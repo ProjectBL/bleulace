@@ -1,0 +1,10 @@
+log.roo
+application.log*
+.settings
+.classpath
+.project
+target
+.DS_Store
+bin/*
+rebel.xml
+ajcore.*
