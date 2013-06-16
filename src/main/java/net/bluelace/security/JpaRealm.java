@@ -1,6 +1,6 @@
 package net.bluelace.security;
 
-import net.bluelace.persistent.Account;
+import net.bluelace.domain.account.Account;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;

@@ -1,4 +1,4 @@
-package net.bluelace.persistent;
+package net.bluelace.domain;
 
 import java.util.UUID;
 import java.util.Vector;

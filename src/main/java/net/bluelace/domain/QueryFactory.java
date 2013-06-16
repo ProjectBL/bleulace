@@ -1,4 +1,4 @@
-package net.bluelace.persistent;
+package net.bluelace.domain;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -1,7 +1,8 @@
 package net.bluelace.ui;
 
+import net.bluelace.ui.registration.RegistrationForm;
+
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 public class BluelaceUI extends UI
@@ -11,7 +12,7 @@ public class BluelaceUI extends UI
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		setContent(new Label("hello there"));
+		setContent(new RegistrationForm());
 	}
 
 }

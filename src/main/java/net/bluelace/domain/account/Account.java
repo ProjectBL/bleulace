@@ -1,21 +1,29 @@
-package net.bluelace.persistent;
+package net.bluelace.domain.account;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
+import net.bluelace.domain.QueryFactory;
+import net.bluelace.domain.project.Task;
+import net.bluelace.persistent.QAccount;
 import net.bluelace.security.Encryptor;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.data.domain.Persistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @Entity
-@RooJavaBean(settersByDefault = false)
+@RooJavaBean
 public class Account implements Persistable<String>
 {
 	private static final long serialVersionUID = -8047989744778433448L;
 
 	@Id
+	@Column(updatable = false)
 	private String id;
 
 	private byte[] hash;
@@ -29,16 +37,9 @@ public class Account implements Persistable<String>
 
 	public void setPassword(String password)
 	{
-		try
-		{
-			BeanUtils.copyProperties(this,
-					new Encryptor(password.toCharArray()));
-		}
-		catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Encryptor encryptor = new Encryptor(password.toCharArray());
+		this.hash = encryptor.getHash();
+		this.salt = encryptor.getSalt();
 	}
 
 	public static Account findById(String id)
@@ -46,4 +47,7 @@ public class Account implements Persistable<String>
 		QAccount a = QAccount.account;
 		return QueryFactory.from(a).where(a.id.eq(id)).uniqueResult(a);
 	}
+
+	@ManyToMany
+	private List<Task> tasks = new ArrayList<Task>();
 }
