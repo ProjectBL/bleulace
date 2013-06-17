@@ -1,6 +1,6 @@
 package net.bluelace.ui.registration;
 
-import net.bluelace.messaging.AccountRegistrationModel;
+import net.bluelace.domain.account.AccountRegistrationPayload;
 
 import com.frugalu.api.messaging.annotation.Publish;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -16,12 +16,12 @@ public class RegistrationForm extends CustomComponent implements ClickListener
 {
 	private static final long serialVersionUID = 5991966984199415096L;
 
-	private final BeanFieldGroup<AccountRegistrationModel> fieldGroup = new BeanFieldGroup<AccountRegistrationModel>(
-			AccountRegistrationModel.class);
+	private final BeanFieldGroup<AccountRegistrationPayload> fieldGroup = new BeanFieldGroup<AccountRegistrationPayload>(
+			AccountRegistrationPayload.class);
 
 	public RegistrationForm()
 	{
-		fieldGroup.setItemDataSource(new AccountRegistrationModel());
+		fieldGroup.setItemDataSource(new AccountRegistrationPayload());
 		setCompositionRoot(new Panel("Register", new FormLayout(
 				fieldGroup.buildAndBind("firstName"),
 				fieldGroup.buildAndBind("lastName"),
@@ -44,7 +44,7 @@ public class RegistrationForm extends CustomComponent implements ClickListener
 	}
 
 	@Publish
-	private AccountRegistrationModel send()
+	private AccountRegistrationPayload send()
 	{
 		return fieldGroup.getItemDataSource().getBean();
 	}

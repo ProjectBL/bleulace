@@ -9,12 +9,20 @@ import net.bluelace.domain.project.Project;
 
 privileged aspect Project_Roo_JavaBean {
     
-    public String Project.getId() {
-        return this.id;
+    public String Project.getTitle() {
+        return this.title;
+    }
+    
+    public void Project.setTitle(String title) {
+        this.title = title;
     }
     
     public Map<String, Bundle> Project.getBundles() {
         return this.bundles;
+    }
+    
+    public void Project.setBundles(Map<String, Bundle> bundles) {
+        this.bundles = bundles;
     }
     
 }

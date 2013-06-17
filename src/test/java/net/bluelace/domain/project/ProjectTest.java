@@ -13,8 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @ContextConfiguration(locations = { "classpath:META-INF/spring/applicationContext.xml" })
-@TransactionConfiguration
+@TransactionConfiguration(defaultRollback = true)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ProjectTest
 {
@@ -62,7 +63,6 @@ public class ProjectTest
 	}
 
 	@Test
-	@Transactional
 	public void testAddAccountToTask()
 	{
 		Bundle bundle = fixtures.getBundle();
@@ -79,6 +79,5 @@ public class ProjectTest
 		Account account = fixtures.getAccount();
 		account.getTasks().add(task);
 		entityManager.persist(account);
-		entityManager.flush();
 	}
 }

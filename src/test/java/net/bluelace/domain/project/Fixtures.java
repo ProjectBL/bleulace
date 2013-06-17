@@ -2,13 +2,12 @@ package net.bluelace.domain.project;
 
 import net.bluelace.domain.account.Account;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 public class Fixtures
 {
 	public Project getProject()
 	{
 		Project project = new Project();
+		project.setTitle("title");
 		return project;
 	}
 
@@ -29,7 +28,7 @@ public class Fixtures
 	public Account getAccount()
 	{
 		Account a = new Account();
-		a.setId(RandomStringUtils.randomAlphabetic(5) + "@foo.com");
+		a.setEmail("foo@bar.com");
 		a.setPassword("password");
 		return a;
 	}

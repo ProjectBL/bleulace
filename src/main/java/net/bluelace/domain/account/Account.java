@@ -5,34 +5,40 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import net.bluelace.domain.QueryFactory;
 import net.bluelace.domain.project.Task;
-import net.bluelace.persistent.QAccount;
 import net.bluelace.security.Encryptor;
 
-import org.springframework.data.domain.Persistable;
+import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
+
+import com.frugalu.api.messaging.jpa.AggregateRoot;
+import com.google.common.eventbus.Subscribe;
 
 @Entity
 @RooJavaBean
-public class Account implements Persistable<String>
+public class Account extends AggregateRoot
 {
 	private static final long serialVersionUID = -8047989744778433448L;
-
-	@Id
-	@Column(updatable = false)
-	private String id;
 
 	private byte[] hash;
 	private byte[] salt;
 
-	@Override
-	public boolean isNew()
+	@Column(nullable = false, unique = true)
+	private String email;
+	private String firstName;
+	private String lastName;
+
+	@ManyToMany
+	private List<Task> tasks = new ArrayList<Task>();
+
+	@Subscribe
+	public void handleRegistration(AccountRegistrationPayload payload)
 	{
-		return id == null;
+		ModelMapper mapper = new ModelMapper();
+		mapper.map(payload, this);
 	}
 
 	public void setPassword(String password)
@@ -42,12 +48,9 @@ public class Account implements Persistable<String>
 		this.salt = encryptor.getSalt();
 	}
 
-	public static Account findById(String id)
+	public static Account findByEmail(String email)
 	{
 		QAccount a = QAccount.account;
-		return QueryFactory.from(a).where(a.id.eq(id)).uniqueResult(a);
+		return QueryFactory.from(a).where(a.email.eq(email)).uniqueResult(a);
 	}
-
-	@ManyToMany
-	private List<Task> tasks = new ArrayList<Task>();
 }

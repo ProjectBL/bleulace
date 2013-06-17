@@ -9,14 +9,6 @@ import net.bluelace.domain.project.Task;
 
 privileged aspect Account_Roo_JavaBean {
     
-    public String Account.getId() {
-        return this.id;
-    }
-    
-    public void Account.setId(String id) {
-        this.id = id;
-    }
-    
     public byte[] Account.getHash() {
         return this.hash;
     }
@@ -31,6 +23,30 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setSalt(byte[] salt) {
         this.salt = salt;
+    }
+    
+    public String Account.getEmail() {
+        return this.email;
+    }
+    
+    public void Account.setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String Account.getFirstName() {
+        return this.firstName;
+    }
+    
+    public void Account.setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    public String Account.getLastName() {
+        return this.lastName;
+    }
+    
+    public void Account.setLastName(String lastName) {
+        this.lastName = lastName;
     }
     
     public List<Task> Account.getTasks() {

@@ -14,5 +14,4 @@ public class BluelaceUI extends UI
 	{
 		setContent(new RegistrationForm());
 	}
-
 }
