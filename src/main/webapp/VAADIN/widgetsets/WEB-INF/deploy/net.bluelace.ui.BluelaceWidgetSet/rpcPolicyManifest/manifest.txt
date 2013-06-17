@@ -1,2 +1,0 @@
-# Module net.bluelace.ui.BluelaceWidgetSet
-# RPC service class, partial path of RPC policy file
