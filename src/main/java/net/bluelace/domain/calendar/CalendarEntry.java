@@ -10,12 +10,15 @@ import javax.persistence.ManyToOne;
 import net.bluelace.domain.account.Account;
 
 import org.joda.time.LocalDateTime;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @Entity
 @RooJavaBean
-public class CalendarEntry
+public class CalendarEntry extends AbstractPersistable<Long>
 {
+	private static final long serialVersionUID = 1831178477077720532L;
+
 	@ManyToOne
 	private Account owner;
 
