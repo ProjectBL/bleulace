@@ -3,16 +3,13 @@ package net.bluelace.ui.mobile;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
 @Theme("touch")
-@Widgetset("net.bluelace.ui.BluelaceWidgetSet")
 @Title("bluelace devel")
 public class BluelaceMobileUI extends UI
 {

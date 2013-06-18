@@ -6,7 +6,6 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 
 import net.bluelace.domain.QueryFactory;
@@ -58,11 +57,5 @@ public class Account extends AggregateRoot
 	{
 		QAccount a = QAccount.account;
 		return QueryFactory.from(a).where(a.email.eq(email)).uniqueResult(a);
-	}
-
-	@PrePersist
-	public void pre()
-	{
-		System.out.println("prepersist");
 	}
 }
