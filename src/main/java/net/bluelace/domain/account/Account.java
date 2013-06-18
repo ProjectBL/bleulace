@@ -6,16 +6,18 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
 
 import net.bluelace.domain.QueryFactory;
 import net.bluelace.domain.project.Task;
 import net.bluelace.security.Encryptor;
 
-import org.modelmapper.ModelMapper;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.frugalu.api.messaging.jpa.AggregateRoot;
-import com.google.common.eventbus.Subscribe;
 
 @Entity
 @RooJavaBean
@@ -26,19 +28,23 @@ public class Account extends AggregateRoot
 	private byte[] hash;
 	private byte[] salt;
 
+	@NotNull
+	@Email
 	@Column(nullable = false, unique = true)
-	private String email;
-	private String firstName;
-	private String lastName;
+	private String email = "";
+
+	@NotEmpty
+	private String firstName = "";
+
+	@NotEmpty
+	private String lastName = "";
 
 	@ManyToMany
 	private List<Task> tasks = new ArrayList<Task>();
 
-	@Subscribe
-	public void handleRegistration(AccountRegistrationPayload payload)
+	public String getPassword()
 	{
-		ModelMapper mapper = new ModelMapper();
-		mapper.map(payload, this);
+		return "";
 	}
 
 	public void setPassword(String password)
@@ -52,5 +58,11 @@ public class Account extends AggregateRoot
 	{
 		QAccount a = QAccount.account;
 		return QueryFactory.from(a).where(a.email.eq(email)).uniqueResult(a);
+	}
+
+	@PrePersist
+	public void pre()
+	{
+		System.out.println("prepersist");
 	}
 }

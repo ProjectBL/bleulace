@@ -1,8 +1,5 @@
 package net.bluelace.security;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import net.bluelace.domain.account.Account;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -17,9 +14,6 @@ import org.apache.shiro.util.ByteSource;
 
 public class JpaRealm extends AuthorizingRealm
 {
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) throws AuthenticationException
@@ -29,16 +23,19 @@ public class JpaRealm extends AuthorizingRealm
 		{
 			return null;
 		}
+
 		String username = usernamePasswordToken.getUsername();
 		if (username == null)
 		{
 			return null;
 		}
-		Account identity = entityManager.find(Account.class, username);
+
+		Account identity = Account.findByEmail(username);
 		if (identity == null)
 		{
 			return null;
 		}
+
 		return new SimpleAuthenticationInfo(identity.getId(),
 				identity.getHash(), ByteSource.Util.bytes(identity.getSalt()),
 				getName());

@@ -22,25 +22,48 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<servlet>
-		<servlet-name>Vaadin Application Servlet</servlet-name>
+		<servlet-name>mobileServlet</servlet-name>
 		<servlet-class>com.vaadin.addon.touchkit.server.TouchKitServlet</servlet-class>
 		<init-param>
 			<description>Vaadin UI to display</description>
 			<param-name>UI</param-name>
-			<param-value>net.bluelace.ui.BluelaceUI</param-value>
+			<param-value>net.bluelace.ui.mobile.BluelaceMobileUI</param-value>
 		</init-param>
 		<init-param>
 			<description>Application widgetset</description>
 			<param-name>widgetset</param-name>
-			<param-value>net.bluelace.ui.BluelaceWidgetSet</param-value>
+			<param-value>net.bluelace.ui.mobile.BluelaceMobileWidgetSet</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>webServlet</servlet-name>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+			<init-param>
+			<description>Vaadin UI to display</description>
+			<param-name>UI</param-name>
+			<param-value>net.bluelace.ui.web.BluelaceWebUI</param-value>
+		</init-param>
+		<init-param>
+			<description>Application widgetset</description>
+			<param-name>widgetset</param-name>
+			<param-value>net.bluelace.ui.web.BluelaceWebWidgetSet</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Vaadin Application Servlet</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<servlet-name>webServlet</servlet-name>
+		<url-pattern>/web/*</url-pattern>
+		<url-pattern>/VAADIN/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>mobileServlet</servlet-name>
+		<url-pattern>/mobile/*</url-pattern>
+	</servlet-mapping>
+
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
