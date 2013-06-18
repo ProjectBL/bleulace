@@ -1,5 +1,7 @@
 package net.bluelace.ui.web.front;
 
+import java.io.Serializable;
+
 import net.bluelace.domain.account.Account;
 import net.bluelace.ui.web.front.FrontView.FrontViewListener;
 
@@ -9,7 +11,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 
 import com.vaadin.ui.Notification;
 
-public class FrontPresenter implements FrontViewListener
+public class FrontPresenter implements FrontViewListener, Serializable
 {
 	private final FrontView view;
 
