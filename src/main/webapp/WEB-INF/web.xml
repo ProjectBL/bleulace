@@ -43,11 +43,6 @@
 			<param-name>UI</param-name>
 			<param-value>net.bluelace.ui.web.BluelaceWebUI</param-value>
 		</init-param>
-		<init-param>
-			<description>Application widgetset</description>
-			<param-name>widgetset</param-name>
-			<param-value>net.bluelace.ui.web.BluelaceWebWidgetSet</param-value>
-		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>webServlet</servlet-name>

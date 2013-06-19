@@ -74,11 +74,15 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client</artifactId>
 			<version>${vaadin.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiled</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
@@ -499,7 +503,6 @@
 					<gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
 					<modules>
 						<module>net.bluelace.ui.mobile.BluelaceMobileWidgetSet</module>
-						<module>net.bluelace.ui.web.BluelaceWebWidgetSet</module>
 					</modules>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
 					<!-- <runTarget>mobilemail</runTarget> -->

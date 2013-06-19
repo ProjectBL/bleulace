@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import net.bluelace.domain.QueryFactory;
 import net.bluelace.domain.account.Account;
 
 import org.modelmapper.ModelMapper;
@@ -37,6 +38,16 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		if (!account.isNew())
 		{
+			QCalendarEntry e = QCalendarEntry.calendarEntry;
+			List<CalendarEntry> entries = QueryFactory
+					.from(e)
+					.where(e.start.after(startDate).and(e.end.before(endDate))
+							.and(e.participants.containsKey(account)))
+					.orderBy(e.start.asc()).listResults(e).getResults();
+			for (CalendarEntry entry : entries)
+			{
+				events.add(entry);
+			}
 		}
 		return events;
 	}
@@ -48,8 +59,8 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 		if (!account.isNew())
 		{
 			ModelMapper mapper = new ModelMapper();
-			// CalendarEntry entry = mapper.map(event, CalendarEntry.class);
-			// entityManager.persist(entry);
+			CalendarEntry entry = mapper.map(event, CalendarEntry.class);
+			entityManager.persist(entry);
 		}
 	}
 

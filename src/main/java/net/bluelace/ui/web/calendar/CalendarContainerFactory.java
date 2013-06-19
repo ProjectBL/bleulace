@@ -3,16 +3,20 @@ package net.bluelace.ui.web.calendar;
 import java.util.Date;
 
 import net.bluelace.domain.account.Account;
+import net.bluelace.domain.calendar.BLContainerEventProvider;
 import net.bluelace.ui.web.calendar.CalendarView.TabDescriptor;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
+
+import com.vaadin.ui.Calendar;
 
 public class CalendarContainerFactory
 {
 	public static CalendarContainer make(Account account,
 			TabDescriptor descriptor)
 	{
+		Calendar calendar = new Calendar(new BLContainerEventProvider(account));
 		return null;
 	}
 

@@ -6,7 +6,7 @@ import com.vaadin.ui.Calendar;
 
 public interface CalendarContainer
 {
-	public CalendarContainer forDirection(RequestDirection direction);
+	public void execute(RequestDirection direction);
 
 	public Calendar getCalendar();
 }
