@@ -1,4 +1,4 @@
-package net.bluelace.ui.web.calendar;
+package net.bluelace.ui.web.rubiks;
 
 import java.io.Serializable;
 

@@ -12,7 +12,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @Embeddable
 @RooJavaBean
-public class CalendarEntryInvitee implements Serializable
+public class CalendarEntryParticipant implements Serializable
 {
 	private static final long serialVersionUID = -5325769114002875339L;
 
@@ -20,5 +20,5 @@ public class CalendarEntryInvitee implements Serializable
 	private Account account;
 
 	@Enumerated
-	private RSVPStatus status;
+	private ParticipationStatus status;
 }
