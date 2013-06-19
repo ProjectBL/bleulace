@@ -3,43 +3,60 @@
 
 package net.bluelace.domain.calendar;
 
-import java.util.List;
+import java.util.Date;
+import java.util.Map;
 import net.bluelace.domain.account.Account;
 import net.bluelace.domain.calendar.CalendarEntry;
-import org.joda.time.LocalDateTime;
+import net.bluelace.domain.calendar.ParticipationStatus;
 
 privileged aspect CalendarEntry_Roo_JavaBean {
     
-    public Account CalendarEntry.getOwner() {
-        return this.owner;
+    public Map<Account, ParticipationStatus> CalendarEntry.getParticipants() {
+        return this.participants;
     }
     
-    public void CalendarEntry.setOwner(Account owner) {
-        this.owner = owner;
+    public void CalendarEntry.setParticipants(Map<Account, ParticipationStatus> participants) {
+        this.participants = participants;
     }
     
-    public List<Account> CalendarEntry.getInvitees() {
-        return this.invitees;
+    public String CalendarEntry.getCaption() {
+        return this.caption;
     }
     
-    public void CalendarEntry.setInvitees(List<Account> invitees) {
-        this.invitees = invitees;
+    public void CalendarEntry.setCaption(String caption) {
+        this.caption = caption;
     }
     
-    public String CalendarEntry.getTitle() {
-        return this.title;
+    public String CalendarEntry.getDescription() {
+        return this.description;
     }
     
-    public void CalendarEntry.setTitle(String title) {
-        this.title = title;
+    public void CalendarEntry.setDescription(String description) {
+        this.description = description;
     }
     
-    public LocalDateTime CalendarEntry.getDate() {
-        return this.date;
+    public Date CalendarEntry.getStart() {
+        return this.start;
     }
     
-    public void CalendarEntry.setDate(LocalDateTime date) {
-        this.date = date;
+    public void CalendarEntry.setStart(Date start) {
+        this.start = start;
+    }
+    
+    public Date CalendarEntry.getEnd() {
+        return this.end;
+    }
+    
+    public void CalendarEntry.setEnd(Date end) {
+        this.end = end;
+    }
+    
+    public String CalendarEntry.getStyleName() {
+        return this.styleName;
+    }
+    
+    public void CalendarEntry.setStyleName(String styleName) {
+        this.styleName = styleName;
     }
     
 }

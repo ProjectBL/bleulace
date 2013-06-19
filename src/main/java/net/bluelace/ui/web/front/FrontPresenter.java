@@ -10,9 +10,12 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
 public class FrontPresenter implements FrontViewListener, Serializable
 {
+	private static final long serialVersionUID = 365877728219202183L;
+
 	private final FrontView view;
 
 	public FrontPresenter(FrontView view)
@@ -31,6 +34,7 @@ public class FrontPresenter implements FrontViewListener, Serializable
 			message = "Welcome back, "
 					+ Account.findByEmail(token.getUsername()).getFirstName()
 					+ ".";
+			UI.getCurrent().getNavigator().navigateTo("calendar");
 		}
 		catch (AuthenticationException e)
 		{

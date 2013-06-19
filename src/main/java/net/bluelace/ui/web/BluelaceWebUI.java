@@ -1,6 +1,7 @@
 package net.bluelace.ui.web;
 
 import net.bluelace.ui.web.front.FrontViewImpl;
+import net.bluelace.ui.web.rubiks.CalendarViewImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -28,6 +29,7 @@ public class BluelaceWebUI extends UI
 	{
 		Navigator navigator = new Navigator(this, this);
 		navigator.addView("front", FrontViewImpl.class);
+		navigator.addView("calendar", CalendarViewImpl.class);
 		navigator.navigateTo("front");
 	}
 }
