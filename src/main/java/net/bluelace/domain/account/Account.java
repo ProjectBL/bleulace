@@ -11,10 +11,14 @@ import net.bluelace.domain.QueryFactory;
 import net.bluelace.domain.project.Task;
 import net.bluelace.security.Encryptor;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.frugalu.api.messaging.jpa.AggregateRoot;
+import com.frugalu.api.messaging.jpa.EntityManagerReference;
 import com.google.common.eventbus.Subscribe;
 
 @Entity
@@ -48,6 +52,7 @@ public class Account extends AggregateRoot
 		this.salt = encryptor.getSalt();
 	}
 
+	@Transactional(readOnly = true)
 	public static Account findByEmail(String email)
 	{
 		QAccount a = QAccount.account;
@@ -59,5 +64,27 @@ public class Account extends AggregateRoot
 	{
 		ModelMapper mapper = new ModelMapper();
 		mapper.map(command, this);
+	}
+
+	public static Account login(String username, String password)
+	{
+		SecurityUtils.getSubject().login(
+				new UsernamePasswordToken(username, password));
+		return findByEmail(username);
+	}
+
+	public static Account current()
+	{
+		Object id = SecurityUtils.getSubject().getPrincipal();
+		return id == null ? null : EntityManagerReference.get().getReference(
+				Account.class, id);
+	}
+
+	@Transactional(readOnly = true)
+	public static Account logout()
+	{
+		Object id = SecurityUtils.getSubject().getPrincipal();
+		SecurityUtils.getSubject().logout();
+		return EntityManagerReference.get().getReference(Account.class, id);
 	}
 }

@@ -1,12 +1,16 @@
 package net.bluelace.ui.web.calendar;
 
+import net.bluelace.ui.web.calendar.CalendarType.RequestDirection;
+
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 public interface CalendarView extends View
 {
-	public void showCenter(String title, Component content);
+	public void showTitle(String title);
+
+	public void showMainContent(Component mainContent);
 
 	public void showEvent(CalendarEvent event);
 
@@ -16,16 +20,6 @@ public interface CalendarView extends View
 	{
 		public void onDirectionRequest(RequestDirection direction);
 
-		public void onTabActivated(TabDescriptor descriptor);
-	}
-
-	public enum TabDescriptor
-	{
-		TODAY, WEEK, MONTH, AGENDA;
-	}
-
-	public enum RequestDirection
-	{
-		FORWARD, BACKWARDS;
+		public void onTabActivated(CalendarType type);
 	}
 }

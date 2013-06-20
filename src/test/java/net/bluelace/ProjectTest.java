@@ -1,4 +1,4 @@
-package net.bluelace.domain.project;
+package net.bluelace;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -7,6 +7,10 @@ import net.bluelace.domain.QueryFactory;
 import net.bluelace.domain.account.Account;
 import net.bluelace.domain.account.AccountRegistrationPayload;
 import net.bluelace.domain.account.QAccount;
+import net.bluelace.domain.project.Bundle;
+import net.bluelace.domain.project.Fixtures;
+import net.bluelace.domain.project.Project;
+import net.bluelace.domain.project.Task;
 
 import org.junit.Before;
 import org.junit.Test;

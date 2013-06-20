@@ -3,6 +3,8 @@ package net.bluelace.ui.web.calendar;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.bluelace.ui.web.calendar.CalendarType.RequestDirection;
+
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -19,26 +21,29 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 
 	private List<CalendarViewListener> listeners = new ArrayList<CalendarViewListener>();
 
-	private Component center;
-	private Panel panel;
+	private Panel panel = new Panel();
 
 	public CalendarViewImpl()
 	{
-		addViewListener(new CalendarPresenter(this));
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		center = new CustomComponent();
 		makeLayout();
+		addViewListener(new CalendarPresenter(this));
 	}
 
 	@Override
-	public void showCenter(String title, Component content)
+	public void showTitle(String title)
 	{
 		panel.setCaption(title);
-		panel.setContent(content);
+	}
+
+	@Override
+	public void showMainContent(Component mainContent)
+	{
+		panel.setContent(mainContent);
 	}
 
 	@Override
@@ -55,10 +60,6 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 
 	private void makeLayout()
 	{
-		HorizontalLayout hLayout = new HorizontalLayout();
-		VerticalLayout vLayout = new VerticalLayout(new ButtonRow(), hLayout);
-		setCompositionRoot(vLayout);
-
 		Button.ClickListener pageRequestListener = new Button.ClickListener()
 		{
 			@Override
@@ -72,13 +73,16 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 			}
 		};
 
-		Button forward = new Button(">");
+		Button forward = new Button(">", pageRequestListener);
 		forward.setData(RequestDirection.FORWARD);
 
-		Button backwards = new Button("<");
-		backwards.setData(RequestDirection.BACKWARDS);
+		Button backwards = new Button("<", pageRequestListener);
+		backwards.setData(RequestDirection.BACKWARD);
 
-		hLayout.addComponents(backwards, center, forward);
+		HorizontalLayout hLayout = new HorizontalLayout();
+		hLayout.addComponents(backwards, panel, forward);
+		VerticalLayout vLayout = new VerticalLayout(new ButtonRow(), hLayout);
+		setCompositionRoot(vLayout);
 	}
 
 	class ButtonRow extends CustomComponent
@@ -88,8 +92,7 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 		public ButtonRow()
 		{
 			HorizontalLayout layout = new HorizontalLayout();
-			setCompositionRoot(layout);
-			for (TabDescriptor value : TabDescriptor.values())
+			for (CalendarType value : CalendarType.values())
 			{
 				Button button = new Button(value.toString(),
 						new Button.ClickListener()
@@ -101,13 +104,15 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 							{
 								for (CalendarViewListener listener : listeners)
 								{
-									listener.onTabActivated((TabDescriptor) event
+									listener.onTabActivated((CalendarType) event
 											.getButton().getData());
 								}
 							}
 						});
 				button.setData(value);
+				layout.addComponent(button);
 			}
+			setCompositionRoot(layout);
 		}
 	}
 }

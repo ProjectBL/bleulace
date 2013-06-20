@@ -36,7 +36,7 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
-		if (!account.isNew())
+		if (account != null && !account.isNew())
 		{
 			QCalendarEntry e = QCalendarEntry.calendarEntry;
 			List<CalendarEntry> entries = QueryFactory

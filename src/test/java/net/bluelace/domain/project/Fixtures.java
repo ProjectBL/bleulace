@@ -1,6 +1,9 @@
 package net.bluelace.domain.project;
 
 import net.bluelace.domain.account.Account;
+import net.bluelace.domain.project.Bundle;
+import net.bluelace.domain.project.Project;
+import net.bluelace.domain.project.Task;
 
 public class Fixtures
 {

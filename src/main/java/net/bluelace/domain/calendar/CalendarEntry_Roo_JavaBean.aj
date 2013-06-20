@@ -39,16 +39,8 @@ privileged aspect CalendarEntry_Roo_JavaBean {
         return this.start;
     }
     
-    public void CalendarEntry.setStart(Date start) {
-        this.start = start;
-    }
-    
     public Date CalendarEntry.getEnd() {
         return this.end;
-    }
-    
-    public void CalendarEntry.setEnd(Date end) {
-        this.end = end;
     }
     
     public String CalendarEntry.getStyleName() {

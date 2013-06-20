@@ -1,6 +1,5 @@
-package net.bluelace.domain.project;
+package net.bluelace.domain.project.calendar;
 
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -11,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = { "classpath:META-INF/spring/applicationContext.xml" })
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class AccountTest
+public class CalendarEntryTest
 {
-	@Test
-	public void testRegisterAccount() throws Exception
+	public void testCalendarEntry()
 	{
+
 	}
 }
