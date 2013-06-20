@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.bleulace.ui.web.calendar.CalendarType.RequestDirection;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
@@ -80,7 +81,13 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 
 		HorizontalLayout hLayout = new HorizontalLayout();
 		hLayout.addComponents(backwards, panel, forward);
-		VerticalLayout vLayout = new VerticalLayout(new ButtonRow(), hLayout);
+		hLayout.setComponentAlignment(backwards, Alignment.MIDDLE_RIGHT);
+		hLayout.setComponentAlignment(forward, Alignment.MIDDLE_LEFT);
+
+		VerticalLayout vLayout = new VerticalLayout();
+		vLayout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
+		vLayout.addComponents(new ButtonRow(), hLayout);
+		vLayout.setExpandRatio(hLayout, 1);
 		setCompositionRoot(vLayout);
 	}
 
@@ -91,6 +98,7 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView
 		public ButtonRow()
 		{
 			HorizontalLayout layout = new HorizontalLayout();
+			layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 			for (CalendarType value : CalendarType.values())
 			{
 				Button button = new Button(value.toString(),

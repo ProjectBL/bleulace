@@ -3,10 +3,9 @@
 
 package com.bleulace.domain.account;
 
-import java.util.List;
-
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.project.Task;
+import java.util.List;
 
 privileged aspect Account_Roo_JavaBean {
     

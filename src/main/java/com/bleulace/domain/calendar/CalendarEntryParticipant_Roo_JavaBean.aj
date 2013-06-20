@@ -4,10 +4,19 @@
 package com.bleulace.domain.calendar;
 
 import com.bleulace.domain.account.Account;
+import com.bleulace.domain.calendar.CalendarEntry;
 import com.bleulace.domain.calendar.CalendarEntryParticipant;
 import com.bleulace.domain.calendar.ParticipationStatus;
 
 privileged aspect CalendarEntryParticipant_Roo_JavaBean {
+    
+    public CalendarEntry CalendarEntryParticipant.getEntry() {
+        return this.entry;
+    }
+    
+    public void CalendarEntryParticipant.setEntry(CalendarEntry entry) {
+        this.entry = entry;
+    }
     
     public Account CalendarEntryParticipant.getAccount() {
         return this.account;

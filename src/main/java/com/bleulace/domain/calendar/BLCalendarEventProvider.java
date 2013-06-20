@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.bluelace.domain.calendar.QCalendarEntry;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,16 +37,17 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		if (account != null && !account.isNew())
 		{
-			QCalendarEntry e = QCalendarEntry.calendarEntry;
-			List<CalendarEntry> entries = QueryFactory
-					.from(e)
-					.where(e.start.after(startDate).and(e.end.before(endDate))
-							.and(e.participants.containsKey(account)))
-					.orderBy(e.start.asc()).listResults(e).getResults();
-			for (CalendarEntry entry : entries)
+			QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
+			for (CalendarEntry entry : QueryFactory
+					.from(p)
+					.where(p.entry.start.between(startDate, endDate)
+							.and(p.entry.end.between(startDate, endDate))
+							.and(p.account.eq(account))).listResults(p.entry)
+					.getResults())
 			{
 				events.add(entry);
 			}
+
 		}
 		return events;
 	}
@@ -57,12 +56,9 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 	@Transactional
 	public void addEvent(CalendarEvent event)
 	{
-		if (!account.isNew())
-		{
-			ModelMapper mapper = new ModelMapper();
-			CalendarEntry entry = mapper.map(event, CalendarEntry.class);
-			entityManager.persist(entry);
-		}
+		ModelMapper mapper = new ModelMapper();
+		CalendarEntry entry = mapper.map(event, CalendarEntry.class);
+		entityManager.persist(entry);
 	}
 
 	@Override

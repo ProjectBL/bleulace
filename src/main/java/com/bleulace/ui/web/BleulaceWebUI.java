@@ -27,6 +27,6 @@ public class BleulaceWebUI extends UI
 		Navigator navigator = new Navigator(this, this);
 		navigator.addView("front", FrontViewImpl.class);
 		navigator.addView("calendar", CalendarViewImpl.class);
-		navigator.navigateTo("calendar");
+		navigator.navigateTo("front");
 	}
 }

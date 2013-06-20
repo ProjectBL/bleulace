@@ -1,15 +1,14 @@
 package com.bleulace.domain.calendar;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -18,12 +17,14 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.account.Account;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
@@ -34,9 +35,9 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 {
 	private static final long serialVersionUID = 1831178477077720532L;
 
-	@Enumerated(EnumType.STRING)
-	@MapKeyJoinColumn(name = "ACCOUNT_ID", unique = false, updatable = false)
-	private Map<Account, ParticipationStatus> participants = new HashMap<Account, ParticipationStatus>();
+	@CascadeOnDelete
+	@OneToMany(cascade = { CascadeType.ALL })
+	private List<CalendarEntryParticipant> participants = new ArrayList<CalendarEntryParticipant>();
 
 	@Column(nullable = false)
 	private String caption = "";
@@ -86,15 +87,26 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 		this.allDay = allDay;
 	}
 
-	public void addParticipants(Account... participants)
+	public void addParticipants(Account... accounts)
 	{
-		for (Account participant : participants)
+		for (Account account : accounts)
 		{
-			if (!this.participants.containsKey(participant))
+			if (!isParticipating(account))
 			{
-				this.participants.put(participant, ParticipationStatus.PENDING);
+				CalendarEntryParticipant participant = new CalendarEntryParticipant();
+				participant.setAccount(account);
+				participant.setEntry(this);
+				participant.setStatus(ParticipationStatus.PENDING);
+				participants.add(participant);
 			}
 		}
+	}
+
+	public boolean isParticipating(Account account)
+	{
+		QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
+		return QueryFactory.from(p)
+				.where(p.account.eq(account).and(p.entry.eq(this))).exists();
 	}
 
 	@PostLoad
@@ -155,7 +167,6 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 		Account executing = Account.current();
 		if (executing != null)
 		{
-			participants.put(executing, ParticipationStatus.ACCEPTED);
 			// add permissions
 		}
 	}

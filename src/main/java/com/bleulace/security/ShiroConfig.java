@@ -1,5 +1,6 @@
 package com.bleulace.security;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.RandomNumberGenerator;
@@ -14,6 +15,7 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -84,6 +86,17 @@ public class ShiroConfig
 	{
 		AuthorizationAttributeSourceAdvisor bean = new AuthorizationAttributeSourceAdvisor();
 		bean.setSecurityManager(securityManager);
+		return bean;
+	}
+
+	@Bean
+	public MethodInvokingFactoryBean methodInvokingFactoryBean(
+			SecurityManager securityManager)
+	{
+		MethodInvokingFactoryBean bean = new MethodInvokingFactoryBean();
+		bean.setArguments(new Object[] { securityManager });
+		bean.setTargetClass(SecurityUtils.class);
+		bean.setTargetMethod("setSecurityManager");
 		return bean;
 	}
 }

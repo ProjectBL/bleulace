@@ -3,10 +3,9 @@
 
 package com.bleulace.domain;
 
+import com.bleulace.domain.StreetAddress;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import com.bleulace.domain.StreetAddress;
 
 privileged aspect StreetAddress_Roo_Equals {
     

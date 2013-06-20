@@ -3,12 +3,10 @@
 
 package com.bleulace.domain.message;
 
-import java.util.List;
-
-import org.joda.time.LocalDateTime;
-
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.message.Message;
+import java.util.List;
+import org.joda.time.LocalDateTime;
 
 privileged aspect Message_Roo_JavaBean {
     

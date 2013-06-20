@@ -3,10 +3,9 @@
 
 package com.bleulace.domain.project;
 
-import java.util.Map;
-
 import com.bleulace.domain.project.Bundle;
 import com.bleulace.domain.project.Project;
+import java.util.Map;
 
 privileged aspect Project_Roo_JavaBean {
     

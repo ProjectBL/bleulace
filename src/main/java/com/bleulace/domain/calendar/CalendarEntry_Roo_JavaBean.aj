@@ -3,20 +3,18 @@
 
 package com.bleulace.domain.calendar;
 
-import java.util.Date;
-import java.util.Map;
-
-import com.bleulace.domain.account.Account;
 import com.bleulace.domain.calendar.CalendarEntry;
-import com.bleulace.domain.calendar.ParticipationStatus;
+import com.bleulace.domain.calendar.CalendarEntryParticipant;
+import java.util.Date;
+import java.util.List;
 
 privileged aspect CalendarEntry_Roo_JavaBean {
     
-    public Map<Account, ParticipationStatus> CalendarEntry.getParticipants() {
+    public List<CalendarEntryParticipant> CalendarEntry.getParticipants() {
         return this.participants;
     }
     
-    public void CalendarEntry.setParticipants(Map<Account, ParticipationStatus> participants) {
+    public void CalendarEntry.setParticipants(List<CalendarEntryParticipant> participants) {
         this.participants = participants;
     }
     

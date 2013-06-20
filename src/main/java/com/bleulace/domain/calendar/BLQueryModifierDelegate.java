@@ -23,8 +23,8 @@ class BLQueryModifierDelegate extends DefaultQueryModifierDelegate
 	public void queryHasBeenBuilt(CriteriaBuilder builder,
 			CriteriaQuery<?> query)
 	{
-		Root<CalendarEntry> entries = query.from(CalendarEntry.class);
-		MapJoin<CalendarEntry, Account, ParticipationStatus> participants = entries
+		Root<CalendarEntry> root = query.from(CalendarEntry.class);
+		MapJoin<CalendarEntry, Account, ParticipationStatus> participants = root
 				.joinMap("participants");
 		query.where(builder.equal(participants.key(), account));
 	}
