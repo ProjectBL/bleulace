@@ -1,8 +1,12 @@
 package com.bleulace.domain.calendar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.CascadeType;
@@ -18,32 +22,36 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.account.Account;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 @Entity
 @RooJavaBean
 public class CalendarEntry extends AbstractPersistable<Long> implements
-		CalendarEvent
+		EditableCalendarEvent
 {
 	private static final long serialVersionUID = 1831178477077720532L;
 
 	@CascadeOnDelete
 	@OneToMany(cascade = { CascadeType.ALL })
-	private List<CalendarEntryParticipant> participants = new ArrayList<CalendarEntryParticipant>();
+	private List<CalendarEntryParticipant> entryParticipants = new ArrayList<CalendarEntryParticipant>();
 
+	@NotEmpty
 	@Column(nullable = false)
 	private String caption = "";
 
+	@NotEmpty
 	@Column(nullable = false)
 	private String description = "";
+
+	private String location = "?";
 
 	@NotNull
 	@Column(nullable = false)
@@ -64,12 +72,14 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 	{
 	}
 
+	@Override
 	public void setStart(Date start)
 	{
 		this.start = start;
 		updateTimes();
 	}
 
+	@Override
 	public void setEnd(Date end)
 	{
 		this.end = end;
@@ -79,34 +89,58 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 	@Override
 	public boolean isAllDay()
 	{
-		return allDay;
+		return false;
 	}
 
+	@Override
 	public void setAllDay(boolean allDay)
 	{
 		this.allDay = allDay;
 	}
 
-	public void addParticipants(Account... accounts)
+	public Map<Account, ParticipationStatus> getParticipants()
 	{
-		for (Account account : accounts)
+		return new ParticipantMap(this);
+	}
+
+	public Collection<Account> getAccounts()
+	{
+		return getParticipants().keySet();
+	}
+
+	public void setAccounts(Collection<Account> accounts)
+	{
+		Set<Account> accountSet = new HashSet<Account>(accounts);
+		for (Account account : accountSet)
 		{
-			if (!isParticipating(account))
+			ParticipationStatus status = getParticipants().get(account);
+			if (status == null)
 			{
-				CalendarEntryParticipant participant = new CalendarEntryParticipant();
-				participant.setAccount(account);
-				participant.setEntry(this);
-				participant.setStatus(ParticipationStatus.PENDING);
-				participants.add(participant);
+				getParticipants().put(account, ParticipationStatus.PENDING);
+			}
+		}
+		for (Account account : getAccounts())
+		{
+			if (!accountSet.contains(account))
+			{
+				getParticipants().remove(account);
 			}
 		}
 	}
 
-	public boolean isParticipating(Account account)
+	public ParticipationStatus getStatus()
 	{
-		QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
-		return QueryFactory.from(p)
-				.where(p.account.eq(account).and(p.entry.eq(this))).exists();
+		Account current = Account.current();
+		return current == null ? null : getParticipants().get(current);
+	}
+
+	public void setStatus(ParticipationStatus status)
+	{
+		Account current = Account.current();
+		if (current != null)
+		{
+			getParticipants().put(current, status);
+		}
 	}
 
 	@PostLoad
@@ -115,14 +149,14 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 		allDay = meetsAllDayCriteria();
 	}
 
+	@PreUpdate
 	@PrePersist
-	protected void prePersist()
+	protected void preSave()
 	{
 		registerOwner();
 		updateTimes();
 	}
 
-	@PreUpdate
 	@PostConstruct
 	protected void updateTimes()
 	{
@@ -167,7 +201,7 @@ public class CalendarEntry extends AbstractPersistable<Long> implements
 		Account executing = Account.current();
 		if (executing != null)
 		{
-			// add permissions
+			getParticipants().put(executing, ParticipationStatus.ACCEPTED);
 		}
 	}
 }

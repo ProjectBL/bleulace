@@ -1,9 +1,8 @@
 package com.bleulace.ui.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
 
+import com.bleulace.domain.account.Account;
 import com.bleulace.ui.web.calendar.CalendarViewImpl;
 import com.bleulace.ui.web.front.FrontViewImpl;
 import com.vaadin.navigator.Navigator;
@@ -18,15 +17,13 @@ public class BleulaceWebUI extends UI
 	 */
 	private static final long serialVersionUID = 2191009197124553972L;
 
-	@Autowired
-	private transient ApplicationContext ctx;
-
 	@Override
 	protected void init(VaadinRequest request)
 	{
+		Account.login("arleighdickerson@frugalu.com", "password");
 		Navigator navigator = new Navigator(this, this);
 		navigator.addView("front", FrontViewImpl.class);
 		navigator.addView("calendar", CalendarViewImpl.class);
-		navigator.navigateTo("front");
+		navigator.navigateTo("calendar");
 	}
 }

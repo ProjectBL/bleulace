@@ -10,12 +10,12 @@ import java.util.List;
 
 privileged aspect CalendarEntry_Roo_JavaBean {
     
-    public List<CalendarEntryParticipant> CalendarEntry.getParticipants() {
-        return this.participants;
+    public List<CalendarEntryParticipant> CalendarEntry.getEntryParticipants() {
+        return this.entryParticipants;
     }
     
-    public void CalendarEntry.setParticipants(List<CalendarEntryParticipant> participants) {
-        this.participants = participants;
+    public void CalendarEntry.setEntryParticipants(List<CalendarEntryParticipant> entryParticipants) {
+        this.entryParticipants = entryParticipants;
     }
     
     public String CalendarEntry.getCaption() {
@@ -32,6 +32,14 @@ privileged aspect CalendarEntry_Roo_JavaBean {
     
     public void CalendarEntry.setDescription(String description) {
         this.description = description;
+    }
+    
+    public String CalendarEntry.getLocation() {
+        return this.location;
+    }
+    
+    public void CalendarEntry.setLocation(String location) {
+        this.location = location;
     }
     
     public Date CalendarEntry.getStart() {

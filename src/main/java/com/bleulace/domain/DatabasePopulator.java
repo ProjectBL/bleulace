@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.calendar.CalendarEntry;
+import com.bleulace.domain.calendar.ParticipationStatus;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
 
 @Component
@@ -20,13 +21,20 @@ public class DatabasePopulator implements
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
 		Account a = makeAccount();
+		a = (Account) a.save();
+
+		Account b = makeAccount();
+		b.setEmail("foo@bar.com");
+		b.setFirstName("Jeff");
+		b = (Account) b.save();
 
 		CalendarEntry entry = new CalendarEntry();
-		entry.addParticipants(a);
 		entry.setCaption("foo");
 		entry.setDescription("bar");
 		entry.setAllDay(true);
 		entry.setStart(new Date());
+		entry.getParticipants().put(a, ParticipationStatus.ACCEPTED);
+
 		EntityManagerReference.get().persist(entry);
 	}
 
@@ -37,6 +45,6 @@ public class DatabasePopulator implements
 		account.setLastName("Dickerson");
 		account.setEmail("arleighdickerson@frugalu.com");
 		account.setPassword("password");
-		return (Account) account.save();
+		return account;
 	}
 }

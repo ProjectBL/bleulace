@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +31,7 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
@@ -56,9 +56,16 @@ public class BLCalendarEventProvider implements CalendarEditableEventProvider
 	@Transactional
 	public void addEvent(CalendarEvent event)
 	{
-		ModelMapper mapper = new ModelMapper();
-		CalendarEntry entry = mapper.map(event, CalendarEntry.class);
-		entityManager.persist(entry);
+		CalendarEntry entry = (CalendarEntry) event;
+		if (entry.isNew())
+		{
+			entityManager.persist(entry);
+		}
+		else
+		{
+			entityManager.merge(entry);
+		}
+		entityManager.flush();
 	}
 
 	@Override

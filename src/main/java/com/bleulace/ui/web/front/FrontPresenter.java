@@ -30,9 +30,7 @@ public class FrontPresenter implements FrontViewListener, Serializable
 		{
 			view.setEnabled(false);
 			SecurityUtils.getSubject().login(token);
-			message = "Welcome back, "
-					+ Account.findByEmail(token.getUsername()).getFirstName()
-					+ ".";
+			message = "Welcome back, " + Account.current().getFirstName();
 			UI.getCurrent().getNavigator().navigateTo("calendar");
 		}
 		catch (AuthenticationException e)

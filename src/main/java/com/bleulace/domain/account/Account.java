@@ -6,11 +6,11 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-
-import net.bluelace.domain.account.QAccount;
+import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.hibernate.validator.constraints.Email;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +31,17 @@ public class Account extends AggregateRoot
 	private byte[] hash;
 	private byte[] salt;
 
-	@Column(nullable = false, unique = true)
-	private String email = "";
+	@Email
+	@Column(nullable = false, unique = true, updatable = false)
+	private String email;
 
-	private String firstName = "";
+	@NotNull
+	@Column(nullable = false, updatable = false)
+	private String firstName;
 
-	private String lastName = "";
+	@NotNull
+	@Column(nullable = false, updatable = false)
+	private String lastName;
 
 	@ManyToMany
 	private List<Task> tasks = new ArrayList<Task>();
@@ -51,6 +56,17 @@ public class Account extends AggregateRoot
 		Encryptor encryptor = new Encryptor(password.toCharArray());
 		this.hash = encryptor.getHash();
 		this.salt = encryptor.getSalt();
+	}
+
+	public String getName()
+	{
+		return firstName + " " + lastName;
+	}
+
+	@Override
+	public String toString()
+	{
+		return getName();
 	}
 
 	@Transactional(readOnly = true)
@@ -79,6 +95,12 @@ public class Account extends AggregateRoot
 		Object id = SecurityUtils.getSubject().getPrincipal();
 		return id == null ? null : EntityManagerReference.get().getReference(
 				Account.class, id);
+	}
+
+	public static List<Account> findAll()
+	{
+		QAccount a = QAccount.account;
+		return QueryFactory.from(a).list(a);
 	}
 
 	@Transactional(readOnly = true)

@@ -3,8 +3,6 @@ package com.bleulace;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import net.bluelace.domain.account.QAccount;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.account.AccountRegistrationPayload;
 import com.bleulace.domain.project.Bundle;
@@ -104,8 +101,5 @@ public class ProjectTest
 		new Command(p).withoutCallback().onAggregate(Account.class, null)
 				.send();
 		Thread.sleep(100);
-		QAccount a = QAccount.account;
-		System.out.println(QueryFactory.from(a).listResults(a).getResults()
-				.size());
 	}
 }

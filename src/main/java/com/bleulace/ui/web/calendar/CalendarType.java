@@ -93,9 +93,9 @@ public enum CalendarType implements DateRangePolicy
 			switch (direction)
 			{
 			case BACKWARD:
-				return LocalDate.fromDateFields(cursor).minusDays(7).toDate();
+				return LocalDate.fromDateFields(cursor).minusWeeks(1).toDate();
 			case FORWARD:
-				return LocalDate.fromDateFields(cursor).plusDays(7).toDate();
+				return LocalDate.fromDateFields(cursor).plusWeeks(1).toDate();
 			default:
 				return null;
 			}
@@ -151,9 +151,9 @@ public enum CalendarType implements DateRangePolicy
 			switch (direction)
 			{
 			case BACKWARD:
-				return LocalDate.fromDateFields(cursor).plusMonths(1).toDate();
-			case FORWARD:
 				return LocalDate.fromDateFields(cursor).minusMonths(1).toDate();
+			case FORWARD:
+				return LocalDate.fromDateFields(cursor).plusMonths(1).toDate();
 			default:
 				return null;
 			}

@@ -10,6 +10,14 @@ import com.bleulace.domain.calendar.ParticipationStatus;
 
 privileged aspect CalendarEntryParticipant_Roo_JavaBean {
     
+    public String CalendarEntryParticipant.getId() {
+        return this.id;
+    }
+    
+    public void CalendarEntryParticipant.setId(String id) {
+        this.id = id;
+    }
+    
     public CalendarEntry CalendarEntryParticipant.getEntry() {
         return this.entry;
     }
