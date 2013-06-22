@@ -6,6 +6,7 @@ import javax.persistence.PersistenceContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -19,6 +20,7 @@ import com.bleulace.domain.project.Project;
 import com.bleulace.domain.project.Task;
 import com.frugalu.api.messaging.command.Command;
 
+@ActiveProfiles("test")
 @Transactional
 @ContextConfiguration(locations = { "classpath:META-INF/spring/applicationContext.xml" })
 @TransactionConfiguration(defaultRollback = true)

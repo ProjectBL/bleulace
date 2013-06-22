@@ -9,6 +9,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
 import org.modelmapper.ModelMapper;
@@ -92,9 +93,17 @@ public class Account extends AggregateRoot
 
 	public static Account current()
 	{
-		Object id = SecurityUtils.getSubject().getPrincipal();
-		return id == null ? null : EntityManagerReference.get().getReference(
-				Account.class, id);
+		try
+		{
+			Object id = SecurityUtils.getSubject().getPrincipal();
+			return id == null ? null : EntityManagerReference.get()
+					.getReference(Account.class, id);
+		}
+		catch (UnavailableSecurityManagerException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public static List<Account> findAll()

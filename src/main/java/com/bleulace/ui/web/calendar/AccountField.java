@@ -1,7 +1,6 @@
 package com.bleulace.ui.web.calendar;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -39,8 +38,6 @@ public class AccountField extends CustomField<Collection>
 	private final ComboBox comboBox = new ComboBox();
 
 	private final BeanContainer<String, Account> tableContainer = makeContainer();
-
-	private Collection<Account> internalValue = new HashSet<Account>();
 
 	public AccountField(String caption)
 	{

@@ -86,6 +86,7 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView,
 		{
 			listener.onBoundariesSelected(new Date(), new Date());
 		}
+		hideEntryDetail();
 	}
 
 	@Override
@@ -173,9 +174,29 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView,
 		}
 	}
 
+	@Override
+	public void eventResize(EventResize event)
+	{
+		EditableCalendarEvent editable = (EditableCalendarEvent) event
+				.getCalendarEvent();
+		editable.setStart(event.getNewStart());
+		editable.setEnd(event.getNewEnd());
+		calendar.addEvent(event.getCalendarEvent());
+	}
+
+	@Override
+	public void rangeSelect(RangeSelectEvent event)
+	{
+		for (CalendarViewListener listener : listeners)
+		{
+			listener.onRangeSelected(event.getStart(), event.getEnd());
+		}
+	}
+
 	private void initLayout()
 	{
 		HorizontalLayout menu = new HorizontalLayout();
+
 		menu.setDefaultComponentAlignment(Alignment.TOP_LEFT);
 		menu.addComponents(start, end);
 		for (final CalendarType type : CalendarType.values())
@@ -195,23 +216,12 @@ public class CalendarViewImpl extends CustomComponent implements CalendarView,
 		setCompositionRoot(mainLayout);
 	}
 
-	@Override
-	public void eventResize(EventResize event)
+	class TimeBox extends CustomComponent
 	{
-		EditableCalendarEvent editable = (EditableCalendarEvent) event
-				.getCalendarEvent();
-		editable.setStart(event.getNewStart());
-		editable.setEnd(event.getNewEnd());
-		calendar.addEvent(event.getCalendarEvent());
-		// initLayout();
-	}
+		private static final long serialVersionUID = -5864401675540887195L;
 
-	@Override
-	public void rangeSelect(RangeSelectEvent event)
-	{
-		for (CalendarViewListener listener : listeners)
+		public TimeBox()
 		{
-
 		}
 	}
 }

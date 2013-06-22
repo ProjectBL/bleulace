@@ -3,9 +3,6 @@ package com.bleulace.ui.web.calendar;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +18,6 @@ public class CalendarPresenter implements CalendarViewListener,
 		CalendarEntryDetailListener, Serializable
 {
 	private static final long serialVersionUID = -8809727082371971055L;
-
-	@PersistenceContext
-	private EntityManager em;
 
 	private final CalendarView view;
 
@@ -42,6 +36,7 @@ public class CalendarPresenter implements CalendarViewListener,
 		Range<Date> range = type.getDateRange(new Date());
 		onBoundariesSelected(range.getMinimum(), range.getMaximum());
 		view.setActiveTab(type);
+		view.hideEntryDetail();
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public class CalendarPresenter implements CalendarViewListener,
 	@Override
 	public void onRangeSelected(Date start, Date end)
 	{
-		entry = new CalendarEntry();
+		CalendarEntry entry = new CalendarEntry();
 		entry.setStart(start);
 		entry.setEnd(end);
 		onEntrySelected(entry);

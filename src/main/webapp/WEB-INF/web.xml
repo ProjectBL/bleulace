@@ -40,6 +40,11 @@
       <param-name>UI</param-name>
       <param-value>com.bleulace.ui.web.BleulaceWebUI</param-value>
     </init-param>
+       <init-param>
+      <description>Application widgetset</description>
+      <param-name>widgetset</param-name>
+      <param-value>com.bleulace.ui.web.BleulaceWebWidgetSet</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>webServlet</servlet-name>
@@ -60,4 +65,8 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:/META-INF/spring/applicationContext.xml</param-value>
   </context-param>
+  <context-param>
+   <param-name>spring.profiles.default</param-name>
+   <param-value>dev</param-value>
+</context-param>
 </web-app>
