@@ -1,99 +1,129 @@
 package com.bleulace.ui.web.calendar;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.commons.lang3.Range;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.domain.calendar.CalendarEntry;
-import com.bleulace.ui.web.calendar.CalendarEntryDetail.CalendarEntryDetailListener;
-import com.bleulace.ui.web.calendar.CalendarView.CalendarViewListener;
+import com.bleulace.domain.calendar.JPACalendarEvent;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
+import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.data.util.BeanItem;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Calendar;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
-@Configurable
-public class CalendarPresenter implements CalendarViewListener,
-		CalendarEntryDetailListener, Serializable
+public class CalendarPresenter implements EventClickHandler, RangeSelectHandler
 {
-	private static final long serialVersionUID = -8809727082371971055L;
+	private static final long serialVersionUID = 7715084569870641483L;
 
-	private final CalendarView view;
+	private final Calendar calendar;
 
-	private CalendarEntry entry;
-
-	public CalendarPresenter(CalendarView view)
+	public CalendarPresenter(Calendar calendar)
 	{
-		this.view = view;
-		Date now = new Date();
-		onBoundariesSelected(now, now);
+		this.calendar = calendar;
+		calendar.setHandler((EventClickHandler) this);
+		calendar.setHandler((RangeSelectHandler) this);
 	}
 
-	@Override
-	public void onTabSelected(CalendarType type)
+	public void showCalendarType(CalendarType type)
 	{
 		Range<Date> range = type.getDateRange(new Date());
-		onBoundariesSelected(range.getMinimum(), range.getMaximum());
-		view.setActiveTab(type);
-		view.hideEntryDetail();
+		calendar.setStartDate(range.getMinimum());
+		calendar.setEndDate(range.getMaximum());
 	}
 
 	@Override
-	public void onBoundariesSelected(Date start, Date end)
+	public void eventClick(EventClick event)
 	{
-		if (end.before(start))
+		UI.getCurrent().addWindow(
+				new EventEditor((JPACalendarEvent) event.getCalendarEvent()));
+	}
+
+	private void showEventRescheduledMessage(CalendarEvent event)
+	{
+		String caption = event.getCaption() + " has been rescheduled.";
+		String description = event.getStart() + " " + event.getEnd();
+		Notification.show(caption, description, Type.TRAY_NOTIFICATION);
+	}
+
+	@Override
+	public void rangeSelect(RangeSelectEvent event)
+	{
+		JPACalendarEvent calendarEvent = new JPACalendarEvent();
+		calendarEvent.setStart(event.getStart());
+		calendarEvent.setEnd(event.getEnd());
+		UI.getCurrent().addWindow(new EventEditor(calendarEvent));
+	}
+
+	class EventEditor extends Window implements ClickListener
+	{
+		private static final long serialVersionUID = -464672570279240167L;
+
+		private final BeanFieldGroup<JPACalendarEvent> fieldGroup;
+
+		public EventEditor(JPACalendarEvent event)
 		{
-			end = start;
-		}
-		view.setBoundaries(start, end);
-	}
+			fieldGroup = new BeanFieldGroup<JPACalendarEvent>(
+					JPACalendarEvent.class);
+			BeanItem<JPACalendarEvent> item = new BeanItem<JPACalendarEvent>(
+					event);
+			fieldGroup.setItemDataSource(item);
 
-	@Override
-	public void onDateClicked(Date date)
-	{
-		if (entry != null && !entry.getStart().equals(date))
+			setModal(true);
+			setWidth("300px");
+			setCaption("Edit: " + event.getCaption());
+
+			AccountField accountField = new AccountField("Participants");
+			fieldGroup.bind(accountField, "accounts");
+			accountField.setWidth("160px");
+
+			TextField tf = fieldGroup.buildAndBind("Title", "caption",
+					TextField.class);
+			tf.setWidth("160px");
+
+			TextArea ta = fieldGroup.buildAndBind("Location", "description",
+					TextArea.class);
+			ta.setWidth("160px");
+
+			Button button = new Button("Submit", this);
+			//@formatter:off
+			FormLayout layout = new FormLayout(
+					tf,
+					ta,
+					accountField,
+					button);
+			//@formatter:on
+			setContent(layout);
+		}
+
+		@Override
+		@Transactional
+		public void buttonClick(ClickEvent event)
 		{
-			view.hideEntryDetail();
+			try
+			{
+				fieldGroup.commit();
+				Notification.show("Event saved to database");
+				close();
+			}
+			catch (CommitException e)
+			{
+				e.printStackTrace();
+			}
 		}
-	}
-
-	@Override
-	public void onEntrySelected(CalendarEntry selected)
-	{
-		entry = selected;
-		view.setBoundaries(entry.getStart(), entry.getEnd());
-		view.setActiveTab(null);
-		view.showEntryDetail(selected, true);
-	}
-
-	@Override
-	public void onRangeSelected(Date start, Date end)
-	{
-		CalendarEntry entry = new CalendarEntry();
-		entry.setStart(start);
-		entry.setEnd(end);
-		onEntrySelected(entry);
-	}
-
-	// ----------------------------------------------------
-
-	@Override
-	@Transactional
-	public void onSaveButtonClicked(CalendarEntry entry)
-	{
-		view.setBoundaries(entry.getStart(), entry.getEnd());
-		view.addEntryToCalendar(entry);
-		view.hideEntryDetail();
-		Notification.show("Event: " + entry.getCaption() + " saved.",
-				Type.TRAY_NOTIFICATION);
-	}
-
-	@Override
-	public void onCancelButtonClicked()
-	{
-		view.hideEntryDetail();
-		Notification.show("Event: " + entry.getCaption() + "not saved.",
-				Type.TRAY_NOTIFICATION);
 	}
 }

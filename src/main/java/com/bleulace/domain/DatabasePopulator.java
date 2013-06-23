@@ -1,14 +1,13 @@
 package com.bleulace.domain;
 
-import java.util.Date;
-
+import org.joda.time.LocalDateTime;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.domain.account.Account;
-import com.bleulace.domain.calendar.CalendarEntry;
+import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.bleulace.domain.calendar.ParticipationStatus;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
 
@@ -28,11 +27,11 @@ public class DatabasePopulator implements
 		b.setFirstName("Jeff");
 		b = (Account) b.save();
 
-		CalendarEntry entry = new CalendarEntry();
+		JPACalendarEvent entry = new JPACalendarEvent();
 		entry.setCaption("foo");
 		entry.setDescription("bar");
-		entry.setAllDay(true);
-		entry.setStart(new Date());
+		entry.setStart(LocalDateTime.now().plusHours(1).toDate());
+		entry.setEnd(LocalDateTime.now().plusHours(3).toDate());
 		entry.getParticipants().put(a, ParticipationStatus.ACCEPTED);
 
 		EntityManagerReference.get().persist(entry);

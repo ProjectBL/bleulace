@@ -15,11 +15,11 @@ import com.mysema.query.jpa.impl.JPAQuery;
 
 class ParticipantMap implements Map<Account, ParticipationStatus>
 {
-	private final CalendarEntry entry;
+	private final JPACalendarEvent entry;
 
 	private static final QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
 
-	public ParticipantMap(CalendarEntry entry)
+	public ParticipantMap(JPACalendarEvent entry)
 	{
 		Assert.notNull(entry);
 		this.entry = entry;

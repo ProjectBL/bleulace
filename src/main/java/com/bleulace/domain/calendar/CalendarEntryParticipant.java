@@ -35,7 +35,7 @@ public class CalendarEntryParticipant implements
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ENTRY_ID", nullable = false, updatable = false)
-	private CalendarEntry entry;
+	private JPACalendarEvent entry;
 
 	@NotNull
 	@ManyToOne
@@ -52,7 +52,7 @@ public class CalendarEntryParticipant implements
 	{
 	}
 
-	public CalendarEntryParticipant(CalendarEntry entry, Account account,
+	public CalendarEntryParticipant(JPACalendarEvent entry, Account account,
 			ParticipationStatus status)
 	{
 		Assert.noNullElements(new Object[] { entry, account, status },
@@ -62,7 +62,7 @@ public class CalendarEntryParticipant implements
 		this.status = status;
 	}
 
-	public CalendarEntryParticipant(CalendarEntry entry, Account account)
+	public CalendarEntryParticipant(JPACalendarEvent entry, Account account)
 	{
 		this(entry, account, ParticipationStatus.PENDING);
 	}

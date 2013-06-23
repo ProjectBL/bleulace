@@ -4,8 +4,8 @@
 package com.bleulace.domain.calendar;
 
 import com.bleulace.domain.account.Account;
-import com.bleulace.domain.calendar.CalendarEntry;
 import com.bleulace.domain.calendar.CalendarEntryParticipant;
+import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.bleulace.domain.calendar.ParticipationStatus;
 
 privileged aspect CalendarEntryParticipant_Roo_JavaBean {
@@ -18,11 +18,11 @@ privileged aspect CalendarEntryParticipant_Roo_JavaBean {
         this.id = id;
     }
     
-    public CalendarEntry CalendarEntryParticipant.getEntry() {
+    public JPACalendarEvent CalendarEntryParticipant.getEntry() {
         return this.entry;
     }
     
-    public void CalendarEntryParticipant.setEntry(CalendarEntry entry) {
+    public void CalendarEntryParticipant.setEntry(JPACalendarEvent entry) {
         this.entry = entry;
     }
     

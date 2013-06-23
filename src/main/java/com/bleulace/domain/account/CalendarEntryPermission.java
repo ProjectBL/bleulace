@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import org.apache.shiro.authz.permission.DomainPermission;
 import org.springframework.data.domain.Persistable;
 
-import com.bleulace.domain.calendar.CalendarEntry;
+import com.bleulace.domain.calendar.JPACalendarEvent;
 
 @Entity
 public class CalendarEntryPermission extends DomainPermission implements
@@ -23,7 +23,7 @@ public class CalendarEntryPermission extends DomainPermission implements
 	{
 	}
 
-	public CalendarEntryPermission(Account account, CalendarEntry entry)
+	public CalendarEntryPermission(Account account, JPACalendarEvent entry)
 	{
 		super("edit", entry.getId().toString());
 	}

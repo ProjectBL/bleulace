@@ -23,6 +23,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("rawtypes")
@@ -46,9 +47,10 @@ public class AccountField extends CustomField<Collection>
 		table.setSelectable(true);
 		table.setImmediate(true);
 		table.setVisibleColumns(new Object[] { "name" });
-		table.setColumnHeaders(new String[] { "active" });
+		// table.setColumnHeaders(new String[] { "active" });
+		table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		table.addItemClickListener(new TableItemClickListener());
-		table.setWidth("160px");
+		// table.setWidth("160px");
 
 		comboBox.setContainerDataSource(JPAContainerFactory.makeReadOnly(
 				Account.class, entityManager));
@@ -57,6 +59,14 @@ public class AccountField extends CustomField<Collection>
 		comboBox.setWidth("160px");
 		comboBox.setItemCaptionPropertyId("name");
 
+	}
+
+	@Override
+	public void setWidth(String width)
+	{
+		super.setWidth(width);
+		comboBox.setWidth(width);
+		table.setWidth(width);
 	}
 
 	@Override
