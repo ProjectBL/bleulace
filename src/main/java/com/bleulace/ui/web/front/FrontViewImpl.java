@@ -3,8 +3,6 @@ package com.bleulace.ui.web.front;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.shiro.authc.UsernamePasswordToken;
-
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
@@ -75,8 +73,8 @@ public class FrontViewImpl extends CustomComponent implements FrontView
 				{
 					for (FrontViewListener listener : listeners)
 					{
-						listener.onLogin(new UsernamePasswordToken(username
-								.getValue(), password.getValue()));
+						listener.onLogin(username.getValue(),
+								password.getValue());
 					}
 				}
 			});

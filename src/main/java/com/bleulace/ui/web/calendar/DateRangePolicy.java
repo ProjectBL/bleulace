@@ -6,7 +6,7 @@ import org.apache.commons.lang3.Range;
 
 import com.bleulace.ui.web.calendar.CalendarType.RequestDirection;
 
-public interface DateRangePolicy
+interface DateRangePolicy
 {
 	public String getTitle(Date cursor);
 

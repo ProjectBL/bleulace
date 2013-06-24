@@ -22,16 +22,18 @@ import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.domain.Persistable;
 
 import com.bleulace.domain.account.Account;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 
 @Entity
-@Configurable
 public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 {
 	private static final long serialVersionUID = -1433376710685791516L;
@@ -41,6 +43,23 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 	private List<CalendarEntryParticipant> eventParticipants = new ArrayList<CalendarEntryParticipant>();
 
 	private boolean transientFlag = true;
+
+	public JPACalendarEvent()
+	{
+		initializeDefaults();
+	}
+
+	protected void initializeDefaults()
+	{
+		setCaption("");
+		setDescription("");
+
+		LocalDateTime now = LocalDateTime.now();
+
+		setStart(now.plusHours(1).toDate());
+		setEnd(now.plusHours(2).toDate());
+		setAllDay(false);
+	}
 
 	@Override
 	@Id
@@ -56,6 +75,7 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		this.id = id;
 	}
 
+	@NotEmpty
 	@Column
 	@Override
 	public String getCaption()
@@ -70,6 +90,8 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		return super.getDescription();
 	}
 
+	@Future
+	@NotNull
 	@Override
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getStart()
@@ -77,6 +99,8 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		return super.getStart();
 	}
 
+	@Future
+	@NotNull
 	@Override
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getEnd()

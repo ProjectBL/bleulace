@@ -6,7 +6,7 @@ import org.apache.commons.lang3.Range;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 
-public enum CalendarType implements DateRangePolicy
+enum CalendarType implements DateRangePolicy
 {
 	DAY("Day", new TodayDateRangePolicy()), WEEK("Week",
 			new WeekDateRangePolicy()), MONTH("Month",

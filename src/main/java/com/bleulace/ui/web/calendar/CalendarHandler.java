@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.Range;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -18,12 +16,14 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -31,7 +31,6 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnHeaderMode;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -55,9 +54,9 @@ import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 import com.vaadin.ui.themes.Reindeer;
 
 @Configurable
-public class CalendarHandler extends CustomComponent implements
-		EventClickHandler, RangeSelectHandler, EventMoveHandler,
-		EventResizeHandler, DateClickHandler, CloseListener
+class CalendarHandler extends CustomComponent implements EventClickHandler,
+		RangeSelectHandler, EventMoveHandler, EventResizeHandler,
+		DateClickHandler, CloseListener
 {
 	private static final long serialVersionUID = 7715084569870641483L;
 
@@ -73,6 +72,7 @@ public class CalendarHandler extends CustomComponent implements
 	{
 		this.provider = provider;
 		this.type = type;
+		init();
 	}
 
 	public void setCursor(Date cursor)
@@ -179,7 +179,6 @@ public class CalendarHandler extends CustomComponent implements
 				.show("The operation was canceled.", Type.TRAY_NOTIFICATION);
 	}
 
-	@PostConstruct
 	protected void init()
 	{
 		setCompositionRoot(makeCalendar(cursor));
@@ -233,13 +232,21 @@ public class CalendarHandler extends CustomComponent implements
 			fieldGroup.bind(accountField, "accounts");
 			accountField.setWidth("160px");
 
-			TextField tf = fieldGroup.buildAndBind("Title", "caption",
+			TextField caption = fieldGroup.buildAndBind("Title", "caption",
 					TextField.class);
-			tf.setWidth("160px");
+			caption.setWidth("160px");
 
-			TextArea ta = fieldGroup.buildAndBind("Location", "description",
-					TextArea.class);
-			ta.setWidth("160px");
+			TextField description = fieldGroup.buildAndBind("Location",
+					"description", TextField.class);
+			description.setWidth("160px");
+
+			DateField start = fieldGroup.buildAndBind("start time", "start",
+					DateField.class);
+			start.setResolution(Resolution.MINUTE);
+
+			DateField end = fieldGroup.buildAndBind("end time", "end",
+					DateField.class);
+			end.setResolution(Resolution.MINUTE);
 
 			Button submit = new Button("Submit", this);
 			submit.setClickShortcut(KeyCode.ENTER);
@@ -261,8 +268,10 @@ public class CalendarHandler extends CustomComponent implements
 
 			//@formatter:off
 			FormLayout layout = new FormLayout(
-					tf,
-					ta,
+					caption,
+					description,
+					start,
+					end,
 					accountField,
 					new HorizontalLayout(submit,cancel));
 			//@formatter:on

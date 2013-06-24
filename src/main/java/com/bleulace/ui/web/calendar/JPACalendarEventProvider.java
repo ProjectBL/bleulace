@@ -24,7 +24,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeListener
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 
 @Configurable
-public class JPACalendarEventProvider extends BasicEventProvider implements
+class JPACalendarEventProvider extends BasicEventProvider implements
 		EventChangeNotifier
 {
 	private static final long serialVersionUID = 6435174386068732471L;

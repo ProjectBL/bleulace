@@ -2,11 +2,10 @@ package com.bleulace.ui.web.front;
 
 import java.io.Serializable;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 
 import com.bleulace.domain.account.Account;
+import com.bleulace.ui.web.calendar.CalendarView;
 import com.bleulace.ui.web.front.FrontView.FrontViewListener;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
@@ -23,15 +22,15 @@ public class FrontPresenter implements FrontViewListener, Serializable
 	}
 
 	@Override
-	public void onLogin(UsernamePasswordToken token)
+	public void onLogin(String username, String password)
 	{
 		String message = null;
 		try
 		{
 			view.setEnabled(false);
-			SecurityUtils.getSubject().login(token);
-			message = "Welcome back, " + Account.current().getFirstName();
-			UI.getCurrent().getNavigator().navigateTo("calendar");
+			Account account = Account.login(username, password);
+			message = "Welcome back, " + account.getFirstName();
+			UI.getCurrent().getNavigator().navigateTo(CalendarView.NAME);
 		}
 		catch (AuthenticationException e)
 		{

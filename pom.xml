@@ -306,9 +306,35 @@
 			<artifactId>modelmapper</artifactId>
 			<version>0.5.6</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv-dozer</artifactId>
+			<version>2.1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<path>/</path>
+							<!-- optional only if you want to use a preconfigured server.xml file -->
+							<!-- <serverXml>src/main/tomcatconf/server.xml</serverXml> -->
+							<enableNaming>true</enableNaming>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- QueryDSL generator -->
 			<!-- use https://github.com/jbosstools/m2e-apt plugin in eclipse -->
 			<plugin>
@@ -389,12 +415,6 @@
 							<artifactId>messaging</artifactId>
 						</aspectLibrary>
 					</aspectLibraries>
-					<weaveDependencies>
-						<weaveDependency>
-							<groupId>com.vaadin</groupId>
-							<artifactId>vaadin-server</artifactId>
-						</weaveDependency>
-					</weaveDependencies>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
@@ -508,8 +528,10 @@
 				<configuration>
 					<gwtSdkFirstInClasspath>true</gwtSdkFirstInClasspath>
 					<modules>
+					<!-- 
 						<module>com.bleulace.ui.mobile.BleulaceMobileWidgetSet</module>
 						<module>com.bleulace.ui.web.BleulaceWebWidgetSet</module>
+ 					-->
 					</modules>
 					<extraJvmArgs>-Xmx512M -Xss1024k</extraJvmArgs>
 					<!-- <runTarget>mobilemail</runTarget> -->

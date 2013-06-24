@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("rawtypes")
 @Configurable(preConstruction = true)
-public class AccountField extends CustomField<Collection>
+class AccountField extends CustomField<Collection>
 {
 	private static final long serialVersionUID = -945633119002683200L;
 
