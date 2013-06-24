@@ -2,9 +2,11 @@ package com.bleulace.ui.web.calendar;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +20,12 @@ import com.frugalu.api.messaging.jpa.EntityManagerReference;
 import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeListener;
+import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 
-public class JPACalendarEventProvider extends BasicEventProvider
+@Configurable
+public class JPACalendarEventProvider extends BasicEventProvider implements
+		EventChangeNotifier
 {
 	private static final long serialVersionUID = 6435174386068732471L;
 
@@ -27,6 +33,8 @@ public class JPACalendarEventProvider extends BasicEventProvider
 			JPACalendarEvent.class, EntityManagerReference.get());
 
 	private Map<String, CalendarEvent> dirtyMap = new HashMap<String, CalendarEvent>();
+
+	private final List<EventChangeListener> eventChangeListeners = new LinkedList<CalendarEvent.EventChangeListener>();
 
 	private final Account account;
 
@@ -75,6 +83,7 @@ public class JPACalendarEventProvider extends BasicEventProvider
 		super.removeEvent(event);
 	}
 
+	@Transactional
 	public void flushChanges()
 	{
 		for (String id : dirtyMap.keySet())
@@ -98,6 +107,25 @@ public class JPACalendarEventProvider extends BasicEventProvider
 		JPACalendarEvent event = (JPACalendarEvent) changeEvent
 				.getCalendarEvent();
 		dirtyMap.put(event.getId(), event);
+		for (EventChangeListener listener : eventChangeListeners)
+		{
+			listener.eventChange(changeEvent);
+		}
 		super.eventChange(changeEvent);
+	}
+
+	@Override
+	public void addEventChangeListener(EventChangeListener listener)
+	{
+		if (!eventChangeListeners.contains(listener))
+		{
+			eventChangeListeners.add(listener);
+		}
+	}
+
+	@Override
+	public void removeEventChangeListener(EventChangeListener listener)
+	{
+		eventChangeListeners.remove(listener);
 	}
 }

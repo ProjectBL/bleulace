@@ -16,6 +16,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,13 +25,14 @@ import javax.persistence.Transient;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.domain.Persistable;
 
 import com.bleulace.domain.account.Account;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 
 @Entity
 @Configurable
-public class JPACalendarEvent extends BasicEvent
+public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 {
 	private static final long serialVersionUID = -1433376710685791516L;
 
@@ -37,6 +40,9 @@ public class JPACalendarEvent extends BasicEvent
 
 	private List<CalendarEntryParticipant> eventParticipants = new ArrayList<CalendarEntryParticipant>();
 
+	private boolean transientFlag = true;
+
+	@Override
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public String getId()
@@ -126,19 +132,10 @@ public class JPACalendarEvent extends BasicEvent
 		fireEventChange();
 	}
 
-	@PrePersist
-	protected void prePersist()
+	@Override
+	public boolean isNew()
 	{
-		registerOwner();
-	}
-
-	private void registerOwner()
-	{
-		Account executing = Account.current();
-		if (executing != null)
-		{
-			getParticipants().put(executing, ParticipationStatus.HOST);
-		}
+		return isTransientFlag();
 	}
 
 	@Override
@@ -163,5 +160,38 @@ public class JPACalendarEvent extends BasicEvent
 		JPACalendarEvent that = (JPACalendarEvent) obj;
 
 		return null == this.getId() ? false : this.getId().equals(that.getId());
+	}
+
+	@PrePersist
+	protected void prePersist()
+	{
+		registerOwner();
+	}
+
+	@PostPersist
+	@PostLoad
+	protected void postLoadOrPersist()
+	{
+		setTransientFlag(false);
+	}
+
+	private void registerOwner()
+	{
+		Account executing = Account.current();
+		if (executing != null)
+		{
+			getParticipants().put(executing, ParticipationStatus.HOST);
+		}
+	}
+
+	@Transient
+	private boolean isTransientFlag()
+	{
+		return transientFlag;
+	}
+
+	private void setTransientFlag(boolean transientFlag)
+	{
+		this.transientFlag = transientFlag;
 	}
 }

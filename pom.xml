@@ -389,6 +389,12 @@
 							<artifactId>messaging</artifactId>
 						</aspectLibrary>
 					</aspectLibraries>
+					<weaveDependencies>
+						<weaveDependency>
+							<groupId>com.vaadin</groupId>
+							<artifactId>vaadin-server</artifactId>
+						</weaveDependency>
+					</weaveDependencies>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
