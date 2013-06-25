@@ -15,24 +15,23 @@ class CalendarComponent extends CustomComponent implements
 {
 	private static final long serialVersionUID = -1466918535763058564L;
 
-	private final Map<CalendarType, CalendarHandler> handlers = new HashMap<CalendarType, CalendarHandler>();
+	private final Map<CalendarType, Tab> tabs = new HashMap<CalendarType, Tab>();
+
+	private final TabSheet tabSheet = new TabSheet();
 
 	public CalendarComponent()
 	{
 		JPACalendarEventProvider provider = new JPACalendarEventProvider(
-				Account.current());
-
-		TabSheet tabSheet = new TabSheet();
+				new AccountCalendarEventProvider(Account.current()));
 
 		for (CalendarType type : CalendarType.values())
 		{
 			CalendarHandler handler = new CalendarHandler(provider, type);
-
 			handler.addListener(this);
-			handlers.put(type, handler);
 
 			Tab tab = tabSheet.addTab(handler);
 			tab.setCaption(type.toString());
+			tabs.put(type, tab);
 		}
 
 		setCompositionRoot(tabSheet);
@@ -41,9 +40,10 @@ class CalendarComponent extends CustomComponent implements
 	@Override
 	public void onCursorSet(Date cursor)
 	{
-		for (CalendarType key : handlers.keySet())
+		for (CalendarType key : tabs.keySet())
 		{
-			handlers.get(key).setCursor(cursor);
+			((CalendarHandler) tabs.get(key).getComponent()).setCursor(cursor);
 		}
+		tabSheet.setSelectedTab(tabs.get(CalendarType.DAY));
 	}
 }

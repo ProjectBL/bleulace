@@ -1,8 +1,8 @@
 package com.bleulace.ui.web;
 
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Configurable;
 
+import com.bleulace.domain.account.Account;
 import com.bleulace.ui.web.calendar.CalendarView;
 import com.bleulace.ui.web.front.FrontView;
 import com.vaadin.annotations.Widgetset;
@@ -23,10 +23,8 @@ public class BleulaceWebUI extends UI
 		getNavigator().addView(FrontView.NAME, FrontView.VIEW);
 		getNavigator().addView(CalendarView.NAME, CalendarView.class);
 
-		if (SecurityUtils.getSubject().isAuthenticated())
-		{
-			getNavigator().navigateTo(CalendarView.NAME);
-		}
-		getNavigator().navigateTo(FrontView.NAME);
+		Account.login("arleighdickerson@frugalu.com", "password");
+
+		getNavigator().navigateTo(CalendarView.NAME);
 	}
 }

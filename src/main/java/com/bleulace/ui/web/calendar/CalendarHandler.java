@@ -78,6 +78,7 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 	public void setCursor(Date cursor)
 	{
 		this.cursor = cursor;
+		init();
 	}
 
 	@Override
@@ -117,10 +118,8 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 		if (!(event.getNewEnd().equals(calendarEvent.getEnd()) && event
 				.getNewStart().equals(calendarEvent.getStart())))
 		{
-			UI.getCurrent().addWindow(
-					new RescheduleModal(event.getCalendarEvent(), event
-							.getNewStart(), event.getNewEnd(), event
-							.getComponent()));
+			reschedule(calendarEvent, event.getNewStart(), event.getNewEnd(),
+					event.getComponent());
 		}
 	}
 
@@ -138,9 +137,8 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 			Date newEnd = LocalDateTime.fromDateFields(event.getNewStart())
 					.plus(difference).toDate();
 
-			UI.getCurrent().addWindow(
-					new RescheduleModal(event.getCalendarEvent(), event
-							.getNewStart(), newEnd, event.getComponent()));
+			reschedule(event.getCalendarEvent(), event.getNewStart(), newEnd,
+					event.getComponent());
 		}
 	}
 
@@ -150,6 +148,37 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 		{
 			listeners.add(listener);
 		}
+	}
+
+	private void reschedule(CalendarEvent event, Date newStart, Date newEnd,
+			Calendar calendar)
+	{
+		if (isFuture(event.getStart(), event.getEnd(), newStart, newEnd))
+		{
+			UI.getCurrent().addWindow(
+					new RescheduleModal(event, newStart, newEnd, calendar));
+		}
+		else
+		{
+			Notification
+					.show("Abort",
+							"The event has already occurred or is being scheduled to occur in the past.",
+							Type.WARNING_MESSAGE);
+			calendar.markAsDirty();
+		}
+	}
+
+	private boolean isFuture(Date... dates)
+	{
+		LocalDateTime now = LocalDateTime.now();
+		for (Date date : dates)
+		{
+			if (LocalDateTime.fromDateFields(date).isBefore(now))
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void showEventCreatedMessage(CalendarEvent event)
@@ -354,8 +383,6 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 						{
 							close();
 							showOperationCanceledMessage(event);
-							calendar.markAsDirty();
-
 						}
 					}))));
 		}
@@ -371,11 +398,6 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 		}
 	}
 
-	interface CalendarHandlerListener
-	{
-		public void onCursorSet(Date cursor);
-	}
-
 	public CloseListener getCloseListener()
 	{
 		return this;
@@ -385,5 +407,10 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 	public void windowClose(CloseEvent e)
 	{
 		init();
+	}
+
+	interface CalendarHandlerListener
+	{
+		public void onCursorSet(Date cursor);
 	}
 }

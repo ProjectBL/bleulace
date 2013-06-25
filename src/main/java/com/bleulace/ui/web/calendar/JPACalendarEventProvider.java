@@ -1,48 +1,64 @@
 package com.bleulace.ui.web.calendar;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
-import com.bleulace.domain.QueryFactory;
-import com.bleulace.domain.account.Account;
 import com.bleulace.domain.calendar.JPACalendarEvent;
-import com.bleulace.domain.calendar.QCalendarEntryParticipant;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
 import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeListener;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
-@Configurable
 class JPACalendarEventProvider extends BasicEventProvider implements
 		EventChangeNotifier
 {
 	private static final long serialVersionUID = 6435174386068732471L;
 
-	private JpaRepository<JPACalendarEvent, String> repository = new SimpleJpaRepository<JPACalendarEvent, String>(
+	private transient JpaRepository<JPACalendarEvent, String> repository = new SimpleJpaRepository<JPACalendarEvent, String>(
 			JPACalendarEvent.class, EntityManagerReference.get());
 
 	private Map<String, CalendarEvent> dirtyMap = new HashMap<String, CalendarEvent>();
 
 	private final List<EventChangeListener> eventChangeListeners = new LinkedList<CalendarEvent.EventChangeListener>();
 
-	private final Account account;
+	private CalendarEventProvider delegate;
 
-	public JPACalendarEventProvider(Account account)
+	private CalendarEventPostProcessor postProcessor = new DoNothingPostProcessor();
+
+	public JPACalendarEventProvider(CalendarEventProvider delegate)
 	{
-		Assert.notNull(account);
-		Assert.isTrue(!account.isNew());
-		this.account = account;
+		this.delegate = delegate;
+	}
+
+	public CalendarEventProvider getDelegate()
+	{
+		return delegate;
+	}
+
+	public void setDelegate(CalendarEventProvider delegate)
+	{
+		this.delegate = delegate;
+	}
+
+	public CalendarEventPostProcessor getPostProcessor()
+	{
+		return postProcessor;
+	}
+
+	public void setPostProcessor(CalendarEventPostProcessor postProcessor)
+	{
+		this.postProcessor = postProcessor;
 	}
 
 	@Override
@@ -51,15 +67,10 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 	{
 		flushChanges();
 		eventList.clear();
-		QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
-		for (JPACalendarEvent event : QueryFactory
-				.from(p)
-				.where(p.entry.start.after(startDate)
-						.or(p.entry.end.before(endDate))
-						.and(p.account.id.eq(account.getId())))
-				.listResults(p.entry).getResults())
+		for (CalendarEvent event : delegate.getEvents(startDate, endDate))
 		{
-			if (!eventList.contains(event))
+			event = postProcessor.process(event, startDate, endDate);
+			if (event != null)
 			{
 				super.addEvent(event);
 			}
@@ -68,7 +79,7 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 	}
 
 	@Override
-	public void addEvent(CalendarEvent event)
+	public final void addEvent(CalendarEvent event)
 	{
 		JPACalendarEvent jpaEvent = (JPACalendarEvent) event;
 		dirtyMap.put(jpaEvent.getId(), event);
@@ -76,33 +87,15 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 	}
 
 	@Override
-	public void removeEvent(CalendarEvent event)
+	public final void removeEvent(CalendarEvent event)
 	{
 		JPACalendarEvent jpaEvent = (JPACalendarEvent) event;
 		dirtyMap.put(jpaEvent.getId(), null);
 		super.removeEvent(event);
 	}
 
-	@Transactional
-	public void flushChanges()
-	{
-		for (String id : dirtyMap.keySet())
-		{
-			JPACalendarEvent event = (JPACalendarEvent) dirtyMap.get(id);
-			if (event == null)
-			{
-				repository.delete(id);
-			}
-			else
-			{
-				repository.save(event);
-			}
-			dirtyMap.remove(id);
-		}
-	}
-
 	@Override
-	public void eventChange(EventChangeEvent changeEvent)
+	public final void eventChange(EventChangeEvent changeEvent)
 	{
 		JPACalendarEvent event = (JPACalendarEvent) changeEvent
 				.getCalendarEvent();
@@ -123,9 +116,44 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 		}
 	}
 
+	public interface CalendarEventPostProcessor extends Serializable
+	{
+		public CalendarEvent process(CalendarEvent event, Date start, Date end);
+	}
+
 	@Override
 	public void removeEventChangeListener(EventChangeListener listener)
 	{
 		eventChangeListeners.remove(listener);
+	}
+
+	@Transactional
+	private void flushChanges()
+	{
+		for (String id : dirtyMap.keySet())
+		{
+			JPACalendarEvent event = (JPACalendarEvent) dirtyMap.get(id);
+			if (event == null)
+			{
+				repository.delete(id);
+			}
+			else
+			{
+				repository.save(event);
+			}
+			dirtyMap.remove(id);
+		}
+	}
+
+	private static class DoNothingPostProcessor implements
+			CalendarEventPostProcessor
+	{
+		private static final long serialVersionUID = 3586376177403362614L;
+
+		@Override
+		public CalendarEvent process(CalendarEvent event, Date start, Date end)
+		{
+			return event;
+		}
 	}
 }
