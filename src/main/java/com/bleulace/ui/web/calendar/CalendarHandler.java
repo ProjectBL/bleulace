@@ -8,7 +8,6 @@ import org.apache.commons.lang3.Range;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -93,21 +92,43 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 	@Override
 	public void eventClick(EventClick event)
 	{
-		UI.getCurrent().addWindow(
-				new EventEditor((JPACalendarEvent) event.getCalendarEvent(),
-						event.getComponent()));
+		if (!isFuture(event.getCalendarEvent().getEnd()))
+		{
+			Notification.show("Abort",
+					"Can not an event which has already occurred",
+					Type.WARNING_MESSAGE);
+			return;
+		}
+		Window window = new EventEditor(
+				(JPACalendarEvent) event.getCalendarEvent(),
+				event.getComponent());
+		UI.getCurrent().addWindow(window);
+		window.focus();
 	}
 
 	@Override
 	public void rangeSelect(RangeSelectEvent event)
 	{
 		JPACalendarEvent calendarEvent = new JPACalendarEvent();
+
+		Date start = event.getStart();
+		Date end = event.getEnd();
+
+		if (!isFuture(start, end))
+		{
+			Notification.show("Abort", "Can not create events in the past.",
+					Type.WARNING_MESSAGE);
+			return;
+		}
+
 		calendarEvent.setStart(event.getStart());
 		calendarEvent.setEnd(event.getEnd());
-		EventEditor editor = new EventEditor(calendarEvent,
-				event.getComponent());
+
+		Window editor = new EventEditor(calendarEvent, event.getComponent());
 		editor.setCaption("Create Event");
 		UI.getCurrent().addWindow(editor);
+		editor.focus();
+		setCursor(event.getStart());
 	}
 
 	@Override
@@ -155,8 +176,10 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 	{
 		if (isFuture(event.getStart(), event.getEnd(), newStart, newEnd))
 		{
-			UI.getCurrent().addWindow(
-					new RescheduleModal(event, newStart, newEnd, calendar));
+			Window window = new RescheduleModal(event, newStart, newEnd,
+					calendar);
+			UI.getCurrent().addWindow(window);
+			window.focus();
 		}
 		else
 		{
@@ -208,6 +231,12 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 				.show("The operation was canceled.", Type.TRAY_NOTIFICATION);
 	}
 
+	private void showEventDeletedMessage(CalendarEvent event)
+	{
+		String caption = event.getCaption() + " has been deleted.";
+		Notification.show(caption, Type.TRAY_NOTIFICATION);
+	}
+
 	protected void init()
 	{
 		setCompositionRoot(makeCalendar(cursor));
@@ -227,6 +256,7 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 		Calendar calendar = new Calendar(provider);
 		calendar.setImmediate(true);
 		calendar.setSizeFull();
+		calendar.setHeight("800px");
 		calendar.setHandler((DateClickHandler) this);
 		calendar.setHandler((EventResizeHandler) this);
 		calendar.setHandler((EventMoveHandler) this);
@@ -277,8 +307,30 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 					DateField.class);
 			end.setResolution(Resolution.MINUTE);
 
-			Button submit = new Button("Submit", this);
+			Button submit = new Button("Save", this);
 			submit.setClickShortcut(KeyCode.ENTER);
+
+			HorizontalLayout buttons = new HorizontalLayout(submit);
+
+			if (!event.isNew())
+			{
+				Button delete = new Button("Delete", new Button.ClickListener()
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public void buttonClick(ClickEvent event)
+					{
+						CalendarEvent calendarEvent = fieldGroup
+								.getItemDataSource().getBean();
+						showEventDeletedMessage(calendarEvent);
+						calendar.removeEvent(calendarEvent);
+						close();
+					}
+				});
+				delete.setClickShortcut(KeyCode.DELETE);
+				buttons.addComponent(delete);
+			}
 
 			Button cancel = new Button("Cancel", new Button.ClickListener()
 			{
@@ -289,11 +341,11 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 				{
 					showOperationCanceledMessage(fieldGroup.getItemDataSource()
 							.getBean());
-					calendar.markAsDirty();
 					close();
 				}
 			});
 			cancel.setClickShortcut(KeyCode.ESCAPE);
+			buttons.addComponent(cancel);
 
 			//@formatter:off
 			FormLayout layout = new FormLayout(
@@ -302,13 +354,12 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 					start,
 					end,
 					accountField,
-					new HorizontalLayout(submit,cancel));
+					buttons);
 			//@formatter:on
 			setContent(layout);
 		}
 
 		@Override
-		@Transactional
 		public void buttonClick(ClickEvent event)
 		{
 			try
@@ -370,21 +421,25 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 			table.setColumnHeaders(new String[] { "caption", "start", "end" });
 			table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 
+			Button submit = new Button("Submit", this);
+			submit.setClickShortcut(KeyCode.ENTER);
+
+			Button cancel = new Button("Cancel", new Button.ClickListener()
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void buttonClick(ClickEvent e)
+				{
+					close();
+					showOperationCanceledMessage(event);
+				}
+			});
+			cancel.setClickShortcut(KeyCode.ESCAPE);
+
 			setContent(new VerticalLayout(new Label(
 					"Are you sure you want to reschedule " + event.getCaption()
-							+ "?"), table, new HorizontalLayout(new Button(
-					"Submit", this), new Button("Cancel",
-					new Button.ClickListener()
-					{
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						public void buttonClick(ClickEvent e)
-						{
-							close();
-							showOperationCanceledMessage(event);
-						}
-					}))));
+							+ "?"), table, new HorizontalLayout(submit, cancel)));
 		}
 
 		@Override
