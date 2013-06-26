@@ -6,11 +6,14 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 
 import com.bleulace.domain.account.Account;
+import com.bleulace.domain.calendar.CalendarEntryParticipant;
+import com.frugalu.api.messaging.jpa.EntityManagerReference;
 
 public class JpaRealm extends AuthorizingRealm
 {
@@ -45,7 +48,31 @@ public class JpaRealm extends AuthorizingRealm
 	protected AuthorizationInfo doGetAuthorizationInfo(
 			PrincipalCollection principalCollection)
 	{
-		// TODO Auto-generated method stub
+		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+		Account account = EntityManagerReference.get().getReference(
+				Account.class, principalCollection.getPrimaryPrincipal());
+		for (CalendarEntryParticipant participation : CalendarEntryParticipant
+				.findByAccounts(account))
+		{
+			String permissionString = getPermission(participation);
+			if (participation != null)
+			{
+				info.addStringPermission(permissionString);
+			}
+		}
+		return info;
+	}
+
+	private String getPermission(CalendarEntryParticipant participation)
+	{
+		switch (participation.getStatus())
+		{
+		case HOST:
+		case ACCEPTED:
+		case DECLINED:
+		case PENDING:
+		default:
+		}
 		return null;
 	}
 }

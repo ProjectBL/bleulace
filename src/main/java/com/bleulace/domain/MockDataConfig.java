@@ -1,7 +1,5 @@
 package com.bleulace.domain;
 
-import java.util.Iterator;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -16,7 +14,7 @@ import com.bleulace.utils.CsvIterator;
 public class MockDataConfig
 {
 	@Bean(name = "mockAccountIterator")
-	public Iterator<Account> mockAccountIterator()
+	public Iterable<Account> mockAccountIterator()
 	{
 		return new CsvIterator<Account>(Account.class, new String[] { "email",
 				"password", "firstName", "lastName" },

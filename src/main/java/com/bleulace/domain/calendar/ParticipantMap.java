@@ -150,6 +150,7 @@ class ParticipantMap implements Map<Account, ParticipationStatus>
 
 	private CalendarEntryParticipant findOne(Account account)
 	{
-		return makeQuery().where(p.account.eq(account)).singleResult(p);
+		return makeQuery().where(p.account.eq(account).and(p.entry.eq(entry)))
+				.singleResult(p);
 	}
 }

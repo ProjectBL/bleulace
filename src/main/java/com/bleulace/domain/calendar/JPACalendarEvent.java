@@ -30,6 +30,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDateTime;
 import org.springframework.data.domain.Persistable;
 
+import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.account.Account;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 
@@ -46,19 +47,8 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 
 	public JPACalendarEvent()
 	{
+		super();
 		initializeDefaults();
-	}
-
-	protected void initializeDefaults()
-	{
-		setCaption("");
-		setDescription("");
-
-		LocalDateTime now = LocalDateTime.now();
-
-		setStart(now.plusHours(1).toDate());
-		setEnd(now.plusHours(2).toDate());
-		setAllDay(false);
 	}
 
 	@Override
@@ -186,6 +176,18 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		return null == this.getId() ? false : this.getId().equals(that.getId());
 	}
 
+	protected void initializeDefaults()
+	{
+		setCaption("");
+		setDescription("");
+
+		LocalDateTime now = LocalDateTime.now();
+
+		setStart(now.plusHours(1).toDate());
+		setEnd(now.plusHours(2).toDate());
+		setAllDay(false);
+	}
+
 	@PrePersist
 	protected void prePersist()
 	{
@@ -217,5 +219,11 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 	private void setTransientFlag(boolean transientFlag)
 	{
 		this.transientFlag = transientFlag;
+	}
+
+	public static List<JPACalendarEvent> findByAccounts(Account... accounts)
+	{
+		QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
+		return QueryFactory.from(p).where(p.account.in(accounts)).list(p.entry);
 	}
 }

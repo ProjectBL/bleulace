@@ -1,0 +1,17 @@
+@import "../reindeer/reindeer.scss";
+
+@mixin bleulacetheme {
+  @include reindeer;
+  .v-calendar .v-calendar-event-accepted{
+  	background : green;
+  }
+  .v-calendar .v-calendar-event-declined{
+  	background : red;
+  }
+  .v-calendar .v-calendar-event-pending{
+  	background : blue;
+  }
+  .v-calendar .v-calendar-event-private{
+  	background : darkred;
+  }
+}

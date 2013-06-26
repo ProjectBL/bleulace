@@ -2,9 +2,8 @@ package com.bleulace.domain.calendar;
 
 public enum ParticipationStatus
 {
-	PENDING("Pending", null), ACCEPTED("Accepted", null), DECLINED("Declined",
-			null), RESCHEDULE_REQUESTED("Reschedule requested", null), HOST(
-			"Host", null);
+	PENDING("Pending", "pending"), ACCEPTED("Accepted", "accepted"), DECLINED(
+			"Declined", "declined"), HOST("Host", "accepted");
 
 	private final String displayName;
 

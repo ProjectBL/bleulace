@@ -10,6 +10,7 @@ import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
@@ -38,6 +39,7 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 
 	public JPACalendarEventProvider(CalendarEventProvider delegate)
 	{
+		Assert.notNull(delegate);
 		this.delegate = delegate;
 	}
 
@@ -46,9 +48,10 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 		return delegate;
 	}
 
-	public void setDelegate(CalendarEventProvider delegate)
+	public JPACalendarEventProvider setDelegate(CalendarEventProvider delegate)
 	{
 		this.delegate = delegate;
+		return this;
 	}
 
 	public CalendarEventPostProcessor getPostProcessor()
@@ -56,9 +59,11 @@ class JPACalendarEventProvider extends BasicEventProvider implements
 		return postProcessor;
 	}
 
-	public void setPostProcessor(CalendarEventPostProcessor postProcessor)
+	public JPACalendarEventProvider setPostProcessor(
+			CalendarEventPostProcessor postProcessor)
 	{
 		this.postProcessor = postProcessor;
+		return this;
 	}
 
 	@Override

@@ -47,10 +47,8 @@ class AccountField extends CustomField<Collection>
 		table.setSelectable(true);
 		table.setImmediate(true);
 		table.setVisibleColumns(new Object[] { "name" });
-		// table.setColumnHeaders(new String[] { "active" });
 		table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		table.addItemClickListener(new TableItemClickListener());
-		// table.setWidth("160px");
 
 		comboBox.setContainerDataSource(JPAContainerFactory.makeReadOnly(
 				Account.class, entityManager));
@@ -120,6 +118,16 @@ class AccountField extends CustomField<Collection>
 		@Override
 		public void itemClick(ItemClickEvent event)
 		{
+			Account current = Account.current();
+			if (current != null)
+			{
+				String userId = (String) event.getItem().getItemProperty("id")
+						.getValue();
+				if (current.getId().equals(userId))
+				{
+					return;
+				}
+			}
 			if (event.isDoubleClick())
 			{
 				BeanItem<Account> item = (BeanItem<Account>) event.getItem();

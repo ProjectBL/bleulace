@@ -21,8 +21,10 @@ class CalendarComponent extends CustomComponent implements
 
 	public CalendarComponent()
 	{
+		AccountCalendarEventProvider delegate = new AccountCalendarEventProvider(
+				Account.current());
 		JPACalendarEventProvider provider = new JPACalendarEventProvider(
-				new AccountCalendarEventProvider(Account.current()));
+				delegate).setPostProcessor(delegate);
 
 		for (CalendarType type : CalendarType.values())
 		{

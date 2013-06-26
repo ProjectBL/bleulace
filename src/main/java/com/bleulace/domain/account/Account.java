@@ -77,6 +77,12 @@ public class Account extends AggregateRoot
 		return QueryFactory.from(a).where(a.email.eq(email)).uniqueResult(a);
 	}
 
+	@Transactional(readOnly = true)
+	public static Account findById(String id)
+	{
+		return EntityManagerReference.get().find(Account.class, id);
+	}
+
 	@Subscribe
 	public void subscribe(AccountRegistrationPayload command)
 	{
@@ -96,14 +102,16 @@ public class Account extends AggregateRoot
 		try
 		{
 			Object id = SecurityUtils.getSubject().getPrincipal();
-			return id == null ? null : EntityManagerReference.get()
-					.getReference(Account.class, id);
+			if (id != null)
+			{
+				return EntityManagerReference.get().getReference(Account.class,
+						id);
+			}
 		}
 		catch (UnavailableSecurityManagerException e)
 		{
-			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 	public static List<Account> findAll()

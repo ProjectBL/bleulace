@@ -1,5 +1,6 @@
 package com.bleulace.domain.calendar;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
+import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.account.Account;
 
 @Entity
@@ -140,5 +142,12 @@ public class CalendarEntryParticipant implements
 			return false;
 		}
 		return true;
+	}
+
+	public static List<CalendarEntryParticipant> findByAccounts(
+			Account... account)
+	{
+		QCalendarEntryParticipant p = QCalendarEntryParticipant.calendarEntryParticipant;
+		return QueryFactory.from(p).where(p.account.in(account)).list(p);
 	}
 }
