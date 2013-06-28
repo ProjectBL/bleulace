@@ -55,15 +55,18 @@ public class DatabasePopulator implements
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent)
 	{
-		Iterator<Account> it = accountData.iterator();
-		for (int i = 0; i < NUMBER_OF_ACCOUNTS; i++)
+		if (accountDAO.count() < NUMBER_OF_ACCOUNTS)
 		{
-			accounts.add(accountDAO.save(it.next()));
-		}
+			Iterator<Account> it = accountData.iterator();
+			for (int i = 0; i < NUMBER_OF_ACCOUNTS; i++)
+			{
+				accounts.add(accountDAO.save(it.next()));
+			}
 
-		for (Account host : accounts)
-		{
-			addParticipants(makeEventForHost(host));
+			for (Account host : accounts)
+			{
+				addParticipants(makeEventForHost(host));
+			}
 		}
 	}
 

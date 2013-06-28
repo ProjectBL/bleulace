@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.SecurityUtils;
@@ -59,6 +60,7 @@ public class Account extends AbstractPersistable<Long>
 		this.salt = encryptor.getSalt();
 	}
 
+	@Transient
 	public String getName()
 	{
 		return firstName + " " + lastName;

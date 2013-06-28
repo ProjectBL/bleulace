@@ -2,11 +2,11 @@ package com.bleulace.ui.web.front;
 
 import java.io.Serializable;
 
-import org.apache.shiro.authc.AuthenticationException;
-
 import com.bleulace.domain.account.Account;
+import com.bleulace.domain.account.messaging.LoginCommand;
 import com.bleulace.ui.web.calendar.CalendarView;
 import com.bleulace.ui.web.front.FrontView.FrontViewListener;
+import com.bleulace.utils.CommandFactory;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
@@ -24,23 +24,20 @@ public class FrontPresenter implements FrontViewListener, Serializable
 	@Override
 	public void onLogin(String username, String password)
 	{
-		String message = null;
-		try
+		view.setEnabled(false);
+		view.setEnabled(false);
+		boolean result = CommandFactory
+				.make(new LoginCommand(username, password), Boolean.class)
+				.send().getFirstResult();
+		view.setEnabled(true);
+		String message = result ? "Welcome back, "
+				+ Account.current().getFirstName() + "." : "Access Denied.";
+		Notification.show(message);
+		if (result)
 		{
-			view.setEnabled(false);
-			Account account = Account.login(username, password);
-			message = "Welcome back, " + account.getFirstName();
 			UI.getCurrent().getNavigator().navigateTo(CalendarView.NAME);
 		}
-		catch (AuthenticationException e)
-		{
-			message = "Login Failed";
-		}
-		finally
-		{
-			Notification.show(message);
-			view.setEnabled(true);
-		}
+
 	}
 
 	@Override

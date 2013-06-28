@@ -47,7 +47,7 @@ public class BasePersistenceConfig
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 		factoryBean.setPersistenceUnitName("persistenceUnit");
-		factoryBean.setPackagesToScan("com.bleulace.domain");
+		factoryBean.setPackagesToScan("com.bleulace");
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setJpaPropertyMap(allProps);
 		factoryBean.setPersistenceProvider(new PersistenceProvider());

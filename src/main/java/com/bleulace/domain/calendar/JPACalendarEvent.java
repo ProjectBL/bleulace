@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -28,6 +29,7 @@ import javax.validation.constraints.NotNull;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.LocalDateTime;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
 import com.bleulace.domain.QueryFactory;
@@ -39,11 +41,11 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 {
 	private static final long serialVersionUID = -1433376710685791516L;
 
+	private JPACalendarEvent persistentValues = null;
+
 	private String id = UUID.randomUUID().toString();
 
 	private List<CalendarEntryParticipant> eventParticipants = new ArrayList<CalendarEntryParticipant>();
-
-	private boolean transientFlag = true;
 
 	public JPACalendarEvent()
 	{
@@ -118,6 +120,22 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		return new ParticipantMap(this);
 	}
 
+	public void setParticipants(Map<Account, ParticipationStatus> participants)
+	{
+		for (Account account : getParticipants().keySet())
+		{
+			if (!participants.keySet().contains(account))
+			{
+				getParticipants().remove(account);
+			}
+		}
+
+		for (Account account : participants.keySet())
+		{
+			getParticipants().put(account, participants.get(account));
+		}
+	}
+
 	@Transient
 	public Collection<Account> getAccounts()
 	{
@@ -149,7 +167,7 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 	@Override
 	public boolean isNew()
 	{
-		return isTransientFlag();
+		return persistentValues == null;
 	}
 
 	@Override
@@ -191,17 +209,27 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 	@PrePersist
 	protected void prePersist()
 	{
-		registerOwner();
+		registerHost();
 	}
 
 	@PostPersist
 	@PostLoad
 	protected void postLoadOrPersist()
 	{
-		setTransientFlag(false);
+		persistentValues = new ModelMapper().map(this, JPACalendarEvent.class);
 	}
 
-	private void registerOwner()
+	@PreUpdate
+	protected void preUpdate()
+	{
+		if (isRescheduled())
+		{
+			resetRSVPs();
+			registerHost();
+		}
+	}
+
+	private void registerHost()
 	{
 		Account executing = Account.current();
 		if (executing != null)
@@ -210,15 +238,24 @@ public class JPACalendarEvent extends BasicEvent implements Persistable<String>
 		}
 	}
 
-	@Transient
-	private boolean isTransientFlag()
+	private void resetRSVPs()
 	{
-		return transientFlag;
+		for (Account participant : getParticipants().keySet())
+		{
+			ParticipationStatus status = getParticipants().get(participant);
+			if (status.equals(ParticipationStatus.ACCEPTED)
+					|| status.equals(ParticipationStatus.HOST))
+			{
+				getParticipants().put(participant, ParticipationStatus.PENDING);
+			}
+		}
 	}
 
-	private void setTransientFlag(boolean transientFlag)
+	private boolean isRescheduled()
 	{
-		this.transientFlag = transientFlag;
+		return persistentValues == null
+				|| !getStart().equals(persistentValues.getStart())
+				|| !getEnd().equals(persistentValues.getEnd());
 	}
 
 	public static List<JPACalendarEvent> findByAccounts(Account... accounts)

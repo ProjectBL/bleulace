@@ -287,8 +287,8 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 			setModal(true);
 			setWidth("300px");
 
-			AccountField accountField = new AccountField("Participants");
-			fieldGroup.bind(accountField, "accounts");
+			ParticipationField accountField = new ParticipationField(event);
+			fieldGroup.bind(accountField, "participants");
 			accountField.setWidth("160px");
 
 			TextField caption = fieldGroup.buildAndBind("Title", "caption",

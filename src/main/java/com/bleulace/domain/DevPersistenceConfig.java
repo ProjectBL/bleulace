@@ -22,7 +22,7 @@ public class DevPersistenceConfig implements PersistenceProfile
 	{
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(Driver.class.getName());
-		dataSource.setUrl("jdbc:h2:mem:bluelace;DB_CLOSE_ON_EXIT=FALSE");
+		dataSource.setUrl("jdbc:h2:~/bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("");
 		dataSource.setTestOnBorrow(true);
@@ -40,9 +40,9 @@ public class DevPersistenceConfig implements PersistenceProfile
 	{
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("eclipselink.target-database", HSQLPlatform.class.getName());
-		props.put("eclipselink.logging.level.sql", "INFO");
-		// props.put("eclipselink.logging.parameters", "true");
-		props.put("eclipselink.ddl-generation", "drop-and-create-tables");
+		props.put("eclipselink.logging.level.sql", "FINE");
+		props.put("eclipselink.logging.parameters", "true");
+		props.put("eclipselink.ddl-generation", "create-or-extend-tables");
 		return props;
 	}
 }
