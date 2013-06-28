@@ -38,7 +38,7 @@ class AccountField extends CustomField<Collection>
 	private final Table table = new Table();
 	private final ComboBox comboBox = new ComboBox();
 
-	private final BeanContainer<String, Account> tableContainer = makeContainer();
+	private final BeanContainer<Long, Account> tableContainer = makeContainer();
 
 	public AccountField(String caption)
 	{
@@ -121,7 +121,7 @@ class AccountField extends CustomField<Collection>
 			Account current = Account.current();
 			if (current != null)
 			{
-				String userId = (String) event.getItem().getItemProperty("id")
+				Long userId = (Long) event.getItem().getItemProperty("id")
 						.getValue();
 				if (current.getId().equals(userId))
 				{
@@ -137,17 +137,17 @@ class AccountField extends CustomField<Collection>
 
 	}
 
-	private BeanContainer<String, Account> makeContainer()
+	private BeanContainer<Long, Account> makeContainer()
 	{
-		BeanContainer<String, Account> container = new BeanContainer<String, Account>(
+		BeanContainer<Long, Account> container = new BeanContainer<Long, Account>(
 				Account.class);
 		container.setBeanIdProperty("id");
-		container.setBeanIdResolver(new BeanIdResolver<String, Account>()
+		container.setBeanIdResolver(new BeanIdResolver<Long, Account>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public String getIdForBean(Account bean)
+			public Long getIdForBean(Account bean)
 			{
 				return bean.getId();
 			}

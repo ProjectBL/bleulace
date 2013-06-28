@@ -5,8 +5,8 @@ package com.bleulace.domain.message;
 
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.message.Message;
+import java.util.Date;
 import java.util.List;
-import org.joda.time.LocalDateTime;
 
 privileged aspect Message_Roo_JavaBean {
     
@@ -26,11 +26,11 @@ privileged aspect Message_Roo_JavaBean {
         this.body = body;
     }
     
-    public LocalDateTime Message.getSendTime() {
+    public Date Message.getSendTime() {
         return this.sendTime;
     }
     
-    public void Message.setSendTime(LocalDateTime sendTime) {
+    public void Message.setSendTime(Date sendTime) {
         this.sendTime = sendTime;
     }
     

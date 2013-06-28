@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -39,22 +40,36 @@ public class DatabasePopulator implements
 
 	private final Random random = new Random(System.currentTimeMillis());
 
+	private JpaRepository<Account, String> accountDAO;
+
+	private static final Integer NUMBER_OF_ACCOUNTS = 20;
+
+	@PostConstruct
+	protected void init()
+	{
+		accountDAO = new SimpleJpaRepository<Account, String>(Account.class,
+				entityManager);
+	}
+
 	@Override
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent)
 	{
-		JpaRepository<Account, String> repo = new SimpleJpaRepository<Account, String>(
-				Account.class, entityManager);
 		Iterator<Account> it = accountData.iterator();
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < NUMBER_OF_ACCOUNTS; i++)
 		{
-			accounts.add(repo.save(it.next()));
+			accounts.add(accountDAO.save(it.next()));
 		}
 
 		for (Account host : accounts)
 		{
 			addParticipants(makeEventForHost(host));
 		}
+	}
+
+	protected boolean shouldPopulate()
+	{
+		return accountDAO.count() < NUMBER_OF_ACCOUNTS;
 	}
 
 	private JPACalendarEvent makeEventForHost(Account host)

@@ -13,19 +13,19 @@ import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.project.Task;
 import com.bleulace.security.Encryptor;
-import com.frugalu.api.messaging.jpa.AggregateRoot;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
 import com.google.common.eventbus.Subscribe;
 
 @Entity
 @RooJavaBean
-public class Account extends AggregateRoot
+public class Account extends AbstractPersistable<Long>
 {
 	private static final long serialVersionUID = -8047989744778433448L;
 
@@ -78,7 +78,7 @@ public class Account extends AggregateRoot
 	}
 
 	@Transactional(readOnly = true)
-	public static Account findById(String id)
+	public static Account findById(Long id)
 	{
 		return EntityManagerReference.get().find(Account.class, id);
 	}

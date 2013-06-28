@@ -1,23 +1,24 @@
 package com.bleulace.domain.message;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import org.joda.time.LocalDateTime;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.account.Account;
-import com.frugalu.api.messaging.jpa.AggregateRoot;
 
 @Entity
 @RooJavaBean
-public class Message extends AggregateRoot
+public class Message extends AbstractPersistable<Long>
 {
 	private static final long serialVersionUID = 704926750683987643L;
 
@@ -27,17 +28,12 @@ public class Message extends AggregateRoot
 	@Column(nullable = false, updatable = false)
 	private String body;
 
-	private LocalDateTime sendTime;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date sendTime;
 
 	@ManyToOne
 	private Account from;
 
 	@ManyToMany
 	private List<Account> to = new ArrayList<Account>();
-
-	@PrePersist
-	protected void prePersist()
-	{
-		sendTime = LocalDateTime.now();
-	}
 }

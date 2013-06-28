@@ -1,6 +1,7 @@
 package com.bleulace.ui.mobile;
 
 import com.bleulace.domain.account.Account;
+import com.frugalu.api.messaging.jpa.EntityManagerReference;
 import com.vaadin.addon.touchkit.gwt.client.theme.StyleNames;
 import com.vaadin.addon.touchkit.ui.DatePicker;
 import com.vaadin.addon.touchkit.ui.NavigationView;
@@ -52,8 +53,8 @@ public class RegistrationView extends NavigationView implements ClickListener
 	{
 		if (fieldGroup.isValid())
 		{
-			Account account = (Account) fieldGroup.getItemDataSource()
-					.getBean().save();
+			Account account = fieldGroup.getItemDataSource().getBean();
+			EntityManagerReference.get().persist(account);
 			if (account != null)
 			{
 				fieldGroup.setItemDataSource(account);

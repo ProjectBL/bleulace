@@ -9,13 +9,12 @@ import javax.persistence.Entity;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-
-import com.frugalu.api.messaging.jpa.AggregateRoot;
 
 @Entity
 @RooJavaBean
-public class Project extends AggregateRoot
+public class Project extends AbstractPersistable<Long>
 {
 	private static final long serialVersionUID = -1852176381989700384L;
 

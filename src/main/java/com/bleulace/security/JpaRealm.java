@@ -10,13 +10,16 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.domain.account.Account;
-import com.bleulace.domain.calendar.CalendarEntryParticipant;
-import com.frugalu.api.messaging.jpa.EntityManagerReference;
+import com.bleulace.domain.authz.PermissionDAO;
 
 public class JpaRealm extends AuthorizingRealm
 {
+	@Autowired
+	private PermissionDAO permissionDAO;
+
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(
 			AuthenticationToken token) throws AuthenticationException
@@ -49,30 +52,12 @@ public class JpaRealm extends AuthorizingRealm
 			PrincipalCollection principalCollection)
 	{
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		Account account = EntityManagerReference.get().getReference(
-				Account.class, principalCollection.getPrimaryPrincipal());
-		for (CalendarEntryParticipant participation : CalendarEntryParticipant
-				.findByAccounts(account))
+		Long id = (Long) principalCollection.getPrimaryPrincipal();
+		if (id != null)
 		{
-			String permissionString = getPermission(participation);
-			if (participation != null)
-			{
-				info.addStringPermission(permissionString);
-			}
+			Account account = Account.findById(id);
+			info.addObjectPermissions(permissionDAO.findByAccounts(account));
 		}
 		return info;
-	}
-
-	private String getPermission(CalendarEntryParticipant participation)
-	{
-		switch (participation.getStatus())
-		{
-		case HOST:
-		case ACCEPTED:
-		case DECLINED:
-		case PENDING:
-		default:
-		}
-		return null;
 	}
 }
