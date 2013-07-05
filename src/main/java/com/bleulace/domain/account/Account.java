@@ -13,7 +13,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ import com.bleulace.domain.QueryFactory;
 import com.bleulace.domain.project.Task;
 import com.bleulace.security.Encryptor;
 import com.frugalu.api.messaging.jpa.EntityManagerReference;
-import com.google.common.eventbus.Subscribe;
 
 @Entity
 @RooJavaBean
@@ -83,13 +81,6 @@ public class Account extends AbstractPersistable<Long>
 	public static Account findById(Long id)
 	{
 		return EntityManagerReference.get().find(Account.class, id);
-	}
-
-	@Subscribe
-	public void subscribe(AccountRegistrationPayload command)
-	{
-		ModelMapper mapper = new ModelMapper();
-		mapper.map(command, this);
 	}
 
 	public static Account login(String username, String password)
