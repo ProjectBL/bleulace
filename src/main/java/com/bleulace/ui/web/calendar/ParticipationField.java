@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.beans.factory.annotation.Configurable;
-
 import com.bleulace.domain.account.Account;
 import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.bleulace.domain.calendar.ParticipationStatus;
@@ -24,27 +22,25 @@ import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("rawtypes")
-@Configurable(preConstruction = true)
 class ParticipationField extends CustomField<Map>
 {
 	private static final long serialVersionUID = -945633119002683200L;
 
 	private final Table table = new Table();
+
 	private final ComboBox comboBox = new ComboBox();
 
 	private final BeanContainer<Long, Entry<Account, ParticipationStatus>> tableContainer;
 
-	private final JPACalendarEvent event;
-
 	public ParticipationField(JPACalendarEvent event)
 	{
-		this.event = event;
-
 		tableContainer = new BeanContainer<Long, Entry<Account, ParticipationStatus>>(
 				Entry.class);
 		tableContainer
 				.setBeanIdResolver(new BeanIdResolver<Long, Map.Entry<Account, ParticipationStatus>>()
 				{
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public Long getIdForBean(
 							Entry<Account, ParticipationStatus> bean)
@@ -60,6 +56,8 @@ class ParticipationField extends CustomField<Map>
 		table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		table.addItemClickListener(new ItemClickListener()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void itemClick(ItemClickEvent event)
 			{
@@ -78,7 +76,7 @@ class ParticipationField extends CustomField<Map>
 		comboBox.setContainerDataSource(comboBoxContainer);
 		comboBox.setImmediate(true);
 		comboBox.addValueChangeListener(new ComboBoxValueChangeListener());
-		comboBox.setWidth("160px");
+		comboBox.setWidth("200px");
 		comboBox.setItemCaptionPropertyId("name");
 		comboBox.addValueChangeListener(this);
 	}
@@ -135,6 +133,7 @@ class ParticipationField extends CustomField<Map>
 		@Override
 		public void valueChange(Property.ValueChangeEvent valueChangeEvent)
 		{
+			@SuppressWarnings("unchecked")
 			final BeanItem<Account> item = (BeanItem<Account>) comboBox
 					.getItem(comboBox.getValue());
 			tableContainer.addBean(new Entry<Account, ParticipationStatus>()
@@ -186,6 +185,7 @@ class ParticipationField extends CustomField<Map>
 			}
 			if (event.isDoubleClick())
 			{
+				@SuppressWarnings("unchecked")
 				BeanItem<Entry<Account, ParticipationStatus>> item = (BeanItem<Entry<Account, ParticipationStatus>>) event
 						.getItem();
 				tableContainer.removeItem(item.getBean().getKey().getId());
