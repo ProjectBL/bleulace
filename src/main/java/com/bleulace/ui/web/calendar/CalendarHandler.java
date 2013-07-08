@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.commons.lang3.Range;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
-import org.springframework.beans.factory.annotation.Configurable;
 
 import com.bleulace.domain.calendar.JPACalendarEvent;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -52,7 +51,6 @@ import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 import com.vaadin.ui.themes.Reindeer;
 
-@Configurable
 class CalendarHandler extends CustomComponent implements EventClickHandler,
 		RangeSelectHandler, EventMoveHandler, EventResizeHandler,
 		DateClickHandler, CloseListener
@@ -289,7 +287,7 @@ class CalendarHandler extends CustomComponent implements EventClickHandler,
 
 			ParticipationField accountField = new ParticipationField(event);
 			fieldGroup.bind(accountField, "participants");
-			accountField.setWidth("160px");
+			accountField.setWidth("200px");
 
 			TextField caption = fieldGroup.buildAndBind("Title", "caption",
 					TextField.class);

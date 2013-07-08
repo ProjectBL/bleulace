@@ -33,7 +33,7 @@
       <param-value>com.bleulace.ui.mobile.BleulaceMobileWidgetSet</param-value>
     </init-param>
   </servlet>
- -->
+  -->
   <servlet>
     <servlet-name>webServlet</servlet-name>
     <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
@@ -43,19 +43,19 @@
       <param-value>com.bleulace.ui.web.BleulaceWebUI</param-value>
     </init-param>
     <!-- 
-       <init-param>
+    <init-param>
       <description>Application widgetset</description>
       <param-name>widgetset</param-name>
       <param-value>com.bleulace.ui.web.BleulaceWebWidgetSet</param-value>
     </init-param>
- -->
+ 	-->
   </servlet>
   <servlet-mapping>
     <servlet-name>webServlet</servlet-name>
     <url-pattern>/*</url-pattern>
     <!-- 
     <url-pattern>/VAADIN/*</url-pattern>
- -->
+ 	-->
   </servlet-mapping>
   <!-- 
   <servlet-mapping>
