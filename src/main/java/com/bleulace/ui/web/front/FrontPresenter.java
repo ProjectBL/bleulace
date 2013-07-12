@@ -25,7 +25,6 @@ public class FrontPresenter implements FrontViewListener, Serializable
 	public void onLogin(String username, String password)
 	{
 		view.setEnabled(false);
-		view.setEnabled(false);
 		boolean result = CommandFactory
 				.make(new LoginCommand(username, password), Boolean.class)
 				.send().getFirstResult();

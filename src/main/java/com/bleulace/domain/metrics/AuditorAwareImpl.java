@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.account.Account;
 
-@Component
+@Component("auditorAwareImpl")
 public class AuditorAwareImpl implements AuditorAware<Account>
 {
 	@Override

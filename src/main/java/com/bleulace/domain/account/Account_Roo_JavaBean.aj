@@ -9,6 +9,14 @@ import java.util.List;
 
 privileged aspect Account_Roo_JavaBean {
     
+    public String Account.getId() {
+        return this.id;
+    }
+    
+    public void Account.setId(String id) {
+        this.id = id;
+    }
+    
     public byte[] Account.getHash() {
         return this.hash;
     }

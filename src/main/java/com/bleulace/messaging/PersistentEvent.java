@@ -1,16 +1,17 @@
 package com.bleulace.messaging;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.springframework.data.jpa.domain.AbstractAuditable;
-
-import com.bleulace.domain.account.Account;
-
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class PersistentEvent extends AbstractAuditable<Account, Long>
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PersistentEvent
 {
-	private static final long serialVersionUID = 8758753138076586184L;
 }

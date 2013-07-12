@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -13,7 +15,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.hibernate.validator.constraints.Email;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +26,13 @@ import com.frugalu.api.messaging.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
-public class Account extends AbstractPersistable<Long>
+public class Account implements Persistable<String>
 {
 	private static final long serialVersionUID = -8047989744778433448L;
+
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	private String id;
 
 	private byte[] hash;
 	private byte[] salt;
@@ -81,6 +87,51 @@ public class Account extends AbstractPersistable<Long>
 	public static Account findById(Long id)
 	{
 		return EntityManagerReference.get().find(Account.class, id);
+	}
+
+	@Override
+	public boolean isNew()
+	{
+		return id == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
+		Account other = (Account) obj;
+		if (id == null)
+		{
+			if (other.id != null)
+			{
+				return false;
+			}
+		}
+		else if (!id.equals(other.id))
+		{
+			return false;
+		}
+		return true;
 	}
 
 	public static Account login(String username, String password)

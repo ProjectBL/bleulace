@@ -30,19 +30,19 @@ class ParticipationField extends CustomField<Map>
 
 	private final ComboBox comboBox = new ComboBox();
 
-	private final BeanContainer<Long, Entry<Account, ParticipationStatus>> tableContainer;
+	private final BeanContainer<String, Entry<Account, ParticipationStatus>> tableContainer;
 
 	public ParticipationField(JPACalendarEvent event)
 	{
-		tableContainer = new BeanContainer<Long, Entry<Account, ParticipationStatus>>(
+		tableContainer = new BeanContainer<String, Entry<Account, ParticipationStatus>>(
 				Entry.class);
 		tableContainer
-				.setBeanIdResolver(new BeanIdResolver<Long, Map.Entry<Account, ParticipationStatus>>()
+				.setBeanIdResolver(new BeanIdResolver<String, Map.Entry<Account, ParticipationStatus>>()
 				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public Long getIdForBean(
+					public String getIdForBean(
 							Entry<Account, ParticipationStatus> bean)
 					{
 						return bean.getKey().getId();
@@ -107,9 +107,9 @@ class ParticipationField extends CustomField<Map>
 	@Override
 	protected Map getInternalValue()
 	{
-		List<Long> accountIds = tableContainer.getItemIds();
+		List<String> accountIds = tableContainer.getItemIds();
 		Map<Account, ParticipationStatus> map = new HashMap<Account, ParticipationStatus>();
-		for (Long id : accountIds)
+		for (String id : accountIds)
 		{
 			Entry<Account, ParticipationStatus> entry = tableContainer.getItem(
 					id).getBean();
