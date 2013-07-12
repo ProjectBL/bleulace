@@ -9,6 +9,12 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import com.bleulace.accountRelations.domain.Account;
 import com.bleulace.io.utils.CsvIterator;
 
+/**
+ * Configures mock data iterators.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Profile({ "dev", "prod" })
 @Configuration
 public class MockDataConfig

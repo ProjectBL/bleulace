@@ -14,6 +14,10 @@ public class VaadinConfig
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	/**
+	 * @return the method invoking factory bean responsible for handing an
+	 *         application context reference to our view resolver.
+	 */
 	@Bean
 	public MethodInvokingFactoryBean xpoftApplicationContextSetter()
 	{

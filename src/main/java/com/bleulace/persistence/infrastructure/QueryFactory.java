@@ -10,6 +10,12 @@ import com.mysema.query.jpa.JPQLTemplates;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 
+/**
+ * Configures JPAQuery instance for use with EclipseLink.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configurable(preConstruction = true)
 public class QueryFactory
 {
@@ -27,7 +33,7 @@ public class QueryFactory
 		return make().from(args);
 	}
 
-	private static JPAQuery make()
+	public static JPAQuery make()
 	{
 		return new JPAQuery(new QueryFactory().entityManager, TEMPLATES);
 	}

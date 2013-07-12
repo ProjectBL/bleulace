@@ -31,6 +31,11 @@
 	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
 
 	<!-- <axon:saga-manager id="sagaManager" event-bus="eventBus"> </axon:saga-manager> -->
+	
+	
+
+	<bean id="entityManagerProvider"
+		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
 
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">

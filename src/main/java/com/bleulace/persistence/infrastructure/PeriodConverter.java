@@ -5,6 +5,12 @@ import org.eclipse.persistence.mappings.converters.Converter;
 import org.eclipse.persistence.sessions.Session;
 import org.joda.time.Period;
 
+/**
+ * Converter to store Period values persistently in EL
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public class PeriodConverter implements Converter
 {
 	private static final long serialVersionUID = 2506658239859630633L;

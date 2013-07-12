@@ -14,6 +14,16 @@ import org.springframework.context.annotation.PropertySource;
 
 import com.mysql.jdbc.Driver;
 
+/**
+ * Persistence configuration for production profile. This class will acquire
+ * Amazon RDS connection params from the container.
+ * 
+ * Clearly, this will have to be altered if we do not use RDS as our database
+ * server.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @PropertySource("classpath:/META-INF/spring/database.properties")
 @Profile("prod")
 @Configuration
@@ -26,7 +36,6 @@ public class ProdPersistenceConfig implements PersistenceProfile
 	private String hostname = System.getProperty("RDS_HOSTNAME");
 	private String port = System.getProperty("RDS_PORT");
 
-	@Override
 	@Bean
 	public DataSource dataSource()
 	{

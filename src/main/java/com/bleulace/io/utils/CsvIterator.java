@@ -10,6 +10,17 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.dozer.CsvDozerBeanReader;
 import org.supercsv.prefs.CsvPreference;
 
+/**
+ * Reads csv files from META-INF/csv dir, which is where we keep csv of random
+ * names and email addresses for demo and testing purposes
+ * 
+ * This is quick and dirty.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ * @param <T>
+ *            target bean class
+ */
 public class CsvIterator<T> implements Iterator<T>, Iterable<T>
 {
 	private T next;
@@ -20,6 +31,18 @@ public class CsvIterator<T> implements Iterator<T>, Iterable<T>
 
 	private final CellProcessor[] cellProcessors;
 
+	/**
+	 * 
+	 * @param clazz
+	 *            the bean to instantiate using file data as params for setters
+	 * @param fieldMapping
+	 *            , @see http://supercsv.sourceforge.net/examples_dozer.html
+	 * @param cellProcessors
+	 * @see supercsv docs
+	 * @param csvFileTitle
+	 *            with trailing ".csv" omitted. The file to be read must be in
+	 *            the META-INF/csv dir
+	 */
 	public CsvIterator(Class<T> clazz, String[] fieldMapping,
 			CellProcessor[] cellProcessors, String csvFileTitle)
 	{

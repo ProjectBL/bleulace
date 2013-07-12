@@ -12,18 +12,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * Persistence configuration for Development and Test profiles
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Profile({ "dev", "test" })
 @Configuration
-public class DevPersistenceConfig implements PersistenceProfile
+public class DevPersistenceConfig
 {
-	@Override
 	@Bean
 	public DataSource dataSource()
 	{
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(Driver.class.getName());
+
+		// deploy database in memory
 		dataSource.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
+
+		// or write database to hard drive
 		// dataSource.setUrl("jdbc:h2:~/bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
+
 		dataSource.setUsername("sa");
 		dataSource.setPassword("");
 		dataSource.setTestOnBorrow(true);
@@ -35,7 +45,6 @@ public class DevPersistenceConfig implements PersistenceProfile
 		return dataSource;
 	}
 
-	@Override
 	@Bean(name = "jpaPropsMap")
 	public Map<String, String> jpaPropsMap()
 	{

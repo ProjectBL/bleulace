@@ -7,6 +7,12 @@ import org.eclipse.persistence.mappings.converters.Converter;
 import org.eclipse.persistence.sessions.Session;
 import org.joda.time.LocalDateTime;
 
+/**
+ * Converter to store LocalDateTime values persistently in EL
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public class LocalDateTimeConverter implements Converter
 {
 	private static final long serialVersionUID = 362089437264505921L;

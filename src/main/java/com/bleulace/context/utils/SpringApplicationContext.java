@@ -4,6 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * This is a thread-safe way to get a reference to the application wherever one
+ * pleases.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configurable(preConstruction = true)
 public class SpringApplicationContext
 {
@@ -14,6 +21,10 @@ public class SpringApplicationContext
 	{
 	}
 
+	/**
+	 * 
+	 * @return application context
+	 */
 	public static ApplicationContext get()
 	{
 		return new SpringApplicationContext().ctx;
