@@ -3,6 +3,8 @@ package com.bleulace.ui.web.front;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.xpoft.vaadin.VaadinView;
+
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
@@ -15,6 +17,8 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
+@org.springframework.stereotype.Component
+@VaadinView(value = "front")
 public class FrontViewImpl extends CustomComponent implements FrontView
 {
 	private static final long serialVersionUID = 1199488980233798486L;
@@ -24,13 +28,8 @@ public class FrontViewImpl extends CustomComponent implements FrontView
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		initializeModels();
 		initializePresenters();
 		buildView();
-	}
-
-	private void initializeModels()
-	{
 	}
 
 	private void initializePresenters()

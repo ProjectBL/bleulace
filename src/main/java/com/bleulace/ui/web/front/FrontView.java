@@ -1,12 +1,10 @@
 package com.bleulace.ui.web.front;
 
-import com.bleulace.domain.account.Account;
+import com.bleulace.accountRelations.domain.Account;
 import com.vaadin.navigator.View;
 
 public interface FrontView extends View
 {
-	public static final String NAME = "front";
-
 	public static final Class<? extends FrontView> VIEW = FrontViewImpl.class;
 
 	public void addListener(FrontViewListener listener);
