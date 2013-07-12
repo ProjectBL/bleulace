@@ -31,8 +31,17 @@ public class ExecutingAccount
 			Object id = SecurityUtils.getSubject().getPrincipal();
 			if (id != null)
 			{
-				return EntityManagerReference.get().getReference(Account.class,
-						id);
+				try
+				{
+					return EntityManagerReference.get().getReference(
+							Account.class, id);
+				}
+				catch (Exception e)
+				{
+					// TODO : hit the logs
+					// TODO : fire off warning email
+					e.printStackTrace();
+				}
 			}
 		}
 		catch (UnavailableSecurityManagerException e)

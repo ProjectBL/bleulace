@@ -1,21 +1,27 @@
 package com.bleulace.persistence.infrastructure;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Component;
 
-/**
- * An abstract database populator, to be used to populate the database while
- * running in dev or test modes.
- * 
- * Concrete subclasses will check if they should populate the database with
- * dummy values whenever the context is refreshed.
- * 
- * @author Arleigh Dickerson
- * 
- */
-abstract class DatabasePopulator implements
-		ApplicationListener<ContextRefreshedEvent>
+import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.domain.Account;
+import com.bleulace.persistence.utils.EntityManagerReference;
+
+@Component
+@Profile({ "dev", "prod" })
+public class DatabasePopulator implements
+		ApplicationListener<ContextRefreshedEvent>, CommandGatewayAware
 {
+	@Autowired
+	@Qualifier("createAccountCommands")
+	private Iterable<CreateAccountCommand> createAccountCommands;
+
 	@Override
 	public final void onApplicationEvent(ContextRefreshedEvent event)
 	{
@@ -25,14 +31,22 @@ abstract class DatabasePopulator implements
 		}
 	}
 
-	/**
-	 * 
-	 * @return whether to execute database population
-	 */
-	protected abstract boolean shouldPopulate();
+	protected boolean shouldPopulate()
+	{
+		return countAccounts() < 1;
+	}
 
-	/**
-	 * executes database population
-	 */
-	protected abstract void populate();
+	protected void populate()
+	{
+		for (CreateAccountCommand command : createAccountCommands)
+		{
+			gateway().send(command);
+		}
+	}
+
+	private Long countAccounts()
+	{
+		return new SimpleJpaRepository<Account, String>(Account.class,
+				EntityManagerReference.get()).count();
+	}
 }

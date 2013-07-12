@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.domain;
 
+import com.bleulace.crm.domain.Account;
 
 privileged aspect Account_Roo_JavaBean {
     
@@ -10,24 +11,48 @@ privileged aspect Account_Roo_JavaBean {
         return this.id;
     }
     
+    public void Account.setId(String id) {
+        this.id = id;
+    }
+    
     public byte[] Account.getHash() {
         return this.hash;
+    }
+    
+    public void Account.setHash(byte[] hash) {
+        this.hash = hash;
     }
     
     public byte[] Account.getSalt() {
         return this.salt;
     }
     
+    public void Account.setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+    
     public String Account.getEmail() {
         return this.email;
+    }
+    
+    public void Account.setEmail(String email) {
+        this.email = email;
     }
     
     public String Account.getFirstName() {
         return this.firstName;
     }
     
+    public void Account.setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
     public String Account.getLastName() {
         return this.lastName;
+    }
+    
+    public void Account.setLastName(String lastName) {
+        this.lastName = lastName;
     }
     
 }

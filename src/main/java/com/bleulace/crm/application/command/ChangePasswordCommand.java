@@ -29,21 +29,6 @@ public class ChangePasswordCommand
 	 */
 	private char[] value;
 
-	public ChangePasswordCommand()
-	{
-		this(null);
-	}
-
-	/**
-	 * 
-	 * @param id
-	 *            , the id of the targeted account
-	 */
-	public ChangePasswordCommand(String id)
-	{
-		this(id, "");
-	}
-
 	/**
 	 * 
 	 * @param id
@@ -56,6 +41,11 @@ public class ChangePasswordCommand
 	{
 		this.id = id;
 		setValue(value);
+	}
+
+	public String getId()
+	{
+		return id;
 	}
 
 	@Password

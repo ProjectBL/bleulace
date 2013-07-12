@@ -1,34 +1,36 @@
 package com.bleulace.crm.domain;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.axonframework.eventsourcing.annotation.AggregateIdentifier;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
-import com.bleulace.crm.application.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.application.event.AccountLoggedOutEvent;
 import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
-import com.bleulace.crm.application.event.PasswordChangedEvent;
+import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
+import com.bleulace.crm.domain.event.PasswordChangedEvent;
 
 @Entity
-@RooJavaBean(settersByDefault = false)
+@RooJavaBean
 public class Account extends AbstractAnnotatedAggregateRoot<String>
 {
 	private static final long serialVersionUID = -8047989744778433448L;
 
-	@AggregateIdentifier
-	private String id;
+	@Id
+	private String id = UUID.randomUUID().toString().toUpperCase();
 
-	private byte[] hash = null;
-	private byte[] salt = null;
+	private byte[] hash;
+	private byte[] salt;
 
 	@Column(nullable = false, unique = true, updatable = false)
 	private String email;
@@ -54,6 +56,12 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	public String getName()
 	{
 		return firstName + " " + lastName;
+	}
+
+	@EventHandler
+	public void on(AccountInfoUpdatedEvent event)
+	{
+		new ModelMapper().map(event, this);
 	}
 
 	/**
@@ -100,6 +108,7 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	@EventHandler
 	public void on(PasswordChangedEvent event)
 	{
-		new ModelMapper().map(event, this);
+		hash = event.getHash();
+		salt = event.getSalt();
 	}
 }

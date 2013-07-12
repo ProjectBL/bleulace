@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
-import com.bleulace.crm.domain.Account;
+import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.io.utils.CsvIterator;
 
 /**
@@ -15,16 +15,17 @@ import com.bleulace.io.utils.CsvIterator;
  * @author Arleigh Dickerson
  * 
  */
-@Profile({ "dev", "prod" })
 @Configuration
+@Profile({ "dev", "prod" })
 public class MockDataConfig
 {
-	@Bean(name = "mockAccountIterator")
-	public Iterable<Account> mockAccountIterator()
+	@Bean(name = "createAccountCommands")
+	public Iterable<CreateAccountCommand> mockAccountIterator()
 	{
-		return new CsvIterator<Account>(Account.class, new String[] { "email",
-				"password", "firstName", "lastName" },
-				new CellProcessor[] { new Optional(), new Optional(),
-						new Optional(), new Optional() }, "mockAccounts");
+		return new CsvIterator<CreateAccountCommand>(
+				CreateAccountCommand.class, new String[] { "email", "password",
+						"firstName", "lastName" }, new CellProcessor[] {
+						new Optional(), new Optional(), new Optional(),
+						new Optional() }, "mockAccounts");
 	}
 }

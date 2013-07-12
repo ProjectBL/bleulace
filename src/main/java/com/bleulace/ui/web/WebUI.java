@@ -1,8 +1,7 @@
 package com.bleulace.ui.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import ru.xpoft.vaadin.DiscoveryNavigator;
 
@@ -37,14 +36,12 @@ import com.vaadin.ui.UI;
  * 
  * @author Arleigh Dickerson
  * This is the bootstrap for the web user interface, to be served by tomcat.
- * Note that this class is http-session scoped.
  * 
  *********************************************** 
  */
 
 //@formatter:on
-@Scope("session")
-@Component("webUI")
+@Configurable(preConstruction = true)
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
 public class WebUI extends UI
@@ -52,7 +49,7 @@ public class WebUI extends UI
 	private static final long serialVersionUID = 2191009197124553972L;
 
 	@Autowired
-	private ExecutingAccount executingAccout;
+	private transient ExecutingAccount executingAccout;
 
 	@Override
 	protected void init(VaadinRequest request)

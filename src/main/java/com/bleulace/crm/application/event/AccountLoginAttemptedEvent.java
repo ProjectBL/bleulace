@@ -11,6 +11,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 @RooJavaBean(settersByDefault = false)
 public class AccountLoginAttemptedEvent
 {
+	private static final long serialVersionUID = 5819278706713701979L;
+
 	private Boolean success;
 
 	public AccountLoginAttemptedEvent(Boolean success)

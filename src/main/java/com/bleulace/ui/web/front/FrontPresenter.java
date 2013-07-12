@@ -2,10 +2,15 @@ package com.bleulace.ui.web.front;
 
 import java.io.Serializable;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
+
+import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.ui.web.front.FrontView.FrontViewListener;
+import com.vaadin.ui.Notification;
 
-public class FrontPresenter implements FrontViewListener, Serializable
+public class FrontPresenter implements FrontViewListener, CommandGatewayAware,
+		Serializable
 {
 	private static final long serialVersionUID = 365877728219202183L;
 
@@ -20,7 +25,16 @@ public class FrontPresenter implements FrontViewListener, Serializable
 	public void onLogin(String username, String password)
 	{
 		view.setEnabled(false);
-		System.out.println("Fire login command");
+		Boolean success = gateway().sendAndWait(
+				new UsernamePasswordToken(username, password));
+		if (success)
+		{
+			Notification.show("SUCCESS");
+		}
+		else
+		{
+			Notification.show("FAIL");
+		}
 		view.setEnabled(true);
 	}
 

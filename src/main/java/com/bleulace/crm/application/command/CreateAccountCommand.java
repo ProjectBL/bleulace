@@ -3,6 +3,7 @@ package com.bleulace.crm.application.command;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
+import org.springframework.roo.addon.tostring.RooToString;
 
 import com.bleulace.crm.infrastructure.Password;
 
@@ -15,6 +16,7 @@ import com.bleulace.crm.infrastructure.Password;
  * @author Arleigh Dickerson
  * 
  */
+@RooToString
 @RooJavaBean
 public class CreateAccountCommand
 {

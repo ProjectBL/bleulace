@@ -8,7 +8,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.eclipse.persistence.jpa.PersistenceProvider;
-import org.eclipse.persistence.sequencing.UUIDSequence;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,8 +66,8 @@ public class BasePersistenceConfig
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("eclipselink.weaving", "static");
 		props.put("eclipselink.ddl-generation.output-mode", "database");
-		props.put("eclipselink.session.customizer",
-				UUIDSequence.class.getName());
+		// props.put("eclipselink.session.customizer",
+		// UUIDSequence.class.getName());
 		return props;
 	}
 }

@@ -25,20 +25,38 @@
 
 	<!-- Axon -->
 	<axon:annotation-config />
-	<axon:command-bus id="commandBus" />
-	<axon:event-bus id="eventBus" />
 
-	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
+	<bean id="springTxManager" class="org.axonframework.unitofwork.SpringTransactionManager">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
 
-	<!-- <axon:saga-manager id="sagaManager" event-bus="eventBus"> </axon:saga-manager> -->
-	
-	
-
-	<bean id="entityManagerProvider"
-		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
-
+	<axon:command-bus id="commandBus" transaction-manager="transactionManager">
+		<!-- TODO : permission interceptor -->
+		<axon:dispatchInterceptors>
+			<bean
+				class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
+			<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
+		</axon:dispatchInterceptors>
+	</axon:command-bus>
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
 		<property name="commandBus" ref="commandBus" />
+		<property name="gatewayInterface" value="com.bleulace.cqrs.command.BLCommandGateway" />
 	</bean>
+
+	<axon:event-bus id="eventBus" />
+	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
+	<!-- <axon:saga-manager id="sagaManager" event-bus="eventBus"> </axon:saga-manager> -->
+
+	<axon:aggregate-command-handler id="accountCommandHandler"
+		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.Account"
+		repository="accountRepository" />
+
+	<axon:jpa-repository id="accountRepository"
+		aggregate-type="com.bleulace.crm.domain.Account"
+		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
+		event-store="eventStore" />
+
+	<bean id="entityManagerProvider"
+		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
 </beans>
