@@ -2,7 +2,7 @@ package com.bleulace.ui.web.front;
 
 import java.io.Serializable;
 
-import com.bleulace.accountRelations.domain.Account;
+import com.bleulace.crm.domain.Account;
 import com.bleulace.ui.web.front.FrontView.FrontViewListener;
 
 public class FrontPresenter implements FrontViewListener, Serializable

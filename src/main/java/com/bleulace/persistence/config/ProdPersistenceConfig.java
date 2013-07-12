@@ -27,7 +27,7 @@ import com.mysql.jdbc.Driver;
 @PropertySource("classpath:/META-INF/spring/database.properties")
 @Profile("prod")
 @Configuration
-public class ProdPersistenceConfig implements PersistenceProfile
+public class ProdPersistenceConfig
 {
 
 	private String dbName = System.getProperty("RDS_DB_NAME");
@@ -48,7 +48,6 @@ public class ProdPersistenceConfig implements PersistenceProfile
 		return dataSource;
 	}
 
-	@Override
 	@Bean(name = "jpaPropsMap")
 	public Map<String, String> jpaPropsMap()
 	{

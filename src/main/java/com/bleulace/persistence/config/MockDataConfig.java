@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
-import com.bleulace.accountRelations.domain.Account;
+import com.bleulace.crm.domain.Account;
 import com.bleulace.io.utils.CsvIterator;
 
 /**

@@ -1,6 +1,6 @@
 package com.bleulace.ui.web.front;
 
-import com.bleulace.accountRelations.domain.Account;
+import com.bleulace.crm.domain.Account;
 import com.vaadin.navigator.View;
 
 public interface FrontView extends View

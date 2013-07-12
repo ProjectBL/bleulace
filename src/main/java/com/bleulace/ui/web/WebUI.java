@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import ru.xpoft.vaadin.DiscoveryNavigator;
 
-import com.bleulace.accountRelations.infrastructure.ExecutingAccount;
+import com.bleulace.crm.infrastructure.ExecutingAccount;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
