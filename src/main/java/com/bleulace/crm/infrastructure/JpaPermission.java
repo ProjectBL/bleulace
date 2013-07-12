@@ -6,7 +6,6 @@ import javax.persistence.Basic;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -30,12 +29,11 @@ import com.bleulace.crm.domain.Account;
  */
 @Entity
 public class JpaPermission extends DomainPermission implements
-		Persistable<Long>
+		Persistable<String>
 {
 	private static final long serialVersionUID = 6349430428412117339L;
 
-	private Long id;
-
+	private String id;
 	private Account account;
 
 	@SuppressWarnings("unused")
@@ -47,25 +45,26 @@ public class JpaPermission extends DomainPermission implements
 			Set<String> actions, Set<String> targets)
 	{
 		Assert.noNullElements(new Object[] { account, domain, actions, targets });
+		this.account = account;
 		setParts(domain, actions, targets);
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Override
-	public Long getId()
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	public String getId()
 	{
 		return id;
 	}
 
 	@SuppressWarnings("unused")
-	private void setId(Long id)
+	private void setId(String id)
 	{
 		this.id = id;
 	}
 
+	@JoinColumn(nullable = false, updatable = false)
 	@ManyToOne
-	@JoinColumn(updatable = false, nullable = false)
 	public Account getAccount()
 	{
 		return account;
@@ -102,6 +101,6 @@ public class JpaPermission extends DomainPermission implements
 	@Override
 	public boolean isNew()
 	{
-		return id != null;
+		return id == null;
 	}
 }

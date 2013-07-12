@@ -17,6 +17,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.bleulace.persistence.infrastructure.UUIDSessionCustomizer;
+
 /**
  * Persistence Configuration shared across all profiles.
  * 
@@ -66,8 +68,8 @@ public class BasePersistenceConfig
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("eclipselink.weaving", "static");
 		props.put("eclipselink.ddl-generation.output-mode", "database");
-		// props.put("eclipselink.session.customizer",
-		// UUIDSequence.class.getName());
+		props.put("eclipselink.session.customizer",
+				UUIDSessionCustomizer.class.getName());
 		return props;
 	}
 }

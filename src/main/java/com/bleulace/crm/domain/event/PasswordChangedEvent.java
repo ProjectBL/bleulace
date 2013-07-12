@@ -1,7 +1,5 @@
 package com.bleulace.crm.domain.event;
 
-import java.io.Serializable;
-
 import com.bleulace.crm.infrastructure.Encryptor;
 
 /**
@@ -10,27 +8,24 @@ import com.bleulace.crm.infrastructure.Encryptor;
  * @author Arleigh Dickerson
  * 
  */
-public class PasswordChangedEvent implements Serializable
+public class PasswordChangedEvent
 {
 	private static final long serialVersionUID = 6321989607384240562L;
 
-	private byte[] hash;
-	private byte[] salt;
+	private final Encryptor encryptor;
 
 	public PasswordChangedEvent(String newPassword)
 	{
-		Encryptor encryptor = new Encryptor(newPassword.toCharArray());
-		hash = encryptor.getHash();
-		salt = encryptor.getSalt();
+		encryptor = new Encryptor(newPassword.toCharArray());
 	}
 
 	public byte[] getHash()
 	{
-		return hash;
+		return encryptor.getHash();
 	}
 
 	public byte[] getSalt()
 	{
-		return salt;
+		return encryptor.getSalt();
 	}
 }

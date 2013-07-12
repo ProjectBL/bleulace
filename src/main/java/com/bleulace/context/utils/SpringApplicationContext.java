@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
 /**
- * This is a thread-safe way to get a reference to the application wherever one
- * pleases.
+ * This is a thread-safe way to get a reference to the application context
+ * wherever one pleases.
  * 
  * @author Arleigh Dickerson
  * 

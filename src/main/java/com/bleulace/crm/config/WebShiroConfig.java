@@ -9,11 +9,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * A security configuration for servlet environments.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configuration
 @Profile({ "dev", "prod" })
-public class WebShiroConfig implements SecurityProfile
+public class WebShiroConfig
 {
-	@Override
 	@Bean(name = "securityManager")
 	@DependsOn("realm")
 	public SecurityManager securityManager(Realm realm)

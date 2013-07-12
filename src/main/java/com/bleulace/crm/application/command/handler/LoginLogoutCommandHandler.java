@@ -30,8 +30,6 @@ public class LoginLogoutCommandHandler
 	@CommandHandler
 	public Boolean login(UsernamePasswordToken command)
 	{
-		System.out.println(command);
-		// is the login a success?
 		Boolean success = true;
 		try
 		{
@@ -40,7 +38,6 @@ public class LoginLogoutCommandHandler
 		catch (AuthenticationException e)
 		{
 			// the login is NOT a success if an exception is thrown.
-			e.printStackTrace();
 			success = false;
 		}
 		finally
@@ -50,7 +47,7 @@ public class LoginLogoutCommandHandler
 			// if a valid account email was input,
 			if (account != null)
 			{
-				// track the login attempt and whether or not it was successful
+				// track the attempt and whether or not it was a successful
 				account.handleLoginAttempt(success);
 			}
 		}

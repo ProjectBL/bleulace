@@ -41,7 +41,7 @@
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
 		<property name="commandBus" ref="commandBus" />
-		<property name="gatewayInterface" value="com.bleulace.cqrs.command.BLCommandGateway" />
+		<property name="gatewayInterface" value="com.bleulace.cqrs.command.MasterCommandGateway" />
 	</bean>
 
 	<axon:event-bus id="eventBus" />

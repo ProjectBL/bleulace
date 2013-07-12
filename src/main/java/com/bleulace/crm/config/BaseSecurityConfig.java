@@ -16,6 +16,12 @@ import org.springframework.context.annotation.Scope;
 
 import com.bleulace.crm.infrastructure.JpaRealm;
 
+/**
+ * Security configuration shared across all environments
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configuration
 public class BaseSecurityConfig
 {

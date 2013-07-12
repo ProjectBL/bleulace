@@ -6,6 +6,14 @@ import org.axonframework.eventhandling.EventBus;
 
 import com.bleulace.context.utils.SpringApplicationContext;
 
+/**
+ * Enables implementor of {@link EventBusAware} to acquire a reference to the
+ * EventBus by calling the eventBus() method. Also declares classes which appear
+ * to be intended for use as event payloads as Serializable.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 aspect EventSourcingHelperAspect
 {
 	/**
@@ -13,7 +21,7 @@ aspect EventSourcingHelperAspect
 	 * as event payloads will automatically declare themselves as
 	 * {@link Serializable}
 	 */
-	declare parents : com.bleulace..event.*Event implements Serializable;
+	declare parents : com.bleulace..event..*Event implements Serializable;
 
 	private static final transient EventBus EVENTBUS = SpringApplicationContext
 			.get().getBean(EventBus.class);

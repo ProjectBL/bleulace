@@ -2,7 +2,7 @@ package com.bleulace.crm.application.command;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 
-public interface CRMCommandGateway
+public interface CrmCommandGateway
 {
 	public boolean sendAndWait(UsernamePasswordToken command);
 

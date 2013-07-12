@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.util.Assert;
 
 /**
- * Encrypts and salts a message represented as a character array
+ * Hashes and salts character array input
  * 
  * @author Arleigh Dickerson
  * 
@@ -33,14 +33,14 @@ public class Encryptor
 
 	/**
 	 * 
-	 * @param source
+	 * @param input
 	 *            the message to encrypt
 	 */
-	public Encryptor(char[] source)
+	public Encryptor(char[] input)
 	{
-		Assert.notNull(source);
+		Assert.notNull(input);
 		ByteSource salt = randomNumberGenerator.nextBytes();
-		Hash hash = calculateHash(ByteSource.Util.bytes(source), salt);
+		Hash hash = calculateHash(ByteSource.Util.bytes(input), salt);
 		this.hash = hash.getBytes();
 		this.salt = hash.getSalt().getBytes();
 	}

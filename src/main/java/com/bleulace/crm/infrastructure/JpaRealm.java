@@ -21,6 +21,7 @@ import com.bleulace.crm.domain.AccountFinder;
  * 
  * @see JpaPermission
  * @see PermissionDAO
+ * @see JpaPermissionDAO
  * 
  * @author Arleigh Dickerson
  * 
@@ -75,7 +76,7 @@ public class JpaRealm extends AuthorizingRealm
 		if (id != null)
 		{
 			Account account = finder.findById(id);
-			info.addObjectPermissions(permissionDAO.findByAccounts(account));
+			info.addObjectPermissions(permissionDAO.findByAccount(account));
 		}
 		return info;
 	}

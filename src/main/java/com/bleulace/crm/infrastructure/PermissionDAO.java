@@ -16,7 +16,7 @@ import com.bleulace.crm.domain.Account;
  */
 public interface PermissionDAO
 {
-	public Set<Permission> findByAccounts(Account account);
+	public Set<Permission> findByAccount(Account account);
 
 	public Set<Permission> addPermissions(Account account,
 			Persistable<?> target, String... actions);

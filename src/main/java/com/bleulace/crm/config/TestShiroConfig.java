@@ -10,11 +10,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
+/**
+ * A security config for VM singleton environments. Specifically, we use this
+ * configuration for unit and integration testing outside of the servlet
+ * environment.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configuration
 @Profile("test")
-public class TestShiroConfig implements SecurityProfile
+public class TestShiroConfig
 {
-	@Override
 	@Bean(name = "securityManager")
 	@DependsOn("realm")
 	public SecurityManager securityManager(Realm realm)

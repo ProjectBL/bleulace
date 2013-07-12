@@ -12,14 +12,14 @@ import com.bleulace.context.utils.SpringApplicationContext;
  */
 aspect CommandGatewayAwareAspect
 {
-	private static final transient BLCommandGateway GATEWAY = SpringApplicationContext
-			.get().getBean(BLCommandGateway.class);
+	private static final transient MasterCommandGateway GATEWAY = SpringApplicationContext
+			.get().getBean(MasterCommandGateway.class);
 
 	/**
 	 * 
 	 * @return a configured command gateway ready for use
 	 */
-	BLCommandGateway CommandGatewayAware.gateway()
+	MasterCommandGateway CommandGatewayAware.gateway()
 	{
 		return GATEWAY;
 	}

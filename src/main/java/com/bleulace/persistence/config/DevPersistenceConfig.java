@@ -28,10 +28,10 @@ public class DevPersistenceConfig
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(Driver.class.getName());
 
-		// deploy database in memory
+		// database in memory
 		dataSource.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
 
-		// or write database to hard drive
+		// database on hard drive
 		// dataSource.setUrl("jdbc:h2:~/bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
 
 		dataSource.setUsername("sa");
