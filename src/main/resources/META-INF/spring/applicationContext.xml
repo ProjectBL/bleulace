@@ -21,14 +21,10 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<task:executor id="executor" pool-size="4" />
+	<task:executor id="executor" pool-size="0-4"/>
 
 	<!-- Axon -->
 	<axon:annotation-config />
-
-	<bean id="springTxManager" class="org.axonframework.unitofwork.SpringTransactionManager">
-		<property name="transactionManager" ref="transactionManager" />
-	</bean>
 
 	<axon:command-bus id="commandBus" transaction-manager="transactionManager">
 		<!-- TODO : permission interceptor -->
