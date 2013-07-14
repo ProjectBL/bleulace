@@ -4,7 +4,7 @@
 package com.bleulace.crm.domain;
 
 import com.bleulace.crm.domain.Account;
-import com.bleulace.crm.infrastructure.JpaPermission;
+import com.bleulace.mgt.domain.ManagementPermission;
 import java.util.List;
 
 privileged aspect Account_Roo_JavaBean {
@@ -57,12 +57,20 @@ privileged aspect Account_Roo_JavaBean {
         this.lastName = lastName;
     }
     
-    public List<JpaPermission> Account.getPermissions() {
+    public List<ManagementPermission> Account.getPermissions() {
         return this.permissions;
     }
     
-    public void Account.setPermissions(List<JpaPermission> permissions) {
+    public void Account.setPermissions(List<ManagementPermission> permissions) {
         this.permissions = permissions;
+    }
+    
+    public List<Account> Account.getFriends() {
+        return this.friends;
+    }
+    
+    public void Account.setFriends(List<Account> friends) {
+        this.friends = friends;
     }
     
 }

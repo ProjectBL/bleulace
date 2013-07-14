@@ -20,12 +20,12 @@ interface AssignableMixin extends Assignable
 			return assignees;
 		}
 
-		public void AssignableMixin.assign(Account... accounts)
+		private void AssignableMixin.assign(Account... accounts)
 		{
 			assignees.addAll(Arrays.asList(accounts));
 		}
 
-		public void AssignableMixin.unAssign(Account... accounts)
+		private void AssignableMixin.unAssign(Account... accounts)
 		{
 			assignees.removeAll(Arrays.asList(accounts));
 		}

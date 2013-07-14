@@ -6,6 +6,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -28,9 +29,6 @@ import com.bleulace.crm.domain.AccountFinder;
  */
 public class JpaRealm extends AuthorizingRealm
 {
-	@Autowired
-	private PermissionDAO permissionDAO;
-
 	@Autowired
 	private AccountFinder finder;
 
@@ -76,7 +74,10 @@ public class JpaRealm extends AuthorizingRealm
 		if (id != null)
 		{
 			Account account = finder.findById(id);
-			info.addObjectPermissions(permissionDAO.findByAccount(account));
+			for (Permission p : account.getPermissions())
+			{
+				info.addObjectPermission(p);
+			}
 		}
 		return info;
 	}

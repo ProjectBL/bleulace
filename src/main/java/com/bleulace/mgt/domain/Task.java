@@ -1,21 +1,26 @@
 package com.bleulace.mgt.domain;
 
-import java.util.List;
-import java.util.Set;
+import java.util.UUID;
 
-import com.bleulace.crm.domain.Account;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-public interface Task
+import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
+import org.springframework.roo.addon.javabean.RooJavaBean;
+
+@Entity
+@RooJavaBean(settersByDefault = false)
+public class Task extends AbstractAnnotatedEntity implements CommentableMixin,
+		AssignableMixin
 {
-	public String getTitle();
+	@Id
+	private String id = UUID.randomUUID().toString();
 
-	public List<Comment> getComments();
+	@Column(nullable = false)
+	private String title;
 
-	public void addComment(Comment comment);
-
-	public void markAsCompleted();
-
-	public void remove();
-
-	public Set<Account> getAssignees();
+	Task()
+	{
+	}
 }

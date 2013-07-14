@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
 import org.apache.shiro.subject.PrincipalCollection;
@@ -16,7 +16,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
@@ -27,7 +26,7 @@ import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
 import com.bleulace.crm.config.BaseSecurityConfig;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
-import com.bleulace.crm.infrastructure.JpaPermission;
+import com.bleulace.mgt.domain.ManagementPermission;
 
 @Entity
 @RooJavaBean
@@ -50,9 +49,11 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	@Column(nullable = false)
 	private String lastName;
 
-	@CascadeOnDelete
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<JpaPermission> permissions = new ArrayList<JpaPermission>();
+	@ElementCollection
+	private List<ManagementPermission> permissions = new ArrayList<ManagementPermission>();
+
+	@ManyToMany
+	private List<Account> friends = new ArrayList<Account>();
 
 	Account()
 	{

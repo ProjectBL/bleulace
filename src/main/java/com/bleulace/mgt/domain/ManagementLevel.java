@@ -10,16 +10,16 @@ import org.apache.shiro.authz.Permission;
  * @author Arleigh Dickerson
  * 
  */
-public enum AuthorizationLevel implements Permission
+public enum ManagementLevel implements Permission
 {
 	LOOP, MIX, OWN;
 
 	@Override
 	public boolean implies(Permission p)
 	{
-		if (p instanceof AuthorizationLevel)
+		if (p instanceof ManagementLevel)
 		{
-			return ordinal() >= ((AuthorizationLevel) p).ordinal();
+			return ordinal() >= ((ManagementLevel) p).ordinal();
 		}
 		return false;
 	}

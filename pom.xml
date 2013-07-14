@@ -15,7 +15,7 @@
 		<vaadin.version>7.1.0.beta1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<shiro.version>1.2.1</shiro.version>
-		<querydsl.version>2.9.0</querydsl.version>
+		<querydsl.version>3.2.0</querydsl.version>
 		<axon.version>2.0.3</axon.version>
 	</properties>
 	<repositories>
@@ -323,9 +323,9 @@
 			<version>${axon.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>quartz</groupId>
+			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
-			<version>1.5.2</version>
+			<version>1.8.0</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -356,7 +356,7 @@
 			<plugin>
 				<groupId>com.mysema.maven</groupId>
 				<artifactId>maven-apt-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.0.4</version>
 				<executions>
 					<execution>
 						<goals>
@@ -367,12 +367,27 @@
 							<processors>
 								<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
 							</processors>
-							<!-- <options> <querydsl.excludedClasses>com.bleulace.persistence.infrastructure.BaseAggregateRoot</querydsl.excludedClasses> 
-								<querydsl.excludedClasses>org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot</querydsl.excludedClasses> 
+							<excludes>
+								<exclude>com.itella.ptp.model.Revision</exclude>
+							</excludes>
+							<!-- <options> <querydsl.excludedPackages>org.axonframework</querydsl.excludedPackages> 
 								</options> -->
 						</configuration>
 					</execution>
 				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.mysema.querydsl</groupId>
+						<artifactId>querydsl-apt</artifactId>
+						<version>${querydsl.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.mysema.querydsl</groupId>
+						<artifactId>querydsl-jpa</artifactId>
+						<classifier>apt</classifier>
+						<version>${querydsl.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -434,6 +449,10 @@
 						<weaveDependency>
 							<groupId>org.axonframework</groupId>
 							<artifactId>axon-core</artifactId>
+						</weaveDependency>
+						<weaveDependency>
+							<groupId>org.axonframework</groupId>
+							<artifactId>axon-integration</artifactId>
 						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>
