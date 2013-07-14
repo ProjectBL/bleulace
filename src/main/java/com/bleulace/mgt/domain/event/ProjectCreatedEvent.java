@@ -7,7 +7,7 @@ public class ProjectCreatedEvent
 {
 	private static final long serialVersionUID = -3632936699480409384L;
 
-	private String name;
+	private String title;
 
 	private String creatorId;
 }

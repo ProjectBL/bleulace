@@ -7,12 +7,12 @@ import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 
 privileged aspect ProjectCreatedEvent_Roo_JavaBean {
     
-    public String ProjectCreatedEvent.getName() {
-        return this.name;
+    public String ProjectCreatedEvent.getTitle() {
+        return this.title;
     }
     
-    public void ProjectCreatedEvent.setName(String name) {
-        this.name = name;
+    public void ProjectCreatedEvent.setTitle(String title) {
+        this.title = title;
     }
     
     public String ProjectCreatedEvent.getCreatorId() {

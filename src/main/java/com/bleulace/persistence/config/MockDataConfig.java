@@ -16,7 +16,7 @@ import com.bleulace.utils.CsvIterator;
  * 
  */
 @Configuration
-@Profile({ "dev", "prod" })
+@Profile({ "dev", "test" })
 public class MockDataConfig
 {
 	@Bean(name = "createAccountCommands")

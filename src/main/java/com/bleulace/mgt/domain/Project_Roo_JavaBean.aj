@@ -5,6 +5,7 @@ package com.bleulace.mgt.domain;
 
 import com.bleulace.mgt.domain.Project;
 import com.bleulace.mgt.domain.ProjectManager;
+import com.bleulace.mgt.domain.Task;
 import java.util.List;
 
 privileged aspect Project_Roo_JavaBean {
@@ -17,16 +18,28 @@ privileged aspect Project_Roo_JavaBean {
         this.id = id;
     }
     
-    public String Project.getName() {
-        return this.name;
+    public String Project.getTitle() {
+        return this.title;
     }
     
-    public void Project.setName(String name) {
-        this.name = name;
+    public void Project.setTitle(String title) {
+        this.title = title;
     }
     
-    public void Project.setMgt(List<ProjectManager> mgt) {
-        this.mgt = mgt;
+    public List<ProjectManager> Project.getMgrList() {
+        return this.mgrList;
+    }
+    
+    public void Project.setMgrList(List<ProjectManager> mgrList) {
+        this.mgrList = mgrList;
+    }
+    
+    public List<Task> Project.getTasks() {
+        return this.tasks;
+    }
+    
+    public void Project.setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
     
 }

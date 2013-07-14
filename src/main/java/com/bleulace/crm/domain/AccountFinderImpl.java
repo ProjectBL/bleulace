@@ -32,4 +32,9 @@ public class AccountFinderImpl implements AccountFinder
 				.where(QACCOUNT.email.equalsIgnoreCase(email))
 				.uniqueResult(QACCOUNT);
 	}
+
+	public long count()
+	{
+		return QueryFactory.from(QACCOUNT).count();
+	}
 }

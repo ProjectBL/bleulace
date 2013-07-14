@@ -23,15 +23,17 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.mgt.application.command.CreateTaskCommand;
 import com.bleulace.mgt.domain.event.ManagerAddedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
+import com.bleulace.mgt.domain.event.TaskCreatedEvent;
 import com.bleulace.persistence.utils.EntityManagerReference;
 
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Project extends AbstractAnnotatedAggregateRoot<String> implements
-		TaskableMixin, Manageable
+		TaskableMixin
 {
 	private static final long serialVersionUID = -1998536878318608268L;
 
@@ -39,10 +41,13 @@ public class Project extends AbstractAnnotatedAggregateRoot<String> implements
 	private String id = UUID.randomUUID().toString();
 
 	@Column(nullable = false)
-	private String name;
+	private String title;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private List<ProjectManager> mgt = new ArrayList<ProjectManager>();
+	private List<ProjectManager> mgrList = new ArrayList<ProjectManager>();
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Task> tasks;
 
 	Project()
 	{
@@ -57,7 +62,7 @@ public class Project extends AbstractAnnotatedAggregateRoot<String> implements
 	@EventHandler
 	public void on(ProjectCreatedEvent event)
 	{
-		name = event.getName();
+		title = event.getTitle();
 		apply(new ManagerAddedEvent(event.getCreatorId(), ManagementLevel.OWN));
 	}
 
@@ -78,14 +83,20 @@ public class Project extends AbstractAnnotatedAggregateRoot<String> implements
 		entityManager.merge(account);
 	}
 
-	@Override
+	@CommandHandler
+	public void handle(CreateTaskCommand command)
+	{
+		apply(new TaskCreatedEvent(command.getTitle()));
+	}
+
+	@EventHandler
+	public void on(TaskCreatedEvent event)
+	{
+		title = event.getTitle();
+	}
+
 	public Map<Account, ManagementLevel> getManagers()
 	{
 		return new ProjectManagerMap(this);
-	}
-
-	protected List<ProjectManager> getMgt()
-	{
-		return mgt;
 	}
 }

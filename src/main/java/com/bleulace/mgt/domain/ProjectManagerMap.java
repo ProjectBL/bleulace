@@ -21,13 +21,13 @@ class ProjectManagerMap implements Map<Account, ManagementLevel>
 	@Override
 	public int size()
 	{
-		return project.getMgt().size();
+		return project.getMgrList().size();
 	}
 
 	@Override
 	public boolean isEmpty()
 	{
-		return project.getMgt().isEmpty();
+		return project.getMgrList().isEmpty();
 	}
 
 	@Override
@@ -78,9 +78,9 @@ class ProjectManagerMap implements Map<Account, ManagementLevel>
 		ProjectManager mgr = find(key);
 		if (mgr != null && !mgr.getLevel().equals(value))
 		{
-			project.getMgt().remove(mgr);
+			project.getMgrList().remove(mgr);
 		}
-		project.getMgt().add(new ProjectManager(project, key, value));
+		project.getMgrList().add(new ProjectManager(project, key, value));
 		return value;
 	}
 
@@ -92,7 +92,8 @@ class ProjectManagerMap implements Map<Account, ManagementLevel>
 		if (mgr != null)
 		{
 			level = mgr.getLevel();
-			project.getMgt().remove(mgr);
+			project.getMgrList().remove(mgr);
+			mgr.setProject(null);
 		}
 		return level;
 	}
@@ -106,9 +107,9 @@ class ProjectManagerMap implements Map<Account, ManagementLevel>
 			ProjectManager mgr = find(entry.getKey());
 			if (mgr != null)
 			{
-				project.getMgt().remove(mgr);
+				project.getMgrList().remove(mgr);
 			}
-			project.getMgt().add(
+			project.getMgrList().add(
 					new ProjectManager(project, entry.getKey(), entry
 							.getValue()));
 		}
@@ -117,7 +118,7 @@ class ProjectManagerMap implements Map<Account, ManagementLevel>
 	@Override
 	public void clear()
 	{
-		project.getMgt().clear();
+		project.getMgrList().clear();
 	}
 
 	@Override
