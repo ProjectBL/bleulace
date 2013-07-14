@@ -1,4 +1,4 @@
-package com.bleulace.context.utils;
+package com.bleulace.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;

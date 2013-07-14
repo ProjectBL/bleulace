@@ -3,6 +3,9 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.Project;
+import com.bleulace.mgt.domain.ProjectManager;
+import java.util.List;
 
 privileged aspect Project_Roo_JavaBean {
     
@@ -20,6 +23,10 @@ privileged aspect Project_Roo_JavaBean {
     
     public void Project.setName(String name) {
         this.name = name;
+    }
+    
+    public void Project.setMgt(List<ProjectManager> mgt) {
+        this.mgt = mgt;
     }
     
 }

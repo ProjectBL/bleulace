@@ -4,6 +4,7 @@
 package com.bleulace.mgt.domain.event;
 
 import com.bleulace.mgt.domain.ManagementLevel;
+import com.bleulace.mgt.domain.event.ManagerAddedEvent;
 
 privileged aspect ManagerAddedEvent_Roo_JavaBean {
     
@@ -11,24 +12,8 @@ privileged aspect ManagerAddedEvent_Roo_JavaBean {
         return this.accountId;
     }
     
-    public void ManagerAddedEvent.setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-    
-    public String ManagerAddedEvent.getTargetId() {
-        return this.targetId;
-    }
-    
-    public void ManagerAddedEvent.setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
-    
     public ManagementLevel ManagerAddedEvent.getLevel() {
         return this.level;
-    }
-    
-    public void ManagerAddedEvent.setLevel(ManagementLevel level) {
-        this.level = level;
     }
     
 }

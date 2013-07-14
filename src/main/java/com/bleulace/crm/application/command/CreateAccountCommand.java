@@ -1,5 +1,6 @@
 package com.bleulace.crm.application.command;
 
+import org.axonframework.domain.IdentifierFactory;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -20,6 +21,9 @@ import com.bleulace.crm.infrastructure.Password;
 @RooJavaBean
 public class CreateAccountCommand
 {
+	private final String id = IdentifierFactory.getInstance()
+			.generateIdentifier();
+
 	@Email
 	@NotEmpty
 	private String email = "";
@@ -32,4 +36,9 @@ public class CreateAccountCommand
 
 	@NotEmpty
 	private String lastName = "";
+
+	public String getId()
+	{
+		return id;
+	}
 }

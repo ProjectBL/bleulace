@@ -67,6 +67,7 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	@CommandHandler
 	public Account(CreateAccountCommand command)
 	{
+		id = command.getId();
 		apply(new ModelMapper().map(command, AccountInfoUpdatedEvent.class));
 		apply(new PasswordChangedEvent(command.getPassword()));
 	}

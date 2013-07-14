@@ -1,4 +1,4 @@
-package com.bleulace.io.utils;
+package com.bleulace.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

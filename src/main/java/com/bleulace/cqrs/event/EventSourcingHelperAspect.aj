@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.axonframework.eventhandling.EventBus;
 
-import com.bleulace.context.utils.SpringApplicationContext;
+import com.bleulace.utils.SpringApplicationContext;
 
 /**
  * Enables implementor of {@link EventBusAware} to acquire a reference to the

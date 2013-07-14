@@ -8,13 +8,13 @@ import javax.persistence.ManyToMany;
 
 import com.bleulace.crm.domain.Account;
 
-interface AssignableMixin extends Assignable
+public interface AssignableMixin extends Assignable
 {
 	static aspect Impl
 	{
 		@ManyToMany
 		private Set<Account> AssignableMixin.assignees = new HashSet<Account>();
-		
+
 		public Set<Account> AssignableMixin.getAssignees()
 		{
 			return assignees;

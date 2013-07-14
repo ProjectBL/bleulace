@@ -3,6 +3,7 @@ package com.bleulace.mgt.domain;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
@@ -12,6 +13,7 @@ import org.joda.time.DateTime;
 
 import com.bleulace.crm.domain.Account;
 
+@Embeddable
 public class BasicComment implements Comment
 {
 	@ManyToOne
