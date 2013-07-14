@@ -7,6 +7,7 @@ import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.domain.AccountFinder;
@@ -19,7 +20,7 @@ import com.bleulace.crm.infrastructure.ExecutingAccount;
  * 
  */
 @Component
-public class LoginLogoutCommandHandler
+public class LoginLogoutCommandHandler implements CommandGatewayAware
 {
 	@Autowired
 	private ExecutingAccount executingAccount;

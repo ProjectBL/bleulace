@@ -1,6 +1,7 @@
 package com.bleulace.crm.application.command;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
+import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.infrastructure.Password;
@@ -14,20 +15,14 @@ import com.bleulace.crm.infrastructure.Password;
  * @author Arleigh Dickerson
  * 
  */
+@RooJavaBean
 public class ChangePasswordCommand
 {
 	@TargetAggregateIdentifier
-	private String id;
+	private final String id;
 
-	/**
-	 * we storing value as char array becuse Strings, being immutable, have a
-	 * tendency to show up in inconvenient locations in the event of a memory
-	 * dump. We certainly do not want to expose our clients' login info in the
-	 * event of a system failure.
-	 * 
-	 * I --THINK-- this is the safe way to do it.
-	 */
-	private char[] value;
+	@Password
+	private String value = "";
 
 	/**
 	 * 
@@ -46,16 +41,5 @@ public class ChangePasswordCommand
 	public String getId()
 	{
 		return id;
-	}
-
-	@Password
-	public String getValue()
-	{
-		return value.toString();
-	}
-
-	public void setValue(String value)
-	{
-		this.value = value.toCharArray();
 	}
 }
