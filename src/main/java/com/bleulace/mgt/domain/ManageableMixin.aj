@@ -3,15 +3,7 @@ package com.bleulace.mgt.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
-
-import org.axonframework.eventhandling.annotation.EventHandler;
-
 import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.event.ManagerAddedEvent;
-import com.bleulace.persistence.utils.EntityManagerReference;
 
 public interface ManageableMixin extends Manageable
 {

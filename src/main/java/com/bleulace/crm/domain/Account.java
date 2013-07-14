@@ -23,9 +23,9 @@ import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.event.AccountLoggedOutEvent;
 import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
-import com.bleulace.crm.config.BaseSecurityConfig;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
+import com.bleulace.crm.infrastructure.SecurityConfig;
 import com.bleulace.mgt.domain.ManagementPermission;
 
 @Entity
@@ -61,7 +61,7 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 
 	public PrincipalCollection getPrincipalCollection()
 	{
-		return new SimplePrincipalCollection(id, BaseSecurityConfig.REALM_NAME);
+		return new SimplePrincipalCollection(id, SecurityConfig.REALM_NAME);
 	}
 
 	@CommandHandler

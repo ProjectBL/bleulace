@@ -21,7 +21,8 @@ import com.bleulace.crm.infrastructure.Password;
 public class CreateAccountCommand
 {
 	@Email
-	private String email;
+	@NotEmpty
+	private String email = "";
 
 	@Password
 	private String password = "";

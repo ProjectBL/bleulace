@@ -3,8 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.ManagementLevel;
-import com.bleulace.mgt.domain.ManagementPermission;
 
 privileged aspect ManagementPermission_Roo_JavaBean {
     

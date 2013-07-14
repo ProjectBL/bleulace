@@ -3,9 +3,9 @@
 
 package com.bleulace.crm.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.ManagementPermission;
 import java.util.List;
+
+import com.bleulace.mgt.domain.ManagementPermission;
 
 privileged aspect Account_Roo_JavaBean {
     

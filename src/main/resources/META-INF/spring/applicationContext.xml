@@ -21,7 +21,7 @@
 			type="annotation" />
 	</context:component-scan>
 
-	<task:executor id="executor" pool-size="0-4"/>
+	<task:executor id="executor" pool-size="0-4" />
 
 	<!-- Axon -->
 	<axon:annotation-config />
@@ -33,11 +33,18 @@
 				class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
 			<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
 		</axon:dispatchInterceptors>
+		<axon:handlerInterceptors>
+			<bean class="org.axonframework.auditing.AuditingInterceptor">
+				<property name="auditDataProvider" ref="auditDataProviderImpl" />
+				<property name="auditLogger" ref="auditLoggerImpl" />
+			</bean>
+		</axon:handlerInterceptors>
 	</axon:command-bus>
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
 		<property name="commandBus" ref="commandBus" />
-		<property name="gatewayInterface" value="com.bleulace.cqrs.command.MasterCommandGateway" />
+		<property name="gatewayInterface"
+			value="com.bleulace.cqrs.command.MasterCommandGateway" />
 	</bean>
 
 	<axon:event-bus id="eventBus" />
