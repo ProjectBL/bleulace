@@ -49,7 +49,7 @@ public class AccountCommandTest implements CommandGatewayAware
 	}
 
 	@Test
-	public void testChangePasswordCommand() throws InterruptedException
+	public void testChangePasswordCommand()
 	{
 		CreateAccountCommand command = createAccountCommands.iterator().next();
 		gateway().send(command);

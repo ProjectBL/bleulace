@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.Bundle;
 import com.bleulace.mgt.domain.Project;
 import com.bleulace.mgt.domain.Task;
 
@@ -18,6 +19,10 @@ privileged aspect Task_Roo_JavaBean {
     
     public Project Task.getProject() {
         return this.project;
+    }
+    
+    public Bundle Task.getBundle() {
+        return this.bundle;
     }
     
 }

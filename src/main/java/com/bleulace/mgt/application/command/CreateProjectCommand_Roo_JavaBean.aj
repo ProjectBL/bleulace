@@ -7,8 +7,12 @@ import com.bleulace.mgt.application.command.CreateProjectCommand;
 
 privileged aspect CreateProjectCommand_Roo_JavaBean {
     
-    public String CreateProjectCommand.getName() {
-        return this.name;
+    public String CreateProjectCommand.getId() {
+        return this.id;
+    }
+    
+    public String CreateProjectCommand.getTitle() {
+        return this.title;
     }
     
     public String CreateProjectCommand.getCreatorId() {

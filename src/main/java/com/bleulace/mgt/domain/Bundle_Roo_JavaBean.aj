@@ -4,12 +4,15 @@
 package com.bleulace.mgt.domain;
 
 import com.bleulace.mgt.domain.Bundle;
-import com.bleulace.mgt.domain.Project;
 
 privileged aspect Bundle_Roo_JavaBean {
     
-    public Project Bundle.getProject() {
-        return this.project;
+    public String Bundle.getId() {
+        return this.id;
+    }
+    
+    public String Bundle.getName() {
+        return this.name;
     }
     
 }

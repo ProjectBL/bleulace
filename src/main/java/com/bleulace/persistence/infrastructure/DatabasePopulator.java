@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.domain.Account;
-import com.bleulace.persistence.utils.EntityManagerReference;
+import com.bleulace.utils.EntityManagerReference;
 
 @Component
 @Profile({ "dev", "prod" })

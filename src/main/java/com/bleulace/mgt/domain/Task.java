@@ -21,19 +21,24 @@ public class Task extends AbstractAnnotatedEntity implements CommentableMixin,
 	@Column(nullable = false)
 	private String title;
 
-	@JoinColumn(nullable = false, updatable = false)
 	@ManyToOne
+	@JoinColumn(nullable = false)
 	private Project project;
+
+	@ManyToOne
+	@JoinColumn(nullable = true)
+	private Bundle bundle;
 
 	@SuppressWarnings("unused")
 	private Task()
 	{
 	}
 
-	Task(Project project, String title)
+	Task(Project project, Bundle bundle, String title)
 	{
-		this.project = project;
 		this.title = title;
+		this.project = project;
+		this.bundle = bundle;
 		registerAggregateRoot(project);
 	}
 }

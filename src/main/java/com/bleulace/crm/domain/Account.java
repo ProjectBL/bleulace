@@ -2,7 +2,6 @@ package com.bleulace.crm.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -35,7 +34,7 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	private static final long serialVersionUID = -8047989744778433448L;
 
 	@Id
-	private String id = UUID.randomUUID().toString();
+	private String id;
 
 	private byte[] hash;
 	private byte[] salt;

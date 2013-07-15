@@ -3,7 +3,6 @@ package com.bleulace.mgt.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,7 +26,7 @@ import com.bleulace.mgt.application.command.CreateTaskCommand;
 import com.bleulace.mgt.domain.event.ManagerAddedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 import com.bleulace.mgt.domain.event.TaskCreatedEvent;
-import com.bleulace.persistence.utils.EntityManagerReference;
+import com.bleulace.utils.EntityManagerReference;
 
 @Entity
 @RooJavaBean
@@ -38,7 +37,7 @@ public class Project extends AbstractAnnotatedAggregateRoot<String> implements
 	private static final long serialVersionUID = -1998536878318608268L;
 
 	@Id
-	private String id = UUID.randomUUID().toString();
+	private String id;
 
 	@Column(nullable = false)
 	private String title;
@@ -54,8 +53,9 @@ public class Project extends AbstractAnnotatedAggregateRoot<String> implements
 	}
 
 	@CommandHandler
-	Project(CreateProjectCommand command)
+	public Project(CreateProjectCommand command)
 	{
+		id = command.getId();
 		apply(new ModelMapper().map(command, ProjectCreatedEvent.class));
 	}
 
