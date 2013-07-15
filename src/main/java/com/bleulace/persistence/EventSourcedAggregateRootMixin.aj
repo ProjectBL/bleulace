@@ -1,5 +1,6 @@
 package com.bleulace.persistence;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Basic;
@@ -23,7 +24,7 @@ import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 
 public interface EventSourcedAggregateRootMixin extends
-		EventSourcedAggregateRoot<String>
+		EventSourcedAggregateRoot<String>, Serializable
 {
 	static aspect Impl
 	{
@@ -108,6 +109,17 @@ public interface EventSourcedAggregateRootMixin extends
 		public Long EventSourcedAggregateRootMixin.getVersion()
 		{
 			return this.getLastCommittedEventSequenceNumber();
+		}
+
+		private void EventSourcedAggregateRootMixin.setId(String id)
+		{
+			Assert.notNull(id, "An aggregate root's id can not be set to null");
+			if (this.id != null)
+			{
+				throw new IllegalStateException(
+						"The identifier for this aggregate root has already been set.");
+			}
+			this.id = id;
 		}
 
 		private void EventSourcedAggregateRootMixin.handle(

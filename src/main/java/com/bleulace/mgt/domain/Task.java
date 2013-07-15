@@ -1,22 +1,18 @@
 package com.bleulace.mgt.domain;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-@Entity
+import com.bleulace.persistence.EventSourcedEntityMixin;
+
 @RooJavaBean(settersByDefault = false)
-public class Task extends AbstractAnnotatedEntity implements CommentableMixin,
+public class Task implements EventSourcedEntityMixin, CommentableMixin,
 		AssignableMixin
 {
-	@Id
-	@Column(nullable = false, updatable = false)
-	private String id;
+	private static final long serialVersionUID = 6010485686197407357L;
 
 	@Column(nullable = false)
 	private String title;

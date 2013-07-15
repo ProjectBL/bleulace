@@ -3,20 +3,12 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.Bundle;
 import com.bleulace.mgt.domain.Project;
 import com.bleulace.mgt.domain.ProjectManager;
-import com.bleulace.mgt.domain.Task;
 import java.util.List;
 
 privileged aspect Project_Roo_JavaBean {
-    
-    public String Project.getId() {
-        return this.id;
-    }
-    
-    public void Project.setId(String id) {
-        this.id = id;
-    }
     
     public String Project.getTitle() {
         return this.title;
@@ -34,12 +26,12 @@ privileged aspect Project_Roo_JavaBean {
         this.mgrList = mgrList;
     }
     
-    public List<Task> Project.getTasks() {
-        return this.tasks;
+    public List<Bundle> Project.getBundles() {
+        return this.bundles;
     }
     
-    public void Project.setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void Project.setBundles(List<Bundle> bundles) {
+        this.bundles = bundles;
     }
     
 }

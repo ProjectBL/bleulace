@@ -2,15 +2,38 @@ package com.bleulace.persistence;
 
 import java.util.Collection;
 
+import javax.persistence.Id;
+
 import org.axonframework.domain.DomainEventMessage;
+import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
+import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
+import org.springframework.data.domain.Persistable;
 
-public interface EventSourcedEntityMixin extends EventSourcedEntity
+import com.bleulace.utils.EntityManagerReference;
+
+public interface EventSourcedEntityMixin extends EventSourcedEntity,
+		Persistable<String>
 {
+	public String getId();
+
 	static aspect Impl
 	{
+		@Id
+		private String EventSourcedEntityMixin.id = IdentifierFactory
+				.getInstance().generateIdentifier();
+
+		public String EventSourcedEntityMixin.getId()
+		{
+			return id;
+		}
+
+		public boolean EventSourcedEntityMixin.isNew()
+		{
+			return !EntityManagerReference.get().contains(this);
+		}
 
 		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
 
@@ -32,6 +55,11 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity
 			this.aggregateRoot = aggregateRootToRegister;
 		}
 
+		public void EventSourcedEntityMixin.registerAggregateRoot(
+				@SuppressWarnings("rawtypes") AbstractEventSourcedAggregateRoot aggregateRoot)
+		{
+		}
+
 		public void EventSourcedEntityMixin.handleRecursively(
 				@SuppressWarnings("rawtypes") DomainEventMessage event)
 		{
@@ -43,15 +71,16 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity
 				{
 					if (entity != null)
 					{
-						//TODO : uncomment
-						//entity.registerAggregateRoot(aggregateRoot);
+						// TODO : uncomment
+						// entity.registerAggregateRoot(aggregateRoot);
 						entity.handleRecursively(event);
 					}
 				}
 			}
 		}
 
-		private void EventSourcedEntityMixin.handle(DomainEventMessage<?> event)
+		@SuppressWarnings("rawtypes")
+		private void EventSourcedEntityMixin.handle(DomainEventMessage event)
 		{
 			ensureInspectorInitialized();
 			ensureInvokerInitialized();
