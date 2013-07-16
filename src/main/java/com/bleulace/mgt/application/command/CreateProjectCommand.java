@@ -8,7 +8,7 @@ import org.springframework.util.Assert;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.infrastructure.ExecutingAccount;
-import com.bleulace.utils.SpringApplicationContext;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RequiresAuthentication
 @RooJavaBean

@@ -1,22 +1,22 @@
 package com.bleulace.mgt.domain;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
+import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OneToMany;
 
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
@@ -24,53 +24,53 @@ import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.mgt.domain.event.BundleAddedEvent;
 import com.bleulace.mgt.domain.event.ManagerAddedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
-import com.bleulace.utils.EntityManagerReference;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Project implements EventSourcedAggregateRootMixin
+public class Project extends MgtRoot implements EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = -1998536878318608268L;
 
-	@JoinColumn
-	@ManyToOne(cascade = CascadeType.ALL)
-	private Project parent;
+	// @OneToMany(cascade = CascadeType.ALL)
+	// @MapKey(name = "account")
+	// private Map<Account, ProjectManager> managers = new HashMap<Account,
+	// ProjectManager>();
 
-	@Column(nullable = false)
-	private String title;
+	@CascadeOnDelete
+	@Enumerated(EnumType.STRING)
+	@MapKeyJoinColumn
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Map<Account, ManagementLevel> managers = new HashMap<Account, ManagementLevel>();
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@MapKey(name = "account")
-	private Map<Account, ProjectManager> managers = new HashMap<Account, ProjectManager>();
-
+	@CascadeOnDelete
 	@EventSourcedMember
+	@MapKeyColumn
 	@OneToMany(cascade = CascadeType.ALL)
-	@MapKey
-	private Map<String, Task> tasks = new HashMap<String, Task>();
-
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Project> bundles = new ArrayList<Project>();
+	private Map<String, Bundle> bundles = new HashMap<String, Bundle>();
 
 	Project()
 	{
 	}
 
+	Project(String id)
+	{
+		super(id);
+	}
+
 	public Project(CreateProjectCommand command)
 	{
-		setId(command.getId());
+		super(command.getId());
 		apply(command, ProjectCreatedEvent.class);
 	}
 
-	public Project(AddBundleCommand command)
-	{
-		this((CreateProjectCommand) command);
-	}
-
+	@Override
 	public void on(ProjectCreatedEvent event)
 	{
 		map(event);
@@ -79,13 +79,6 @@ public class Project implements EventSourcedAggregateRootMixin
 		{
 			apply(new ManagerAddedEvent(event.getCreatorId(),
 					ManagementLevel.OWN));
-		}
-
-		if (event.getParentId() != null)
-		{
-			parent = EntityManagerReference.get().getReference(Project.class,
-					event.getParentId());
-			parent.getBundles().add(this);
 		}
 	}
 
@@ -99,21 +92,22 @@ public class Project implements EventSourcedAggregateRootMixin
 		String accountId = event.getAccountId();
 		EntityManager entityManager = EntityManagerReference.get();
 		Account account = entityManager.getReference(Account.class, accountId);
-		// account.getPermissions().add(
-		// new ManagementPermission(getId(), event.getLevel()));
-		entityManager.merge(account);
-		getManagers().put(account,
-				new ProjectManager(this, account, event.getLevel()));
+		getManagers().put(account, event.getLevel());
+	}
+
+	public void handle(AddBundleCommand command)
+	{
+		apply(command, BundleAddedEvent.class);
+	}
+
+	public void on(BundleAddedEvent event)
+	{
+		Bundle bundle = new Bundle(this, event);
+		bundles.put(bundle.getId(), bundle);
 	}
 
 	public void handle(AddTaskCommand command)
 	{
 		apply(command, TaskAddedEvent.class);
-	}
-
-	public void on(TaskAddedEvent event)
-	{
-		Task task = new Task(this, event.getTitle());
-		tasks.put(task.getId(), task);
 	}
 }

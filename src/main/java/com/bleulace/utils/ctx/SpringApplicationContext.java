@@ -1,4 +1,4 @@
-package com.bleulace.utils;
+package com.bleulace.utils.ctx;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;

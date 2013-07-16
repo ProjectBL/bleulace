@@ -7,6 +7,22 @@ import com.bleulace.mgt.domain.event.TaskAddedEvent;
 
 privileged aspect TaskAddedEvent_Roo_JavaBean {
     
+    public String TaskAddedEvent.getId() {
+        return this.id;
+    }
+    
+    public void TaskAddedEvent.setId(String id) {
+        this.id = id;
+    }
+    
+    public String TaskAddedEvent.getBundleId() {
+        return this.bundleId;
+    }
+    
+    public void TaskAddedEvent.setBundleId(String bundleId) {
+        this.bundleId = bundleId;
+    }
+    
     public String TaskAddedEvent.getTitle() {
         return this.title;
     }

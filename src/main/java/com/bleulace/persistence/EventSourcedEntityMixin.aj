@@ -1,21 +1,18 @@
 package com.bleulace.persistence;
 
+import java.io.Serializable;
 import java.util.Collection;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 import org.axonframework.domain.DomainEventMessage;
 import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
 import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
-import org.springframework.data.domain.Persistable;
 
-import com.bleulace.utils.EntityManagerReference;
-
-public interface EventSourcedEntityMixin extends EventSourcedEntity
+public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializable
 {
+	public String getId();
+	
 	static aspect Impl
 	{
 		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
@@ -61,6 +58,30 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity
 				}
 			}
 		}
+		
+		public boolean EventSourcedEntityMixin.equals(Object obj)
+		{
+			if (null == obj)
+			{
+				return false;
+			}
+
+			if (this == obj)
+			{
+				return true;
+			}
+
+			if (!getClass().equals(obj.getClass()))
+			{
+				return false;
+			}
+
+			EventSourcedEntityMixin that = (EventSourcedEntityMixin) obj;
+
+			return null == this.getId() ? false : this.getId().equals(
+					that.getId());
+		}
+
 
 		@SuppressWarnings("rawtypes")
 		private void EventSourcedEntityMixin.handle(DomainEventMessage event)

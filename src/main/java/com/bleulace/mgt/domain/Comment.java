@@ -1,14 +1,41 @@
 package com.bleulace.mgt.domain;
 
-import org.joda.time.DateTime;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
 
-public interface Comment
+@RooJavaBean(settersByDefault = false)
+@Embeddable
+public class Comment
 {
-	public Account getAuthor();
+	@ManyToOne
+	@JoinColumn(updatable = false, nullable = false)
+	private Account author;
 
-	public String getContent();
+	@Column(nullable = false, updatable = false)
+	private String content;
 
-	public DateTime getDatePosted();
+	@Column(insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date datePosted;
+
+	@SuppressWarnings("unused")
+	private Comment()
+	{
+	}
+
+	public Comment(Account author, String content)
+	{
+		this.author = author;
+		this.content = content;
+	}
 }

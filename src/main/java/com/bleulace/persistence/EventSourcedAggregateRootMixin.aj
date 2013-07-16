@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.Transient;
 
 import org.axonframework.common.Assert;
@@ -23,12 +21,12 @@ import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-import org.springframework.ui.ModelMap;
 
 public interface EventSourcedAggregateRootMixin extends
 		EventSourcedAggregateRoot<String>, Serializable
 {
+	public String getId();
+	
 	static aspect Impl
 	{
 		@Transient
@@ -42,15 +40,6 @@ public interface EventSourcedAggregateRootMixin extends
 
 		private transient AnnotationEventHandlerInvoker EventSourcedAggregateRootMixin.eventHandlerInvoker;
 		private transient AggregateAnnotationInspector EventSourcedAggregateRootMixin.inspector;
-
-		@Id
-		@Column(nullable = false, updatable = false)
-		private String EventSourcedAggregateRootMixin.id;
-
-		public String EventSourcedAggregateRootMixin.getId()
-		{
-			return id;
-		}
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
@@ -90,7 +79,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public String EventSourcedAggregateRootMixin.getIdentifier()
 		{
-			return id;
+			return this.getId();
 		}
 
 		public void EventSourcedAggregateRootMixin.initializeState(
@@ -112,26 +101,30 @@ public interface EventSourcedAggregateRootMixin extends
 		{
 			return this.getLastCommittedEventSequenceNumber();
 		}
-		
+
 		public boolean EventSourcedAggregateRootMixin.equals(Object obj)
 		{
-			if (null == obj) {
+			if (null == obj)
+			{
 				return false;
 			}
 
-			if (this == obj) {
+			if (this == obj)
+			{
 				return true;
 			}
 
-			if (!getClass().equals(obj.getClass())) {
+			if (!getClass().equals(obj.getClass()))
+			{
 				return false;
 			}
 
 			EventSourcedAggregateRootMixin that = (EventSourcedAggregateRootMixin) obj;
 
-			return null == this.getId() ? false : this.getId().equals(that.getId());
+			return null == this.getId() ? false : this.getId().equals(
+					that.getId());
 		}
-		
+
 		private void EventSourcedAggregateRootMixin.map(Object source)
 		{
 			new ModelMapper().map(source, this);
@@ -141,17 +134,6 @@ public interface EventSourcedAggregateRootMixin extends
 				Class<?> eventClazz)
 		{
 			this.apply(new ModelMapper().map(command, eventClazz));
-		}
-
-		private void EventSourcedAggregateRootMixin.setId(String id)
-		{
-			Assert.notNull(id, "An aggregate root's id can not be set to null");
-			if (this.id != null)
-			{
-				throw new IllegalStateException(
-						"The identifier for this aggregate root has already been set.");
-			}
-			this.id = id;
 		}
 
 		@SuppressWarnings("rawtypes")

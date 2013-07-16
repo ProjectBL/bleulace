@@ -21,8 +21,7 @@ import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
-import com.bleulace.persistence.infrastructure.QueryFactory;
-import com.bleulace.utils.EntityManagerReference;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -76,11 +75,6 @@ public class ProjectCommandTest implements CommandGatewayAware
 		gateway().send(addManagerCommand);
 		project = finder.findOne(addManagerCommand.getId());
 		Assert.assertEquals(managerCount + 1, project.getManagers().size());
-		QProjectManager m = QProjectManager.projectManager;
-		Assert.assertNotNull(QueryFactory
-				.from(m)
-				.where(m.account.id.eq(addManagerCommand.getAccountId()).and(
-						m.project.eq(project))).singleResult(m));
 	}
 
 	@Test
@@ -98,8 +92,10 @@ public class ProjectCommandTest implements CommandGatewayAware
 	public void testAddTaskCommand()
 	{
 		String id = addTaskCommand.getBundleId();
-		long taskCount = finder.findOne(id).getTasks().size();
+		long taskCount = EntityManagerReference.get()
+				.getReference(Bundle.class, id).getTasks().size();
 		gateway().send(addTaskCommand);
-		Assert.assertEquals(taskCount + 1, finder.findOne(id).getTasks().size());
+		Assert.assertEquals(taskCount + 1, EntityManagerReference.get()
+				.getReference(Bundle.class, id).getTasks().size());
 	}
 }

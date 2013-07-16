@@ -70,12 +70,10 @@ public class CommandFixturesConfig implements CommandGatewayAware
 
 	@Bean
 	@Scope("prototype")
-	public AddTaskCommand addTaskCommand(
-			CreateProjectCommand createProjectCommand)
+	public AddTaskCommand addTaskCommand(AddBundleCommand addBundleCommand)
 	{
-		gateway().send(createProjectCommand);
-		AddTaskCommand command = new AddTaskCommand(
-				createProjectCommand.getId());
+		gateway().send(addBundleCommand);
+		AddTaskCommand command = new AddTaskCommand(addBundleCommand.getId());
 		command.setTitle("foo");
 		return command;
 	}

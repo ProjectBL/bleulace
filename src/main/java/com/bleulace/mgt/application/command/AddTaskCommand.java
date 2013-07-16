@@ -11,7 +11,7 @@ public class AddTaskCommand
 	@TargetAggregateIdentifier
 	private final String bundleId;
 
-	private final String taskId = IdentifierFactory.getInstance()
+	private final String id = IdentifierFactory.getInstance()
 			.generateIdentifier();
 
 	@NotEmpty

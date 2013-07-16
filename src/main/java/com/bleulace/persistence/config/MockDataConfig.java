@@ -7,7 +7,7 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import com.bleulace.crm.application.command.CreateAccountCommand;
-import com.bleulace.utils.CsvIterator;
+import com.bleulace.utils.io.CsvIterator;
 
 /**
  * Configures mock data iterators.

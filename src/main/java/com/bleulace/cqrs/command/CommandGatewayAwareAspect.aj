@@ -1,6 +1,6 @@
 package com.bleulace.cqrs.command;
 
-import com.bleulace.utils.SpringApplicationContext;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
  * Declares the gateway() method on implementors of the

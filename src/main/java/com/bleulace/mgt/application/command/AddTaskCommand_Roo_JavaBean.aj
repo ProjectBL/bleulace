@@ -11,8 +11,8 @@ privileged aspect AddTaskCommand_Roo_JavaBean {
         return this.bundleId;
     }
     
-    public String AddTaskCommand.getTaskId() {
-        return this.taskId;
+    public String AddTaskCommand.getId() {
+        return this.id;
     }
     
     public String AddTaskCommand.getTitle() {

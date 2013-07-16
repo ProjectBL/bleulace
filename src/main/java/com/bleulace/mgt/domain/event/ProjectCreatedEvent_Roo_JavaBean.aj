@@ -15,14 +15,6 @@ privileged aspect ProjectCreatedEvent_Roo_JavaBean {
         this.id = id;
     }
     
-    public String ProjectCreatedEvent.getParentId() {
-        return this.parentId;
-    }
-    
-    public void ProjectCreatedEvent.setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-    
     public String ProjectCreatedEvent.getTitle() {
         return this.title;
     }

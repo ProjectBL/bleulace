@@ -4,51 +4,26 @@
 package com.bleulace.mgt.domain;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.domain.Bundle;
+import com.bleulace.mgt.domain.ManagementLevel;
 import com.bleulace.mgt.domain.Project;
-import com.bleulace.mgt.domain.ProjectManager;
-import com.bleulace.mgt.domain.Task;
-import java.util.List;
 import java.util.Map;
 
 privileged aspect Project_Roo_JavaBean {
     
-    public Project Project.getParent() {
-        return this.parent;
-    }
-    
-    public void Project.setParent(Project parent) {
-        this.parent = parent;
-    }
-    
-    public String Project.getTitle() {
-        return this.title;
-    }
-    
-    public void Project.setTitle(String title) {
-        this.title = title;
-    }
-    
-    public Map<Account, ProjectManager> Project.getManagers() {
+    public Map<Account, ManagementLevel> Project.getManagers() {
         return this.managers;
     }
     
-    public void Project.setManagers(Map<Account, ProjectManager> managers) {
+    public void Project.setManagers(Map<Account, ManagementLevel> managers) {
         this.managers = managers;
     }
     
-    public Map<String, Task> Project.getTasks() {
-        return this.tasks;
-    }
-    
-    public void Project.setTasks(Map<String, Task> tasks) {
-        this.tasks = tasks;
-    }
-    
-    public List<Project> Project.getBundles() {
+    public Map<String, Bundle> Project.getBundles() {
         return this.bundles;
     }
     
-    public void Project.setBundles(List<Project> bundles) {
+    public void Project.setBundles(Map<String, Bundle> bundles) {
         this.bundles = bundles;
     }
     

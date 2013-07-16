@@ -7,7 +7,7 @@ import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.event.EventBusAware;
-import com.bleulace.utils.SpringApplicationContext;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
  * Enables implementor of {@link EventBusAware} to acquire a reference to the

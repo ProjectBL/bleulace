@@ -5,7 +5,7 @@ import org.apache.shiro.UnavailableSecurityManagerException;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.crm.domain.Account;
-import com.bleulace.utils.EntityManagerReference;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 /**
  * An application component to find the Account belonging to the currently

@@ -9,8 +9,6 @@ public class ProjectCreatedEvent
 
 	private String id;
 
-	private String parentId;
-
 	private String title;
 
 	private String creatorId;
