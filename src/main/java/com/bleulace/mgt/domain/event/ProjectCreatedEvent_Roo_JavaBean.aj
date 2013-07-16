@@ -7,6 +7,22 @@ import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 
 privileged aspect ProjectCreatedEvent_Roo_JavaBean {
     
+    public String ProjectCreatedEvent.getId() {
+        return this.id;
+    }
+    
+    public void ProjectCreatedEvent.setId(String id) {
+        this.id = id;
+    }
+    
+    public String ProjectCreatedEvent.getParentId() {
+        return this.parentId;
+    }
+    
+    public void ProjectCreatedEvent.setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+    
     public String ProjectCreatedEvent.getTitle() {
         return this.title;
     }

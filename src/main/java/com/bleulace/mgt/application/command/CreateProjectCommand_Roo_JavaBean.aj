@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 
 privileged aspect CreateProjectCommand_Roo_JavaBean {
@@ -19,8 +20,8 @@ privileged aspect CreateProjectCommand_Roo_JavaBean {
         this.title = title;
     }
     
-    public String CreateProjectCommand.getCreatorId() {
-        return this.creatorId;
+    public Account CreateProjectCommand.getCreator() {
+        return this.creator;
     }
     
 }

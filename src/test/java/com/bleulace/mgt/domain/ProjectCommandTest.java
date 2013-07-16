@@ -1,5 +1,7 @@
 package com.bleulace.mgt.domain;
 
+import javax.annotation.PostConstruct;
+
 import junit.framework.Assert;
 
 import org.axonframework.domain.IdentifierFactory;
@@ -7,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,8 +17,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.crm.application.command.CreateAccountCommand;
-import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.application.command.AddManagerCommand;
+import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.utils.EntityManagerReference;
 
@@ -28,21 +30,30 @@ import com.bleulace.utils.EntityManagerReference;
 public class ProjectCommandTest implements CommandGatewayAware
 {
 	@Autowired
-	@Qualifier("createAccountCommands")
-	private Iterable<CreateAccountCommand> createAccountCommands;
+	private CreateProjectCommand createProjectCommand;
 
-	private final JpaRepository<Project, String> finder = new SimpleJpaRepository<Project, String>(
-			Project.class, EntityManagerReference.get());
+	@Autowired
+	private AddManagerCommand addManagerCommand;
 
-	private Account account;
+	@Autowired
+	private AddBundleCommand addBundleCommand;
+
+	@Autowired
+	private AddTaskCommand addTaskCommand;
+
+	private JpaRepository<Project, String> finder;
+
+	@PostConstruct
+	protected void init()
+	{
+		finder = new SimpleJpaRepository<Project, String>(Project.class,
+				EntityManagerReference.get());
+	}
 
 	@Before
 	public void before()
 	{
-		CreateAccountCommand command = createAccountCommands.iterator().next();
-		gateway().send(command);
-		account = EntityManagerReference.get().getReference(Account.class,
-				command.getId());
+		gateway().send(createProjectCommand);
 	}
 
 	@Test
@@ -54,5 +65,35 @@ public class ProjectCommandTest implements CommandGatewayAware
 		command.setTitle("Project Name");
 		gateway().send(command);
 		Assert.assertEquals(count + 1, finder.count());
+	}
+
+	@Test
+	public void testAddManagerCommand()
+	{
+		Project project = finder.findOne(addManagerCommand.getId());
+		long managerCount = project.getManagers().size();
+		gateway().send(addManagerCommand);
+		Assert.assertEquals(managerCount + 1,
+				finder.findOne(addManagerCommand.getId()).getManagers().size());
+	}
+
+	@Test
+	public void testAddBundleCommand()
+	{
+		Project project = finder.findOne(addBundleCommand.getParentId());
+		long bundleCount = project.getBundles().size();
+		gateway().send(addBundleCommand);
+		Assert.assertEquals(bundleCount + 1,
+				finder.findOne(addBundleCommand.getParentId()).getBundles()
+						.size());
+	}
+
+	@Test
+	public void testAddTaskCommand()
+	{
+		String id = addTaskCommand.getBundleId();
+		long taskCount = finder.findOne(id).getTasks().size();
+		gateway().send(addTaskCommand);
+		Assert.assertEquals(taskCount + 1, finder.findOne(id).getTasks().size());
 	}
 }

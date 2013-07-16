@@ -60,7 +60,6 @@
 		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
 		event-store="eventStore" />
 
-
 	<axon:aggregate-command-handler id="projectCommandHandler"
 		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.Project"
 		repository="projectRepository" />

@@ -3,12 +3,33 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.Project;
 import com.bleulace.mgt.domain.Task;
 
 privileged aspect Task_Roo_JavaBean {
     
+    public String Task.getId() {
+        return this.id;
+    }
+    
+    public void Task.setId(String id) {
+        this.id = id;
+    }
+    
+    public Project Task.getProject() {
+        return this.project;
+    }
+    
+    public void Task.setProject(Project project) {
+        this.project = project;
+    }
+    
     public String Task.getTitle() {
         return this.title;
+    }
+    
+    public void Task.setTitle(String title) {
+        this.title = title;
     }
     
 }

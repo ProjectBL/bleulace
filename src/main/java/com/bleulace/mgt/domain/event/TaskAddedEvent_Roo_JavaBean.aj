@@ -3,15 +3,15 @@
 
 package com.bleulace.mgt.domain.event;
 
-import com.bleulace.mgt.domain.event.TaskCreatedEvent;
+import com.bleulace.mgt.domain.event.TaskAddedEvent;
 
-privileged aspect TaskCreatedEvent_Roo_JavaBean {
+privileged aspect TaskAddedEvent_Roo_JavaBean {
     
-    public String TaskCreatedEvent.getTitle() {
+    public String TaskAddedEvent.getTitle() {
         return this.title;
     }
     
-    public void TaskCreatedEvent.setTitle(String title) {
+    public void TaskAddedEvent.setTitle(String title) {
         this.title = title;
     }
     

@@ -3,12 +3,22 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.Bundle;
+import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.domain.Project;
 import com.bleulace.mgt.domain.ProjectManager;
+import com.bleulace.mgt.domain.Task;
 import java.util.List;
+import java.util.Map;
 
 privileged aspect Project_Roo_JavaBean {
+    
+    public Project Project.getParent() {
+        return this.parent;
+    }
+    
+    public void Project.setParent(Project parent) {
+        this.parent = parent;
+    }
     
     public String Project.getTitle() {
         return this.title;
@@ -18,19 +28,27 @@ privileged aspect Project_Roo_JavaBean {
         this.title = title;
     }
     
-    public List<ProjectManager> Project.getMgrList() {
-        return this.mgrList;
+    public Map<Account, ProjectManager> Project.getManagers() {
+        return this.managers;
     }
     
-    public void Project.setMgrList(List<ProjectManager> mgrList) {
-        this.mgrList = mgrList;
+    public void Project.setManagers(Map<Account, ProjectManager> managers) {
+        this.managers = managers;
     }
     
-    public List<Bundle> Project.getBundles() {
+    public Map<String, Task> Project.getTasks() {
+        return this.tasks;
+    }
+    
+    public void Project.setTasks(Map<String, Task> tasks) {
+        this.tasks = tasks;
+    }
+    
+    public List<Project> Project.getBundles() {
         return this.bundles;
     }
     
-    public void Project.setBundles(List<Bundle> bundles) {
+    public void Project.setBundles(List<Project> bundles) {
         this.bundles = bundles;
     }
     

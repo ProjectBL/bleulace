@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,14 +25,12 @@ public class AccountCommandTest implements CommandGatewayAware
 	private AccountFinder finder;
 
 	@Autowired
-	@Qualifier("createAccountCommands")
-	private Iterable<CreateAccountCommand> createAccountCommands;
+	private CreateAccountCommand command;
 
 	@Test
 	public void testCreateAccountCommand() throws InterruptedException
 	{
 		long count = finder.count();
-		CreateAccountCommand command = createAccountCommands.iterator().next();
 		gateway().send(command);
 		Assert.assertEquals(count + 1, finder.count());
 	}
@@ -41,7 +38,6 @@ public class AccountCommandTest implements CommandGatewayAware
 	@Test
 	public void testLoginCommand()
 	{
-		CreateAccountCommand command = createAccountCommands.iterator().next();
 		gateway().send(command);
 		Assert.assertTrue(gateway().sendAndWait(
 				new LoginCommand(command.getEmail(), command.getPassword())));
@@ -50,7 +46,6 @@ public class AccountCommandTest implements CommandGatewayAware
 	@Test
 	public void testChangePasswordCommand()
 	{
-		CreateAccountCommand command = createAccountCommands.iterator().next();
 		gateway().send(command);
 		String newPassword = "password";
 		gateway().send(new ChangePasswordCommand(command.getId(), newPassword));

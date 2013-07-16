@@ -22,13 +22,14 @@ import org.axonframework.eventsourcing.EventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
+import org.modelmapper.ModelMapper;
+import org.springframework.ui.ModelMap;
 
 public interface EventSourcedAggregateRootMixin extends
 		EventSourcedAggregateRoot<String>, Serializable
 {
 	static aspect Impl
 	{
-
 		@Transient
 		private volatile EventContainer EventSourcedAggregateRootMixin.eventContainer;
 
@@ -110,6 +111,17 @@ public interface EventSourcedAggregateRootMixin extends
 		{
 			return this.getLastCommittedEventSequenceNumber();
 		}
+		
+		private void EventSourcedAggregateRootMixin.map(Object source)
+		{
+			new ModelMapper().map(source, this);
+		}
+
+		private void EventSourcedAggregateRootMixin.apply(Object command,
+				Class<?> eventClazz)
+		{
+			this.apply(new ModelMapper().map(command, eventClazz));
+		}
 
 		private void EventSourcedAggregateRootMixin.setId(String id)
 		{
@@ -122,8 +134,9 @@ public interface EventSourcedAggregateRootMixin extends
 			this.id = id;
 		}
 
+		@SuppressWarnings("rawtypes")
 		private void EventSourcedAggregateRootMixin.handle(
-				DomainEventMessage<?> event)
+				DomainEventMessage event)
 		{
 			ensureInspectorInitialized();
 			ensureInvokerInitialized();
@@ -183,8 +196,9 @@ public interface EventSourcedAggregateRootMixin extends
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
 		private void EventSourcedAggregateRootMixin.handleRecursively(
-				DomainEventMessage<?> event)
+				DomainEventMessage event)
 		{
 			handle(event);
 			Iterable<? extends EventSourcedEntity> childEntities = getChildEntities();

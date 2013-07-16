@@ -1,5 +1,6 @@
 package com.bleulace.crm.application.command;
 
+import com.bleulace.mgt.application.command.AddManagerCommand;
 
 public interface CrmCommandGateway
 {
@@ -10,4 +11,6 @@ public interface CrmCommandGateway
 	public void send(ChangePasswordCommand command);
 
 	public void send(CreateAccountCommand command);
+
+	public void send(AddManagerCommand command);
 }
