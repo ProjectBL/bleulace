@@ -1,4 +1,4 @@
-package com.bleulace.mgt.domain.event;
+package com.bleulace.mgt.domain.event.filter;
 
 import com.bleulace.mgt.domain.Taskable;
 import com.bleulace.persistence.EventFilterSpecification;

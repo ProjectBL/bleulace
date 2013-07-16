@@ -13,23 +13,29 @@ import javax.persistence.Transient;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.annotation.AbstractAnnotatedAggregateRoot;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.cqrs.event.EventBusAware;
 import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
+import com.bleulace.crm.application.command.SendFriendRequestCommand;
 import com.bleulace.crm.application.event.AccountLoggedOutEvent;
 import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
+import com.bleulace.crm.application.event.FriendRequestSentEvent;
+import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
 import com.bleulace.crm.infrastructure.SecurityConfig;
 import com.bleulace.mgt.domain.ManagementPermission;
+import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 
 @Entity
 @RooJavaBean
-public class Account extends AbstractAnnotatedAggregateRoot<String>
+public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 {
 	private static final long serialVersionUID = -8047989744778433448L;
 
@@ -129,5 +135,31 @@ public class Account extends AbstractAnnotatedAggregateRoot<String>
 	{
 		hash = event.getHash();
 		salt = event.getSalt();
+	}
+
+	public void handle(SendFriendRequestCommand command)
+	{
+		apply(command, FriendRequestSentEvent.class);
+	}
+
+	public void on(FriendRequestSentEvent event)
+	{
+		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
+	}
+
+	public void handle(ReplyToFriendRequestCommand command)
+	{
+		apply(command, RepliedToFriendRequestEvent.class);
+	}
+
+	public void on(RepliedToFriendRequestEvent event)
+	{
+		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
+	}
+
+	protected void addFriend(Account friend)
+	{
+		getFriends().add(friend);
+		friend.getFriends().add(this);
 	}
 }

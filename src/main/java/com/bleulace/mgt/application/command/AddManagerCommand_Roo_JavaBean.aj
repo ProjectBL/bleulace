@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.domain.ManagementLevel;
 
 privileged aspect AddManagerCommand_Roo_JavaBean {

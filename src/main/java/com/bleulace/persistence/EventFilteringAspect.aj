@@ -5,29 +5,25 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aspectj.lang.reflect.MethodSignature;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 public aspect EventFilteringAspect
 {
 	pointcut eventHandlerExecution(Object handler, Object event) : 
-		execution(@EventHandler * *.*(*)) 
+		execution(@EventHandler public void *.*(*)) 
 	&& this(handler) 
 	&& args(event);
 
-	pointcut filteredMethodExecution() : execution(@Filter * *.*());
-
 	void around(Object handler, Object event) : 
 		eventHandlerExecution(handler,event) 
-	&&  filteredMethodExecution()
 	{
 		if (passesFilters(handler, event))
 		{
 			proceed(handler, event);
 		}
+		return;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -44,7 +40,8 @@ public aspect EventFilteringAspect
 		return true;
 	}
 
-	private List<EventFilterSpecification<?>> acquireFilters(Object handler, Object event)
+	private List<EventFilterSpecification<?>> acquireFilters(Object handler,
+			Object event)
 	{
 		List<EventFilterSpecification<?>> filters = new ArrayList<EventFilterSpecification<?>>();
 		Class<?> clazz = handler.getClass();

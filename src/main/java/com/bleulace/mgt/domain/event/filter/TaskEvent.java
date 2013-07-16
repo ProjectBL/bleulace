@@ -1,4 +1,4 @@
-package com.bleulace.mgt.domain.event;
+package com.bleulace.mgt.domain.event.filter;
 
 public interface TaskEvent
 {

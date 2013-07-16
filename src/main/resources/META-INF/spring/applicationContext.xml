@@ -49,7 +49,16 @@
 
 	<axon:event-bus id="eventBus" />
 	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
-	<!-- <axon:saga-manager id="sagaManager" event-bus="eventBus"> </axon:saga-manager> -->
+
+	<axon:jpa-saga-repository id="sagaRepository"
+		entity-manager-provider="entityManagerProvider" />
+
+	<axon:saga-manager id="sagaManager" event-bus="eventBus">
+		<axon:async executor="executor" transaction-manager="transactionManager" />
+		<axon:types>
+			com.bleulace.crm.domain.FriendRequestSaga
+		</axon:types>
+	</axon:saga-manager>
 
 	<axon:aggregate-command-handler id="accountCommandHandler"
 		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.Account"
