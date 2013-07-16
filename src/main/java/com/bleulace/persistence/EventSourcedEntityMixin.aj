@@ -25,6 +25,13 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 		private String EventSourcedEntityMixin.id = IdentifierFactory
 				.getInstance().generateIdentifier();
 
+		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
+
+		private transient AnnotationEventHandlerInvoker EventSourcedEntityMixin.eventHandlerInvoker = new AnnotationEventHandlerInvoker(
+				this);
+
+		private volatile EventSourcedAggregateRootMixin EventSourcedEntityMixin.aggregateRoot;
+
 		public String EventSourcedEntityMixin.getId()
 		{
 			return id;
@@ -34,13 +41,6 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 		{
 			return !EntityManagerReference.get().contains(this);
 		}
-
-		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
-
-		private transient AnnotationEventHandlerInvoker EventSourcedEntityMixin.eventHandlerInvoker = new AnnotationEventHandlerInvoker(
-				this);
-
-		private volatile EventSourcedAggregateRootMixin EventSourcedEntityMixin.aggregateRoot;
 
 		public void EventSourcedEntityMixin.registerAggregateRoot(
 				EventSourcedAggregateRootMixin aggregateRootToRegister)

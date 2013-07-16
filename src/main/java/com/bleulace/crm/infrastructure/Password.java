@@ -9,6 +9,8 @@ import javax.validation.Payload;
 import javax.validation.ReportAsSingleViolation;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * An annotation for jsr-303 validation of potential password values.
  * 
@@ -18,6 +20,7 @@ import javax.validation.constraints.Size;
 @Target({ ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @ReportAsSingleViolation
+@NotBlank
 @Size(min = Password.MIN_SIZE, max = Password.MAX_SIZE)
 public @interface Password
 {

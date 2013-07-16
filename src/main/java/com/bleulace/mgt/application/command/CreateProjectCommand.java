@@ -1,33 +1,26 @@
 package com.bleulace.mgt.application.command;
 
-import javax.validation.constraints.NotNull;
-
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
 @RequiresAuthentication
-@RooJavaBean(settersByDefault = false)
+@RooJavaBean
 public class CreateProjectCommand
 {
-	private String id;
+	private final String id;
 
 	@NotEmpty
 	private String title = "";
 
-	@NotNull
-	private final String creatorId;
+	private final String creatorId = (String) SecurityUtils.getSubject()
+			.getPrincipal();
 
-	public CreateProjectCommand(String id, String creatorId)
+	public CreateProjectCommand(String id)
 	{
-		Assert.noNullElements(new Object[] { id, creatorId });
+		Assert.notNull(id);
 		this.id = id;
-		this.creatorId = creatorId;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
 	}
 }

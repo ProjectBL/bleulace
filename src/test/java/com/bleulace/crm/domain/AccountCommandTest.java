@@ -2,7 +2,6 @@ package com.bleulace.crm.domain;
 
 import junit.framework.Assert;
 
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.application.command.LoginCommand;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -44,8 +44,7 @@ public class AccountCommandTest implements CommandGatewayAware
 		CreateAccountCommand command = createAccountCommands.iterator().next();
 		gateway().send(command);
 		Assert.assertTrue(gateway().sendAndWait(
-				new UsernamePasswordToken(command.getEmail(), command
-						.getPassword())));
+				new LoginCommand(command.getEmail(), command.getPassword())));
 	}
 
 	@Test
@@ -56,7 +55,7 @@ public class AccountCommandTest implements CommandGatewayAware
 		String newPassword = "password";
 		gateway().send(new ChangePasswordCommand(command.getId(), newPassword));
 		Assert.assertTrue(gateway().sendAndWait(
-				new UsernamePasswordToken(command.getEmail(), newPassword)));
+				new LoginCommand(command.getEmail(), newPassword)));
 
 	}
 }

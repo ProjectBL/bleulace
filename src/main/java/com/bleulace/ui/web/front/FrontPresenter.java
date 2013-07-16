@@ -2,9 +2,8 @@ package com.bleulace.ui.web.front;
 
 import java.io.Serializable;
 
-import org.apache.shiro.authc.UsernamePasswordToken;
-
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.ui.web.front.FrontView.FrontViewListener;
 import com.vaadin.ui.Notification;
@@ -26,7 +25,7 @@ public class FrontPresenter implements FrontViewListener, CommandGatewayAware,
 	{
 		view.setEnabled(false);
 		Boolean success = gateway().sendAndWait(
-				new UsernamePasswordToken(username, password));
+				new LoginCommand(username, password));
 		if (success)
 		{
 			Notification.show("SUCCESS");

@@ -7,18 +7,17 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.persistence.EventSourcedEntityMixin;
 
 @Entity
-@RooJavaBean(settersByDefault = false)
+@RooJavaBean
 public class Bundle extends Project implements EventSourcedEntityMixin
 {
 	private static final long serialVersionUID = -5604228662275728239L;
 
-	@SuppressWarnings("unused")
-	private Bundle()
+	Bundle()
 	{
 	}
 
-	protected Bundle(Project project, String name)
+	Bundle(Project goal)
 	{
-		registerAggregateRoot(project);
+		registerAggregateRoot(goal);
 	}
 }

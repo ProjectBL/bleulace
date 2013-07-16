@@ -50,8 +50,7 @@ public class ProjectCommandTest implements CommandGatewayAware
 	{
 		long count = finder.count();
 		String id = IdentifierFactory.getInstance().generateIdentifier();
-		CreateProjectCommand command = new CreateProjectCommand(id,
-				account.getId());
+		CreateProjectCommand command = new CreateProjectCommand(id);
 		command.setTitle("Project Name");
 		gateway().send(command);
 		Assert.assertEquals(count + 1, finder.count());

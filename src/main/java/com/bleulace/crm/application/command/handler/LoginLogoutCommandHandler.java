@@ -2,12 +2,11 @@ package com.bleulace.crm.application.command.handler;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.domain.AccountFinder;
@@ -28,13 +27,12 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 	@Autowired
 	private AccountFinder finder;
 
-	@CommandHandler
-	public Boolean login(UsernamePasswordToken command)
+	public Boolean handle(LoginCommand command)
 	{
 		Boolean success = true;
 		try
 		{
-			SecurityUtils.getSubject().login(command);
+			SecurityUtils.getSubject().login(command.getToken());
 		}
 		catch (AuthenticationException e)
 		{
@@ -56,7 +54,7 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 		return success;
 	}
 
-	public void logout(LogoutCommand command)
+	public void handle(LogoutCommand command)
 	{
 		Account account = executingAccount.current();
 

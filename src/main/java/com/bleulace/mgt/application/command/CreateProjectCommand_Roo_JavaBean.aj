@@ -15,6 +15,10 @@ privileged aspect CreateProjectCommand_Roo_JavaBean {
         return this.title;
     }
     
+    public void CreateProjectCommand.setTitle(String title) {
+        this.title = title;
+    }
+    
     public String CreateProjectCommand.getCreatorId() {
         return this.creatorId;
     }
