@@ -21,6 +21,7 @@ import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.persistence.infrastructure.QueryFactory;
 import com.bleulace.utils.EntityManagerReference;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
@@ -73,8 +74,13 @@ public class ProjectCommandTest implements CommandGatewayAware
 		Project project = finder.findOne(addManagerCommand.getId());
 		long managerCount = project.getManagers().size();
 		gateway().send(addManagerCommand);
-		Assert.assertEquals(managerCount + 1,
-				finder.findOne(addManagerCommand.getId()).getManagers().size());
+		project = finder.findOne(addManagerCommand.getId());
+		Assert.assertEquals(managerCount + 1, project.getManagers().size());
+		QProjectManager m = QProjectManager.projectManager;
+		Assert.assertNotNull(QueryFactory
+				.from(m)
+				.where(m.account.id.eq(addManagerCommand.getAccountId()).and(
+						m.project.eq(project))).singleResult(m));
 	}
 
 	@Test

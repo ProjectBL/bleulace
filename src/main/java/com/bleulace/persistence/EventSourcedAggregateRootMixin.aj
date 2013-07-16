@@ -23,6 +23,7 @@ import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.ui.ModelMap;
 
 public interface EventSourcedAggregateRootMixin extends
@@ -110,6 +111,25 @@ public interface EventSourcedAggregateRootMixin extends
 		public Long EventSourcedAggregateRootMixin.getVersion()
 		{
 			return this.getLastCommittedEventSequenceNumber();
+		}
+		
+		public boolean EventSourcedAggregateRootMixin.equals(Object obj)
+		{
+			if (null == obj) {
+				return false;
+			}
+
+			if (this == obj) {
+				return true;
+			}
+
+			if (!getClass().equals(obj.getClass())) {
+				return false;
+			}
+
+			EventSourcedAggregateRootMixin that = (EventSourcedAggregateRootMixin) obj;
+
+			return null == this.getId() ? false : this.getId().equals(that.getId());
 		}
 		
 		private void EventSourcedAggregateRootMixin.map(Object source)

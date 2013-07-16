@@ -99,8 +99,8 @@ public class Project implements EventSourcedAggregateRootMixin
 		String accountId = event.getAccountId();
 		EntityManager entityManager = EntityManagerReference.get();
 		Account account = entityManager.getReference(Account.class, accountId);
-		account.getPermissions().add(
-				new ManagementPermission(getId(), event.getLevel()));
+		// account.getPermissions().add(
+		// new ManagementPermission(getId(), event.getLevel()));
 		entityManager.merge(account);
 		getManagers().put(account,
 				new ProjectManager(this, account, event.getLevel()));
