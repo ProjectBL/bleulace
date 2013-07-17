@@ -3,9 +3,8 @@
 
 package com.bleulace.crm.domain;
 
+import com.bleulace.crm.domain.Account;
 import java.util.List;
-
-import com.bleulace.mgt.domain.ManagementPermission;
 
 privileged aspect Account_Roo_JavaBean {
     
@@ -55,14 +54,6 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    
-    public List<ManagementPermission> Account.getPermissions() {
-        return this.permissions;
-    }
-    
-    public void Account.setPermissions(List<ManagementPermission> permissions) {
-        this.permissions = permissions;
     }
     
     public List<Account> Account.getFriends() {

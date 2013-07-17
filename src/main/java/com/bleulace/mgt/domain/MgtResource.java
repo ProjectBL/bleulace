@@ -15,7 +15,7 @@ import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @RooJavaBean
-public abstract class MgtRoot implements Serializable
+public abstract class MgtResource implements Serializable
 {
 	private static final long serialVersionUID = -1911715243742088159L;
 
@@ -25,16 +25,16 @@ public abstract class MgtRoot implements Serializable
 	@Column(nullable = false)
 	private String title;
 
-	MgtRoot()
+	MgtResource()
 	{
 	}
 
-	MgtRoot(String id)
+	MgtResource(String id)
 	{
 		this(id, null);
 	}
 
-	MgtRoot(String id, String title)
+	MgtResource(String id, String title)
 	{
 		this.id = id;
 		this.title = title;

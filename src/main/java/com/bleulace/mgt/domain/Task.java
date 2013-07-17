@@ -11,7 +11,7 @@ import com.bleulace.persistence.EventSourcedEntityMixin;
 @Entity
 @RooEquals(excludeFields = {})
 @RooJavaBean(settersByDefault = false)
-public class Task extends MgtRoot implements EventSourcedEntityMixin
+public class Task extends MgtResource implements EventSourcedEntityMixin
 {
 	private static final long serialVersionUID = 6010485686197407357L;
 

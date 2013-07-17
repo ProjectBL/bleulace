@@ -34,14 +34,10 @@ import com.bleulace.utils.jpa.EntityManagerReference;
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Project extends MgtRoot implements EventSourcedAggregateRootMixin
+public class Project extends MgtResource implements
+		EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = -1998536878318608268L;
-
-	// @OneToMany(cascade = CascadeType.ALL)
-	// @MapKey(name = "account")
-	// private Map<Account, ProjectManager> managers = new HashMap<Account,
-	// ProjectManager>();
 
 	@CascadeOnDelete
 	@Enumerated(EnumType.STRING)

@@ -6,7 +6,6 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -74,10 +73,6 @@ public class JpaRealm extends AuthorizingRealm
 		if (id != null)
 		{
 			Account account = finder.findById(id);
-			for (Permission p : account.getPermissions())
-			{
-				info.addObjectPermission(p);
-			}
 		}
 		return info;
 	}

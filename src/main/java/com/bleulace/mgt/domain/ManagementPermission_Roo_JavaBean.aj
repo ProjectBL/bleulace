@@ -3,11 +3,14 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.ManagementLevel;
+import com.bleulace.mgt.domain.ManagementPermission;
+import com.bleulace.mgt.domain.MgtResource;
 
 privileged aspect ManagementPermission_Roo_JavaBean {
     
-    public String ManagementPermission.getTargetId() {
-        return this.targetId;
+    public MgtResource ManagementPermission.getResource() {
+        return this.resource;
     }
     
     public ManagementLevel ManagementPermission.getLevel() {

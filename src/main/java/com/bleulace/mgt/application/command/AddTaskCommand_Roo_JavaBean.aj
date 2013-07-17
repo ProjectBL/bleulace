@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.application.command.AddTaskCommand;
 
 privileged aspect AddTaskCommand_Roo_JavaBean {
     

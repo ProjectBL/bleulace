@@ -4,6 +4,7 @@
 package com.bleulace.mgt.application.command;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.application.command.CreateProjectCommand;
 
 privileged aspect CreateProjectCommand_Roo_JavaBean {
     

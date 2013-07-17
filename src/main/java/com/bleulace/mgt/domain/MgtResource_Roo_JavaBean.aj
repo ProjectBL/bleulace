@@ -3,22 +3,23 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.MgtResource;
 
-privileged aspect MgtRoot_Roo_JavaBean {
+privileged aspect MgtResource_Roo_JavaBean {
     
-    public String MgtRoot.getId() {
+    public String MgtResource.getId() {
         return this.id;
     }
     
-    public void MgtRoot.setId(String id) {
+    public void MgtResource.setId(String id) {
         this.id = id;
     }
     
-    public String MgtRoot.getTitle() {
+    public String MgtResource.getTitle() {
         return this.title;
     }
     
-    public void MgtRoot.setTitle(String title) {
+    public void MgtResource.setTitle(String title) {
         this.title = title;
     }
     

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -30,7 +29,6 @@ import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
 import com.bleulace.crm.infrastructure.SecurityConfig;
-import com.bleulace.mgt.domain.ManagementPermission;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 
 @Entity
@@ -53,9 +51,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	@Column(nullable = false)
 	private String lastName;
-
-	@ElementCollection
-	private List<ManagementPermission> permissions = new ArrayList<ManagementPermission>();
 
 	@ManyToMany
 	private List<Account> friends = new ArrayList<Account>();
