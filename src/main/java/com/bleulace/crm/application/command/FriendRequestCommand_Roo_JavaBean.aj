@@ -3,14 +3,15 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.FriendRequestCommand;
 
-privileged aspect SendFriendRequestCommand_Roo_JavaBean {
+privileged aspect FriendRequestCommand_Roo_JavaBean {
     
-    public String SendFriendRequestCommand.getInitiatorId() {
+    public String FriendRequestCommand.getInitiatorId() {
         return this.initiatorId;
     }
     
-    public String SendFriendRequestCommand.getRecipientId() {
+    public String FriendRequestCommand.getRecipientId() {
         return this.recipientId;
     }
     

@@ -13,4 +13,8 @@ public interface CrmCommandGateway
 	public void send(CreateAccountCommand command);
 
 	public void send(AddManagerCommand command);
+
+	public void send(SendFriendRequestCommand command);
+
+	public void send(ReplyToFriendRequestCommand command);
 }

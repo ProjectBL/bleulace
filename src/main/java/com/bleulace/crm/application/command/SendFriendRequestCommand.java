@@ -1,19 +1,12 @@
 package com.bleulace.crm.application.command;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean(settersByDefault = false)
-public class SendFriendRequestCommand
+public class SendFriendRequestCommand extends FriendRequestCommand
 {
-	@TargetAggregateIdentifier
-	private String initiatorId;
-
-	private String recipientId;
-
 	public SendFriendRequestCommand(String initiatorId, String recipientId)
 	{
-		this.initiatorId = initiatorId;
-		this.recipientId = recipientId;
+		super(initiatorId, recipientId);
 	}
 }

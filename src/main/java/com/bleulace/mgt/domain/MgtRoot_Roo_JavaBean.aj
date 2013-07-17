@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.mgt.domain.MgtRoot;
 
 privileged aspect MgtRoot_Roo_JavaBean {
     

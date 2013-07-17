@@ -144,6 +144,7 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(FriendRequestSentEvent event)
 	{
+		System.out.println(event.getSagaId());
 		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
 	}
 
@@ -154,12 +155,7 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(RepliedToFriendRequestEvent event)
 	{
+		System.out.println(event.getSagaId());
 		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
-	}
-
-	protected void addFriend(Account friend)
-	{
-		getFriends().add(friend);
-		friend.getFriends().add(this);
 	}
 }

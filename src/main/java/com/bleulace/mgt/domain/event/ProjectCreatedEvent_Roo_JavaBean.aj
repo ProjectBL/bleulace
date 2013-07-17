@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 
 privileged aspect ProjectCreatedEvent_Roo_JavaBean {
     

@@ -3,15 +3,16 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 
 privileged aspect ReplyToFriendRequestCommand_Roo_JavaBean {
     
-    public boolean ReplyToFriendRequestCommand.isAccept() {
-        return this.accept;
+    public boolean ReplyToFriendRequestCommand.isAccepted() {
+        return this.accepted;
     }
     
-    public void ReplyToFriendRequestCommand.setAccept(boolean accept) {
-        this.accept = accept;
+    public void ReplyToFriendRequestCommand.setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
     
 }
