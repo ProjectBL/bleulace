@@ -1,4 +1,4 @@
-package com.bleulace.crm.application.command;
+package com.bleulace.mgt.application.command;
 
 import org.apache.shiro.SecurityUtils;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;

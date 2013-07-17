@@ -1,4 +1,4 @@
-package com.bleulace.crm.application.event;
+package com.bleulace.mgt.domain.event;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 

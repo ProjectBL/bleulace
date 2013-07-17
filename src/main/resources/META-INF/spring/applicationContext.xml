@@ -71,11 +71,11 @@
 		event-store="eventStore" />
 
 	<axon:aggregate-command-handler id="groupCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.AccountGroup"
+		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.AccountGroup"
 		repository="groupRepository" />
 
 	<axon:jpa-repository id="groupRepository"
-		aggregate-type="com.bleulace.crm.domain.AccountGroup"
+		aggregate-type="com.bleulace.mgt.domain.AccountGroup"
 		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
 		event-store="eventStore" />
 

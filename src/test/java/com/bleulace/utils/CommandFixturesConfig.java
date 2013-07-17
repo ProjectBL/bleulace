@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Scope;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.crm.application.command.JoinGroupCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.mgt.application.command.JoinGroupCommand;
 import com.bleulace.mgt.domain.ManagementLevel;
 
 @Configuration

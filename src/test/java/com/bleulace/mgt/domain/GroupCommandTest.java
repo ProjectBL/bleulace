@@ -1,4 +1,4 @@
-package com.bleulace.crm.domain;
+package com.bleulace.mgt.domain;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.crm.application.command.JoinGroupCommand;
+import com.bleulace.mgt.application.command.JoinGroupCommand;
+import com.bleulace.mgt.domain.AccountGroup;
 
 @Transactional
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")

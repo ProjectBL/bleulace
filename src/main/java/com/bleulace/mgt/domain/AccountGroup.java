@@ -1,4 +1,4 @@
-package com.bleulace.crm.domain;
+package com.bleulace.mgt.domain;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +11,10 @@ import javax.persistence.ManyToMany;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.crm.application.command.JoinGroupCommand;
-import com.bleulace.crm.application.event.GroupCreatedEvent;
-import com.bleulace.crm.application.event.GroupJoinedEvent;
+import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.application.command.JoinGroupCommand;
+import com.bleulace.mgt.domain.event.GroupCreatedEvent;
+import com.bleulace.mgt.domain.event.GroupJoinedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.utils.jpa.EntityManagerReference;
 

@@ -17,8 +17,4 @@ public interface CrmCommandGateway
 	public void send(SendFriendRequestCommand command);
 
 	public void send(ReplyToFriendRequestCommand command);
-
-	public void send(CreateGroupCommand command);
-
-	public void send(JoinGroupCommand command);
 }
