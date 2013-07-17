@@ -1,17 +1,18 @@
-package pl.com.bottega.ddd.domain.sharedkernel.specification;
+package com.bleulace.ddd.spec;
 
 /**
  * 
  * @author Slawek
- *
+ * 
  * @param <T>
  */
-public interface Specification<T> {
-	boolean isSatisfiedBy(T candidate);
-
+public interface Specification<T>
+{
 	Specification<T> and(Specification<T> other);
 
 	Specification<T> or(Specification<T> other);
 
 	Specification<T> not();
+
+	boolean isSatisfiedBy(T candidate);
 }

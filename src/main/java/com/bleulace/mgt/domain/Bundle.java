@@ -20,6 +20,8 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 	@JoinColumn(nullable = false)
 	private Project parent;
 
+	private boolean active = true;
+
 	Bundle()
 	{
 	}
@@ -46,5 +48,10 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 			cursor = ((Bundle) cursor).getParent();
 		}
 		return cursor;
+	}
+
+	protected void markAsCompleted()
+	{
+		active = false;
 	}
 }

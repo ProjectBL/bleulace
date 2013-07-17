@@ -4,10 +4,14 @@
 package com.bleulace.crm.application.event;
 
 
-privileged aspect AccountLoginAttemptedEvent_Roo_JavaBean {
+privileged aspect GroupCreatedEvent_Roo_JavaBean {
     
-    public Boolean AccountLoginAttemptedEvent.getSuccess() {
-        return this.success;
+    public String GroupCreatedEvent.getTitle() {
+        return this.title;
+    }
+    
+    public void GroupCreatedEvent.setTitle(String title) {
+        this.title = title;
     }
     
 }

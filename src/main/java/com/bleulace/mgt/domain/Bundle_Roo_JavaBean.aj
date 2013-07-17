@@ -16,4 +16,12 @@ privileged aspect Bundle_Roo_JavaBean {
         this.parent = parent;
     }
     
+    public boolean Bundle.isActive() {
+        return this.active;
+    }
+    
+    public void Bundle.setActive(boolean active) {
+        this.active = active;
+    }
+    
 }

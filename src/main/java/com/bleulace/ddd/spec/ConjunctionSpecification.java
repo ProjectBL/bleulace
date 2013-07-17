@@ -1,4 +1,4 @@
-package pl.com.bottega.ddd.domain.sharedkernel.specification;
+package com.bleulace.ddd.spec;
 
 /**
  * 

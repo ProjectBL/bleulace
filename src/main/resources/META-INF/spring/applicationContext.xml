@@ -53,7 +53,8 @@
 	<axon:jpa-saga-repository id="sagaRepository"
 		entity-manager-provider="entityManagerProvider" />
 
-	<axon:saga-manager id="sagaManager" event-bus="eventBus" suppress-exceptions="false">
+	<axon:saga-manager id="sagaManager" event-bus="eventBus"
+		suppress-exceptions="false">
 		<axon:async executor="executor" transaction-manager="transactionManager" />
 		<axon:types>
 			com.bleulace.crm.domain.FriendRequestSaga
@@ -66,6 +67,15 @@
 
 	<axon:jpa-repository id="accountRepository"
 		aggregate-type="com.bleulace.crm.domain.Account"
+		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
+		event-store="eventStore" />
+
+	<axon:aggregate-command-handler id="groupCommandHandler"
+		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.AccountGroup"
+		repository="groupRepository" />
+
+	<axon:jpa-repository id="groupRepository"
+		aggregate-type="com.bleulace.crm.domain.AccountGroup"
 		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
 		event-store="eventStore" />
 

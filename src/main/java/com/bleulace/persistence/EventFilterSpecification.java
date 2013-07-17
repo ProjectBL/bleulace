@@ -1,6 +1,6 @@
 package com.bleulace.persistence;
 
-import com.bleulace.utils.spec.Specification;
+import com.bleulace.ddd.spec.Specification;
 
 public interface EventFilterSpecification<T> extends Specification<T>
 {

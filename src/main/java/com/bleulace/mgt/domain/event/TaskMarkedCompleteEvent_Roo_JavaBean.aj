@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.domain.event;
 
-import com.bleulace.mgt.domain.event.TaskMarkedCompleteEvent;
 
 privileged aspect TaskMarkedCompleteEvent_Roo_JavaBean {
     

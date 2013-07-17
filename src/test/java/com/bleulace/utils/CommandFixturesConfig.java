@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Scope;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.application.command.CreateGroupCommand;
+import com.bleulace.crm.application.command.JoinGroupCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
@@ -75,6 +77,28 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		gateway().send(addBundleCommand);
 		AddTaskCommand command = new AddTaskCommand(addBundleCommand.getId());
 		command.setTitle("foo");
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public CreateGroupCommand createGroupCommand()
+	{
+		CreateGroupCommand command = new CreateGroupCommand();
+		command.setTitle(RandomStringUtils.random(20));
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public JoinGroupCommand joinGroupCommand(
+			CreateGroupCommand createGroupCommand,
+			CreateAccountCommand createAccountCommand)
+	{
+		gateway().send(createAccountCommand);
+		gateway().send(createGroupCommand);
+		JoinGroupCommand command = new JoinGroupCommand(
+				createGroupCommand.getId(), createAccountCommand.getId());
 		return command;
 	}
 }

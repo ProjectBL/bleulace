@@ -3,11 +3,9 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.Bundle;
-import com.bleulace.mgt.domain.ManagementLevel;
-import com.bleulace.mgt.domain.Project;
 import java.util.Map;
+
+import com.bleulace.crm.domain.Account;
 
 privileged aspect Project_Roo_JavaBean {
     
