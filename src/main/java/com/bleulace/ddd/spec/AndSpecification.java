@@ -1,7 +1,6 @@
 package com.bleulace.ddd.spec;
 
 /**
- * 
  * @author Slawek
  * 
  * @param <T>
@@ -17,6 +16,7 @@ public class AndSpecification<T> extends CompositeSpecification<T>
 		this.b = b;
 	}
 
+	@Override
 	public boolean isSatisfiedBy(T candidate)
 	{
 		return a.isSatisfiedBy(candidate) && b.isSatisfiedBy(candidate);

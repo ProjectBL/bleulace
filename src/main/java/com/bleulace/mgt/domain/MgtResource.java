@@ -15,7 +15,7 @@ import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @RooJavaBean
-public abstract class MgtResource implements Serializable
+public abstract class MgtResource implements Commentable.Mixin, Serializable
 {
 	private static final long serialVersionUID = -1911715243742088159L;
 

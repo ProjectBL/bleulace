@@ -1,6 +1,7 @@
 package com.bleulace.ddd.spec;
 
 /**
+ * @see http://code.google.com/p/ddd-cqrs-sample/
  * 
  * @author Slawek
  * 

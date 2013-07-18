@@ -18,6 +18,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
@@ -40,6 +41,9 @@ public class ProjectCommandTest implements CommandGatewayAware
 
 	@Autowired
 	private AddTaskCommand addTaskCommand;
+
+	@Autowired
+	private AddCommentCommand addCommentCommand;
 
 	private JpaRepository<Project, String> finder;
 
@@ -97,5 +101,14 @@ public class ProjectCommandTest implements CommandGatewayAware
 		gateway().send(addTaskCommand);
 		Assert.assertEquals(taskCount + 1, EntityManagerReference.get()
 				.getReference(Bundle.class, id).getTasks().size());
+	}
+
+	@Test
+	public void testAddCommentCommand()
+	{
+		String id = addCommentCommand.getId();
+		int size = finder.findOne(id).getComments().size();
+		gateway().send(addCommentCommand);
+		Assert.assertEquals(size + 1, finder.findOne(id).getComments().size());
 	}
 }

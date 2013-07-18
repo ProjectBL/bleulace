@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Scope;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.CreateGroupCommand;
+import com.bleulace.crm.application.command.LoginCommand;
+import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
@@ -99,6 +102,27 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		gateway().send(createGroupCommand);
 		JoinGroupCommand command = new JoinGroupCommand(
 				createGroupCommand.getId(), createAccountCommand.getId());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public AddCommentCommand addCommentCommand(
+			CreateAccountCommand createAccountCommand,
+			CreateProjectCommand createProjectCommand)
+	{
+		gateway().send(createAccountCommand);
+		gateway().send(createProjectCommand);
+		if (!gateway().sendAndWait(
+				new LoginCommand(createAccountCommand.getEmail(),
+						createAccountCommand.getPassword())))
+		{
+			throw new RuntimeException();
+		}
+		AddCommentCommand command = new AddCommentCommand(
+				createProjectCommand.getId());
+		command.setContent("foo");
+		gateway().send(new LogoutCommand());
 		return command;
 	}
 }

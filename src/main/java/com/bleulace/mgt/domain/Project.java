@@ -21,10 +21,12 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.mgt.domain.event.BundleAddedEvent;
+import com.bleulace.mgt.domain.event.CommentAddedEvent;
 import com.bleulace.mgt.domain.event.ManagerAddedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
@@ -105,5 +107,10 @@ public class Project extends MgtResource implements
 	public void handle(AddTaskCommand command)
 	{
 		apply(command, TaskAddedEvent.class);
+	}
+
+	public void handle(AddCommentCommand command)
+	{
+		apply(command, CommentAddedEvent.class);
 	}
 }

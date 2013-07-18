@@ -2,7 +2,6 @@ package com.bleulace.crm.infrastructure;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
-import org.springframework.stereotype.Component;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.utils.jpa.EntityManagerReference;
@@ -14,7 +13,6 @@ import com.bleulace.utils.jpa.EntityManagerReference;
  * @author Arleigh Dickerson
  * 
  */
-@Component
 public class ExecutingAccount
 {
 	/**
@@ -24,7 +22,7 @@ public class ExecutingAccount
 	 *         Otherwise return null, representing an unauthenticated, anonymous
 	 *         system user.
 	 */
-	public Account current()
+	public static Account current()
 	{
 		try
 		{
@@ -46,6 +44,8 @@ public class ExecutingAccount
 		}
 		catch (UnavailableSecurityManagerException e)
 		{
+			// TODO : hit the logs
+			// TODO : fire off warning email
 		}
 		return null;
 	}

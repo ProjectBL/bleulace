@@ -22,9 +22,6 @@ import com.bleulace.crm.infrastructure.ExecutingAccount;
 public class LoginLogoutCommandHandler implements CommandGatewayAware
 {
 	@Autowired
-	private ExecutingAccount executingAccount;
-
-	@Autowired
 	private AccountFinder finder;
 
 	public Boolean handle(LoginCommand command)
@@ -56,7 +53,7 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 
 	public void handle(LogoutCommand command)
 	{
-		Account account = executingAccount.current();
+		Account account = ExecutingAccount.current();
 
 		// if the executing subject is authenticated,
 		if (account != null)

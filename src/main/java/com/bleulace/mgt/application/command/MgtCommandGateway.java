@@ -13,4 +13,6 @@ public interface MgtCommandGateway
 	public void send(CreateGroupCommand command);
 
 	public void send(JoinGroupCommand command);
+
+	public void send(AddCommentCommand command);
 }

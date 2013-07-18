@@ -8,7 +8,6 @@ import org.springframework.util.Assert;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.infrastructure.ExecutingAccount;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RequiresAuthentication
 @RooJavaBean
@@ -19,8 +18,7 @@ public class CreateProjectCommand
 	@NotEmpty
 	private String title = "";
 
-	private final Account creator = SpringApplicationContext.get()
-			.getBean(ExecutingAccount.class).current();
+	private final Account creator = ExecutingAccount.current();
 
 	public CreateProjectCommand()
 	{
