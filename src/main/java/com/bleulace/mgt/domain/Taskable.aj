@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+
+import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.mgt.domain.event.filter.TaskEvent;
@@ -24,6 +28,8 @@ public interface Taskable
 	{
 		static aspect Impl
 		{
+			@EventSourcedMember
+			@CascadeOnDelete
 			@OneToMany(cascade = CascadeType.ALL)
 			private List<Task> Mixin.tasks = new ArrayList<Task>();
 
@@ -36,14 +42,8 @@ public interface Taskable
 			{
 				if (event.getBundleId().equals(this.getId()))
 				{
-					tasks.add(new Task(this.getProject(), event));
+					tasks.add(new Task(event));
 				}
-			}
-			
-			@Filter
-			private EventFilterSpecification<TaskEvent> Mixin.getTaskFilter()
-			{
-				return new TaskEventFilter(this);
 			}
 		}
 	}

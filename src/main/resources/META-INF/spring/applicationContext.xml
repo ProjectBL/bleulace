@@ -83,11 +83,6 @@
 		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.Project"
 		repository="projectRepository" />
 
-	<axon:jpa-repository id="projectRepository"
-		aggregate-type="com.bleulace.mgt.domain.Project"
-		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
-		event-store="eventStore" />
-
 	<bean id="entityManagerProvider"
 		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
 </beans>

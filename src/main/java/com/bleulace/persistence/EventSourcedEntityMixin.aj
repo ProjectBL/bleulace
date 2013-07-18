@@ -8,6 +8,7 @@ import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
 import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
+import org.modelmapper.ModelMapper;
 
 public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializable
 {
@@ -51,7 +52,6 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializabl
 				{
 					if (entity != null)
 					{
-						// TODO : uncomment
 						((EventSourcedEntityMixin)entity).registerAggregateRoot(aggregateRoot);
 						entity.handleRecursively(event);
 					}
@@ -81,8 +81,12 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializabl
 			return null == this.getId() ? false : this.getId().equals(
 					that.getId());
 		}
-
-
+		
+		private void EventSourcedEntityMixin.map(Object event)
+		{
+			new ModelMapper().map(event, this);
+		}
+		
 		@SuppressWarnings("rawtypes")
 		private void EventSourcedEntityMixin.handle(DomainEventMessage event)
 		{

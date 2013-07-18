@@ -45,8 +45,8 @@ public class Project extends MgtResource implements
 	@ManyToMany(cascade = CascadeType.ALL)
 	private Map<Account, ManagementLevel> managers = new HashMap<Account, ManagementLevel>();
 
-	@CascadeOnDelete
 	@EventSourcedMember
+	@CascadeOnDelete
 	@MapKeyColumn
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, Bundle> bundles = new HashMap<String, Bundle>();
