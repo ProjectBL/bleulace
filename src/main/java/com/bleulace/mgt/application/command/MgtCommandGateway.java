@@ -15,4 +15,6 @@ public interface MgtCommandGateway
 	public void send(JoinGroupCommand command);
 
 	public void send(AddCommentCommand command);
+
+	public void send(AssignTaskCommand command);
 }

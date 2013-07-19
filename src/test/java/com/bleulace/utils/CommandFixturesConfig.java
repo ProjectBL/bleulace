@@ -16,11 +16,13 @@ import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
-import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
+import com.bleulace.mgt.application.command.AssignManagerCommand;
+import com.bleulace.mgt.application.command.AssignTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.mgt.application.command.JoinGroupCommand;
 import com.bleulace.mgt.domain.ManagementAssignment;
+import com.bleulace.mgt.domain.TaskAssignment;
 
 @Configuration
 @Profile("test")
@@ -81,6 +83,17 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		AddTaskCommand command = new AddTaskCommand(addBundleCommand.getId());
 		command.setTitle("foo");
 		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public AssignTaskCommand assignTaskCommand(AddTaskCommand addTaskCommand,
+			CreateAccountCommand createAccountCommand)
+	{
+		gateway().send(addTaskCommand);
+		gateway().send(createAccountCommand);
+		return new AssignTaskCommand(addTaskCommand.getId(),
+				createAccountCommand.getId(), TaskAssignment.ASSIGNEE);
 	}
 
 	@Bean

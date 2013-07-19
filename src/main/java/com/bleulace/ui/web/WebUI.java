@@ -55,7 +55,7 @@ public class WebUI extends UI
 	protected void init(VaadinRequest request)
 	{
 		setNavigator(new DiscoveryNavigator(this, this));
-		if (executingAccout.current() != null)
+		if (ExecutingAccount.current() != null)
 		{
 			// somebody is currently logged in
 			// TODO : navigate somewhere slow poke!

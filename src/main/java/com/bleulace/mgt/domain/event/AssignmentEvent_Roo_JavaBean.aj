@@ -7,6 +7,14 @@ import com.bleulace.mgt.domain.event.AssignmentEvent;
 
 privileged aspect AssignmentEvent_Roo_JavaBean {
     
+    public String AssignmentEvent.getId() {
+        return this.id;
+    }
+    
+    public void AssignmentEvent.setId(String id) {
+        this.id = id;
+    }
+    
     public String AssignmentEvent.getAccountId() {
         return this.accountId;
     }

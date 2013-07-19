@@ -3,15 +3,15 @@
 
 package com.bleulace.mgt.domain.event;
 
-import com.bleulace.mgt.domain.event.TaskMarkedCompleteEvent;
+import com.bleulace.mgt.domain.event.ResourceCompletedEvent;
 
-privileged aspect TaskMarkedCompleteEvent_Roo_JavaBean {
+privileged aspect ResourceCompletedEvent_Roo_JavaBean {
     
-    public String TaskMarkedCompleteEvent.getId() {
+    public String ResourceCompletedEvent.getId() {
         return this.id;
     }
     
-    public void TaskMarkedCompleteEvent.setId(String id) {
+    public void ResourceCompletedEvent.setId(String id) {
         this.id = id;
     }
     

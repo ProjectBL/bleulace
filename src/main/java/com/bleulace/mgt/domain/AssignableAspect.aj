@@ -30,8 +30,11 @@ aspect AssignableAspect
 	@EventHandler
 	public void Assignable.Mixin<T>.on(AssignmentEvent<T> event)
 	{
-		this.assignees.put(
-				EntityManagerReference.get().getReference(Account.class,
-						event.getAccountId()), event.getRole());
+		if (this.getId().equals(event.getId()))
+		{
+			this.assignees.put(
+					EntityManagerReference.get().getReference(Account.class,
+							event.getAccountId()), event.getRole());
+		}
 	}
 }

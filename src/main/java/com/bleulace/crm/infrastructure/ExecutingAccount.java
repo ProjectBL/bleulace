@@ -49,4 +49,10 @@ public class ExecutingAccount
 		}
 		return null;
 	}
+
+	public static String id()
+	{
+		Account account = current();
+		return account == null ? null : account.getId();
+	}
 }

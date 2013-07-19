@@ -23,4 +23,12 @@ privileged aspect MgtResource_Roo_JavaBean {
         this.title = title;
     }
     
+    public boolean MgtResource.isComplete() {
+        return this.complete;
+    }
+    
+    public void MgtResource.setComplete(boolean complete) {
+        this.complete = complete;
+    }
+    
 }

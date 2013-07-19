@@ -20,7 +20,6 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AssignManagerCommand;
-import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
@@ -38,9 +37,6 @@ public class ProjectCommandTest implements CommandGatewayAware
 
 	@Autowired
 	private AddBundleCommand addBundleCommand;
-
-	@Autowired
-	private AddTaskCommand addTaskCommand;
 
 	@Autowired
 	private AddCommentCommand addCommentCommand;
@@ -90,17 +86,6 @@ public class ProjectCommandTest implements CommandGatewayAware
 		Assert.assertEquals(bundleCount + 1,
 				finder.findOne(addBundleCommand.getParentId()).getBundles()
 						.size());
-	}
-
-	@Test
-	public void testAddTaskCommand()
-	{
-		String id = addTaskCommand.getBundleId();
-		long taskCount = EntityManagerReference.get()
-				.getReference(Bundle.class, id).getTasks().size();
-		gateway().send(addTaskCommand);
-		Assert.assertEquals(taskCount + 1, EntityManagerReference.get()
-				.getReference(Bundle.class, id).getTasks().size());
 	}
 
 	@Test

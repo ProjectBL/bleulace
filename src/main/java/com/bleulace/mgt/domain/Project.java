@@ -1,7 +1,9 @@
 package com.bleulace.mgt.domain;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,14 +18,16 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
-import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
+import com.bleulace.mgt.application.command.AssignManagerCommand;
+import com.bleulace.mgt.application.command.AssignTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.mgt.domain.event.BundleAddedEvent;
 import com.bleulace.mgt.domain.event.CommentAddedEvent;
 import com.bleulace.mgt.domain.event.ManagerAssignedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
+import com.bleulace.mgt.domain.event.TaskAssignedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 
 @Entity
@@ -93,5 +97,16 @@ public class Project extends MgtResource implements
 	public void handle(AddCommentCommand command)
 	{
 		apply(command, CommentAddedEvent.class);
+	}
+
+	public void handle(AssignTaskCommand command)
+	{
+		apply(command, TaskAssignedEvent.class);
+	}
+
+	@Override
+	protected Set<String> getAncestorIds()
+	{
+		return new HashSet<String>();
 	}
 }
