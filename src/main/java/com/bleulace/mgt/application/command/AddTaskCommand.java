@@ -1,24 +1,12 @@
 package com.bleulace.mgt.application.command;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
-import org.axonframework.domain.IdentifierFactory;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean
-public class AddTaskCommand
+public class AddTaskCommand extends AddBundleCommand
 {
-	@TargetAggregateIdentifier
-	private final String bundleId;
-
-	private final String id = IdentifierFactory.getInstance()
-			.generateIdentifier();
-
-	@NotEmpty
-	private String title = "";
-
-	public AddTaskCommand(String bundleId)
+	public AddTaskCommand(String parentId)
 	{
-		this.bundleId = bundleId;
+		super(parentId);
 	}
 }

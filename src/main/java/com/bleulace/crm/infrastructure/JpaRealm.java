@@ -69,10 +69,9 @@ public class JpaRealm extends AuthorizingRealm
 			PrincipalCollection principalCollection)
 	{
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		String id = (String) principalCollection.getPrimaryPrincipal();
-		if (id != null)
+		String accountId = (String) principalCollection.getPrimaryPrincipal();
+		if (accountId != null)
 		{
-			Account account = finder.findById(id);
 		}
 		return info;
 	}

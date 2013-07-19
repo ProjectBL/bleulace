@@ -4,7 +4,6 @@ import javax.annotation.PostConstruct;
 
 import junit.framework.Assert;
 
-import org.axonframework.domain.IdentifierFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,8 +59,7 @@ public class ProjectCommandTest implements CommandGatewayAware
 	public void testCreateProjectCommand()
 	{
 		long count = finder.count();
-		String id = IdentifierFactory.getInstance().generateIdentifier();
-		CreateProjectCommand command = new CreateProjectCommand(id);
+		CreateProjectCommand command = new CreateProjectCommand();
 		command.setTitle("Project Name");
 		gateway().send(command);
 		Assert.assertEquals(count + 1, finder.count());

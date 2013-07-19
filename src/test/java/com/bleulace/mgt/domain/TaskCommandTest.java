@@ -36,7 +36,7 @@ public class TaskCommandTest implements CommandGatewayAware
 	@Test
 	public void testAddTaskCommand()
 	{
-		String id = addTaskCommand.getBundleId();
+		String id = addTaskCommand.getParentId();
 		long taskCount = em.getReference(Bundle.class, id).getTasks().size();
 		gateway().send(addTaskCommand);
 		Assert.assertEquals(taskCount + 1, em.getReference(Bundle.class, id)

@@ -1,7 +1,6 @@
 package com.bleulace.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.axonframework.domain.IdentifierFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -43,15 +42,14 @@ public class CommandFixturesConfig implements CommandGatewayAware
 	@Scope("prototype")
 	public CreateProjectCommand createProjectCommand()
 	{
-		String id = IdentifierFactory.getInstance().generateIdentifier();
-		CreateProjectCommand command = new CreateProjectCommand(id);
+		CreateProjectCommand command = new CreateProjectCommand();
 		command.setTitle(RandomStringUtils.random(20, true, true));
 		return command;
 	}
 
 	@Bean
 	@Scope("prototype")
-	public AddBundleCommand createBundleCommand(
+	public AddBundleCommand addBundleCommand(
 			CreateProjectCommand createProjectCommand)
 	{
 		gateway().send(createProjectCommand);
@@ -63,14 +61,14 @@ public class CommandFixturesConfig implements CommandGatewayAware
 
 	@Bean
 	@Scope("prototype")
-	public AssignManagerCommand addManagerCommand(
-			CreateAccountCommand accountCommand,
+	public AssignManagerCommand assignManagerCommand(
+			CreateAccountCommand createAccountCommand,
 			CreateProjectCommand createProjectCommand)
 	{
-		gateway().send(accountCommand);
+		gateway().send(createAccountCommand);
 		gateway().send(createProjectCommand);
 		AssignManagerCommand command = new AssignManagerCommand(
-				createProjectCommand.getId(), accountCommand.getId(),
+				createProjectCommand.getId(), createAccountCommand.getId(),
 				ManagementAssignment.LOOP);
 		return command;
 	}

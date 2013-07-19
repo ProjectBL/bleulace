@@ -35,7 +35,7 @@ public interface Taskable
 
 			public void Mixin.on(TaskAddedEvent event)
 			{
-				if (event.getBundleId().equals(this.getId()))
+				if (event.getParentId().equals(this.getId()))
 				{
 					tasks.add(new Task(event));
 				}

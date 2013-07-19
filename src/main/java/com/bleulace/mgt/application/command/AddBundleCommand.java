@@ -2,18 +2,15 @@ package com.bleulace.mgt.application.command;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.util.Assert;
 
 @RooJavaBean
-public class AddBundleCommand extends CreateProjectCommand
+public class AddBundleCommand extends CreateResourceCommand
 {
 	@TargetAggregateIdentifier
 	private final String parentId;
 
-	public AddBundleCommand(String id)
+	public AddBundleCommand(String parentId)
 	{
-		super();
-		Assert.notNull(id);
-		this.parentId = id;
+		this.parentId = parentId;
 	}
 }

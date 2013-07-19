@@ -1,6 +1,5 @@
 package com.bleulace.ui.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import ru.xpoft.vaadin.DiscoveryNavigator;
@@ -47,9 +46,6 @@ import com.vaadin.ui.UI;
 public class WebUI extends UI
 {
 	private static final long serialVersionUID = 2191009197124553972L;
-
-	@Autowired
-	private transient ExecutingAccount executingAccout;
 
 	@Override
 	protected void init(VaadinRequest request)

@@ -15,12 +15,12 @@ privileged aspect TaskAddedEvent_Roo_JavaBean {
         this.id = id;
     }
     
-    public String TaskAddedEvent.getBundleId() {
-        return this.bundleId;
+    public String TaskAddedEvent.getParentId() {
+        return this.parentId;
     }
     
-    public void TaskAddedEvent.setBundleId(String bundleId) {
-        this.bundleId = bundleId;
+    public void TaskAddedEvent.setParentId(String parentId) {
+        this.parentId = parentId;
     }
     
     public String TaskAddedEvent.getTitle() {

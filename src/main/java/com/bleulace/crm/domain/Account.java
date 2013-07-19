@@ -11,9 +11,7 @@ import javax.persistence.Transient;
 
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.domain.GenericDomainEventMessage;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
@@ -73,7 +71,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 		return new SimplePrincipalCollection(id, SecurityConfig.REALM_NAME);
 	}
 
-	@CommandHandler
 	public Account(CreateAccountCommand command)
 	{
 		id = command.getId();
@@ -87,7 +84,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 		return firstName + " " + lastName;
 	}
 
-	@EventHandler
 	public void on(AccountInfoUpdatedEvent event)
 	{
 		new ModelMapper().map(event, this);
@@ -105,7 +101,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 		apply(new AccountLoginAttemptedEvent(success));
 	}
 
-	@EventHandler
 	public void on(AccountLoginAttemptedEvent event)
 	{
 		// TODO : lock account on x number of incorrect logins
@@ -121,20 +116,17 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 		apply(new AccountLoggedOutEvent());
 	}
 
-	@EventHandler
 	public void onLogoutAttemptedEvent(AccountLoggedOutEvent event)
 	{
 		// TODO : I forgot what to do here, but I know I'm supposed to do
 		// something!
 	}
 
-	@CommandHandler
 	public void handle(ChangePasswordCommand command)
 	{
 		apply(new PasswordChangedEvent(command.getValue()));
 	}
 
-	@EventHandler
 	public void on(PasswordChangedEvent event)
 	{
 		hash = event.getHash();

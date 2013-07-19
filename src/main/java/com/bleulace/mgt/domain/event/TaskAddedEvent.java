@@ -9,7 +9,7 @@ public class TaskAddedEvent
 
 	private String id;
 
-	private String bundleId;
+	private String parentId;
 
 	private String title;
 
