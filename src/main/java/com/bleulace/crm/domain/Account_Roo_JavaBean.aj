@@ -56,6 +56,30 @@ privileged aspect Account_Roo_JavaBean {
         this.lastName = lastName;
     }
     
+    public byte[] Account.getImage() {
+        return this.image;
+    }
+    
+    public void Account.setImage(byte[] image) {
+        this.image = image;
+    }
+    
+    public String Account.getSchool() {
+        return this.school;
+    }
+    
+    public void Account.setSchool(String school) {
+        this.school = school;
+    }
+    
+    public String Account.getWork() {
+        return this.work;
+    }
+    
+    public void Account.setWork(String work) {
+        this.work = work;
+    }
+    
     public List<Account> Account.getFriends() {
         return this.friends;
     }

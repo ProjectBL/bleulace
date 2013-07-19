@@ -41,7 +41,6 @@ public class Project extends MgtResource implements
 {
 	private static final long serialVersionUID = -1998536878318608268L;
 
-	@CascadeOnDelete
 	@Enumerated(EnumType.STRING)
 	@MapKeyJoinColumn
 	@ManyToMany(cascade = CascadeType.ALL)

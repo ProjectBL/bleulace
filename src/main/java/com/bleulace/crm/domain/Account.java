@@ -52,6 +52,15 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	@Column(nullable = false)
 	private String lastName;
 
+	@Column
+	private byte[] image;
+
+	@Column(nullable = false)
+	private String school = "Marshall University";
+
+	@Column(nullable = false)
+	private String work = "BleuLace";
+
 	@ManyToMany
 	private List<Account> friends = new ArrayList<Account>();
 
