@@ -3,9 +3,9 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.AccountGroup;
 import java.util.Set;
+
+import com.bleulace.crm.domain.Account;
 
 privileged aspect AccountGroup_Roo_JavaBean {
     

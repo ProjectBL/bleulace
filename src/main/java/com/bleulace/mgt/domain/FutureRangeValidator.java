@@ -4,21 +4,24 @@ import java.util.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraints.Future;
 
 import org.joda.time.LocalDateTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.JodaTimeConverters.DateToLocalDateTimeConverter;
 
 public class FutureRangeValidator implements
-		ConstraintValidator<Future, DateRange>
+		ConstraintValidator<FutureRange, DateRange>
 {
+
 	private Converter<Date, LocalDateTime> converter = DateToLocalDateTimeConverter.INSTANCE;
 
-	@Override
-	public void initialize(Future constraintAnnotation)
+	public FutureRangeValidator()
 	{
-		return;
+	}
+
+	@Override
+	public void initialize(FutureRange constraintAnnotation)
+	{
 	}
 
 	@Override

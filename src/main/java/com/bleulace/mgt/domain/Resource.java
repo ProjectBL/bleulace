@@ -17,7 +17,7 @@ import com.bleulace.mgt.domain.event.ResourceCompletedEvent;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @RooJavaBean
-public abstract class MgtResource implements Commentable.Mixin, Serializable
+public abstract class Resource implements Commentable.Mixin, Serializable
 {
 	private static final long serialVersionUID = -1911715243742088159L;
 
@@ -30,16 +30,16 @@ public abstract class MgtResource implements Commentable.Mixin, Serializable
 	@Column(nullable = false)
 	private boolean complete = false;
 
-	MgtResource()
+	Resource()
 	{
 	}
 
-	MgtResource(String id)
+	Resource(String id)
 	{
 		this(id, null);
 	}
 
-	MgtResource(String id, String title)
+	Resource(String id, String title)
 	{
 		this.id = id;
 		this.title = title;
@@ -58,5 +58,7 @@ public abstract class MgtResource implements Commentable.Mixin, Serializable
 		}
 	}
 
-	protected abstract Set<String> getAncestorIds();
+	protected abstract Set<String> getParentIds();
+
+	protected abstract Set<String> getChildIds();
 }

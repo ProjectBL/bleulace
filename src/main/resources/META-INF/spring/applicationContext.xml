@@ -84,7 +84,7 @@
 		repository="projectRepository" />
 
 	<axon:aggregate-command-handler id="mgtEventCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.MgtEvent"
+		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.Event"
 		repository="projectRepository" />
 
 	<bean id="entityManagerProvider"

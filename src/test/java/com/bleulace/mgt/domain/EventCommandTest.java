@@ -15,52 +15,35 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.mgt.application.command.JoinGroupCommand;
+import com.bleulace.mgt.application.command.CreateEventCommand;
 
-@Transactional
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class GroupCommandTest implements CommandGatewayAware
+public class EventCommandTest implements CommandGatewayAware
 {
+	@Autowired
+	private CreateEventCommand createEventCommand;
+
 	@PersistenceContext
 	private EntityManager em;
-
-	private JpaRepository<AccountGroup, String> repository;
 
 	@PostConstruct
 	protected void init()
 	{
-		repository = new SimpleJpaRepository<AccountGroup, String>(
-				AccountGroup.class, em);
+		repo = new SimpleJpaRepository<Event, String>(Event.class, em);
 	}
 
-	@Autowired
-	private CreateGroupCommand createGroupCommand;
-
-	@Autowired
-	private JoinGroupCommand joinGroupCommand;
+	private JpaRepository<Event, String> repo;
 
 	@Test
-	public void testCreateGroupCommand()
+	public void testCreateEventCommand()
 	{
-		gateway().send(createGroupCommand);
-		Assert.assertNotNull(repository.findOne(createGroupCommand.getId()));
-	}
-
-	@Test
-	public void testJoinGroupCommand()
-	{
-		int size = repository.findOne(joinGroupCommand.getGroupId())
-				.getMembers().size();
-		gateway().send(joinGroupCommand);
-		Assert.assertEquals(size + 1,
-				repository.findOne(joinGroupCommand.getGroupId()).getMembers()
-						.size());
+		long count = repo.count();
+		gateway().send(createEventCommand);
+		Assert.assertEquals(count + 1, repo.count());
 	}
 }

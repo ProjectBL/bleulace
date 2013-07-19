@@ -17,4 +17,6 @@ public interface MgtCommandGateway
 	public void send(AddCommentCommand command);
 
 	public void send(AssignTaskCommand command);
+
+	public void send(CreateEventCommand command);
 }

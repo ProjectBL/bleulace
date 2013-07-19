@@ -1,6 +1,7 @@
 package com.bleulace.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AssignTaskCommand;
+import com.bleulace.mgt.application.command.CreateEventCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.mgt.application.command.JoinGroupCommand;
 import com.bleulace.mgt.domain.ManagementAssignment;
@@ -134,6 +136,17 @@ public class CommandFixturesConfig implements CommandGatewayAware
 				createProjectCommand.getId());
 		command.setContent("foo");
 		gateway().send(new LogoutCommand());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public CreateEventCommand createEventCommand()
+	{
+		CreateEventCommand command = new CreateEventCommand();
+		command.setTitle("foo");
+		command.setStart(DateTime.now().plusMinutes(15).toDate());
+		command.setEnd(DateTime.now().plusMinutes(75).toDate());
 		return command;
 	}
 }

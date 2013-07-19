@@ -3,9 +3,9 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.Comment;
 import java.util.Date;
+
+import com.bleulace.crm.domain.Account;
 
 privileged aspect Comment_Roo_JavaBean {
     

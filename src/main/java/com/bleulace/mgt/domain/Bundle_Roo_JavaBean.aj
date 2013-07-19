@@ -3,8 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.Bundle;
-import com.bleulace.mgt.domain.Project;
 
 privileged aspect Bundle_Roo_JavaBean {
     

@@ -12,6 +12,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 
+import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -33,7 +34,7 @@ import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Project extends MgtResource implements
+public class Project extends Resource implements
 		EventSourcedAggregateRootMixin, Assignable.Mixin<ManagementAssignment>
 {
 	private static final long serialVersionUID = -1998536878318608268L;
@@ -105,8 +106,22 @@ public class Project extends MgtResource implements
 	}
 
 	@Override
-	protected Set<String> getAncestorIds()
+	protected Set<String> getParentIds()
 	{
 		return new HashSet<String>();
 	}
+
+	@Override
+	protected Set<String> getChildIds()
+	{
+		Set<String> ids = new HashSet<String>();
+		for (EventSourcedEntity entity : getChildEntities())
+		{
+			Resource resource = (Resource) entity;
+			ids.add(resource.getId());
+			ids.addAll(resource.getChildIds());
+		}
+		return ids;
+	}
+
 }

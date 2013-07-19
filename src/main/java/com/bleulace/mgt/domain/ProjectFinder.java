@@ -7,5 +7,7 @@ public interface ProjectFinder
 {
 	public Project findById(String id);
 
+	public Project findByTaskId(String taskId);
+
 	public Project findAll();
 }

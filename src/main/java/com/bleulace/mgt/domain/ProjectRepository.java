@@ -37,7 +37,7 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 
 	public String getProjectIdentifier(String id)
 	{
-		MgtResource resource = em.getReference(MgtResource.class, id);
+		Resource resource = em.getReference(Resource.class, id);
 
 		if (resource.getClass().equals(Project.class))
 		{

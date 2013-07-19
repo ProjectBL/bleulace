@@ -9,4 +9,7 @@ public interface BundleFinder
 {
 	@Query("SELECT b FROM Bundle b WHERE :task MEMBER OF b.tasks")
 	public Bundle findOneByTask(@Param("task") Task task);
+
+	@Query("SELECT b FROM Bundle b JOIN b.tasks t WHERE t.id=:taskId")
+	public Bundle findOneByTaskId(@Param("taskId") String taskId);
 }

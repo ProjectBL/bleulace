@@ -3,7 +3,6 @@
 
 package com.bleulace.crm.application.event;
 
-import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
 
 privileged aspect AccountLoginAttemptedEvent_Roo_JavaBean {
     

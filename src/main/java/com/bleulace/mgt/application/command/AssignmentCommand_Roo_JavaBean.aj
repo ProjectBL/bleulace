@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.AssignmentCommand;
 
 privileged aspect AssignmentCommand_Roo_JavaBean {
     

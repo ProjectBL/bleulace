@@ -13,7 +13,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @Entity
 @RooJavaBean(settersByDefault = false)
-public class Task extends MgtResource implements EventSourcedEntityMixin,
+public class Task extends Resource implements EventSourcedEntityMixin,
 		Assignable.Mixin<TaskAssignment>
 {
 	private static final long serialVersionUID = 6010485686197407357L;
@@ -29,11 +29,16 @@ public class Task extends MgtResource implements EventSourcedEntityMixin,
 	}
 
 	@Override
-	protected Set<String> getAncestorIds()
+	protected Set<String> getParentIds()
 	{
 		Set<String> ids = new HashSet<String>(SpringApplicationContext.get()
-				.getBean(BundleFinder.class).findOneByTask(this)
-				.getAncestorIds());
+				.getBean(BundleFinder.class).findOneByTask(this).getParentIds());
 		return ids;
+	}
+
+	@Override
+	protected Set<String> getChildIds()
+	{
+		return new HashSet<String>();
 	}
 }
