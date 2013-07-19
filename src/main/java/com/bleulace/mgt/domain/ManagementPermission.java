@@ -20,9 +20,9 @@ public class ManagementPermission implements Serializable, Permission
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, updatable = false)
-	private ManagementLevel level;
+	private ManagementAssignment level;
 
-	public ManagementPermission(MgtResource resource, ManagementLevel level)
+	public ManagementPermission(MgtResource resource, ManagementAssignment level)
 	{
 		Assert.noNullElements(new Object[] { resource, level });
 		this.resource = resource;

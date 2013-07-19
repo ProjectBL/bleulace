@@ -1,6 +1,6 @@
 package com.bleulace.crm.application.command;
 
-import com.bleulace.mgt.application.command.AddManagerCommand;
+import com.bleulace.mgt.application.command.AssignManagerCommand;
 
 public interface CrmCommandGateway
 {
@@ -12,7 +12,7 @@ public interface CrmCommandGateway
 
 	public void send(CreateAccountCommand command);
 
-	public void send(AddManagerCommand command);
+	public void send(AssignManagerCommand command);
 
 	public void send(SendFriendRequestCommand command);
 

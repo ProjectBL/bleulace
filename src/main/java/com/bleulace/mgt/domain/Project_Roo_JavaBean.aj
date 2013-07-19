@@ -3,21 +3,11 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.domain.Bundle;
-import com.bleulace.mgt.domain.ManagementLevel;
 import com.bleulace.mgt.domain.Project;
 import java.util.Map;
 
 privileged aspect Project_Roo_JavaBean {
-    
-    public Map<Account, ManagementLevel> Project.getManagers() {
-        return this.managers;
-    }
-    
-    public void Project.setManagers(Map<Account, ManagementLevel> managers) {
-        this.managers = managers;
-    }
     
     public Map<String, Bundle> Project.getBundles() {
         return this.bundles;

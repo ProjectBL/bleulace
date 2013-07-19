@@ -19,7 +19,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
-import com.bleulace.mgt.application.command.AddManagerCommand;
+import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.utils.jpa.EntityManagerReference;
@@ -34,7 +34,7 @@ public class ProjectCommandTest implements CommandGatewayAware
 	private CreateProjectCommand createProjectCommand;
 
 	@Autowired
-	private AddManagerCommand addManagerCommand;
+	private AssignManagerCommand addManagerCommand;
 
 	@Autowired
 	private AddBundleCommand addBundleCommand;
@@ -75,10 +75,10 @@ public class ProjectCommandTest implements CommandGatewayAware
 	public void testAddManagerCommand()
 	{
 		Project project = finder.findOne(addManagerCommand.getId());
-		long managerCount = project.getManagers().size();
+		long managerCount = project.getAssignees().size();
 		gateway().send(addManagerCommand);
 		project = finder.findOne(addManagerCommand.getId());
-		Assert.assertEquals(managerCount + 1, project.getManagers().size());
+		Assert.assertEquals(managerCount + 1, project.getAssignees().size());
 	}
 
 	@Test

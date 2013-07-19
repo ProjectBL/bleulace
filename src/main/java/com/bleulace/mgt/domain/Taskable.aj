@@ -4,17 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
-import com.bleulace.mgt.domain.event.filter.TaskEvent;
-import com.bleulace.mgt.domain.event.filter.TaskEventFilter;
-import com.bleulace.persistence.EventFilterSpecification;
-import com.bleulace.persistence.Filter;
 
 public interface Taskable
 {

@@ -16,11 +16,11 @@ import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
-import com.bleulace.mgt.application.command.AddManagerCommand;
+import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.mgt.application.command.JoinGroupCommand;
-import com.bleulace.mgt.domain.ManagementLevel;
+import com.bleulace.mgt.domain.ManagementAssignment;
 
 @Configuration
 @Profile("test")
@@ -61,15 +61,15 @@ public class CommandFixturesConfig implements CommandGatewayAware
 
 	@Bean
 	@Scope("prototype")
-	public AddManagerCommand addManagerCommand(
+	public AssignManagerCommand addManagerCommand(
 			CreateAccountCommand accountCommand,
 			CreateProjectCommand createProjectCommand)
 	{
 		gateway().send(accountCommand);
 		gateway().send(createProjectCommand);
-		AddManagerCommand command = new AddManagerCommand(
+		AssignManagerCommand command = new AssignManagerCommand(
 				createProjectCommand.getId(), accountCommand.getId(),
-				ManagementLevel.LOOP);
+				ManagementAssignment.LOOP);
 		return command;
 	}
 

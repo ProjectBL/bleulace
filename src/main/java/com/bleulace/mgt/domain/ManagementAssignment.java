@@ -10,16 +10,16 @@ import org.apache.shiro.authz.Permission;
  * @author Arleigh Dickerson
  * 
  */
-public enum ManagementLevel implements Permission
+public enum ManagementAssignment implements Permission
 {
 	LOOP, MIX, OWN;
 
 	@Override
 	public boolean implies(Permission p)
 	{
-		if (p instanceof ManagementLevel)
+		if (p instanceof ManagementAssignment)
 		{
-			return ordinal() >= ((ManagementLevel) p).ordinal();
+			return ordinal() >= ((ManagementAssignment) p).ordinal();
 		}
 		return false;
 	}

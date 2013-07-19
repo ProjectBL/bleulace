@@ -4,23 +4,21 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
-import com.bleulace.mgt.domain.ManagementLevel;
-
-@RooJavaBean
-public class AddManagerCommand
+@RooJavaBean(settersByDefault = false)
+public abstract class AssignmentCommand<T extends Enum<T>>
 {
 	@TargetAggregateIdentifier
 	private final String id;
 
-	private String accountId;
+	private final String accountId;
 
-	private ManagementLevel level;
+	private final T role;
 
-	public AddManagerCommand(String id, String accountId, ManagementLevel level)
+	public AssignmentCommand(String id, String accountId, T role)
 	{
-		Assert.noNullElements(new Object[] { accountId, id, level });
+		Assert.noNullElements(new Object[] { accountId, id, role });
 		this.id = id;
 		this.accountId = accountId;
-		this.level = level;
+		this.role = role;
 	}
 }

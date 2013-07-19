@@ -3,7 +3,7 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.ManagementLevel;
+import com.bleulace.mgt.domain.ManagementAssignment;
 import com.bleulace.mgt.domain.ManagementPermission;
 import com.bleulace.mgt.domain.MgtResource;
 
@@ -13,7 +13,7 @@ privileged aspect ManagementPermission_Roo_JavaBean {
         return this.resource;
     }
     
-    public ManagementLevel ManagementPermission.getLevel() {
+    public ManagementAssignment ManagementPermission.getLevel() {
         return this.level;
     }
     
