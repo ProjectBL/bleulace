@@ -7,6 +7,17 @@ public abstract class AssignmentEvent<T extends Enum<T>>
 {
 	private static final long serialVersionUID = 2599220269755614191L;
 
+	public AssignmentEvent()
+	{
+	}
+
+	public AssignmentEvent(String id, String accountId, T role)
+	{
+		this.id = id;
+		this.accountId = accountId;
+		this.role = role;
+	}
+
 	private String id;
 
 	private String accountId;

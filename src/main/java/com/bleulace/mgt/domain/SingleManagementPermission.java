@@ -1,40 +1,47 @@
 package com.bleulace.mgt.domain;
 
 import org.apache.shiro.authz.Permission;
+import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
 import com.bleulace.ddd.spec.CompositePermission;
 
+@RooEquals
 @RooJavaBean(settersByDefault = false)
-public class SingleResourcePermission extends CompositePermission
+class SingleManagementPermission extends CompositePermission
 {
 	static final long serialVersionUID = -5681890426894240536L;
 
-	private final ManagementAssignment assignment;
-	private final Resource resource;
+	private ManagementAssignment assignment;
 
-	public SingleResourcePermission(Resource resource,
+	private Project project;
+
+	SingleManagementPermission()
+	{
+	}
+
+	public SingleManagementPermission(Project project,
 			ManagementAssignment assignment)
 	{
-		Assert.noNullElements(new Object[] { resource, assignment });
+		Assert.noNullElements(new Object[] { project, assignment });
 		this.assignment = assignment;
-		this.resource = resource;
+		this.project = project;
 	}
 
 	@Override
 	public boolean implies(Permission p)
 	{
-		if (p instanceof SingleResourcePermission)
+		if (p instanceof SingleManagementPermission)
 		{
-			SingleResourcePermission that = (SingleResourcePermission) p;
+			SingleManagementPermission that = (SingleManagementPermission) p;
 
-			if (that.resource.getId() == null)
+			if (that.project.getId() == null)
 			{
 				throw new IllegalArgumentException();
 			}
 
-			return this.resource.getId().equals(that.resource.getId())
+			return this.project.getId().equals(that.project.getId())
 					&& this.assignment.implies(that.assignment);
 		}
 		return false;

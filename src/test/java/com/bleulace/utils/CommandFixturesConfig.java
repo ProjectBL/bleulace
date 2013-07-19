@@ -37,7 +37,9 @@ public class CommandFixturesConfig implements CommandGatewayAware
 	@Scope("prototype")
 	public CreateAccountCommand createAccountCommand()
 	{
-		return createAccountCommands.iterator().next();
+		CreateAccountCommand command = createAccountCommands.iterator().next();
+		command.setPassword("password");
+		return command;
 	}
 
 	@Bean

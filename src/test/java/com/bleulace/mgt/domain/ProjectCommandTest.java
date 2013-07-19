@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import junit.framework.Assert;
 
+import org.apache.shiro.SecurityUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.crm.application.command.LoginCommand;
+import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AssignManagerCommand;
@@ -73,6 +76,16 @@ public class ProjectCommandTest implements CommandGatewayAware
 		gateway().send(addManagerCommand);
 		project = finder.findOne(addManagerCommand.getId());
 		Assert.assertEquals(managerCount + 1, project.getAssignees().size());
+
+		Account account = EntityManagerReference.get().getReference(
+				Account.class, addManagerCommand.getAccountId());
+
+		Assert.assertTrue(gateway().sendAndWait(
+				new LoginCommand(account.getEmail(), "password")));
+
+		Assert.assertTrue(SecurityUtils.getSubject().isPermitted(
+				new SingleManagementPermission(project, addManagerCommand
+						.getRole())));
 	}
 
 	@Test

@@ -1,12 +1,15 @@
 package com.bleulace.mgt.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MapKeyColumn;
@@ -17,6 +20,7 @@ import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
@@ -30,12 +34,12 @@ import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.mgt.domain.event.TaskAssignedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Project extends Resource implements
-		EventSourcedAggregateRootMixin, Assignable.Mixin<ManagementAssignment>
+public class Project extends Resource implements EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = -1998536878318608268L;
 
@@ -44,6 +48,9 @@ public class Project extends Resource implements
 	@MapKeyColumn
 	@OneToMany(cascade = CascadeType.ALL)
 	private Map<String, Bundle> bundles = new HashMap<String, Bundle>();
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<JPAManagementPermission> assignees = new ArrayList<JPAManagementPermission>();
 
 	Project()
 	{
@@ -105,6 +112,32 @@ public class Project extends Resource implements
 		apply(command, TaskAssignedEvent.class);
 	}
 
+	public void on(ManagerAssignedEvent event)
+	{
+		if (this.getId().equals(event.getId()))
+		{
+			EntityManager em = EntityManagerReference.get();
+			Account account = em.getReference(Account.class,
+					event.getAccountId());
+			JPAManagementPermission permission = new JPAManagementPermission(
+					account, this, event.getRole());
+			if (event.getRole() == null)
+			{
+				this.assignees.remove(permission);
+			}
+			else
+			{
+				assignees.add(new JPAManagementPermission(account, this, event
+						.getRole()));
+			}
+
+			for (String id : getChildIds())
+			{
+				apply(new ManagerAssignedEvent(id, event.getAccountId(), null));
+			}
+		}
+	}
+
 	@Override
 	protected Set<String> getParentIds()
 	{
@@ -119,9 +152,7 @@ public class Project extends Resource implements
 		{
 			Resource resource = (Resource) entity;
 			ids.add(resource.getId());
-			ids.addAll(resource.getChildIds());
 		}
 		return ids;
 	}
-
 }

@@ -16,7 +16,7 @@ public abstract class AssignmentCommand<T extends Enum<T>>
 
 	public AssignmentCommand(String id, String accountId, T role)
 	{
-		Assert.noNullElements(new Object[] { accountId, id, role });
+		Assert.noNullElements(new Object[] { accountId, id });
 		this.id = id;
 		this.accountId = accountId;
 		this.role = role;

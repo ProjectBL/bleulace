@@ -1,5 +1,7 @@
 package com.bleulace.crm.infrastructure;
 
+import java.util.List;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -14,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.domain.AccountFinder;
+import com.bleulace.mgt.domain.JPAManagementPermission;
+import com.bleulace.mgt.domain.QJPAManagementPermission;
+import com.bleulace.persistence.infrastructure.QueryFactory;
 
 /**
  * A realm which performs authentication and authorization for {@link Account}
@@ -72,6 +77,17 @@ public class JpaRealm extends AuthorizingRealm
 		String accountId = (String) principalCollection.getPrimaryPrincipal();
 		if (accountId != null)
 		{
+			Account account = finder.findById(accountId);
+			if (account != null)
+			{
+				QJPAManagementPermission p = QJPAManagementPermission.jPAManagementPermission;
+				List<JPAManagementPermission> permissions = QueryFactory
+						.from(p).where(p.account.eq(account)).list(p);
+				for (JPAManagementPermission permission : permissions)
+				{
+					info.addObjectPermission(permission);
+				}
+			}
 		}
 		return info;
 	}
