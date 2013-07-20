@@ -7,28 +7,18 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.domain.AccountDAO;
-import com.bleulace.utils.dto.DTOConverter;
+import com.bleulace.utils.dto.BasicFinder;
 
 @Component
-class AccountFinderImpl implements AccountFinder
+class AccountFinderImpl extends BasicFinder<Account, AccountDTO> implements
+		AccountFinder
 {
 	@Autowired
 	private AccountDAO dao;
 
-	@Autowired
-	private DTOConverter<Account, AccountDTO> accountDTOConverter;
-
-	@Override
-	@Autowired
-	public List<AccountDTO> findAll()
+	public AccountFinderImpl()
 	{
-		return accountDTOConverter.convert(dao.findAll());
-	}
-
-	@Override
-	public AccountDTO findById(String id)
-	{
-		return accountDTOConverter.convert(dao.findOne(id));
+		super(Account.class, AccountDTO.class);
 	}
 
 	@Override
@@ -37,8 +27,8 @@ class AccountFinderImpl implements AccountFinder
 		Account account = dao.findOne(id);
 		if (account != null)
 		{
-			return (List<AccountDTO>) accountDTOConverter.convert(account
-					.getFriends());
+			return (List<AccountDTO>) getConverter().convert(
+					account.getFriends());
 		}
 		return null;
 	}

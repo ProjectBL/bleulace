@@ -31,6 +31,7 @@ import com.bleulace.mgt.domain.event.BundleAddedEvent;
 import com.bleulace.mgt.domain.event.CommentAddedEvent;
 import com.bleulace.mgt.domain.event.ManagerAssignedEvent;
 import com.bleulace.mgt.domain.event.ProjectCreatedEvent;
+import com.bleulace.mgt.domain.event.ResourceCompletedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.mgt.domain.event.TaskAssignedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
@@ -138,6 +139,38 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 		}
 	}
 
+	public void on(ResourceCompletedEvent event)
+	{
+		if (event.getId().equals(getId()))
+		{
+			for (EventSourcedEntity child : getChildEntities())
+			{
+				if (child instanceof Task)
+				{
+					((Task) child).setComplete(true);
+				}
+			}
+		}
+	}
+
+	public Double getPercentComplete()
+	{
+		int completed = 0;
+		int total = 0;
+		for (EventSourcedEntity child : getChildEntities())
+		{
+			if (child instanceof Task)
+			{
+				total++;
+				if (((Task) child).isComplete())
+				{
+					completed++;
+				}
+			}
+		}
+		return new Double(completed) / new Double(total);
+	}
+
 	@Override
 	protected Set<String> getParentIds()
 	{
@@ -154,5 +187,11 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 			ids.add(resource.getId());
 		}
 		return ids;
+	}
+
+	@Override
+	public boolean isComplete()
+	{
+		return getPercentComplete().equals(new Double(1));
 	}
 }

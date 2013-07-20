@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.Resource;
 
 privileged aspect Resource_Roo_JavaBean {
     
@@ -21,14 +20,6 @@ privileged aspect Resource_Roo_JavaBean {
     
     public void Resource.setTitle(String title) {
         this.title = title;
-    }
-    
-    public boolean Resource.isComplete() {
-        return this.complete;
-    }
-    
-    public void Resource.setComplete(boolean complete) {
-        this.complete = complete;
     }
     
 }

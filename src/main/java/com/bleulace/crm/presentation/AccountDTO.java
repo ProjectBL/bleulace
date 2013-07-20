@@ -6,8 +6,8 @@ import org.springframework.roo.addon.tostring.RooToString;
 
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-@RooEquals
 @RooToString
+@RooEquals
 @RooJavaBean
 public class AccountDTO
 {

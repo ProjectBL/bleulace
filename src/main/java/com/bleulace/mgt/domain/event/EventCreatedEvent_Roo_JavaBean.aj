@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.domain.event;
 
-import com.bleulace.mgt.domain.event.EventCreatedEvent;
 import java.util.Date;
 
 privileged aspect EventCreatedEvent_Roo_JavaBean {

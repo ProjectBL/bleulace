@@ -17,7 +17,7 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 	private EntityManager em;
 
 	@Autowired
-	private BundleFinder bundleFinder;
+	private BundleDAO bundleDAO;
 
 	@Autowired
 	public ProjectRepository(EntityManagerProvider entityManagerProvider,
@@ -46,7 +46,7 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 
 		if (resource instanceof Task)
 		{
-			resource = bundleFinder.findOneByTask((Task) resource);
+			resource = bundleDAO.findByTaskId(((Task) resource).getId());
 		}
 
 		if (resource instanceof Bundle)

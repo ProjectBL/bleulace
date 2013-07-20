@@ -7,44 +7,41 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.crm.domain.AccountGroup;
 import com.bleulace.crm.domain.GroupDAO;
-import com.bleulace.utils.dto.DTOConverter;
+import com.bleulace.utils.dto.BasicFinder;
 
 @Component
-class GroupFinderImpl implements GroupFinder
+public class GroupFinderImpl extends BasicFinder<AccountGroup, GroupDTO>
+		implements GroupFinder
 {
 	@Autowired
 	private GroupDAO dao;
 
-	@Autowired
-	private DTOConverter<AccountGroup, GroupDTO> groupDTOConverter;
-
-	@Override
-	public GroupDTO findById(String id)
+	public GroupFinderImpl()
 	{
-		return groupDTOConverter.convert(dao.findOne(id));
+		super(AccountGroup.class, GroupDTO.class);
 	}
 
 	@Override
 	public GroupDTO findOneByTitle(String title)
 	{
-		return groupDTOConverter.convert(dao.findOneByTitle(title));
+		return getConverter().convert(dao.findOneByTitle(title));
 	}
 
 	@Override
 	public List<GroupDTO> findByTitle(String title)
 	{
-		return groupDTOConverter.convert(dao.findByTitle(title));
+		return getConverter().convert(dao.findByTitle(title));
 	}
 
 	@Override
 	public List<GroupDTO> findByMemberId(String memberId)
 	{
-		return groupDTOConverter.convert(dao.findByMemberId(memberId));
+		return getConverter().convert(dao.findByMemberId(memberId));
 	}
 
 	@Override
 	public List<GroupDTO> findAll()
 	{
-		return groupDTOConverter.convert(dao.findAll());
+		return getConverter().convert(dao.findAll());
 	}
 }

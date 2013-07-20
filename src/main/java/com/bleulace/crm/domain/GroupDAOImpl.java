@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.util.Assert;
 
-import com.bleulace.mgt.domain.QAccountGroup;
 import com.bleulace.persistence.infrastructure.QueryFactory;
 
 class GroupDAOImpl implements GroupDAOCustom

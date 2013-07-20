@@ -3,7 +3,8 @@
 
 package com.bleulace.crm.domain;
 
-import com.bleulace.crm.domain.GroupCreatedEvent;
+import com.bleulace.crm.domain.event.GroupCreatedEvent;
+
 
 privileged aspect GroupCreatedEvent_Roo_JavaBean {
     

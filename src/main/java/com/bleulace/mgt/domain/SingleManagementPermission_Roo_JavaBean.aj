@@ -3,9 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.ManagementAssignment;
-import com.bleulace.mgt.domain.Project;
-import com.bleulace.mgt.domain.SingleManagementPermission;
 
 privileged aspect SingleManagementPermission_Roo_JavaBean {
     

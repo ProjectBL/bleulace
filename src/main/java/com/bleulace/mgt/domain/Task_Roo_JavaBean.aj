@@ -3,14 +3,26 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.Task;
 import java.util.Set;
+
+import com.bleulace.crm.domain.Account;
 
 privileged aspect Task_Roo_JavaBean {
     
+    public boolean Task.isComplete() {
+        return this.complete;
+    }
+    
+    public void Task.setComplete(boolean complete) {
+        this.complete = complete;
+    }
+    
     public Set<Account> Task.getAssignees() {
         return this.assignees;
+    }
+    
+    public void Task.setAssignees(Set<Account> assignees) {
+        this.assignees = assignees;
     }
     
 }

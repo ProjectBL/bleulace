@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.DateRange;
 import java.util.Date;
 
 privileged aspect DateRange_Roo_JavaBean {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.util.Assert;
 
 class IterableConverter<S, T> implements Converter<Iterable<S>, List<T>>
 {
@@ -11,6 +12,7 @@ class IterableConverter<S, T> implements Converter<Iterable<S>, List<T>>
 
 	public IterableConverter(Converter<S, T> converter)
 	{
+		Assert.notNull(converter);
 		this.converter = converter;
 	}
 
@@ -20,7 +22,11 @@ class IterableConverter<S, T> implements Converter<Iterable<S>, List<T>>
 		List<T> toList = new ArrayList<T>();
 		for (S from : source)
 		{
-			toList.add(converter.convert(from));
+			T to = converter.convert(from);
+			if (to != null)
+			{
+				toList.add(to);
+			}
 		}
 		return toList;
 	}

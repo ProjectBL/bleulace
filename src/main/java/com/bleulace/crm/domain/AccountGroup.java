@@ -12,6 +12,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.application.command.CreateGroupCommand;
 import com.bleulace.crm.application.command.JoinGroupCommand;
+import com.bleulace.crm.domain.event.GroupCreatedEvent;
 import com.bleulace.crm.domain.event.GroupJoinedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.utils.jpa.EntityManagerReference;
@@ -41,7 +42,10 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 		id = command.getId();
 		apply(command, GroupCreatedEvent.class);
 		String creatorId = command.getCreatorId();
-		apply(new GroupJoinedEvent(command.getCreatorId()));
+		if (creatorId != null)
+		{
+			apply(new GroupJoinedEvent(creatorId));
+		}
 	}
 
 	public void on(GroupCreatedEvent event)

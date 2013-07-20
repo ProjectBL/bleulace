@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.AddCommentCommand;
 
 privileged aspect AddCommentCommand_Roo_JavaBean {
     

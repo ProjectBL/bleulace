@@ -28,12 +28,11 @@ public interface Commentable
 
 			public void Mixin.on(CommentAddedEvent event)
 			{
-				Account author = EntityManagerReference.get().getReference(
-						Account.class, event.getAccountId());
-				Comment comment = new Comment(author, event.getContent());
-
 				if (this.getId().equals(event.getId()))
 				{
+					Account author = EntityManagerReference.get().getReference(
+							Account.class, event.getAccountId());
+					Comment comment = new Comment(author, event.getContent());
 					this.comments.add(comment);
 				}
 			}

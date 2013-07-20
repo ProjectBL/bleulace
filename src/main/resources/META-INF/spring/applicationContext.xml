@@ -24,8 +24,6 @@
 	</jpa:repositories>
 
 	<context:component-scan base-package="com.bleulace">
-		<context:include-filter expression="com.bleulace.utils.dto.Finder"
-			type="assignable" />
 		<context:exclude-filter expression=".*_Roo_.*"
 			type="regex" />
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
@@ -33,6 +31,11 @@
 	</context:component-scan>
 
 	<task:executor id="executor" pool-size="0-4" />
+
+	<bean id="taskDTOFinder" class="com.bleulace.utils.dto.BasicFinder">
+		<property name="sourceClass" value="com.bleulace.mgt.domain.Task" />
+		<property name="dtoClass" value="com.bleulace.mgt.presentation.TaskDTO" />
+	</bean>
 
 	<!-- Axon -->
 	<axon:annotation-config />
