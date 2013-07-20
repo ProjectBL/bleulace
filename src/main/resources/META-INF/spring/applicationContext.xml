@@ -42,11 +42,6 @@
 
 	<axon:command-bus id="commandBus" transaction-manager="transactionManager">
 		<!-- TODO : permission interceptor -->
-		<axon:dispatchInterceptors>
-			<bean
-				class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
-			<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
-		</axon:dispatchInterceptors>
 		<axon:handlerInterceptors>
 			<bean class="org.axonframework.auditing.AuditingInterceptor">
 				<property name="auditDataProvider" ref="auditDataProviderImpl" />
@@ -59,6 +54,13 @@
 		<property name="commandBus" ref="commandBus" />
 		<property name="gatewayInterface"
 			value="com.bleulace.cqrs.command.MasterCommandGateway" />
+		<property name="commandDispatchInterceptors">
+			<array>
+				<bean
+					class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor" />
+				<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
+			</array>
+		</property>
 	</bean>
 
 	<axon:event-bus id="eventBus" />

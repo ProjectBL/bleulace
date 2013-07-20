@@ -9,12 +9,12 @@ public class GroupJoinedEvent
 
 	private String accountId;
 
+	public GroupJoinedEvent()
+	{
+	}
+
 	public GroupJoinedEvent(String accountId)
 	{
 		this.accountId = accountId;
-	}
-
-	public GroupJoinedEvent()
-	{
 	}
 }

@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.AssignmentEvent;
 
 privileged aspect AssignmentEvent_Roo_JavaBean {
     

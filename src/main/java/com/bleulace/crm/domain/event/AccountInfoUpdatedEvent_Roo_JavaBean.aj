@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.domain.event;
 
+import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 
 privileged aspect AccountInfoUpdatedEvent_Roo_JavaBean {
     

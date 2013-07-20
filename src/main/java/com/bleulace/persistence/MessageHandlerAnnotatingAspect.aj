@@ -7,6 +7,7 @@ import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
@@ -26,7 +27,7 @@ public aspect MessageHandlerAnnotatingAspect
 	interface Event extends Serializable
 	{
 	}
-	
+
 	declare parents : com.bleulace..event..*Event implements Event;
 	declare parents : com.bleulace..command..*Command implements Command;
 

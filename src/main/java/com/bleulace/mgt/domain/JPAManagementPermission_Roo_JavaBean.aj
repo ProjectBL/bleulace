@@ -4,6 +4,9 @@
 package com.bleulace.mgt.domain;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.domain.JPAManagementPermission;
+import com.bleulace.mgt.domain.ManagementAssignment;
+import com.bleulace.mgt.domain.Project;
 
 privileged aspect JPAManagementPermission_Roo_JavaBean {
     

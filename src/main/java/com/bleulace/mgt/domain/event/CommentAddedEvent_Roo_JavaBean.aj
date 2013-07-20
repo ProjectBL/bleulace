@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.CommentAddedEvent;
 
 privileged aspect CommentAddedEvent_Roo_JavaBean {
     

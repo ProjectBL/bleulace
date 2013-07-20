@@ -1,4 +1,4 @@
-package com.bleulace.mgt.domain;
+package com.bleulace.crm.domain;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;

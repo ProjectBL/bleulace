@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.axonframework.domain.GenericDomainEventMessage;
 import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
@@ -138,8 +137,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(FriendRequestSentEvent event)
 	{
-		System.out.println(event.getSagaId());
-		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
 	}
 
 	public void handle(ReplyToFriendRequestCommand command)
@@ -149,7 +146,5 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(RepliedToFriendRequestEvent event)
 	{
-		System.out.println(event.getSagaId());
-		eventBus().publish(GenericDomainEventMessage.asEventMessage(event));
 	}
 }

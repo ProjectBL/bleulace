@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.presentation;
 
+import com.bleulace.mgt.presentation.ProjectDTO;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

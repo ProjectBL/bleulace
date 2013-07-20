@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 @RooJavaBean
 public class JoinGroupCommand
 {
+	@NotNull
 	@TargetAggregateIdentifier
 	private final String groupId;
 

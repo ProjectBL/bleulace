@@ -16,4 +16,8 @@ public interface ProjectDAO extends ReadOnlyDAO<Project, String>
 			@Param("accountId") String accountId,
 			@Param("assignment") ManagementAssignment assignment,
 			@Param("classes") List<Class<T>> classes);
+
+	@Query("SELECT p.project FROM JPAManagementPermission p "
+			+ "WHERE p.account.id=:accountId ")
+	public List<Project> findByAssignment(@Param("accountId") String accountId);
 }
