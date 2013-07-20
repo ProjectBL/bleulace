@@ -9,8 +9,7 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.crm.domain.Account;
-import com.bleulace.crm.domain.AccountFinder;
-import com.bleulace.crm.infrastructure.ExecutingAccount;
+import com.bleulace.crm.domain.AccountDAO;
 
 /**
  * Handles {@link LoginCommand}s and {@link LogoutCommand}s.
@@ -22,7 +21,7 @@ import com.bleulace.crm.infrastructure.ExecutingAccount;
 public class LoginLogoutCommandHandler implements CommandGatewayAware
 {
 	@Autowired
-	private AccountFinder finder;
+	private AccountDAO dao;
 
 	public Boolean handle(LoginCommand command)
 	{
@@ -38,7 +37,7 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 		}
 		finally
 		{
-			Account account = finder.findByEmail(command.getUsername());
+			Account account = dao.findByEmail(command.getUsername());
 
 			// if a valid account email was input,
 			if (account != null)
@@ -47,13 +46,14 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 				account.handleLoginAttempt(success);
 			}
 		}
+
 		// return true if the login attempt was a success, false otherwise
 		return success;
 	}
 
 	public void handle(LogoutCommand command)
 	{
-		Account account = ExecutingAccount.current();
+		Account account = SecurityUtils.getAccount();
 
 		// if the executing subject is authenticated,
 		if (account != null)

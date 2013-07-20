@@ -1,10 +1,17 @@
 package com.bleulace.ddd.spec;
 
+import java.util.Collection;
+
 import org.apache.shiro.authz.Permission;
 
-public class DisjunctionPermission extends CompositePermission
+public class DisjunctionPermission implements PermissionSpecification
 {
 	private Permission[] disjunction;
+
+	public DisjunctionPermission(Collection<Permission> disjunction)
+	{
+		this(disjunction.toArray(new Permission[disjunction.size()]));
+	}
 
 	public DisjunctionPermission(Permission... disjunction)
 	{

@@ -1,10 +1,10 @@
 package com.bleulace.ui.web;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import ru.xpoft.vaadin.DiscoveryNavigator;
 
-import com.bleulace.crm.infrastructure.ExecutingAccount;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
@@ -51,7 +51,8 @@ public class WebUI extends UI
 	protected void init(VaadinRequest request)
 	{
 		setNavigator(new DiscoveryNavigator(this, this));
-		if (ExecutingAccount.current() != null)
+		if (!(SecurityUtils.getSubject().isAuthenticated() || SecurityUtils
+				.getSubject().isRemembered()))
 		{
 			// somebody is currently logged in
 			// TODO : navigate somewhere slow poke!

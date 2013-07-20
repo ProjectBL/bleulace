@@ -5,11 +5,11 @@ import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
-import com.bleulace.ddd.spec.CompositePermission;
+import com.bleulace.ddd.spec.PermissionSpecification;
 
 @RooEquals
 @RooJavaBean(settersByDefault = false)
-class SingleManagementPermission extends CompositePermission
+class SingleManagementPermission implements PermissionSpecification
 {
 	static final long serialVersionUID = -5681890426894240536L;
 

@@ -3,8 +3,15 @@ package com.bleulace.crm.application.command;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.util.Assert;
 
+/**
+ * A command to authenticate and log in a system user.
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public class LoginCommand
 {
 	private UsernamePasswordToken token = new UsernamePasswordToken("", "",
@@ -25,7 +32,7 @@ public class LoginCommand
 		token = new UsernamePasswordToken(username, password, rememberMe);
 	}
 
-	@NotBlank
+	@NotEmpty
 	public String getUsername()
 	{
 		return token.getUsername();

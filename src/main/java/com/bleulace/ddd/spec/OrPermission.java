@@ -2,7 +2,7 @@ package com.bleulace.ddd.spec;
 
 import org.apache.shiro.authz.Permission;
 
-public class OrPermission extends CompositePermission
+public class OrPermission implements PermissionSpecification
 {
 	private final Permission a;
 	private final Permission b;
@@ -18,5 +18,4 @@ public class OrPermission extends CompositePermission
 	{
 		return a.implies(p) || b.implies(p);
 	}
-
 }

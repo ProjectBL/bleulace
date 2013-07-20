@@ -29,4 +29,19 @@ public class SpringApplicationContext
 	{
 		return new SpringApplicationContext().ctx;
 	}
+
+	public static Object getBean(String name)
+	{
+		return get().getBean(name);
+	}
+
+	public static <T> T getBean(Class<T> requiredType)
+	{
+		return get().getBean(requiredType);
+	}
+
+	public static <T> T getBean(Class<T> requiredType, String name)
+	{
+		return get().getBean(name, requiredType);
+	}
 }

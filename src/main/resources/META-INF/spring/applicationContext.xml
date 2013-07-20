@@ -4,6 +4,7 @@
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:axon="http://www.axonframework.org/schema/core" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
 		http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
@@ -11,10 +12,20 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		 http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
 	<context:spring-configured />
+
+	<jpa:repositories base-package="com.bleulace"
+		repository-impl-postfix="Impl">
+		<repository:include-filter type="assignable"
+			expression="com.bleulace.utils.jpa.ReadOnlyDAO" />
+	</jpa:repositories>
+
 	<context:component-scan base-package="com.bleulace">
+		<context:include-filter expression="com.bleulace.utils.dto.Finder"
+			type="assignable" />
 		<context:exclude-filter expression=".*_Roo_.*"
 			type="regex" />
 		<context:exclude-filter expression="org.springframework.stereotype.Controller"
@@ -71,11 +82,11 @@
 		event-store="eventStore" />
 
 	<axon:aggregate-command-handler id="groupCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.AccountGroup"
+		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.AccountGroup"
 		repository="groupRepository" />
 
 	<axon:jpa-repository id="groupRepository"
-		aggregate-type="com.bleulace.mgt.domain.AccountGroup"
+		aggregate-type="com.bleulace.crm.domain.AccountGroup"
 		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
 		event-store="eventStore" />
 

@@ -1,4 +1,6 @@
-package com.bleulace.mgt.application.command;
+package com.bleulace.crm.application.command;
+
+import javax.validation.constraints.NotNull;
 
 import org.apache.shiro.SecurityUtils;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
@@ -9,13 +11,14 @@ import org.springframework.util.Assert;
 public class JoinGroupCommand
 {
 	@TargetAggregateIdentifier
-	private String groupId;
+	private final String groupId;
 
-	private String accountId;
+	@NotNull
+	private final String accountId;
 
 	public JoinGroupCommand(String groupId)
 	{
-		this(groupId, (String) SecurityUtils.getSubject().getPrincipal());
+		this(groupId, SecurityUtils.getSubject().getId());
 	}
 
 	public JoinGroupCommand(String groupId, String accountId)
@@ -23,9 +26,5 @@ public class JoinGroupCommand
 		Assert.noNullElements(new Object[] { groupId, accountId });
 		this.accountId = accountId;
 		this.groupId = groupId;
-	}
-
-	public JoinGroupCommand()
-	{
 	}
 }

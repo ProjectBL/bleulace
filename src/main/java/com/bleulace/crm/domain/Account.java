@@ -118,8 +118,6 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void onLogoutAttemptedEvent(AccountLoggedOutEvent event)
 	{
-		// TODO : I forgot what to do here, but I know I'm supposed to do
-		// something!
 	}
 
 	public void handle(ChangePasswordCommand command)

@@ -12,13 +12,13 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.crm.domain.Account;
-import com.bleulace.crm.domain.AccountFinder;
+import com.bleulace.crm.domain.AccountDAO;
 import com.bleulace.mgt.domain.JPAManagementPermission;
 import com.bleulace.mgt.domain.QJPAManagementPermission;
 import com.bleulace.persistence.infrastructure.QueryFactory;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
  * A realm which performs authentication and authorization for {@link Account}
@@ -33,9 +33,6 @@ import com.bleulace.persistence.infrastructure.QueryFactory;
  */
 public class JpaRealm extends AuthorizingRealm
 {
-	@Autowired
-	private AccountFinder finder;
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -55,7 +52,7 @@ public class JpaRealm extends AuthorizingRealm
 			return null;
 		}
 
-		Account identity = finder.findByEmail(username);
+		Account identity = getDAO().findByEmail(username);
 		if (identity == null)
 		{
 			return null;
@@ -77,7 +74,7 @@ public class JpaRealm extends AuthorizingRealm
 		String accountId = (String) principalCollection.getPrimaryPrincipal();
 		if (accountId != null)
 		{
-			Account account = finder.findById(accountId);
+			Account account = getDAO().findOne(accountId);
 			if (account != null)
 			{
 				QJPAManagementPermission p = QJPAManagementPermission.jPAManagementPermission;
@@ -90,5 +87,14 @@ public class JpaRealm extends AuthorizingRealm
 			}
 		}
 		return info;
+	}
+
+	/**
+	 * 
+	 * @return an accountDAO
+	 */
+	private AccountDAO getDAO()
+	{
+		return SpringApplicationContext.get().getBean(AccountDAO.class);
 	}
 }

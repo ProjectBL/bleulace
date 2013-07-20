@@ -2,7 +2,7 @@ package com.bleulace.ddd.spec;
 
 import org.apache.shiro.authz.Permission;
 
-public class AndPermission extends CompositePermission
+public class AndPermission implements PermissionSpecification
 {
 	private final Permission a;
 	private final Permission b;

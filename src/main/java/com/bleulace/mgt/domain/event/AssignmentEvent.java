@@ -1,9 +1,12 @@
 package com.bleulace.mgt.domain.event;
 
+import java.io.Serializable;
+
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean
-public abstract class AssignmentEvent<T extends Enum<T>>
+public abstract class AssignmentEvent<T extends Enum<T>> implements
+		Serializable
 {
 	private static final long serialVersionUID = 2599220269755614191L;
 

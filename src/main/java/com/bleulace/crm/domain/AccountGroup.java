@@ -1,7 +1,7 @@
-package com.bleulace.mgt.domain;
+package com.bleulace.crm.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +11,8 @@ import javax.persistence.ManyToMany;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.application.command.JoinGroupCommand;
-import com.bleulace.mgt.domain.event.GroupCreatedEvent;
-import com.bleulace.mgt.domain.event.GroupJoinedEvent;
+import com.bleulace.crm.application.command.JoinGroupCommand;
+import com.bleulace.crm.domain.event.GroupJoinedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
@@ -32,7 +30,7 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 
 	// add permissions in shiro
 	@ManyToMany
-	private Set<Account> members = new HashSet<Account>();
+	private List<Account> members = new ArrayList<Account>();
 
 	AccountGroup()
 	{
@@ -42,12 +40,8 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 	{
 		id = command.getId();
 		apply(command, GroupCreatedEvent.class);
-
-		Account creator = command.getCreator();
-		if (creator != null)
-		{
-			apply(new GroupJoinedEvent(id, creator.getId()));
-		}
+		String creatorId = command.getCreatorId();
+		apply(new GroupJoinedEvent(command.getCreatorId()));
 	}
 
 	public void on(GroupCreatedEvent event)
@@ -62,7 +56,7 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 
 	public void on(GroupJoinedEvent event)
 	{
-		members.add(EntityManagerReference.get().getReference(Account.class,
+		members.add(EntityManagerReference.load(Account.class,
 				event.getAccountId()));
 	}
 }

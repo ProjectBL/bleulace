@@ -2,7 +2,7 @@ package com.bleulace.ddd.spec;
 
 import org.apache.shiro.authz.Permission;
 
-public class NotPermission extends CompositePermission
+public class NotPermission implements PermissionSpecification
 {
 	private Permission wrapped;
 

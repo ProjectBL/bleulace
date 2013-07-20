@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateGroupCommand;
-import com.bleulace.mgt.application.command.JoinGroupCommand;
+import com.bleulace.crm.application.command.JoinGroupCommand;
+import com.bleulace.crm.domain.AccountGroup;
 
 @Transactional
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
@@ -50,7 +51,9 @@ public class GroupCommandTest implements CommandGatewayAware
 	public void testCreateGroupCommand()
 	{
 		gateway().send(createGroupCommand);
-		Assert.assertNotNull(repository.findOne(createGroupCommand.getId()));
+		AccountGroup group = repository.findOne(createGroupCommand.getId());
+		Assert.assertNotNull(group);
+		Assert.assertTrue(group.getMembers().size() > 0);
 	}
 
 	@Test

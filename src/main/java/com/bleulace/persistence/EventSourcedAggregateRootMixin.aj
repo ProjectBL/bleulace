@@ -40,7 +40,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 		private transient AnnotationEventHandlerInvoker EventSourcedAggregateRootMixin.eventHandlerInvoker;
 		private transient AggregateAnnotationInspector EventSourcedAggregateRootMixin.inspector;
-
+		
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
 			return deleted;

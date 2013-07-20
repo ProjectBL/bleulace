@@ -1,6 +1,7 @@
 package com.bleulace.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.CreateGroupCommand;
+import com.bleulace.crm.application.command.JoinGroupCommand;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
@@ -21,7 +23,6 @@ import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AssignTaskCommand;
 import com.bleulace.mgt.application.command.CreateEventCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
-import com.bleulace.mgt.application.command.JoinGroupCommand;
 import com.bleulace.mgt.domain.ManagementAssignment;
 import com.bleulace.mgt.domain.TaskAssignment;
 
@@ -100,10 +101,18 @@ public class CommandFixturesConfig implements CommandGatewayAware
 
 	@Bean
 	@Scope("prototype")
-	public CreateGroupCommand createGroupCommand()
+	public CreateGroupCommand createGroupCommand(
+			CreateAccountCommand createAccountCommand)
 	{
+		gateway().send(createAccountCommand);
+		if (!gateway().sendAndWait(
+				new LoginCommand(createAccountCommand.getEmail(), "password")))
+		{
+			throw new AuthenticationException();
+		}
 		CreateGroupCommand command = new CreateGroupCommand();
 		command.setTitle(RandomStringUtils.random(20));
+		gateway().send(new LogoutCommand());
 		return command;
 	}
 

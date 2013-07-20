@@ -3,7 +3,7 @@
 
 package com.bleulace.crm.application.command;
 
-import com.bleulace.crm.domain.Account;
+import com.bleulace.crm.application.command.CreateGroupCommand;
 
 privileged aspect CreateGroupCommand_Roo_JavaBean {
     
@@ -11,8 +11,8 @@ privileged aspect CreateGroupCommand_Roo_JavaBean {
         return this.id;
     }
     
-    public Account CreateGroupCommand.getCreator() {
-        return this.creator;
+    public String CreateGroupCommand.getCreatorId() {
+        return this.creatorId;
     }
     
     public String CreateGroupCommand.getTitle() {

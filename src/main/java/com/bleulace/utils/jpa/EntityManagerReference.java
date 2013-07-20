@@ -24,6 +24,11 @@ public class EntityManagerReference
 	{
 	}
 
+	public static <T> T load(Class<T> clazz, Object id)
+	{
+		return get().getReference(clazz, id);
+	}
+
 	public static EntityManager get()
 	{
 		return new EntityManagerReference().entityManager;

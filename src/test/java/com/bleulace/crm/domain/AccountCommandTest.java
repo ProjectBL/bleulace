@@ -34,7 +34,7 @@ public class AccountCommandTest implements CommandGatewayAware
 	private ApplicationContext ctx;
 
 	@Autowired
-	private AccountFinder finder;
+	private AccountDAO dao;
 
 	@Autowired
 	private CreateAccountCommand command;
@@ -42,9 +42,9 @@ public class AccountCommandTest implements CommandGatewayAware
 	@Test
 	public void testCreateAccountCommand() throws InterruptedException
 	{
-		long count = finder.count();
+		long count = dao.count();
 		gateway().send(command);
-		Assert.assertEquals(count + 1, finder.count());
+		Assert.assertEquals(count + 1, dao.count());
 	}
 
 	@Test

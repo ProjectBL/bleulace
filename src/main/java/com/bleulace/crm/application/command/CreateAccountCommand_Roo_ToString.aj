@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.CreateAccountCommand;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

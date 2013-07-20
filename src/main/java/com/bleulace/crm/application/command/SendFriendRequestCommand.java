@@ -2,6 +2,13 @@ package com.bleulace.crm.application.command;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+/**
+ * 
+ * A command to request friendship with another account
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @RooJavaBean(settersByDefault = false)
 public class SendFriendRequestCommand extends FriendRequestCommand
 {
