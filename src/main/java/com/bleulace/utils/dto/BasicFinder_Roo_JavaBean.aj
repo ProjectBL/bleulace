@@ -3,8 +3,9 @@
 
 package com.bleulace.utils.dto;
 
+import com.bleulace.utils.dto.BasicFinder;
+import com.bleulace.utils.dto.DTOConverter;
 import javax.persistence.EntityManager;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 privileged aspect BasicFinder_Roo_JavaBean {
@@ -23,10 +24,6 @@ privileged aspect BasicFinder_Roo_JavaBean {
     
     public void BasicFinder.setDtoClass(Class<T> dtoClass) {
         this.dtoClass = dtoClass;
-    }
-    
-    public DTOConverter<S, T> BasicFinder.getConverter() {
-        return this.converter;
     }
     
     public void BasicFinder.setConverter(DTOConverter<S, T> converter) {

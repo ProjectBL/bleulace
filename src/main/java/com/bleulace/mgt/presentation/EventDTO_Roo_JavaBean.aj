@@ -3,18 +3,18 @@
 
 package com.bleulace.mgt.presentation;
 
-import java.util.List;
-
 import com.bleulace.crm.presentation.AccountDTO;
+import com.bleulace.mgt.presentation.EventDTO;
+import java.util.List;
 
 privileged aspect EventDTO_Roo_JavaBean {
     
-    public List<AccountDTO> EventDTO.getInvitees() {
-        return this.invitees;
+    public List<AccountDTO> EventDTO.getAttendees() {
+        return this.attendees;
     }
     
-    public void EventDTO.setInvitees(List<AccountDTO> invitees) {
-        this.invitees = invitees;
+    public void EventDTO.setAttendees(List<AccountDTO> attendees) {
+        this.attendees = attendees;
     }
     
 }

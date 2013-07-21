@@ -12,4 +12,6 @@ public class EventCreatedEvent extends ProjectCreatedEvent
 	private Date start;
 
 	private Date end;
+
+	private String location;
 }

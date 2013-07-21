@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.event.EventBusAware;
@@ -75,7 +74,7 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	public Account(CreateAccountCommand command)
 	{
 		id = command.getId();
-		apply(new ModelMapper().map(command, AccountCreatedEvent.class));
+		apply(command, AccountCreatedEvent.class);
 		apply(new PasswordChangedEvent(command.getPassword()));
 	}
 

@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.CreateAccountCommand;
 
 privileged aspect CreateAccountCommand_Roo_JavaBean {
     

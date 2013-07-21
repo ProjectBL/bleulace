@@ -3,9 +3,9 @@
 
 package com.bleulace.mgt.domain;
 
-import java.util.Set;
-
 import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.domain.Task;
+import java.util.Set;
 
 privileged aspect Task_Roo_JavaBean {
     

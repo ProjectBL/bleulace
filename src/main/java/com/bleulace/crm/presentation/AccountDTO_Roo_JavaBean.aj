@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.presentation;
 
+import com.bleulace.crm.presentation.AccountDTO;
 
 privileged aspect AccountDTO_Roo_JavaBean {
     

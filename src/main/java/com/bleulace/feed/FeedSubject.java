@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RooJavaBean
 public class FeedSubject implements Serializable
@@ -18,7 +19,7 @@ public class FeedSubject implements Serializable
 
 	FeedSubject(Account account)
 	{
-		new ModelMapper().map(account, this);
+		SpringApplicationContext.getBean(ModelMapper.class).map(account, this);
 	}
 
 	@SuppressWarnings("unused")

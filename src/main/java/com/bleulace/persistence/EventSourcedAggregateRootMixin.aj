@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 public interface EventSourcedAggregateRootMixin extends
@@ -135,13 +136,15 @@ public interface EventSourcedAggregateRootMixin extends
 
 		private void EventSourcedAggregateRootMixin.map(Object source)
 		{
-			new ModelMapper().map(source, this);
+			SpringApplicationContext.getBean(ModelMapper.class).map(source,
+					this);
 		}
 
 		private void EventSourcedAggregateRootMixin.apply(Object command,
 				Class<?> eventClazz)
 		{
-			this.apply(new ModelMapper().map(command, eventClazz));
+			apply(SpringApplicationContext.getBean(ModelMapper.class).map(
+					command, eventClazz));
 		}
 
 		@SuppressWarnings("rawtypes")
@@ -179,8 +182,8 @@ public interface EventSourcedAggregateRootMixin extends
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload)
 		{
 			apply(eventPayload, MetaData.emptyInstance());
-			//this.eventBus().publish(
-					//GenericDomainEventMessage.asEventMessage(eventPayload));
+			// this.eventBus().publish(
+			// GenericDomainEventMessage.asEventMessage(eventPayload));
 		}
 
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload,

@@ -17,7 +17,7 @@ public class EventDTO extends ProjectDTO implements BasicEventMixin
 {
 	private static final long serialVersionUID = -2448976717235008166L;
 
-	private List<AccountDTO> invitees;
+	private List<AccountDTO> attendees;
 
 	public static final EventFinder FINDER = SpringApplicationContext
 			.getBean(EventFinder.class);

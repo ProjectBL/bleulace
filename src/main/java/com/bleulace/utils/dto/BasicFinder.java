@@ -73,4 +73,9 @@ public class BasicFinder<S, T> implements Finder<T>, FactoryBean<Finder<T>>
 	{
 		return false;
 	}
+
+	public DTOConverter<S, T> getConverter()
+	{
+		return converter;
+	}
 }

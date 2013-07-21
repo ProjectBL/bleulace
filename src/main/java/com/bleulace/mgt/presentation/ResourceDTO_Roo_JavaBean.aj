@@ -3,7 +3,7 @@
 
 package com.bleulace.mgt.presentation;
 
-import java.util.List;
+import com.bleulace.mgt.presentation.ResourceDTO;
 
 privileged aspect ResourceDTO_Roo_JavaBean {
     
@@ -29,14 +29,6 @@ privileged aspect ResourceDTO_Roo_JavaBean {
     
     public void ResourceDTO.setComplete(boolean complete) {
         this.complete = complete;
-    }
-    
-    public List<CommentDTO> ResourceDTO.getComments() {
-        return this.comments;
-    }
-    
-    public void ResourceDTO.setComments(List<CommentDTO> comments) {
-        this.comments = comments;
     }
     
 }

@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.TaskAddedEvent;
 
 privileged aspect TaskAddedEvent_Roo_JavaBean {
     

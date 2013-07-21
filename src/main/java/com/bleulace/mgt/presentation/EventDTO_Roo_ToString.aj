@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.presentation;
 
+import com.bleulace.mgt.presentation.EventDTO;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

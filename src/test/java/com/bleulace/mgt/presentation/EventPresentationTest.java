@@ -10,24 +10,23 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.application.command.RsvpCommand;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ProjectPresentationTest implements CommandGatewayAware
+public class EventPresentationTest implements CommandGatewayAware
 {
 	@Autowired
-	private AddBundleCommand addBundleCommand;
+	private RsvpCommand rsvpCommand;
 
 	@Test
-	public void testProjectFinder()
+	public void testEventDTOMapping()
 	{
-		gateway().send(addBundleCommand);
-		ProjectDTO dto = ProjectDTO.FINDER.findById(addBundleCommand
-				.getParentId());
-		Assert.assertNotNull(dto.getId());
-		Assert.assertNotNull(dto.getTitle());
+		gateway().send(rsvpCommand);
+		EventDTO dto = EventDTO.FINDER.findById(rsvpCommand.getId());
+		Assert.assertNotNull(dto);
+		// Assert.assertNotNull(dto.getAttendees());
 	}
 }

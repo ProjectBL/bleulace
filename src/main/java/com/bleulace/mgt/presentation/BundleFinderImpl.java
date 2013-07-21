@@ -1,6 +1,5 @@
 package com.bleulace.mgt.presentation;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,8 @@ public class BundleFinderImpl extends BasicFinder<Bundle, BundleDTO> implements
 	{
 		return getConverter().convert(
 				projectDAO.findByAssignment(accountId, assignment,
-						Arrays.asList(Bundle.class)));
+				// Arrays.asList(Bundle.class)));
+						Bundle.class));
 	}
 
 	@Override

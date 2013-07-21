@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.EventCreatedEvent;
 import java.util.Date;
 
 privileged aspect EventCreatedEvent_Roo_JavaBean {
@@ -21,6 +22,14 @@ privileged aspect EventCreatedEvent_Roo_JavaBean {
     
     public void EventCreatedEvent.setEnd(Date end) {
         this.end = end;
+    }
+    
+    public String EventCreatedEvent.getLocation() {
+        return this.location;
+    }
+    
+    public void EventCreatedEvent.setLocation(String location) {
+        this.location = location;
     }
     
 }

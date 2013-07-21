@@ -10,6 +10,8 @@ import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
+import com.bleulace.utils.ctx.SpringApplicationContext;
+
 public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable<String>
 {
 	public String getId();
@@ -89,7 +91,8 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable
 		
 		private void EventSourcedEntityMixin.map(Object event)
 		{
-			new ModelMapper().map(event, this);
+			SpringApplicationContext.getBean(ModelMapper.class).map(event,
+					this);
 		}
 		
 		@SuppressWarnings("rawtypes")

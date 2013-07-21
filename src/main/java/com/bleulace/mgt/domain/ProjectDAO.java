@@ -11,11 +11,16 @@ public interface ProjectDAO extends ReadOnlyDAO<Project, String>
 {
 	@Query("SELECT p.project FROM JPAManagementPermission p "
 			+ "WHERE p.account.id=:accountId "
-			+ "AND p.assignment=:assignment AND TYPE(p.project) IN (:classes)")
+			+ "AND p.assignment=:assignment AND TYPE(p.project)=:clazz")
 	public <T extends Project> List<T> findByAssignment(
 			@Param("accountId") String accountId,
 			@Param("assignment") ManagementAssignment assignment,
-			@Param("classes") List<Class<T>> classes);
+			@Param("clazz") Class<T> clazz);
+
+	@Query("SELECT p.project FROM JPAManagementPermission p "
+			+ "WHERE p.account.id=:accountId AND TYPE(p.project)=:clazz")
+	public <T extends Project> List<T> findByAssignment(
+			@Param("accountId") String accountId, @Param("clazz") Class<T> clazz);
 
 	@Query("SELECT p.project FROM JPAManagementPermission p "
 			+ "WHERE p.account.id=:accountId ")

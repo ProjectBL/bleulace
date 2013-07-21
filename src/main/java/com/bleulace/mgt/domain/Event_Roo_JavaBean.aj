@@ -27,6 +27,14 @@ privileged aspect Event_Roo_JavaBean {
         this.length = length;
     }
     
+    public String Event.getLocation() {
+        return this.location;
+    }
+    
+    public void Event.setLocation(String location) {
+        this.location = location;
+    }
+    
     public List<Account> Event.getAttendees() {
         return this.attendees;
     }

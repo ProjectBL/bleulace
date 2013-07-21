@@ -29,6 +29,7 @@ public class ProjectFinderImpl extends BasicFinder<Project, ProjectDTO>
 	{
 		return getConverter().convert(
 				projectDAO.findByAssignment(accountId, assignment,
-						Arrays.asList(Project.class)));
+				// Arrays.asList(Project.class)));
+						Project.class));
 	}
 }

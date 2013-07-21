@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.application.command.MarkResourceCompleteCommand;
 
 privileged aspect MarkResourceCompleteCommand_Roo_JavaBean {
     

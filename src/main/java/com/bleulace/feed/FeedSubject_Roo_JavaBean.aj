@@ -3,6 +3,7 @@
 
 package com.bleulace.feed;
 
+import com.bleulace.feed.FeedSubject;
 
 privileged aspect FeedSubject_Roo_JavaBean {
     

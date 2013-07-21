@@ -23,12 +23,14 @@ import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.mgt.application.command.RsvpCommand;
 import com.bleulace.mgt.domain.event.EventCreatedEvent;
 import com.bleulace.mgt.domain.event.EventRescheduledEvent;
-import com.bleulace.mgt.domain.event.GuestAttendingEvent;
 import com.bleulace.mgt.domain.event.GuestInvitedEvent;
+import com.bleulace.mgt.domain.event.GuestRSVPEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.persistence.infrastructure.LocalDateTimeConverter;
 import com.bleulace.persistence.infrastructure.PeriodConverter;
 import com.bleulace.utils.jpa.EntityManagerReference;
+import com.mysema.query.annotations.PropertyType;
+import com.mysema.query.annotations.QueryType;
 
 @RooJavaBean
 @Entity
@@ -43,9 +45,13 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	@Convert("localDateTimeConverter")
 	private LocalDateTime start;
 
+	@QueryType(PropertyType.COMPARABLE)
 	@Column(nullable = false)
 	@Convert("periodConverter")
 	private Period length;
+
+	@Column(nullable = false)
+	private String location;
 
 	@ManyToMany
 	private List<Account> attendees = new ArrayList<Account>();
@@ -121,17 +127,18 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 
 	public void handle(RsvpCommand command)
 	{
-		if (command.isAccepted())
-		{
-			apply(new GuestAttendingEvent(getId(), command.getGuestId()));
-		}
+		apply(new GuestRSVPEvent(getId(), command.getGuestId(),
+				command.isAccepted()));
 	}
 
-	public void on(GuestAttendingEvent event)
+	public void on(GuestRSVPEvent event)
 	{
-		attendees.add(EntityManagerReference.load(Account.class,
-				event.getGuestId()));
-		new NewsFeedEnvelope().addFriends(event.getGuestId())
-				.withPayloads(this, event).send();
+		if (event.isAccepted())
+		{
+			attendees.add(EntityManagerReference.load(Account.class,
+					event.getGuestId()));
+			new NewsFeedEnvelope().addFriends(event.getGuestId())
+					.withPayloads(this, event).send();
+		}
 	}
 }
