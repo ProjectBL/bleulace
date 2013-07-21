@@ -3,13 +3,11 @@ package com.bleulace.crm.domain.event;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean
-public class GroupCreatedEvent
+public class GroupJoinedFeedPayload extends GroupJoinedEvent
 {
-	private static final long serialVersionUID = -6482579716836818865L;
+	private static final long serialVersionUID = -7591208351100280691L;
 
 	private String id;
-
-	private String creatorId;
 
 	private String title;
 }

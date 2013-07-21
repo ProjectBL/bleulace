@@ -23,9 +23,11 @@ import com.bleulace.crm.application.event.AccountLoggedOutEvent;
 import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
 import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
+import com.bleulace.crm.domain.event.AccountCreatedEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
 import com.bleulace.crm.infrastructure.SecurityConfig;
+import com.bleulace.feed.NewsFeedEnvelope;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 
 @Entity
@@ -73,7 +75,7 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	public Account(CreateAccountCommand command)
 	{
 		id = command.getId();
-		apply(new ModelMapper().map(command, AccountInfoUpdatedEvent.class));
+		apply(new ModelMapper().map(command, AccountCreatedEvent.class));
 		apply(new PasswordChangedEvent(command.getPassword()));
 	}
 
@@ -81,6 +83,12 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	public String getName()
 	{
 		return firstName + " " + lastName;
+	}
+
+	public void on(AccountCreatedEvent event)
+	{
+		on((AccountInfoUpdatedEvent) event);
+		new NewsFeedEnvelope().addAccounts(this).withPayloads(event).send();
 	}
 
 	public void on(AccountInfoUpdatedEvent event)
@@ -146,5 +154,9 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(RepliedToFriendRequestEvent event)
 	{
+		if (event.isAccepted())
+		{
+			new NewsFeedEnvelope().addFriends(this).withPayloads(event).send();
+		}
 	}
 }

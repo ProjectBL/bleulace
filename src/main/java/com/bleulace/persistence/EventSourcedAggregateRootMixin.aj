@@ -1,6 +1,5 @@
 package com.bleulace.persistence;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Basic;
@@ -21,11 +20,13 @@ import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Persistable;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 public interface EventSourcedAggregateRootMixin extends
-		EventSourcedAggregateRoot<String>, EventBusAware, Serializable
+		EventSourcedAggregateRoot<String>, EventBusAware, Persistable<String>
 {
 	public String getId();
 
@@ -42,6 +43,11 @@ public interface EventSourcedAggregateRootMixin extends
 
 		private transient AnnotationEventHandlerInvoker EventSourcedAggregateRootMixin.eventHandlerInvoker;
 		private transient AggregateAnnotationInspector EventSourcedAggregateRootMixin.inspector;
+
+		public boolean EventSourcedAggregateRootMixin.isNew()
+		{
+			return EntityManagerReference.get().find(getClass(), this.getId()) != null;
+		}
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{

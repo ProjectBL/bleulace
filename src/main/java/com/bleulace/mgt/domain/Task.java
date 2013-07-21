@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.feed.NewsFeedEnvelope;
 import com.bleulace.mgt.domain.event.ResourceCompletedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.mgt.domain.event.TaskAssignedEvent;
@@ -64,6 +65,8 @@ public class Task extends Resource implements EventSourcedEntityMixin
 		if (getId().equals(event.getId()))
 		{
 			complete = true;
+			new NewsFeedEnvelope().addAccounts(getAssignees())
+					.withPayloads(event, this).send();
 		}
 	}
 }

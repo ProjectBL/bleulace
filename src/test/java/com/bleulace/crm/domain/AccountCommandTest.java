@@ -90,7 +90,7 @@ public class AccountCommandTest implements CommandGatewayAware
 
 		gateway().send(reply);
 
-		Thread.sleep(1000);
+		Thread.sleep(250);
 
 		Account initiator = em.getReference(Account.class, initiatorId);
 		Account recipient = em.getReference(Account.class, recipientId);

@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.feed.NewsFeedEnvelope;
 import com.bleulace.mgt.domain.event.BundleAddedEvent;
 import com.bleulace.persistence.EventSourcedEntityMixin;
 
@@ -36,8 +37,16 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 	public void on(BundleAddedEvent event)
 	{
 		map(event);
+		String creatorId = event.getCreatorId();
+		if (creatorId != null)
+		{
+			new NewsFeedEnvelope().addFriends(event.getCreatorId())
+					.addAccounts(getManagers()).withPayloads(this, event)
+					.send();
+		}
 	}
 
+	@Override
 	public Project getProject()
 	{
 		Project cursor = this;
