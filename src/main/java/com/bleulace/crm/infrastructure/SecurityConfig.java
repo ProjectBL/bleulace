@@ -106,7 +106,7 @@ public class SecurityConfig
 	 * @return a method invoking factory bean which set the fallback security
 	 *         manager
 	 */
-	@Bean
+	@Bean(name = "securityManagerSetter")
 	public MethodInvokingFactoryBean securityManagerSetter(Realm realm)
 	{
 		MethodInvokingFactoryBean bean = new MethodInvokingFactoryBean();

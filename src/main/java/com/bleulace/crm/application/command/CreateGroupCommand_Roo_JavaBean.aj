@@ -10,10 +10,6 @@ privileged aspect CreateGroupCommand_Roo_JavaBean {
         return this.id;
     }
     
-    public String CreateGroupCommand.getCreatorId() {
-        return this.creatorId;
-    }
-    
     public String CreateGroupCommand.getTitle() {
         return this.title;
     }

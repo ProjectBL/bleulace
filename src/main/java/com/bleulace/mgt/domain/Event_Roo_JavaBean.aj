@@ -3,12 +3,11 @@
 
 package com.bleulace.mgt.domain;
 
+import com.bleulace.crm.domain.Account;
+import com.bleulace.mgt.domain.Event;
 import java.util.List;
-
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
-
-import com.bleulace.crm.domain.Account;
 
 privileged aspect Event_Roo_JavaBean {
     
@@ -28,12 +27,12 @@ privileged aspect Event_Roo_JavaBean {
         this.length = length;
     }
     
-    public List<Account> Event.getInvitees() {
-        return this.invitees;
+    public List<Account> Event.getAttendees() {
+        return this.attendees;
     }
     
-    public void Event.setInvitees(List<Account> invitees) {
-        this.invitees = invitees;
+    public void Event.setAttendees(List<Account> attendees) {
+        this.attendees = attendees;
     }
     
 }

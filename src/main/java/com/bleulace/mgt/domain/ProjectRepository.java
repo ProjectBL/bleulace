@@ -54,6 +54,11 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 			return ((Bundle) resource).getProject().getId();
 		}
 
+		if (resource instanceof Event)
+		{
+			return ((Event) resource).getId();
+		}
+
 		throw new IllegalArgumentException();
 	}
 }

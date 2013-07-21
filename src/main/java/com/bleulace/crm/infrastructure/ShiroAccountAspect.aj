@@ -26,4 +26,17 @@ public aspect ShiroAccountAspect
 		}
 		return null;
 	}
+
+	Object around() : execution(public Object Subject.getPrincipal()) 
+	{
+		Object retVal = null;
+		try
+		{
+			return proceed();
+		}
+		catch (Throwable t)
+		{
+			return null;
+		}
+	}
 }

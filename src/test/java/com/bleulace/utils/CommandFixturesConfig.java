@@ -3,6 +3,7 @@ package com.bleulace.utils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,10 @@ import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.AssignTaskCommand;
 import com.bleulace.mgt.application.command.CreateEventCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.mgt.application.command.InviteGuestsCommand;
+import com.bleulace.mgt.application.command.MoveEventCommand;
+import com.bleulace.mgt.application.command.ResizeEventCommand;
+import com.bleulace.mgt.application.command.RsvpCommand;
 import com.bleulace.mgt.domain.ManagementAssignment;
 import com.bleulace.mgt.domain.TaskAssignment;
 
@@ -158,6 +163,55 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		command.setTitle("foo");
 		command.setStart(DateTime.now().plusMinutes(15).toDate());
 		command.setEnd(DateTime.now().plusMinutes(75).toDate());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public MoveEventCommand moveEventCommand(
+			CreateEventCommand createEventCommand)
+	{
+		gateway().send(createEventCommand);
+		MoveEventCommand command = new MoveEventCommand(
+				createEventCommand.getId());
+		command.setNewStart(LocalDateTime.now().plusHours(1).toDate());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public ResizeEventCommand resizeEventCommand(
+			CreateEventCommand createEventCommand)
+	{
+		gateway().send(createEventCommand);
+		ResizeEventCommand command = new ResizeEventCommand(
+				createEventCommand.getId());
+		command.setStart(DateTime.now().plusMinutes(15).toDate());
+		command.setEnd(DateTime.now().plusMinutes(75).toDate());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public InviteGuestsCommand inviteGuestsCommand(
+			CreateEventCommand createEventCommand,
+			CreateAccountCommand createAccountCommand)
+	{
+		gateway().send(createAccountCommand);
+		gateway().send(createEventCommand);
+		InviteGuestsCommand command = new InviteGuestsCommand(
+				createEventCommand.getId());
+		command.getGuestIds().add(createAccountCommand.getId());
+		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public RsvpCommand rsvpCommand(InviteGuestsCommand inviteGuestsCommand)
+	{
+		gateway().send(inviteGuestsCommand);
+		RsvpCommand command = new RsvpCommand(inviteGuestsCommand.getId(),
+				inviteGuestsCommand.getGuestIds().iterator().next());
 		return command;
 	}
 }

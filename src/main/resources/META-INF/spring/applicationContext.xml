@@ -74,6 +74,7 @@
 		<axon:async executor="executor" transaction-manager="transactionManager" />
 		<axon:types>
 			com.bleulace.crm.domain.FriendRequestSaga
+			com.bleulace.mgt.domain.EventInvitationSaga
 		</axon:types>
 	</axon:saga-manager>
 

@@ -6,6 +6,10 @@ package com.bleulace.crm.application.command;
 
 privileged aspect CreateAccountCommand_Roo_JavaBean {
     
+    public String CreateAccountCommand.getId() {
+        return this.id;
+    }
+    
     public String CreateAccountCommand.getEmail() {
         return this.email;
     }

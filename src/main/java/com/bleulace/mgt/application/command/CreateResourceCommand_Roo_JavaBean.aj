@@ -6,10 +6,6 @@ package com.bleulace.mgt.application.command;
 
 privileged aspect CreateResourceCommand_Roo_JavaBean {
     
-    public String CreateResourceCommand.getCreatorId() {
-        return this.creatorId;
-    }
-    
     public String CreateResourceCommand.getId() {
         return this.id;
     }

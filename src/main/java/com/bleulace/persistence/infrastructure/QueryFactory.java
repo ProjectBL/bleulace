@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import com.mysema.query.jpa.EclipseLinkTemplates;
 import com.mysema.query.jpa.JPQLTemplates;
+import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 
@@ -28,13 +29,19 @@ public class QueryFactory
 	{
 	}
 
-	public static JPAQuery from(EntityPath<?>... args)
+	public static JPAQuery from(EntityPath<?> entity)
 	{
-		return make().from(args);
+		return new JPAQuery(new QueryFactory().entityManager, TEMPLATES)
+				.from(entity);
 	}
 
-	public static JPAQuery make()
+	public static JPADeleteClause delete(EntityPath<?> entity)
 	{
-		return new JPAQuery(new QueryFactory().entityManager, TEMPLATES);
+		return new JPADeleteClause(entityManager(), entity);
+	}
+
+	private static EntityManager entityManager()
+	{
+		return new QueryFactory().entityManager;
 	}
 }

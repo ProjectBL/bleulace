@@ -8,20 +8,26 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.persistence.infrastructure.QueryFactory;
 
 @Entity
-public class FeedEntry extends AbstractPersistable<Long>
+public class FeedEntry implements Persistable<String>
 {
 	private static final long serialVersionUID = 1150763613614458205L;
+
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	private String id;
 
 	@Column(nullable = false, updatable = false)
 	private String accountId;
@@ -33,6 +39,7 @@ public class FeedEntry extends AbstractPersistable<Long>
 	@ElementCollection
 	private Map<String, Serializable> payloads;
 
+	@Column(nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
 
@@ -44,6 +51,7 @@ public class FeedEntry extends AbstractPersistable<Long>
 
 		this.accountId = account.getId();
 		this.payloads = payloads;
+		dateCreated = new Date();
 	}
 
 	@SuppressWarnings("unused")
@@ -51,11 +59,10 @@ public class FeedEntry extends AbstractPersistable<Long>
 	{
 	}
 
-	public static List<FeedEntry> findByAccountId(String accountId)
+	@Override
+	public String getId()
 	{
-		QFeedEntry f = QFeedEntry.feedEntry;
-		return QueryFactory.from(f).where(f.accountId.eq(accountId))
-				.orderBy(f.id.desc()).list(f);
+		return id;
 	}
 
 	public String getAccountId()
@@ -78,5 +85,18 @@ public class FeedEntry extends AbstractPersistable<Long>
 	{
 		Serializable value = payloads.get(clazz.getSimpleName());
 		return value == null ? null : (T) value;
+	}
+
+	@Override
+	public boolean isNew()
+	{
+		return id == null;
+	}
+
+	public static List<FeedEntry> findByAccountId(String accountId)
+	{
+		QFeedEntry f = QFeedEntry.feedEntry;
+		return QueryFactory.from(f).where(f.accountId.eq(accountId))
+				.orderBy(f.dateCreated.desc()).list(f);
 	}
 }

@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.util.Assert;
 
 import com.bleulace.crm.infrastructure.Password;
 
@@ -26,13 +25,7 @@ public class CreateAccountCommand
 
 	public CreateAccountCommand()
 	{
-		this(IdentifierFactory.getInstance().generateIdentifier());
-	}
-
-	public CreateAccountCommand(String id)
-	{
-		Assert.notNull(id);
-		this.id = id;
+		id = IdentifierFactory.getInstance().generateIdentifier();
 	}
 
 	@Email
@@ -47,9 +40,4 @@ public class CreateAccountCommand
 
 	@NotEmpty
 	private String lastName = "";
-
-	public String getId()
-	{
-		return id;
-	}
 }
