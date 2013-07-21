@@ -30,6 +30,7 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 	{
 		super(event.getId());
 		this.parent = parent;
+		// TODO : feed entry
 	}
 
 	@Override
@@ -38,6 +39,7 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 		map(event);
 	}
 
+	@Override
 	public Project getProject()
 	{
 		Project cursor = this;

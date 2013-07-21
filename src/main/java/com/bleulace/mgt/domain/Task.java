@@ -43,6 +43,7 @@ public class Task extends Resource implements EventSourcedEntityMixin
 	{
 		assignees.add(EntityManagerReference.get().getReference(Account.class,
 				event.getAccountId()));
+		// TODO : feed entry
 	}
 
 	@Override

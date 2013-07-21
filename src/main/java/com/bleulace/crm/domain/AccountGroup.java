@@ -26,7 +26,7 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 	@Id
 	private String id;
 
-	@Column(unique = true)
+	@Column(unique = true, nullable = false)
 	private String title;
 
 	// add permissions in shiro
@@ -39,10 +39,8 @@ public class AccountGroup implements EventSourcedAggregateRootMixin
 
 	public AccountGroup(CreateGroupCommand command)
 	{
-		id = command.getId();
 		apply(command, GroupCreatedEvent.class);
 		String creatorId = command.getCreatorId();
-		if (creatorId != null)
 		{
 			apply(new GroupJoinedEvent(creatorId));
 		}

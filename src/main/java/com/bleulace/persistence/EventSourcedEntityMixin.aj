@@ -1,6 +1,5 @@
 package com.bleulace.persistence;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.axonframework.domain.DomainEventMessage;
@@ -9,8 +8,9 @@ import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Persistable;
 
-public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializable
+public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable<String>
 {
 	public String getId();
 	
@@ -22,6 +22,11 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Serializabl
 				this);
 
 		private volatile EventSourcedAggregateRootMixin EventSourcedEntityMixin.aggregateRoot;
+		
+		public boolean EventSourcedEntityMixin.isNew()
+		{
+			return this.getId() == null;
+		}
 
 		@SuppressWarnings("rawtypes")
 		public void EventSourcedEntityMixin.registerAggregateRoot(AbstractEventSourcedAggregateRoot root)

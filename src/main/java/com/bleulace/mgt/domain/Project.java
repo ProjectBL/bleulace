@@ -79,6 +79,7 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 			toApply.setAccountId(event.getCreatorId());
 			toApply.setRole(ManagementAssignment.OWN);
 			apply(toApply);
+			// TODO : feed entry
 		}
 	}
 
@@ -130,6 +131,7 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 			{
 				assignees.add(new JPAManagementPermission(account, this, event
 						.getRole()));
+				// TODO : feed entry
 			}
 
 			for (String id : getChildIds())

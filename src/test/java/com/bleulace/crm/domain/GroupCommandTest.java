@@ -1,6 +1,5 @@
 package com.bleulace.crm.domain;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -9,8 +8,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateGroupCommand;
 import com.bleulace.crm.application.command.JoinGroupCommand;
-import com.bleulace.crm.domain.AccountGroup;
 
 @Transactional
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
@@ -32,14 +28,8 @@ public class GroupCommandTest implements CommandGatewayAware
 	@PersistenceContext
 	private EntityManager em;
 
-	private JpaRepository<AccountGroup, String> repository;
-
-	@PostConstruct
-	protected void init()
-	{
-		repository = new SimpleJpaRepository<AccountGroup, String>(
-				AccountGroup.class, em);
-	}
+	@Autowired
+	private GroupDAO groupDAO;
 
 	@Autowired
 	private CreateGroupCommand createGroupCommand;
@@ -48,10 +38,10 @@ public class GroupCommandTest implements CommandGatewayAware
 	private JoinGroupCommand joinGroupCommand;
 
 	@Test
-	public void testCreateGroupCommand()
+	public void testCreateGroupCommand() throws Exception
 	{
 		gateway().send(createGroupCommand);
-		AccountGroup group = repository.findOne(createGroupCommand.getId());
+		AccountGroup group = groupDAO.findAll().iterator().next();
 		Assert.assertNotNull(group);
 		Assert.assertTrue(group.getMembers().size() > 0);
 	}
@@ -59,11 +49,11 @@ public class GroupCommandTest implements CommandGatewayAware
 	@Test
 	public void testJoinGroupCommand()
 	{
-		int size = repository.findOne(joinGroupCommand.getGroupId())
-				.getMembers().size();
+		int size = groupDAO.findOne(joinGroupCommand.getGroupId()).getMembers()
+				.size();
 		gateway().send(joinGroupCommand);
 		Assert.assertEquals(size + 1,
-				repository.findOne(joinGroupCommand.getGroupId()).getMembers()
+				groupDAO.findOne(joinGroupCommand.getGroupId()).getMembers()
 						.size());
 	}
 }

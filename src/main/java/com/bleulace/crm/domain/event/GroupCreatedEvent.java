@@ -7,5 +7,7 @@ public class GroupCreatedEvent
 {
 	private static final long serialVersionUID = -6482579716836818865L;
 
+	private String creatorId;
+
 	private String title;
 }

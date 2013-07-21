@@ -57,5 +57,6 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 		start = LocalDateTime.fromDateFields(event.getStart());
 		LocalDateTime end = LocalDateTime.fromDateFields(event.getEnd());
 		length = Period.fieldDifference(start, end);
+		// TODO : feed entry
 	}
 }

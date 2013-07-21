@@ -21,11 +21,12 @@ import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Persistable;
 
 import com.bleulace.cqrs.event.EventBusAware;
 
 public interface EventSourcedAggregateRootMixin extends
-		EventSourcedAggregateRoot<String>, EventBusAware, Serializable
+		EventSourcedAggregateRoot<String>, EventBusAware, Persistable<String>
 {
 	public String getId();
 
@@ -43,6 +44,11 @@ public interface EventSourcedAggregateRootMixin extends
 		private transient AnnotationEventHandlerInvoker EventSourcedAggregateRootMixin.eventHandlerInvoker;
 		private transient AggregateAnnotationInspector EventSourcedAggregateRootMixin.inspector;
 
+		public boolean EventSourcedAggregateRootMixin.isNew()
+		{
+			return this.getId() == null;
+		}
+		
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
 			return deleted;
@@ -173,8 +179,8 @@ public interface EventSourcedAggregateRootMixin extends
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload)
 		{
 			apply(eventPayload, MetaData.emptyInstance());
-			this.eventBus().publish(
-					GenericDomainEventMessage.asEventMessage(eventPayload));
+			//this.eventBus().publish(
+					//GenericDomainEventMessage.asEventMessage(eventPayload));
 		}
 
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload,

@@ -1,6 +1,7 @@
 package com.bleulace.utils.jpa;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
@@ -15,5 +16,5 @@ public interface ReadOnlyDAO<T, ID extends Serializable> extends
 
 	long count();
 
-	Iterable<T> findAll();
+	List<T> findAll();
 }

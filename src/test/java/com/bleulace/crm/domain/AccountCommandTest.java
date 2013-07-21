@@ -1,5 +1,7 @@
 package com.bleulace.crm.domain;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -20,6 +22,7 @@ import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
+import com.bleulace.feed.FeedEntry;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -45,6 +48,8 @@ public class AccountCommandTest implements CommandGatewayAware
 		long count = dao.count();
 		gateway().send(command);
 		Assert.assertEquals(count + 1, dao.count());
+		Assert.assertEquals(1,
+				FeedEntry.findByAccountId(dao.findAll().get(0).getId()));
 	}
 
 	@Test
@@ -60,9 +65,10 @@ public class AccountCommandTest implements CommandGatewayAware
 	{
 		gateway().send(command);
 		String newPassword = "password";
-		gateway().send(new ChangePasswordCommand(command.getId(), newPassword));
+		Account a = dao.findAll().iterator().next();
+		gateway().send(new ChangePasswordCommand(a.getId(), newPassword));
 		Assert.assertTrue(gateway().sendAndWait(
-				new LoginCommand(command.getEmail(), newPassword)));
+				new LoginCommand(a.getEmail(), newPassword)));
 	}
 
 	@Test
@@ -73,11 +79,13 @@ public class AccountCommandTest implements CommandGatewayAware
 		CreateAccountCommand createRecipient = ctx
 				.getBean(CreateAccountCommand.class);
 
-		String initiatorId = createInitiator.getId();
-		String recipientId = createRecipient.getId();
-
 		gateway().send(createInitiator);
 		gateway().send(createRecipient);
+
+		List<Account> accs = dao.findAll();
+
+		String initiatorId = accs.get(0).getId();
+		String recipientId = accs.get(1).getId();
 
 		SendFriendRequestCommand command = new SendFriendRequestCommand(
 				initiatorId, recipientId);

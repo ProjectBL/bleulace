@@ -14,6 +14,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateGroupCommand;
+import com.bleulace.crm.domain.GroupDAO;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -24,11 +25,15 @@ public class GroupDTOTest implements CommandGatewayAware
 	@Autowired
 	private CreateGroupCommand createGroupCommand;
 
+	@Autowired
+	private GroupDAO groupDAO;
+
 	@Test
 	public void testGroupDTOFinder()
 	{
 		gateway().send(createGroupCommand);
-		GroupDTO dto = GroupDTO.FINDER.findById(createGroupCommand.getId());
+		GroupDTO dto = GroupDTO.FINDER.findById(groupDAO.findAll().iterator()
+				.next().getId());
 		Assert.assertNotNull(dto);
 		Assert.assertTrue(dto.getMembers().size() > 0);
 

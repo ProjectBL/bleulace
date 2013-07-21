@@ -23,10 +23,13 @@ import com.bleulace.crm.application.event.AccountLoggedOutEvent;
 import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
 import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
+import com.bleulace.crm.domain.event.AccountCreatedEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
 import com.bleulace.crm.infrastructure.SecurityConfig;
+import com.bleulace.feed.FeedEntryBuilder;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
@@ -72,8 +75,7 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public Account(CreateAccountCommand command)
 	{
-		id = command.getId();
-		apply(new ModelMapper().map(command, AccountInfoUpdatedEvent.class));
+		apply(new ModelMapper().map(command, AccountCreatedEvent.class));
 		apply(new PasswordChangedEvent(command.getPassword()));
 	}
 
@@ -83,9 +85,15 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 		return firstName + " " + lastName;
 	}
 
+	public void on(AccountCreatedEvent event)
+	{
+		on((AccountInfoUpdatedEvent) event);
+		new FeedEntryBuilder().addAccounts(this).addPayloads(event).build();
+	}
+
 	public void on(AccountInfoUpdatedEvent event)
 	{
-		new ModelMapper().map(event, this);
+		map(event);
 	}
 
 	/**
@@ -146,5 +154,14 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 
 	public void on(RepliedToFriendRequestEvent event)
 	{
+		if (event.isAccepted())
+		{
+			Account initiator = EntityManagerReference.load(Account.class,
+					event.getInitiatorId());
+			new FeedEntryBuilder().addAccounts(this, initiator)
+					.addAccounts(this.getFriends())
+					.addAccounts(initiator.getFriends()).addPayloads(event)
+					.build();
+		}
 	}
 }
