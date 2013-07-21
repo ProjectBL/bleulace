@@ -27,6 +27,9 @@ public class EventPresentationTest implements CommandGatewayAware
 		gateway().send(rsvpCommand);
 		EventDTO dto = EventDTO.FINDER.findById(rsvpCommand.getId());
 		Assert.assertNotNull(dto);
-		// Assert.assertNotNull(dto.getAttendees());
+		Assert.assertNotNull(dto.getAttendees());
+		Assert.assertNotNull(dto.getAssignments());
+		Assert.assertEquals(rsvpCommand.getGuestId(), dto.getAttendees().get(0)
+				.getId());
 	}
 }

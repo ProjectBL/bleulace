@@ -1,6 +1,8 @@
 package com.bleulace.persistence;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Transient;
@@ -33,11 +35,10 @@ public interface EventSourcedAggregateRootMixin extends
 
 	static aspect Impl
 	{
-		@Transient
-		private volatile EventContainer EventSourcedAggregateRootMixin.eventContainer;
+		private static final Set<String> DELETE = new HashSet<String>();
 
 		@Transient
-		private boolean EventSourcedAggregateRootMixin.deleted = false;
+		private volatile EventContainer EventSourcedAggregateRootMixin.eventContainer;
 
 		@Basic(optional = true)
 		private Long EventSourcedAggregateRootMixin.lastEventSequenceNumber;
@@ -52,7 +53,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
-			return deleted;
+			return DELETE.contains(this.getId());
 		}
 
 		public void EventSourcedAggregateRootMixin.addEventRegistrationCallback(
@@ -182,8 +183,6 @@ public interface EventSourcedAggregateRootMixin extends
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload)
 		{
 			apply(eventPayload, MetaData.emptyInstance());
-			// this.eventBus().publish(
-			// GenericDomainEventMessage.asEventMessage(eventPayload));
 		}
 
 		private void EventSourcedAggregateRootMixin.apply(Object eventPayload,
@@ -246,7 +245,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 		private void EventSourcedAggregateRootMixin.markDeleted()
 		{
-			this.deleted = true;
+			DELETE.add(this.getId());
 		}
 
 		private void EventSourcedAggregateRootMixin.initializeEventStream(

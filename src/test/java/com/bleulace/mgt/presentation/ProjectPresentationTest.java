@@ -29,5 +29,6 @@ public class ProjectPresentationTest implements CommandGatewayAware
 				.getParentId());
 		Assert.assertNotNull(dto.getId());
 		Assert.assertNotNull(dto.getTitle());
+		Assert.assertNotNull(dto.getAssignments());
 	}
 }

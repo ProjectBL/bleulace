@@ -69,10 +69,10 @@ public class EventCommandTest implements CommandGatewayAware
 	public void moveEventCommand()
 	{
 		LocalDateTime oldStart = repo.findOne(moveEventCommand.getId())
-				.getStart();
+				.getStartTime();
 		gateway().send(moveEventCommand);
 		LocalDateTime newStart = repo.findOne(moveEventCommand.getId())
-				.getStart();
+				.getStartTime();
 		Assert.assertTrue(newStart.isAfter(oldStart));
 	}
 
@@ -81,13 +81,13 @@ public class EventCommandTest implements CommandGatewayAware
 	{
 		Event event = repo.findOne(resizeEventCommand.getId());
 
-		LocalDateTime oldStart = event.getStart();
+		LocalDateTime oldStart = event.getStartTime();
 		Period oldLength = event.getLength();
 
 		gateway().send(resizeEventCommand);
 
 		event = repo.findOne(resizeEventCommand.getId());
-		LocalDateTime newStart = event.getStart();
+		LocalDateTime newStart = event.getStartTime();
 		Period newLength = event.getLength();
 
 		Assert.assertTrue(newStart.isAfter(oldStart));

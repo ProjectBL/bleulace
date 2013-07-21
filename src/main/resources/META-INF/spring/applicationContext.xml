@@ -32,13 +32,6 @@
 
 	<task:executor id="executor" pool-size="0-4" />
 
-	<bean id="taskDTOFinder" class="com.bleulace.utils.dto.BasicFinder">
-		<property name="sourceClass" value="com.bleulace.mgt.domain.Task" />
-		<property name="dtoClass" value="com.bleulace.mgt.presentation.TaskDTO" />
-	</bean>
-	
-	<bean id="mapper" class="org.modelmapper.ModelMapper"/>
-
 	<!-- Axon -->
 	<axon:annotation-config />
 

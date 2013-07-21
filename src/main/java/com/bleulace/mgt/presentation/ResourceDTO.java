@@ -1,15 +1,43 @@
 package com.bleulace.mgt.presentation;
 
-import org.springframework.roo.addon.equals.RooEquals;
-import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.tostring.RooToString;
-
-@RooToString
-@RooEquals
-@RooJavaBean
 public abstract class ResourceDTO
 {
 	private String id;
 	private String title;
 	private boolean complete;
+
+	public ResourceDTO()
+	{
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	public boolean isComplete()
+	{
+		return complete;
+	}
+
+	public void setComplete(boolean complete)
+	{
+		this.complete = complete;
+	}
+
 }

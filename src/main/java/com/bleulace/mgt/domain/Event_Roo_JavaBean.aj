@@ -11,12 +11,12 @@ import org.joda.time.Period;
 
 privileged aspect Event_Roo_JavaBean {
     
-    public LocalDateTime Event.getStart() {
-        return this.start;
+    public LocalDateTime Event.getStartTime() {
+        return this.startTime;
     }
     
-    public void Event.setStart(LocalDateTime start) {
-        this.start = start;
+    public void Event.setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
     
     public Period Event.getLength() {

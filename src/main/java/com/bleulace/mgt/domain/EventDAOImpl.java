@@ -35,8 +35,8 @@ class EventDAOImpl implements EventDAOCustom
 		QEvent e = QEvent.event;
 		return QueryFactory
 				.from(e)
-				.where(e.start.between(startDT, endDT)
-						.and(e.length.loe(period))).list(e);
+				.where(e.startTime.between(startDT, endDT).and(
+						e.length.loe(period))).list(e);
 
 	}
 }

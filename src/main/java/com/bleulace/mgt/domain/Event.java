@@ -1,6 +1,7 @@
 package com.bleulace.mgt.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import org.eclipse.persistence.annotations.Converter;
 import org.eclipse.persistence.annotations.Converters;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
+import org.springframework.data.convert.JodaTimeConverters.LocalDateTimeToDateConverter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
@@ -43,7 +45,7 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 
 	@Column(nullable = false)
 	@Convert("localDateTimeConverter")
-	private LocalDateTime start;
+	private LocalDateTime startTime;
 
 	@QueryType(PropertyType.COMPARABLE)
 	@Column(nullable = false)
@@ -60,6 +62,22 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 	}
 
+	public Date getStart()
+	{
+		return LocalDateTimeToDateConverter.INSTANCE.convert(startTime);
+	}
+
+	public Date getEnd()
+	{
+		return LocalDateTimeToDateConverter.INSTANCE.convert(startTime
+				.plus(length));
+	}
+
+	public boolean isAllDay()
+	{
+		return length.getDays() >= 1;
+	}
+
 	public Event(CreateEventCommand command)
 	{
 		super(command.getId());
@@ -68,8 +86,8 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 
 	public void handle(ResizeEventCommand command)
 	{
-		if (!(command.getStart().equals(getStart().toDate()) && command
-				.getEnd().equals(getStart().plus(getLength()).toDate())))
+		if (!(command.getStart().equals(getStartTime().toDate()) && command
+				.getEnd().equals(getStartTime().plus(getLength()).toDate())))
 		{
 			EventRescheduledEvent event = new EventRescheduledEvent();
 			event.setId(getId());
@@ -100,9 +118,9 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	public void on(EventCreatedEvent event)
 	{
 		super.on(event);
-		start = LocalDateTime.fromDateFields(event.getStart());
+		startTime = LocalDateTime.fromDateFields(event.getStart());
 		LocalDateTime end = LocalDateTime.fromDateFields(event.getEnd());
-		length = Period.fieldDifference(start, end);
+		length = Period.fieldDifference(startTime, end);
 		String creatorId = event.getCreatorId();
 		if (creatorId != null)
 		{
