@@ -3,7 +3,6 @@
 
 package com.bleulace.crm.application.event;
 
-import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
 
 privileged aspect RepliedToFriendRequestEvent_Roo_JavaBean {
     

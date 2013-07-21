@@ -3,10 +3,10 @@
 
 package com.bleulace.mgt.presentation;
 
+import java.util.Map;
+
 import com.bleulace.crm.presentation.AccountDTO;
 import com.bleulace.mgt.domain.ManagementAssignment;
-import com.bleulace.mgt.presentation.ProjectDTO;
-import java.util.Map;
 
 privileged aspect ProjectDTO_Roo_JavaBean {
     

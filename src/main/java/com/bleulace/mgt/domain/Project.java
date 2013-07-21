@@ -21,6 +21,7 @@ import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.feed.NewsFeedEnvelope;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
@@ -35,6 +36,7 @@ import com.bleulace.mgt.domain.event.ResourceCompletedEvent;
 import com.bleulace.mgt.domain.event.TaskAddedEvent;
 import com.bleulace.mgt.domain.event.TaskAssignedEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
+import com.bleulace.persistence.infrastructure.QueryFactory;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
@@ -72,9 +74,10 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 	public void on(ProjectCreatedEvent event)
 	{
 		map(event);
-
 		if (event.getCreatorId() != null)
 		{
+			new NewsFeedEnvelope().addFriends(event.getCreatorId())
+					.withPayloads(this, event).send();
 			ManagerAssignedEvent toApply = new ManagerAssignedEvent();
 			toApply.setAccountId(event.getCreatorId());
 			toApply.setRole(ManagementAssignment.OWN);
@@ -131,7 +134,8 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 			{
 				assignees.add(new JPAManagementPermission(account, this, event
 						.getRole()));
-				// TODO : feed entry
+				new NewsFeedEnvelope().addFriends(event.getAccountId())
+						.withPayloads(this, event).send();
 			}
 
 			for (String id : getChildIds())
@@ -152,6 +156,8 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 					((Task) child).setComplete(true);
 				}
 			}
+			new NewsFeedEnvelope().addAccounts(getManagers())
+					.withPayloads(this, event).send();
 		}
 	}
 
@@ -195,5 +201,11 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 	public boolean isComplete()
 	{
 		return getPercentComplete().equals(new Double(1));
+	}
+
+	protected List<Account> getManagers()
+	{
+		QJPAManagementPermission p = QJPAManagementPermission.jPAManagementPermission;
+		return QueryFactory.from(p).where(p.project.eq(this)).list(p.account);
 	}
 }

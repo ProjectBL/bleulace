@@ -3,7 +3,6 @@
 
 package com.bleulace.utils.dto;
 
-import com.bleulace.utils.dto.MappingDTOConverter;
 import org.modelmapper.ModelMapper;
 
 privileged aspect MappingDTOConverter_Roo_JavaBean {

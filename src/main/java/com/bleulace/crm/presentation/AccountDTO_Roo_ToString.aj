@@ -3,7 +3,6 @@
 
 package com.bleulace.crm.presentation;
 
-import com.bleulace.crm.presentation.AccountDTO;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

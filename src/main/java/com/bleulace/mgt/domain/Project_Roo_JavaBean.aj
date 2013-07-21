@@ -3,9 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.Bundle;
-import com.bleulace.mgt.domain.JPAManagementPermission;
-import com.bleulace.mgt.domain.Project;
 import java.util.List;
 import java.util.Map;
 

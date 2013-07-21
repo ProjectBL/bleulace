@@ -3,9 +3,9 @@
 
 package com.bleulace.mgt.presentation;
 
-import com.bleulace.crm.presentation.AccountDTO;
-import com.bleulace.mgt.presentation.EventDTO;
 import java.util.List;
+
+import com.bleulace.crm.presentation.AccountDTO;
 
 privileged aspect EventDTO_Roo_JavaBean {
     

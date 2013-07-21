@@ -3,7 +3,6 @@
 
 package com.bleulace.crm.application.command;
 
-import com.bleulace.crm.application.command.FriendRequestCommand;
 
 privileged aspect FriendRequestCommand_Roo_JavaBean {
     

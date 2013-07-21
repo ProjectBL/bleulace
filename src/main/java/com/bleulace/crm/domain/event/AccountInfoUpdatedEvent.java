@@ -14,7 +14,6 @@ import com.bleulace.crm.domain.Account;
 public class AccountInfoUpdatedEvent
 {
 	private static final long serialVersionUID = -8717341530583207856L;
-
 	private String email;
 	private String firstName;
 	private String lastName;

@@ -48,8 +48,8 @@ public class AccountCommandTest implements CommandGatewayAware
 		long count = dao.count();
 		gateway().send(command);
 		Assert.assertEquals(count + 1, dao.count());
-		Assert.assertEquals(1,
-				FeedEntry.findByAccountId(dao.findAll().get(0).getId()));
+		Assert.assertTrue(0 < FeedEntry.findByAccountId(
+				dao.findAll().get(0).getId()).size());
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class AccountCommandTest implements CommandGatewayAware
 
 		gateway().send(reply);
 
-		Thread.sleep(1000);
+		Thread.sleep(250);
 
 		Account initiator = em.getReference(Account.class, initiatorId);
 		Account recipient = em.getReference(Account.class, recipientId);

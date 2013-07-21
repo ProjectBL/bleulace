@@ -7,6 +7,14 @@ import com.bleulace.crm.domain.event.GroupCreatedEvent;
 
 privileged aspect GroupCreatedEvent_Roo_JavaBean {
     
+    public String GroupCreatedEvent.getId() {
+        return this.id;
+    }
+    
+    public void GroupCreatedEvent.setId(String id) {
+        this.id = id;
+    }
+    
     public String GroupCreatedEvent.getCreatorId() {
         return this.creatorId;
     }

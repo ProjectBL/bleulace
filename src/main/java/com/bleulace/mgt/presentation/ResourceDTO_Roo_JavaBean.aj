@@ -3,8 +3,6 @@
 
 package com.bleulace.mgt.presentation;
 
-import com.bleulace.mgt.presentation.CommentDTO;
-import com.bleulace.mgt.presentation.ResourceDTO;
 import java.util.List;
 
 privileged aspect ResourceDTO_Roo_JavaBean {

@@ -3,7 +3,6 @@
 
 package com.bleulace.crm.application.command;
 
-import com.bleulace.crm.application.command.JoinGroupCommand;
 
 privileged aspect JoinGroupCommand_Roo_JavaBean {
     

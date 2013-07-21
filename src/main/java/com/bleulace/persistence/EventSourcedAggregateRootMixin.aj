@@ -1,6 +1,5 @@
 package com.bleulace.persistence;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Basic;
@@ -24,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 public interface EventSourcedAggregateRootMixin extends
 		EventSourcedAggregateRoot<String>, EventBusAware, Persistable<String>
@@ -46,9 +46,9 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public boolean EventSourcedAggregateRootMixin.isNew()
 		{
-			return this.getId() == null;
+			return EntityManagerReference.get().find(getClass(), this.getId()) != null;
 		}
-		
+
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
 			return deleted;
