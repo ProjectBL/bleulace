@@ -10,7 +10,7 @@ import org.joda.time.Period;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
-import com.bleulace.utils.jpa.LocalDateTimeRange;
+import com.bleulace.utils.jpa.DateWindow;
 
 @RooJavaBean
 public class ResizeEventCommand
@@ -19,13 +19,13 @@ public class ResizeEventCommand
 	private final String id;
 
 	@NotNull
-	private LocalDateTimeRange range;
+	private DateWindow window;
 
 	public ResizeEventCommand(String id)
 	{
 		Assert.notNull(id);
 		this.id = id;
-		range = new LocalDateTimeRange(LocalDateTime.now().plusMinutes(15),
+		window = new DateWindow(LocalDateTime.now().plusMinutes(15),
 				Period.hours(1));
 	}
 
@@ -38,23 +38,23 @@ public class ResizeEventCommand
 
 	public Date getStart()
 	{
-		return range.getStart();
+		return window.getStart();
 	}
 
 	public Date getEnd()
 	{
-		return range.getEnd();
+		return window.getEnd();
 	}
 
 	public void setStart(Date start)
 	{
 		Assert.notNull(start);
-		range = new LocalDateTimeRange(start, range.getEnd());
+		window = new DateWindow(start, window.getEnd());
 	}
 
 	public void setEnd(Date end)
 	{
 		Assert.notNull(end);
-		range = new LocalDateTimeRange(range.getStart(), end);
+		window = new DateWindow(window.getStart(), end);
 	}
 }

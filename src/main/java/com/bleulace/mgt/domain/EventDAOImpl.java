@@ -27,9 +27,10 @@ class EventDAOImpl implements EventDAOCustom
 	public List<Event> findBetweenDates(Date start, Date end)
 	{
 		QEvent e = QEvent.event;
-		return QueryFactory.from(e)
-				.where(e.range.start.before(end).and(e.range.end.after(start)))
-				.list(e);
+		return QueryFactory
+				.from(e)
+				.where(e.window.start.before(end)
+						.and(e.window.end.after(start))).list(e);
 
 	}
 }

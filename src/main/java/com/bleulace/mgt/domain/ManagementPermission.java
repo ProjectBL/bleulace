@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.shiro.authz.Permission;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import com.bleulace.ddd.spec.DisjunctionPermission;
+import com.bleulace.utils.authz.DisjunctionPermission;
 
 @Configurable
 public class ManagementPermission extends SingleManagementPermission implements

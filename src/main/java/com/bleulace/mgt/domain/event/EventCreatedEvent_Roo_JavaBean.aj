@@ -3,7 +3,8 @@
 
 package com.bleulace.mgt.domain.event;
 
-import java.util.Date;
+import com.bleulace.mgt.domain.event.EventCreatedEvent;
+import com.bleulace.utils.jpa.DateWindow;
 
 privileged aspect EventCreatedEvent_Roo_JavaBean {
     
@@ -15,20 +16,12 @@ privileged aspect EventCreatedEvent_Roo_JavaBean {
         this.location = location;
     }
     
-    public Date EventCreatedEvent.getStart() {
-        return this.start;
+    public DateWindow EventCreatedEvent.getWindow() {
+        return this.window;
     }
     
-    public void EventCreatedEvent.setStart(Date start) {
-        this.start = start;
-    }
-    
-    public Date EventCreatedEvent.getEnd() {
-        return this.end;
-    }
-    
-    public void EventCreatedEvent.setEnd(Date end) {
-        this.end = end;
+    public void EventCreatedEvent.setWindow(DateWindow window) {
+        this.window = window;
     }
     
 }

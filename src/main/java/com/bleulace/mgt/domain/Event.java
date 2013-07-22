@@ -9,8 +9,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.eclipse.persistence.annotations.Converter;
-import org.eclipse.persistence.annotations.Converters;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
@@ -25,22 +23,17 @@ import com.bleulace.mgt.domain.event.EventRescheduledEvent;
 import com.bleulace.mgt.domain.event.GuestInvitedEvent;
 import com.bleulace.mgt.domain.event.GuestRSVPEvent;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
-import com.bleulace.persistence.infrastructure.LocalDateTimeConverter;
-import com.bleulace.persistence.infrastructure.PeriodConverter;
+import com.bleulace.utils.jpa.DateWindow;
 import com.bleulace.utils.jpa.EntityManagerReference;
-import com.bleulace.utils.jpa.LocalDateTimeRange;
 
 @RooJavaBean
 @Entity
-@Converters(value = {
-		@Converter(name = "localDateTimeConverter", converterClass = LocalDateTimeConverter.class),
-		@Converter(name = "periodConverter", converterClass = PeriodConverter.class) })
 public class Event extends Project implements EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = 8727887519388582258L;
 
 	@Embedded
-	private LocalDateTimeRange range;
+	private DateWindow window;
 
 	@Column(nullable = false)
 	private String location;
@@ -55,13 +48,12 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	public Event(CreateEventCommand command)
 	{
 		setId(command.getId());
-		apply(command, EventCreatedEvent.class);
+		apply(command, new EventCreatedEvent(command.getWindow()));
 	}
 
 	public void on(EventCreatedEvent event)
 	{
 		super.on(event);
-		range = new LocalDateTimeRange(event.getStart(), event.getEnd());
 		String creatorId = event.getCreatorId();
 		if (creatorId != null)
 		{
@@ -77,13 +69,13 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 
 	public void handle(MoveEventCommand command)
 	{
-		LocalDateTimeRange newRange = range.move(command.getStart());
-		reschedule(newRange.getStart(), newRange.getEnd());
+		DateWindow newWindow = window.move(command.getStart());
+		reschedule(newWindow.getStart(), newWindow.getEnd());
 	}
 
 	public void on(EventRescheduledEvent event)
 	{
-		range = event.getRange();
+		window = event.getWindow();
 		new NewsFeedEnvelope().addAccounts(getManagers())
 				.addAccounts(getAttendees()).withPayloads(this, event).send();
 	}
@@ -123,13 +115,13 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		if (!identicalDates(start, end))
 		{
-			apply(new EventRescheduledEvent(new LocalDateTimeRange(start, end)));
+			apply(new EventRescheduledEvent(new DateWindow(start, end)));
 		}
 	}
 
 	private boolean identicalDates(Date start, Date end)
 	{
-		return range == null ? false : range.equals(new LocalDateTimeRange(
-				start, end));
+		return window == null ? false : window
+				.equals(new DateWindow(start, end));
 	}
 }

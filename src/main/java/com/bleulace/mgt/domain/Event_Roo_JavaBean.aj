@@ -3,19 +3,19 @@
 
 package com.bleulace.mgt.domain;
 
-import java.util.List;
-
 import com.bleulace.crm.domain.Account;
-import com.bleulace.utils.jpa.LocalDateTimeRange;
+import com.bleulace.mgt.domain.Event;
+import com.bleulace.utils.jpa.DateWindow;
+import java.util.List;
 
 privileged aspect Event_Roo_JavaBean {
     
-    public LocalDateTimeRange Event.getRange() {
-        return this.range;
+    public DateWindow Event.getWindow() {
+        return this.window;
     }
     
-    public void Event.setRange(LocalDateTimeRange range) {
-        this.range = range;
+    public void Event.setWindow(DateWindow window) {
+        this.window = window;
     }
     
     public String Event.getLocation() {

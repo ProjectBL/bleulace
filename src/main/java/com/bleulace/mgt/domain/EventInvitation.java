@@ -1,30 +1,32 @@
 package com.bleulace.mgt.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.util.Assert;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.persistence.infrastructure.QueryFactory;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
-public class EventInvitation implements Serializable
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "ACCOUNT_ID",
+		"EVENT_ID" }) })
+public class EventInvitation extends AbstractPersistable<Long>
 {
 	private static final long serialVersionUID = -8782392444912650040L;
 
-	@Id
-	@JoinColumn(nullable = false, updatable = false)
-	private Account invitee;
+	@JoinColumn(nullable = false, updatable = false, name = "ACCOUNT_ID")
+	private Account account;
 
-	@Id
-	@JoinColumn(nullable = false, updatable = false)
+	@JoinColumn(nullable = false, updatable = false, name = "EVENT_ID")
 	private Event event;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -33,13 +35,13 @@ public class EventInvitation implements Serializable
 	EventInvitation(Account invitee, Event event)
 	{
 		Assert.noNullElements(new Object[] { invitee, event });
-		this.invitee = invitee;
+		this.account = invitee;
 		this.event = event;
 	}
 
-	public Account getInvitee()
+	public Account getAccount()
 	{
-		return invitee;
+		return account;
 	}
 
 	public Event getEvent()
@@ -61,14 +63,12 @@ public class EventInvitation implements Serializable
 	{
 		QEventInvitation e = QEventInvitation.eventInvitation;
 		return QueryFactory.from(e)
-				.where(e.invitee.id.eq(accountId).and(e.event.id.eq(eventId)))
+				.where(e.account.id.eq(accountId).and(e.event.id.eq(eventId)))
 				.singleResult(e);
 	}
 
 	public static void delete(String accountId, String eventId)
 	{
-		QEventInvitation e = QEventInvitation.eventInvitation;
-		QueryFactory.delete(e).where(
-				e.invitee.id.eq(accountId).and(e.event.id.eq(eventId)));
+		EntityManagerReference.get().remove(find(accountId, eventId));
 	}
 }

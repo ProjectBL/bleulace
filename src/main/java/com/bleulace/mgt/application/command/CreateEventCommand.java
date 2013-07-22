@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.utils.jpa.LocalDateTimeRange;
+import com.bleulace.utils.jpa.DateWindow;
 
 @RooJavaBean
 public class CreateEventCommand extends CreateProjectCommand
@@ -14,25 +14,25 @@ public class CreateEventCommand extends CreateProjectCommand
 	@NotNull
 	private String location = "";
 
-	private LocalDateTimeRange range = LocalDateTimeRange.defaultValue();
+	private DateWindow window = DateWindow.defaultValue();
 
 	public Date getStart()
 	{
-		return range.getStart();
+		return window.getStart();
 	}
 
 	public Date getEnd()
 	{
-		return range.getEnd();
+		return window.getEnd();
 	}
 
 	public void setStart(Date start)
 	{
-		range = range.withStart(start);
+		window = window.withStart(start);
 	}
 
 	public void setEnd(Date end)
 	{
-		range = range.withEnd(end);
+		window = window.withEnd(end);
 	}
 }

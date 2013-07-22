@@ -5,7 +5,7 @@ import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
-import com.bleulace.ddd.spec.PermissionSpecification;
+import com.bleulace.utils.authz.PermissionSpecification;
 
 @RooEquals
 @RooJavaBean(settersByDefault = false)

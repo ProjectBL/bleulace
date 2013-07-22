@@ -1,8 +1,5 @@
 package com.bleulace.crm.domain;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -25,9 +22,6 @@ import com.bleulace.crm.application.command.JoinGroupCommand;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class GroupCommandTest implements CommandGatewayAware
 {
-	@PersistenceContext
-	private EntityManager em;
-
 	@Autowired
 	private GroupDAO groupDAO;
 

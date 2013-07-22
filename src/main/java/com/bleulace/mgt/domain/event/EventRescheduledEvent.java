@@ -1,24 +1,18 @@
 package com.bleulace.mgt.domain.event;
 
-import com.bleulace.utils.jpa.LocalDateTimeRange;
+import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.utils.jpa.DateWindow;
+
+@RooJavaBean(settersByDefault = false)
 public class EventRescheduledEvent
 {
 	private static final long serialVersionUID = 818429591163191885L;
 
-	private LocalDateTimeRange range;
+	private DateWindow window;
 
-	public EventRescheduledEvent()
+	public EventRescheduledEvent(DateWindow range)
 	{
-	}
-
-	public EventRescheduledEvent(LocalDateTimeRange range)
-	{
-		this.range = range;
-	}
-
-	public LocalDateTimeRange getRange()
-	{
-		return range;
+		this.window = range;
 	}
 }

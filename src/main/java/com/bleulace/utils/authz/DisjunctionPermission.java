@@ -1,4 +1,4 @@
-package com.bleulace.ddd.spec;
+package com.bleulace.utils.authz;
 
 import java.util.Collection;
 

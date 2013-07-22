@@ -1,4 +1,4 @@
-package com.bleulace.ddd.spec;
+package com.bleulace.utils.authz;
 
 import org.apache.shiro.authz.Permission;
 

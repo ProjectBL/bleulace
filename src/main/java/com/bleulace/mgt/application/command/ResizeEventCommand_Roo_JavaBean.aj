@@ -3,7 +3,8 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.utils.jpa.LocalDateTimeRange;
+import com.bleulace.mgt.application.command.ResizeEventCommand;
+import com.bleulace.utils.jpa.DateWindow;
 
 privileged aspect ResizeEventCommand_Roo_JavaBean {
     
@@ -11,12 +12,12 @@ privileged aspect ResizeEventCommand_Roo_JavaBean {
         return this.id;
     }
     
-    public LocalDateTimeRange ResizeEventCommand.getRange() {
-        return this.range;
+    public DateWindow ResizeEventCommand.getWindow() {
+        return this.window;
     }
     
-    public void ResizeEventCommand.setRange(LocalDateTimeRange range) {
-        this.range = range;
+    public void ResizeEventCommand.setWindow(DateWindow window) {
+        this.window = window;
     }
     
 }

@@ -52,7 +52,7 @@ public class DevPersistenceConfig
 		props.put("eclipselink.target-database", HSQLPlatform.class.getName());
 		props.put("eclipselink.logging.level.sql", "FINE");
 		props.put("eclipselink.logging.parameters", "true");
-		props.put("eclipselink.ddl-generation", "create-or-extend-tables");
+		props.put("eclipselink.ddl-generation", "drop-and-create-tables");
 		return props;
 	}
 }

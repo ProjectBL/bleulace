@@ -1,8 +1,9 @@
 package com.bleulace.utils.jpa;
 
+import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
-public aspect PeriodCompareAspect
+public aspect JodaTimeCompareAspect
 {
 	declare parents : Period implements Comparable<Period>;
 

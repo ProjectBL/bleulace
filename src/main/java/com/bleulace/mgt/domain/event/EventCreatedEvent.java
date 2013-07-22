@@ -1,8 +1,8 @@
 package com.bleulace.mgt.domain.event;
 
-import java.util.Date;
-
 import org.springframework.roo.addon.javabean.RooJavaBean;
+
+import com.bleulace.utils.jpa.DateWindow;
 
 @RooJavaBean
 public class EventCreatedEvent extends ProjectCreatedEvent
@@ -11,7 +11,10 @@ public class EventCreatedEvent extends ProjectCreatedEvent
 
 	private String location;
 
-	private Date start;
+	private DateWindow window;
 
-	private Date end;
+	public EventCreatedEvent(DateWindow window)
+	{
+		this.window = window;
+	}
 }

@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
 
 @Embeddable
 @RooEquals
-public class LocalDateTimeRange implements Serializable
+public class DateWindow implements Serializable
 {
 	private static final long serialVersionUID = -1900206502831675688L;
 
@@ -30,16 +30,16 @@ public class LocalDateTimeRange implements Serializable
 	private Date end;
 
 	@SuppressWarnings("unused")
-	private LocalDateTimeRange()
+	private DateWindow()
 	{
 	}
 
-	public LocalDateTimeRange(LocalDateTime startTime, Period length)
+	public DateWindow(LocalDateTime startTime, Period length)
 	{
 		init(startTime, length);
 	}
 
-	public LocalDateTimeRange(Date from, Date to)
+	public DateWindow(Date from, Date to)
 	{
 		Range<Date> range = Range.between(from, to);
 		LocalDateTime startTime = LocalDateTime.fromDateFields(range
@@ -49,9 +49,9 @@ public class LocalDateTimeRange implements Serializable
 		init(startTime, length);
 	}
 
-	public static LocalDateTimeRange defaultValue()
+	public static DateWindow defaultValue()
 	{
-		return new LocalDateTimeRange(LocalDateTime.now().plusMinutes(15),
+		return new DateWindow(LocalDateTime.now().plusMinutes(15),
 				Period.hours(1));
 	}
 
@@ -76,19 +76,19 @@ public class LocalDateTimeRange implements Serializable
 				LocalDateTime.fromDateFields(end));
 	}
 
-	public LocalDateTimeRange withEnd(Date end)
+	public DateWindow withEnd(Date end)
 	{
-		return new LocalDateTimeRange(getStart(), end);
+		return new DateWindow(getStart(), end);
 	}
 
-	public LocalDateTimeRange withStart(Date start)
+	public DateWindow withStart(Date start)
 	{
-		return new LocalDateTimeRange(start, getEnd());
+		return new DateWindow(start, getEnd());
 	}
 
-	public LocalDateTimeRange move(Date newStart)
+	public DateWindow move(Date newStart)
 	{
-		return new LocalDateTimeRange(LocalDateTime.fromDateFields(newStart),
+		return new DateWindow(LocalDateTime.fromDateFields(newStart),
 				getLength());
 	}
 
