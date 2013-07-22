@@ -5,15 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.Converter;
 import org.eclipse.persistence.annotations.Converters;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
-import org.springframework.data.convert.JodaTimeConverters.LocalDateTimeToDateConverter;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
@@ -31,8 +28,7 @@ import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.persistence.infrastructure.LocalDateTimeConverter;
 import com.bleulace.persistence.infrastructure.PeriodConverter;
 import com.bleulace.utils.jpa.EntityManagerReference;
-import com.mysema.query.annotations.PropertyType;
-import com.mysema.query.annotations.QueryType;
+import com.bleulace.utils.jpa.LocalDateTimeRange;
 
 @RooJavaBean
 @Entity
@@ -43,14 +39,8 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = 8727887519388582258L;
 
-	@Column(nullable = false)
-	@Convert("localDateTimeConverter")
-	private LocalDateTime startTime;
-
-	@QueryType(PropertyType.COMPARABLE)
-	@Column(nullable = false)
-	@Convert("periodConverter")
-	private Period length;
+	@Embedded
+	private LocalDateTimeRange range;
 
 	@Column(nullable = false)
 	private String location;
@@ -62,71 +52,40 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 	}
 
-	public Date getStart()
-	{
-		return LocalDateTimeToDateConverter.INSTANCE.convert(startTime);
-	}
-
-	public Date getEnd()
-	{
-		return LocalDateTimeToDateConverter.INSTANCE.convert(startTime
-				.plus(length));
-	}
-
-	public boolean isAllDay()
-	{
-		return length.getDays() >= 1;
-	}
-
 	public Event(CreateEventCommand command)
 	{
-		super(command.getId());
+		setId(command.getId());
 		apply(command, EventCreatedEvent.class);
-	}
-
-	public void handle(ResizeEventCommand command)
-	{
-		if (!(command.getStart().equals(getStartTime().toDate()) && command
-				.getEnd().equals(getStartTime().plus(getLength()).toDate())))
-		{
-			EventRescheduledEvent event = new EventRescheduledEvent();
-			event.setId(getId());
-			event.setStart(LocalDateTime.fromDateFields(command.getStart()));
-			event.setLength(Period.fieldDifference(
-					LocalDateTime.fromDateFields(command.getStart()),
-					LocalDateTime.fromDateFields(command.getEnd())));
-			apply(event);
-		}
-	}
-
-	public void handle(MoveEventCommand command)
-	{
-		EventRescheduledEvent event = new EventRescheduledEvent();
-		event.setId(getId());
-		event.setStart(LocalDateTime.fromDateFields(command.getNewStart()));
-		event.setLength(getLength());
-		apply(event);
-	}
-
-	public void on(EventRescheduledEvent event)
-	{
-		map(event);
-		new NewsFeedEnvelope().addAccounts(getManagers())
-				.addAccounts(getAttendees()).withPayloads(this, event).send();
 	}
 
 	public void on(EventCreatedEvent event)
 	{
 		super.on(event);
-		startTime = LocalDateTime.fromDateFields(event.getStart());
-		LocalDateTime end = LocalDateTime.fromDateFields(event.getEnd());
-		length = Period.fieldDifference(startTime, end);
+		range = new LocalDateTimeRange(event.getStart(), event.getEnd());
 		String creatorId = event.getCreatorId();
 		if (creatorId != null)
 		{
 			new NewsFeedEnvelope().addFriends(event.getCreatorId())
 					.withPayloads(event, this).send();
 		}
+	}
+
+	public void handle(ResizeEventCommand command)
+	{
+		reschedule(command.getStart(), command.getEnd());
+	}
+
+	public void handle(MoveEventCommand command)
+	{
+		LocalDateTimeRange newRange = range.move(command.getStart());
+		reschedule(newRange.getStart(), newRange.getEnd());
+	}
+
+	public void on(EventRescheduledEvent event)
+	{
+		range = event.getRange();
+		new NewsFeedEnvelope().addAccounts(getManagers())
+				.addAccounts(getAttendees()).withPayloads(this, event).send();
 	}
 
 	public void handle(InviteGuestsCommand command)
@@ -158,5 +117,19 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 			new NewsFeedEnvelope().addFriends(event.getGuestId())
 					.withPayloads(this, event).send();
 		}
+	}
+
+	private void reschedule(Date start, Date end)
+	{
+		if (!identicalDates(start, end))
+		{
+			apply(new EventRescheduledEvent(new LocalDateTimeRange(start, end)));
+		}
+	}
+
+	private boolean identicalDates(Date start, Date end)
+	{
+		return range == null ? false : range.equals(new LocalDateTimeRange(
+				start, end));
 	}
 }

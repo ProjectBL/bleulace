@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.MoveEventCommand;
 import java.util.Date;
 
 privileged aspect MoveEventCommand_Roo_JavaBean {
@@ -12,8 +11,12 @@ privileged aspect MoveEventCommand_Roo_JavaBean {
         return this.id;
     }
     
-    public void MoveEventCommand.setNewStart(Date newStart) {
-        this.newStart = newStart;
+    public Date MoveEventCommand.getStart() {
+        return this.start;
+    }
+    
+    public void MoveEventCommand.setStart(Date start) {
+        this.start = start;
     }
     
 }

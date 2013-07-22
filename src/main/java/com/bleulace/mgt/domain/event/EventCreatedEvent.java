@@ -9,9 +9,9 @@ public class EventCreatedEvent extends ProjectCreatedEvent
 {
 	private static final long serialVersionUID = -2228933387504167888L;
 
+	private String location;
+
 	private Date start;
 
 	private Date end;
-
-	private String location;
 }

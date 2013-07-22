@@ -3,8 +3,6 @@
 
 package com.bleulace.crm.presentation;
 
-import com.bleulace.crm.presentation.AccountDTO;
-import com.bleulace.crm.presentation.GroupDTO;
 import java.util.List;
 
 privileged aspect GroupDTO_Roo_JavaBean {

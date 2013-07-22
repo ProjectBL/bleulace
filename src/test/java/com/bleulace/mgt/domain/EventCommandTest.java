@@ -1,13 +1,13 @@
 package com.bleulace.mgt.domain;
 
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import junit.framework.Assert;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,12 +68,12 @@ public class EventCommandTest implements CommandGatewayAware
 	@Test
 	public void moveEventCommand()
 	{
-		LocalDateTime oldStart = repo.findOne(moveEventCommand.getId())
-				.getStartTime();
+		Date oldStart = repo.findOne(moveEventCommand.getId()).getRange()
+				.getStart();
 		gateway().send(moveEventCommand);
-		LocalDateTime newStart = repo.findOne(moveEventCommand.getId())
-				.getStartTime();
-		Assert.assertTrue(newStart.isAfter(oldStart));
+		Date newStart = repo.findOne(moveEventCommand.getId()).getRange()
+				.getStart();
+		Assert.assertTrue(newStart.after(oldStart));
 	}
 
 	@Test
@@ -81,17 +81,18 @@ public class EventCommandTest implements CommandGatewayAware
 	{
 		Event event = repo.findOne(resizeEventCommand.getId());
 
-		LocalDateTime oldStart = event.getStartTime();
-		Period oldLength = event.getLength();
+		Date oldStart = event.getRange().getStart();
+		Date oldEnd = event.getRange().getEnd();
 
 		gateway().send(resizeEventCommand);
 
 		event = repo.findOne(resizeEventCommand.getId());
-		LocalDateTime newStart = event.getStartTime();
-		Period newLength = event.getLength();
 
-		Assert.assertTrue(newStart.isAfter(oldStart));
-		Assert.assertEquals(newLength.getMillis(), oldLength.getMillis());
+		Date newStart = event.getRange().getStart();
+		Date newEnd = event.getRange().getEnd();
+
+		Assert.assertTrue(newStart.after(oldStart));
+		Assert.assertTrue(newEnd.after(oldEnd));
 	}
 
 	@Test

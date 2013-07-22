@@ -2,7 +2,6 @@ package com.bleulace.utils.dto;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -18,8 +17,6 @@ public class ModelMappingConfig implements ApplicationContextAware
 	public ModelMapper modelMapper()
 	{
 		ModelMapper mapper = new ModelMapper();
-
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 
 		for (PropertyMap<?, ?> map : ctx.getBeansOfType(PropertyMap.class)
 				.values())

@@ -3,28 +3,19 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.crm.domain.Account;
-import com.bleulace.mgt.domain.Event;
 import java.util.List;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
+
+import com.bleulace.crm.domain.Account;
+import com.bleulace.utils.jpa.LocalDateTimeRange;
 
 privileged aspect Event_Roo_JavaBean {
     
-    public LocalDateTime Event.getStartTime() {
-        return this.startTime;
+    public LocalDateTimeRange Event.getRange() {
+        return this.range;
     }
     
-    public void Event.setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-    
-    public Period Event.getLength() {
-        return this.length;
-    }
-    
-    public void Event.setLength(Period length) {
-        this.length = length;
+    public void Event.setRange(LocalDateTimeRange range) {
+        this.range = range;
     }
     
     public String Event.getLocation() {

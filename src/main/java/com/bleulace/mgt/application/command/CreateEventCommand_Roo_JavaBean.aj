@@ -3,7 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.CreateEventCommand;
+import com.bleulace.utils.jpa.LocalDateTimeRange;
 
 privileged aspect CreateEventCommand_Roo_JavaBean {
     
@@ -13,6 +13,14 @@ privileged aspect CreateEventCommand_Roo_JavaBean {
     
     public void CreateEventCommand.setLocation(String location) {
         this.location = location;
+    }
+    
+    public LocalDateTimeRange CreateEventCommand.getRange() {
+        return this.range;
+    }
+    
+    public void CreateEventCommand.setRange(LocalDateTimeRange range) {
+        this.range = range;
     }
     
 }

@@ -3,7 +3,6 @@ package com.bleulace.utils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -174,7 +173,7 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		gateway().send(createEventCommand);
 		MoveEventCommand command = new MoveEventCommand(
 				createEventCommand.getId());
-		command.setNewStart(LocalDateTime.now().plusHours(1).toDate());
+		command.setStart(DateTime.now().plusHours(1).toDate());
 		return command;
 	}
 
@@ -186,8 +185,8 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		gateway().send(createEventCommand);
 		ResizeEventCommand command = new ResizeEventCommand(
 				createEventCommand.getId());
-		command.setStart(DateTime.now().plusMinutes(15).toDate());
-		command.setEnd(DateTime.now().plusMinutes(75).toDate());
+		command.setStart(DateTime.now().plusHours(15).toDate());
+		command.setEnd(DateTime.now().plusHours(75).toDate());
 		return command;
 	}
 

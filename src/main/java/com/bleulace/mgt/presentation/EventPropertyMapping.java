@@ -14,5 +14,4 @@ public class EventPropertyMapping extends PropertyMap<Event, EventDTO>
 		map().setCaption(source.getTitle());
 		map().setDescription(source.getLocation());
 	}
-
 }

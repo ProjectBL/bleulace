@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.domain;
 
-import com.bleulace.mgt.domain.Resource;
 
 privileged aspect Resource_Roo_JavaBean {
     

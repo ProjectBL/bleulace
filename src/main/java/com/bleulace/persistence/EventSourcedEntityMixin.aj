@@ -12,10 +12,11 @@ import org.springframework.data.domain.Persistable;
 
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable<String>
+public interface EventSourcedEntityMixin extends EventSourcedEntity,
+		Persistable<String>
 {
 	public String getId();
-	
+
 	static aspect Impl
 	{
 		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
@@ -24,14 +25,15 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable
 				this);
 
 		private volatile EventSourcedAggregateRootMixin EventSourcedEntityMixin.aggregateRoot;
-		
+
 		public boolean EventSourcedEntityMixin.isNew()
 		{
 			return this.getId() == null;
 		}
 
 		@SuppressWarnings("rawtypes")
-		public void EventSourcedEntityMixin.registerAggregateRoot(AbstractEventSourcedAggregateRoot root)
+		public void EventSourcedEntityMixin.registerAggregateRoot(
+				AbstractEventSourcedAggregateRoot root)
 		{
 		}
 
@@ -59,13 +61,14 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable
 				{
 					if (entity != null)
 					{
-						((EventSourcedEntityMixin)entity).registerAggregateRoot(aggregateRoot);
+						((EventSourcedEntityMixin) entity)
+								.registerAggregateRoot(aggregateRoot);
 						entity.handleRecursively(event);
 					}
 				}
 			}
 		}
-		
+
 		public boolean EventSourcedEntityMixin.equals(Object obj)
 		{
 			if (null == obj)
@@ -88,13 +91,13 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity, Persistable
 			return null == this.getId() ? false : this.getId().equals(
 					that.getId());
 		}
-		
+
 		private void EventSourcedEntityMixin.map(Object event)
 		{
-			SpringApplicationContext.getBean(ModelMapper.class).map(event,
-					this);
+			SpringApplicationContext.getBean(ModelMapper.class)
+					.map(event, this);
 		}
-		
+
 		@SuppressWarnings("rawtypes")
 		private void EventSourcedEntityMixin.handle(DomainEventMessage event)
 		{

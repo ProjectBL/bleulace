@@ -3,6 +3,7 @@ package com.bleulace.mgt.application.command;
 import java.util.Date;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -14,23 +15,19 @@ public class MoveEventCommand
 	@TargetAggregateIdentifier
 	private final String id;
 
+	@NotNull
 	@Future
-	private Date newStart;
+	private Date start;
 
 	public MoveEventCommand(String id)
 	{
-		this(id, null);
-	}
-
-	public MoveEventCommand(String id, Date newStart)
-	{
 		Assert.notNull(id);
 		this.id = id;
-		this.newStart = newStart;
 	}
 
-	public Date getNewStart()
+	public MoveEventCommand(String id, Date start)
 	{
-		return newStart;
+		this(id);
+		this.start = start;
 	}
 }

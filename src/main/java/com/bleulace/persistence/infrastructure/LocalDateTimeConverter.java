@@ -13,7 +13,10 @@ import org.joda.time.LocalDateTime;
  * @author Arleigh Dickerson
  * 
  */
-public class LocalDateTimeConverter implements Converter
+public class LocalDateTimeConverter
+		implements
+		Converter,
+		org.springframework.core.convert.converter.Converter<LocalDateTime, LocalDateTime>
 {
 	private static final long serialVersionUID = 362089437264505921L;
 
@@ -49,4 +52,11 @@ public class LocalDateTimeConverter implements Converter
 		return;
 	}
 
+	@Override
+	public LocalDateTime convert(LocalDateTime source)
+	{
+		return new LocalDateTime(source.getYear(), source.getMonthOfYear(),
+				source.getDayOfMonth(), source.getHourOfDay(),
+				source.getMinuteOfHour(), 0);
+	}
 }

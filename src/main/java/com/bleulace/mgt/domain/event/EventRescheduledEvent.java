@@ -1,17 +1,24 @@
 package com.bleulace.mgt.domain.event;
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
-import org.springframework.roo.addon.javabean.RooJavaBean;
+import com.bleulace.utils.jpa.LocalDateTimeRange;
 
-@RooJavaBean
 public class EventRescheduledEvent
 {
 	private static final long serialVersionUID = 818429591163191885L;
 
-	private String id;
+	private LocalDateTimeRange range;
 
-	private LocalDateTime start;
+	public EventRescheduledEvent()
+	{
+	}
 
-	private Period length;
+	public EventRescheduledEvent(LocalDateTimeRange range)
+	{
+		this.range = range;
+	}
+
+	public LocalDateTimeRange getRange()
+	{
+		return range;
+	}
 }

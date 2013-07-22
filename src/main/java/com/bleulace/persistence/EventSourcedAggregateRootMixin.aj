@@ -140,6 +140,11 @@ public interface EventSourcedAggregateRootMixin extends
 			SpringApplicationContext.getBean(ModelMapper.class).map(source,
 					this);
 		}
+		
+		ModelMapper EventSourcedAggregateRootMixin.getMapper()
+		{
+			return SpringApplicationContext.getBean(ModelMapper.class);
+		}
 
 		private void EventSourcedAggregateRootMixin.apply(Object command,
 				Class<?> eventClazz)
