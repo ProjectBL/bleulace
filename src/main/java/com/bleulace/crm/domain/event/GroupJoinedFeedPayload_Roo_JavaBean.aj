@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.domain.event;
 
+import com.bleulace.crm.domain.event.GroupJoinedFeedPayload;
 
 privileged aspect GroupJoinedFeedPayload_Roo_JavaBean {
     

@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.presentation;
 
+import com.bleulace.mgt.presentation.CommentDTO;
 import java.util.Date;
 
 privileged aspect CommentDTO_Roo_JavaBean {

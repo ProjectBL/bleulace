@@ -1,5 +1,7 @@
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.domain.SchedulingConflictException;
+
 public interface MgtCommandGateway
 {
 	public void send(CreateProjectCommand command);
@@ -20,5 +22,5 @@ public interface MgtCommandGateway
 
 	public void send(InviteGuestsCommand command);
 
-	public void send(RsvpCommand command);
+	public void send(RsvpCommand command) throws SchedulingConflictException;
 }

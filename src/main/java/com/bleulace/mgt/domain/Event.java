@@ -22,6 +22,7 @@ import com.bleulace.mgt.domain.event.EventCreatedEvent;
 import com.bleulace.mgt.domain.event.EventRescheduledEvent;
 import com.bleulace.mgt.domain.event.GuestInvitedEvent;
 import com.bleulace.mgt.domain.event.GuestRSVPEvent;
+import com.bleulace.mgt.presentation.ScheduleStatus;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 import com.bleulace.utils.jpa.DateWindow;
 import com.bleulace.utils.jpa.EntityManagerReference;
@@ -104,6 +105,10 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		if (event.isAccepted())
 		{
+			if (ScheduleStatus.BUSY.is(event.getGuestId(), window.getRange()))
+			{
+				throw new SchedulingConflictException();
+			}
 			attendees.add(EntityManagerReference.load(Account.class,
 					event.getGuestId()));
 			new NewsFeedEnvelope().addFriends(event.getGuestId())

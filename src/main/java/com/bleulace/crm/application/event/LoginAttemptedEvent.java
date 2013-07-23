@@ -9,13 +9,13 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
  * 
  */
 @RooJavaBean(settersByDefault = false)
-public class AccountLoginAttemptedEvent
+public class LoginAttemptedEvent
 {
 	private static final long serialVersionUID = 5819278706713701979L;
 
 	private Boolean success;
 
-	public AccountLoginAttemptedEvent(Boolean success)
+	public LoginAttemptedEvent(Boolean success)
 	{
 		this.success = success;
 	}

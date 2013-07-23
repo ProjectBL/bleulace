@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.EventRescheduledEvent;
 import com.bleulace.utils.jpa.DateWindow;
 
 privileged aspect EventRescheduledEvent_Roo_JavaBean {

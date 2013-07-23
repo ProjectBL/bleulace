@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.ChangePasswordCommand;
 
 privileged aspect ChangePasswordCommand_Roo_JavaBean {
     

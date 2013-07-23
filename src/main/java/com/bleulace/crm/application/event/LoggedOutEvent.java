@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author Arleigh Dickerson
  * 
  */
-public class AccountLoggedOutEvent implements Serializable
+public class LoggedOutEvent implements Serializable
 {
 	private static final long serialVersionUID = 6572207297876301625L;
 }

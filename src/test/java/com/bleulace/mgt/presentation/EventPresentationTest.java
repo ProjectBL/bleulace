@@ -11,6 +11,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.RsvpCommand;
+import com.bleulace.mgt.domain.SchedulingConflictException;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -22,7 +23,7 @@ public class EventPresentationTest implements CommandGatewayAware
 	private RsvpCommand rsvpCommand;
 
 	@Test
-	public void testEventDTOMapping()
+	public void testEventDTOMapping() throws SchedulingConflictException
 	{
 		gateway().send(rsvpCommand);
 		EventDTO dto = EventDTO.FINDER.findById(rsvpCommand.getId());

@@ -3,10 +3,11 @@
 
 package com.bleulace.crm.application.event;
 
+import com.bleulace.crm.application.event.LoginAttemptedEvent;
 
-privileged aspect AccountLoginAttemptedEvent_Roo_JavaBean {
+privileged aspect LoginAttemptedEvent_Roo_JavaBean {
     
-    public Boolean AccountLoginAttemptedEvent.getSuccess() {
+    public Boolean LoginAttemptedEvent.getSuccess() {
         return this.success;
     }
     

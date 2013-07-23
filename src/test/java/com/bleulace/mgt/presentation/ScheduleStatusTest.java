@@ -32,9 +32,6 @@ public class ScheduleStatusTest implements CommandGatewayAware
 	private EventDAO eventDAO;
 
 	@Autowired
-	private ScheduleStatusFinder finder;
-
-	@Autowired
 	private CreateAccountCommand createAccountCommand;
 
 	@Autowired
@@ -82,7 +79,7 @@ public class ScheduleStatusTest implements CommandGatewayAware
 		Set<ScheduleStatus> results = getStatuses(accountId, start, end);
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals(status, results.iterator().next());
-		Assert.assertEquals(status, finder.find(accountId, start, end));
+		Assert.assertEquals(status, ScheduleStatus.get(accountId, start, end));
 	}
 
 	private Set<ScheduleStatus> getStatuses(String accountId, Date start,

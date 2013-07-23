@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.domain;
 
+import com.bleulace.crm.domain.Account;
 import java.util.List;
 
 privileged aspect Account_Roo_JavaBean {

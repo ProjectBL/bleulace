@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.application.command.AddBundleCommand;
 
 privileged aspect AddBundleCommand_Roo_JavaBean {
     

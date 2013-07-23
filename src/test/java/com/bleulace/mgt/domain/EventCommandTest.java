@@ -104,7 +104,7 @@ public class EventCommandTest implements CommandGatewayAware
 	}
 
 	@Test
-	public void testRsvpCommand()
+	public void testRsvpCommand() throws SchedulingConflictException
 	{
 		gateway().send(rsvpCommand);
 		Assert.assertTrue(repo.findOne(rsvpCommand.getId()).getAttendees()

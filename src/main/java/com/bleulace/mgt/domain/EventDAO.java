@@ -17,4 +17,10 @@ public interface EventDAO extends EventDAOCustom, ReadOnlyDAO<Event, String>
 			+ "WHERE a.id=:accountId AND e.window.start < :end AND e.window.end > :start")
 	public long countByAttendeeAndDates(@Param("accountId") String accountId,
 			@Param("start") Date start, @Param("end") Date end);
+
+	@Query("SELECT e FROM Event e JOIN e.attendees a "
+			+ "WHERE a.id=:accountId AND e.window.start < :end AND e.window.end > :start")
+	public List<Event> findByByAttendeeAndDates(
+			@Param("accountId") String accountId, @Param("start") Date start,
+			@Param("end") Date end);
 }

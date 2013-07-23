@@ -18,8 +18,8 @@ import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
-import com.bleulace.crm.application.event.AccountLoggedOutEvent;
-import com.bleulace.crm.application.event.AccountLoginAttemptedEvent;
+import com.bleulace.crm.application.event.LoggedOutEvent;
+import com.bleulace.crm.application.event.LoginAttemptedEvent;
 import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
 import com.bleulace.crm.domain.event.AccountCreatedEvent;
@@ -104,10 +104,10 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	 */
 	public void handleLoginAttempt(Boolean success)
 	{
-		apply(new AccountLoginAttemptedEvent(success));
+		apply(new LoginAttemptedEvent(success));
 	}
 
-	public void on(AccountLoginAttemptedEvent event)
+	public void on(LoginAttemptedEvent event)
 	{
 		// TODO : lock account on x number of incorrect logins
 	}
@@ -119,10 +119,10 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	 */
 	public void handleLogout()
 	{
-		apply(new AccountLoggedOutEvent());
+		apply(new LoggedOutEvent());
 	}
 
-	public void onLogoutAttemptedEvent(AccountLoggedOutEvent event)
+	public void onLogoutAttemptedEvent(LoggedOutEvent event)
 	{
 	}
 

@@ -1,5 +1,6 @@
 package com.bleulace.mgt.presentation;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,13 @@ public class EventFinderImpl extends BasicFinder<Event, EventDTO> implements
 	{
 		return getConverter().convert(
 				eventDAO.findByAssignment(accountId, assignment));
+	}
+
+	@Override
+	public List<EventDTO> findByAccountIdAndRange(String accountId, Date start,
+			Date end)
+	{
+		return getConverter().convert(
+				eventDAO.findByByAttendeeAndDates(accountId, start, end));
 	}
 }

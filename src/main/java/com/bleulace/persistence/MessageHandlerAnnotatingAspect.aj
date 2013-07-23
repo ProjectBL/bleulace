@@ -33,16 +33,4 @@ public aspect MessageHandlerAnnotatingAspect
 	declare @method : public void com.bleulace..*.on*(Event+) : @EventHandler;
 	declare @method : public * com.bleulace..*.handle*(Command+) : @CommandHandler;
 	declare @constructor : public com.bleulace..new(Command+) : @CommandHandler;
-
-	private static final transient EventBus EVENTBUS = SpringApplicationContext
-			.get().getBean(EventBus.class);
-
-	/**
-	 * 
-	 * @return a configured event bus ready for use
-	 */
-	EventBus EventBusAware.eventBus()
-	{
-		return EVENTBUS;
-	}
 }

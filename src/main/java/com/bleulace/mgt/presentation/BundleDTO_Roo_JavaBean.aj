@@ -3,6 +3,8 @@
 
 package com.bleulace.mgt.presentation;
 
+import com.bleulace.mgt.presentation.BundleDTO;
+import com.bleulace.mgt.presentation.TaskDTO;
 import java.util.List;
 
 privileged aspect BundleDTO_Roo_JavaBean {

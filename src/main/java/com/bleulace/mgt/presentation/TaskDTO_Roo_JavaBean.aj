@@ -4,6 +4,7 @@
 package com.bleulace.mgt.presentation;
 
 import com.bleulace.crm.presentation.AccountDTO;
+import com.bleulace.mgt.presentation.TaskDTO;
 
 privileged aspect TaskDTO_Roo_JavaBean {
     

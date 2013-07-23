@@ -21,7 +21,7 @@ public class AuditLoggerImpl implements AuditLogger
 		String msgEnd = returnValue == null ? "void" : returnValue.toString();
 
 		CommandMessage<?> message = (CommandMessage<?>) command;
-		LOG.info("Command of type " + message.getCommandName()
+		LOG.fine("Command of type " + message.getCommandName()
 				+ " carrying payload " + message.getPayload().toString()
 				+ " returned " + msgEnd + ".");
 	}

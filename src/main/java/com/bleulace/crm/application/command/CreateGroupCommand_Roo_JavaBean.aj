@@ -3,6 +3,7 @@
 
 package com.bleulace.crm.application.command;
 
+import com.bleulace.crm.application.command.CreateGroupCommand;
 
 privileged aspect CreateGroupCommand_Roo_JavaBean {
     

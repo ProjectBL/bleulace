@@ -1,9 +1,9 @@
 package com.bleulace.crm.application.command;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.util.Assert;
 
 /**
@@ -32,13 +32,13 @@ public class LoginCommand
 		token = new UsernamePasswordToken(username, password, rememberMe);
 	}
 
-	@NotEmpty
+	@NotNull
 	public String getUsername()
 	{
 		return token.getUsername();
 	}
 
-	@NotBlank
+	@NotNull
 	public String getPassword()
 	{
 		return token.getPassword().toString();

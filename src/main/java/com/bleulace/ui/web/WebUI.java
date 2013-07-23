@@ -1,10 +1,5 @@
 package com.bleulace.ui.web;
 
-import org.apache.shiro.SecurityUtils;
-import org.springframework.beans.factory.annotation.Configurable;
-
-import ru.xpoft.vaadin.DiscoveryNavigator;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
@@ -40,7 +35,6 @@ import com.vaadin.ui.UI;
  */
 
 //@formatter:on
-@Configurable(preConstruction = true)
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
 public class WebUI extends UI
@@ -50,17 +44,5 @@ public class WebUI extends UI
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		setNavigator(new DiscoveryNavigator(this, this));
-		if (!(SecurityUtils.getSubject().isAuthenticated() || SecurityUtils
-				.getSubject().isRemembered()))
-		{
-			// somebody is currently logged in
-			// TODO : navigate somewhere slow poke!
-		}
-		else
-		{
-			// nobody logged in
-			getNavigator().navigateTo("front");
-		}
 	}
 }

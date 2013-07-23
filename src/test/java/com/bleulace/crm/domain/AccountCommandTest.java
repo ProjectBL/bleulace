@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import junit.framework.Assert;
 
+import org.axonframework.commandhandling.CommandBus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
 import com.bleulace.feed.FeedEntry;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -98,12 +100,18 @@ public class AccountCommandTest implements CommandGatewayAware
 
 		gateway().send(reply);
 
-		Thread.sleep(250);
+		for (int i = 0; i < 10; i++)
+		{
+			Thread.sleep(100);
+			Account initiator = em.getReference(Account.class, initiatorId);
+			Account recipient = em.getReference(Account.class, recipientId);
 
-		Account initiator = em.getReference(Account.class, initiatorId);
-		Account recipient = em.getReference(Account.class, recipientId);
-
-		Assert.assertTrue(initiator.getFriends().contains(recipient));
-		Assert.assertTrue(recipient.getFriends().contains(initiator));
+			if (initiator.getFriends().contains(recipient)
+					&& recipient.getFriends().contains(initiator))
+			{
+				return;
+			}
+		}
+		Assert.fail();
 	}
 }

@@ -1,20 +1,16 @@
 package com.bleulace.ui.web.front;
 
-import com.bleulace.crm.domain.Account;
-import com.vaadin.navigator.View;
+import com.bleulace.ui.infrastructure.VaadinView;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
-public interface FrontView extends View
+@VaadinView
+public class FrontView
 {
-	public static final Class<? extends FrontView> VIEW = FrontViewImpl.class;
+	private static final long serialVersionUID = 5567348045276713883L;
 
-	public void addListener(FrontViewListener listener);
-
-	public void setEnabled(boolean enabled);
-
-	public interface FrontViewListener
+	@Override
+	public void enter(ViewChangeEvent event)
 	{
-		public void onLogin(String username, String password);
-
-		public void onRegister(Account account);
+		post("");
 	}
 }

@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.domain.event;
 
+import com.bleulace.mgt.domain.event.GuestRSVPEvent;
 
 privileged aspect GuestRSVPEvent_Roo_JavaBean {
     

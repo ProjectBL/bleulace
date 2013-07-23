@@ -6,17 +6,16 @@ import org.apache.commons.lang3.Range;
 
 import com.bleulace.mgt.domain.EventDAO;
 import com.bleulace.mgt.domain.EventInvitationDAO;
-import com.bleulace.mgt.presentation.ScheduleStatusFinder.ScheduleStatusInquirer;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-public enum ScheduleStatus implements ScheduleStatusInquirer
+public enum ScheduleStatus implements ScheduleStatusFinder
 {
 	AVAILABLE(new AvailableScheduleFinder()), TENTATIVE(
 			new TentativeScheduleFinder()), BUSY(new BusyScheduleFinder());
 
-	private final ScheduleStatusInquirer finder;
+	private final ScheduleStatusFinder finder;
 
-	private ScheduleStatus(ScheduleStatusInquirer finder)
+	private ScheduleStatus(ScheduleStatusFinder finder)
 	{
 		this.finder = finder;
 	}
@@ -27,8 +26,20 @@ public enum ScheduleStatus implements ScheduleStatusInquirer
 		return finder.is(accountId, range);
 	}
 
+	public static ScheduleStatus get(String accountId, Date start, Date end)
+	{
+		for (ScheduleStatus status : ScheduleStatus.values())
+		{
+			if (status.is(accountId, Range.between(start, end)))
+			{
+				return status;
+			}
+		}
+		throw new IllegalStateException();
+	}
+
 	private static class AvailableScheduleFinder implements
-			ScheduleStatusInquirer
+			ScheduleStatusFinder
 	{
 		@Override
 		public boolean is(String accountId, Range<Date> range)
@@ -38,7 +49,7 @@ public enum ScheduleStatus implements ScheduleStatusInquirer
 		}
 	}
 
-	private static class BusyScheduleFinder implements ScheduleStatusInquirer
+	private static class BusyScheduleFinder implements ScheduleStatusFinder
 	{
 		@Override
 		public boolean is(String accountId, Range<Date> range)
@@ -50,7 +61,7 @@ public enum ScheduleStatus implements ScheduleStatusInquirer
 	}
 
 	private static class TentativeScheduleFinder implements
-			ScheduleStatusInquirer
+			ScheduleStatusFinder
 	{
 		@Override
 		public boolean is(String accountId, Range<Date> range)

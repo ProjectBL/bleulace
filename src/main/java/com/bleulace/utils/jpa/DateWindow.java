@@ -10,8 +10,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.Range;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.JodaTimeConverters;
 import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.util.Assert;
 
@@ -90,6 +94,12 @@ public class DateWindow implements Serializable
 	{
 		return new DateWindow(LocalDateTime.fromDateFields(newStart),
 				getLength());
+	}
+
+	public Interval getInterval()
+	{
+		Converter<Date, DateTime> converter = JodaTimeConverters.DateToDateTimeConverter.INSTANCE;
+		return new Interval(converter.convert(start), converter.convert(end));
 	}
 
 	public Range<Date> getRange()
