@@ -1,32 +1,29 @@
 package com.bleulace.ui.infrastructure;
 
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+
 import com.bleulace.utils.ctx.SpringApplicationContext;
-import com.vaadin.navigator.Navigator.ClassBasedViewProvider;
+import com.vaadin.navigator.Navigator.StaticViewProvider;
 import com.vaadin.navigator.View;
 
-public class SpringViewProvider extends ClassBasedViewProvider
+class SpringViewProvider extends StaticViewProvider
 {
 	private static final long serialVersionUID = -3847157174338421311L;
 
-	public SpringViewProvider(String viewName, Class<? extends View> viewClass)
+	public SpringViewProvider(String viewName)
 	{
-		super(viewName, viewClass);
+		super(viewName, null);
 	}
 
 	@Override
 	public View getView(String viewName)
 	{
-		if (getViewName().equals(viewName))
+		try
 		{
-			try
-			{
-				return SpringApplicationContext.getBean(View.class,
-						getViewName());
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException(e);
-			}
+			return SpringApplicationContext.get().getBean(viewName, View.class);
+		}
+		catch (NoSuchBeanDefinitionException e)
+		{
 		}
 		return null;
 	}

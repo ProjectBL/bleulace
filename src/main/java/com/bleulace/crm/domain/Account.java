@@ -13,14 +13,13 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.event.EventBusAware;
 import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
+import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.LoggedOutEvent;
 import com.bleulace.crm.application.event.LoginAttemptedEvent;
-import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
 import com.bleulace.crm.domain.event.AccountCreatedEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
@@ -31,7 +30,7 @@ import com.bleulace.persistence.EventSourcedAggregateRootMixin;
 
 @Entity
 @RooJavaBean
-public class Account implements EventSourcedAggregateRootMixin, EventBusAware
+public class Account implements EventSourcedAggregateRootMixin
 {
 	private static final long serialVersionUID = -8047989744778433448L;
 
@@ -104,12 +103,11 @@ public class Account implements EventSourcedAggregateRootMixin, EventBusAware
 	 */
 	public void handleLoginAttempt(Boolean success)
 	{
-		apply(new LoginAttemptedEvent(success));
+		apply(new LoginAttemptedEvent(email, success));
 	}
 
 	public void on(LoginAttemptedEvent event)
 	{
-		// TODO : lock account on x number of incorrect logins
 	}
 
 	/**

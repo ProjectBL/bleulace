@@ -129,7 +129,6 @@
 	<beans profile="test">
 		<axon:command-bus id="commandBus"
 			transaction-manager="transactionManager">
-			<!-- TODO : permission interceptor -->
 			<axon:handlerInterceptors>
 				<bean class="org.axonframework.auditing.AuditingInterceptor">
 					<property name="auditDataProvider" ref="auditDataProviderImpl" />

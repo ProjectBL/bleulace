@@ -2,12 +2,15 @@ package com.bleulace.crm.application.command.handler;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.axonframework.domain.GenericEventMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.cqrs.event.EventBusAware;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
+import com.bleulace.crm.application.event.LoginAttemptedEvent;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.crm.domain.AccountDAO;
 
@@ -18,7 +21,8 @@ import com.bleulace.crm.domain.AccountDAO;
  * 
  */
 @Component
-public class LoginLogoutCommandHandler implements CommandGatewayAware
+public class LoginLogoutCommandHandler implements CommandGatewayAware,
+		EventBusAware
 {
 	@Autowired
 	private AccountDAO dao;
@@ -45,6 +49,9 @@ public class LoginLogoutCommandHandler implements CommandGatewayAware
 				// track the attempt and whether or not it was a successful
 				account.handleLoginAttempt(success);
 			}
+			eventBus().publish(
+					GenericEventMessage.asEventMessage(new LoginAttemptedEvent(
+							command.getUsername(), success)));
 		}
 
 		// return true if the login attempt was a success, false otherwise

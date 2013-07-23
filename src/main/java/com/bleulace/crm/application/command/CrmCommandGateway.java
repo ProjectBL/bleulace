@@ -6,6 +6,8 @@ public interface CrmCommandGateway
 {
 	public boolean sendAndWait(LoginCommand command);
 
+	public void send(LoginCommand command);
+
 	public void send(LogoutCommand command);
 
 	public void send(ChangePasswordCommand command);

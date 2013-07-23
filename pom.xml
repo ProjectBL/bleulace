@@ -84,6 +84,11 @@
 			<version>${vaadin.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-push</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.vaadin.addon</groupId>
 			<artifactId>jpacontainer</artifactId>
 			<version>3.0.0</version>

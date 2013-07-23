@@ -1,5 +1,7 @@
 package com.bleulace.ui.web;
 
+import com.bleulace.ui.infrastructure.NavigatorFactory;
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
@@ -35,6 +37,7 @@ import com.vaadin.ui.UI;
  */
 
 //@formatter:on
+@Push
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
 public class WebUI extends UI
@@ -44,5 +47,7 @@ public class WebUI extends UI
 	@Override
 	protected void init(VaadinRequest request)
 	{
+		setNavigator(NavigatorFactory.make(this));
+		getNavigator().navigateTo("frontView");
 	}
 }

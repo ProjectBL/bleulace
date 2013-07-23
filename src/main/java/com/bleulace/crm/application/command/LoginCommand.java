@@ -28,7 +28,6 @@ public class LoginCommand
 
 	public LoginCommand(String username, String password, boolean rememberMe)
 	{
-		Assert.noNullElements(new Object[] { username, password, rememberMe });
 		token = new UsernamePasswordToken(username, password, rememberMe);
 	}
 
