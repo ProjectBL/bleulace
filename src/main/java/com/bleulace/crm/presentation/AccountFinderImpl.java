@@ -32,4 +32,10 @@ class AccountFinderImpl extends BasicFinder<Account, AccountDTO> implements
 		}
 		return null;
 	}
+
+	@Override
+	public AccountDTO findByUsername(String username)
+	{
+		return getConverter().convert(dao.findByEmail(username));
+	}
 }

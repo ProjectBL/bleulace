@@ -7,6 +7,10 @@ import com.bleulace.crm.application.event.LoginAttemptedEvent;
 
 privileged aspect LoginAttemptedEvent_Roo_JavaBean {
     
+    public String LoginAttemptedEvent.getUsername() {
+        return this.username;
+    }
+    
     public Boolean LoginAttemptedEvent.getSuccess() {
         return this.success;
     }

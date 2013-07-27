@@ -24,6 +24,7 @@ class SpringViewProvider extends StaticViewProvider
 		}
 		catch (NoSuchBeanDefinitionException e)
 		{
+			e.printStackTrace();
 		}
 		return null;
 	}

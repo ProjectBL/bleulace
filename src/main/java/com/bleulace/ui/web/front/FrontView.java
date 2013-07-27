@@ -1,48 +1,24 @@
 package com.bleulace.ui.web.front;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
-
-import com.bleulace.cqrs.event.EventBusPublisher;
-import com.bleulace.crm.application.command.LoginCommand;
-import com.bleulace.ui.infrastructure.ServerPush;
 import com.bleulace.ui.infrastructure.VaadinView;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.LoginForm;
-import com.vaadin.ui.LoginForm.LoginEvent;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.VerticalLayout;
 
 @VaadinView
-public class FrontView extends CustomComponent implements
-		LoginForm.LoginListener, EventBusPublisher
+public class FrontView extends CustomComponent
 {
-	private static final long serialVersionUID = 5567348045276713883L;
+	private static final long serialVersionUID = 4860935860876735922L;
 
-	FrontView()
+	public FrontView()
 	{
-		LoginForm l = new LoginForm();
-		l.addListener(this);
-		setCompositionRoot(l);
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-	}
-
-	@EventHandler
-	@ServerPush
-	public void on(final LoginEvent event)
-	{
-		Notification.show(event.toString());
-	}
-
-	@Override
-	public void onLogin(LoginEvent event)
-	{
-		post(event);
-		gateway().send(
-				new LoginCommand(event.getLoginParameter("username"), event
-						.getLoginParameter("password")));
+		VerticalLayout layout = new VerticalLayout();
+		layout.addComponent(new LoginBar());
+		setCompositionRoot(layout);
 	}
 }

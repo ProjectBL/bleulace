@@ -5,7 +5,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.UI;
 
-public class NavigatorFactory
+public abstract class NavigatorFactory
 {
 	public static Navigator make(UI ui)
 	{
