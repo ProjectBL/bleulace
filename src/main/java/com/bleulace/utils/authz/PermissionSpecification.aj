@@ -3,7 +3,7 @@ package com.bleulace.utils.authz;
 import org.apache.shiro.authz.Permission;
 
 /**
- * Enables the assembly of dynamic permissions at runtime.
+ * Enables dynamic assembly of permissions (authorizations) at runtime.
  * 
  * @author Arleigh Dickerson
  * 

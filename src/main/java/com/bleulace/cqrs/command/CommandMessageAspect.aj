@@ -5,10 +5,6 @@ import org.apache.shiro.subject.Subject;
 import org.axonframework.commandhandling.CommandMessage;
 
 /**
- * Keeps maven-apt from freaking out when we generate query classes. Maven-apt
- * doesn't like axon's AggregateRoot classes, so we are just marking them for
- * exclusion.
- * 
  * @author Arleigh Dickerson
  * 
  */

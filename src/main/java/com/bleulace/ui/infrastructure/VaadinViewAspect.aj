@@ -10,7 +10,6 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.cqrs.event.EventBusPublisher;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.vaadin.navigator.View;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 aspect VaadinViewAspect

@@ -11,6 +11,7 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
  */
 public class SpringJPAContainerFactory
 {
+	// static calls only
 	private SpringJPAContainerFactory()
 	{
 	}

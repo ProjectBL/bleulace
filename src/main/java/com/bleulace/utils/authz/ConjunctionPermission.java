@@ -4,6 +4,11 @@ import java.util.Collection;
 
 import org.apache.shiro.authz.Permission;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public class ConjunctionPermission implements PermissionSpecification
 {
 	private Permission[] conjunction;

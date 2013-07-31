@@ -4,8 +4,8 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
  * Declares the gateway() method on implementors of the
- * {@link CommandGatewayAware} to allow these clients to unobtrusively access
- * the command gateway interface
+ * {@link CommandGatewayAware} to grant clients unintrusive access to the
+ * command gateway interface
  * 
  * @author Arleigh Dickerson
  * 
@@ -13,7 +13,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 aspect CommandGatewayAwareAspect
 {
 	private static final transient MasterCommandGateway GATEWAY = SpringApplicationContext
-			.get().getBean(MasterCommandGateway.class);
+			.getBean(MasterCommandGateway.class);
 
 	/**
 	 * 

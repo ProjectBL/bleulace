@@ -12,7 +12,7 @@ import org.axonframework.commandhandling.CommandMessage;
  * @author Arleigh Dickerson
  * 
  */
-public class AuthorizationInterceptor implements CommandDispatchInterceptor
+class AuthorizationInterceptor implements CommandDispatchInterceptor
 {
 	@Override
 	public CommandMessage<?> handle(CommandMessage<?> commandMessage)
@@ -21,6 +21,8 @@ public class AuthorizationInterceptor implements CommandDispatchInterceptor
 		if (payload instanceof Permission)
 		{
 			Permission permission = (Permission) payload;
+
+			// throw exception on authorization failure
 			SecurityUtils.getSubject().checkPermission(permission);
 		}
 		return commandMessage;

@@ -2,6 +2,11 @@ package com.bleulace.utils.authz;
 
 import org.apache.shiro.authz.Permission;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public class AndPermission implements PermissionSpecification
 {
 	private final Permission a;

@@ -1,7 +1,7 @@
 /**
  * @author Arleigh Dickerson
  * 
- * Marks axon infrastructures for Q-class generation
+ * Marks axon infrastructure for Q-class generation
  */
 @com.mysema.query.annotations.QueryEntities({
 		org.axonframework.eventsourcing.AbstractEventSourcedEntity.class,

@@ -3,12 +3,15 @@ package com.bleulace.ui.web.front;
 import com.bleulace.ui.infrastructure.VaadinView;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Label;
 
 @VaadinView
 public class FrontView extends CustomComponent
 {
-	private static final long serialVersionUID = 4860935860876735922L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2862278918968899497L;
 
 	public FrontView()
 	{
@@ -17,8 +20,6 @@ public class FrontView extends CustomComponent
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		VerticalLayout layout = new VerticalLayout();
-		layout.addComponent(new LoginBar());
-		setCompositionRoot(layout);
+		setCompositionRoot(new Label("You win!"));
 	}
 }
