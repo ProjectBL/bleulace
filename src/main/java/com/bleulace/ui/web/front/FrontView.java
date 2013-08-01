@@ -20,6 +20,6 @@ public class FrontView extends CustomComponent
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		setCompositionRoot(new Label("You win!"));
+		setCompositionRoot(new LoginBar());
 	}
 }
