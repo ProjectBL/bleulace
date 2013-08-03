@@ -3,8 +3,12 @@ package com.bleulace.ui.web.front;
 import com.bleulace.ui.infrastructure.VaadinView;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @VaadinView
 public class FrontView extends CustomComponent
 {
@@ -20,6 +24,6 @@ public class FrontView extends CustomComponent
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		setCompositionRoot(new LoginBar());
+		setCompositionRoot(new LoginForm());
 	}
 }
