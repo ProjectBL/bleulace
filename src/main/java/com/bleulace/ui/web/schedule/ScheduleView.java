@@ -1,9 +1,10 @@
 package com.bleulace.ui.web.schedule;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+
 import com.bleulace.ui.infrastructure.VaadinView;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Label;
 
 @VaadinView
 public class ScheduleView extends CustomComponent
@@ -15,12 +16,12 @@ public class ScheduleView extends CustomComponent
 
 	public ScheduleView()
 	{
-		setCompositionRoot(new Label("IMPLEMENT ME!"));
 	}
 
+	@RequiresAuthentication
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		return;
+		setCompositionRoot(new CalendarComponent());
 	}
 }

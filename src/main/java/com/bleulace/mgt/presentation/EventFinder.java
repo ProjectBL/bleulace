@@ -6,6 +6,11 @@ import java.util.List;
 import com.bleulace.mgt.domain.ManagementAssignment;
 import com.bleulace.utils.dto.Finder;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 public interface EventFinder extends Finder<EventDTO>
 {
 	public List<EventDTO> findByAccountIdAndRange(String accountId, Date start,

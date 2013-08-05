@@ -161,7 +161,7 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 		}
 	}
 
-	public Double getPercentComplete()
+	private Double getPercentComplete()
 	{
 		int completed = 0;
 		int total = 0;
@@ -175,6 +175,10 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 					completed++;
 				}
 			}
+		}
+		if (completed == 0 && total == 0)
+		{
+			return new Double(1);
 		}
 		return new Double(completed) / new Double(total);
 	}
@@ -200,7 +204,8 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 	@Override
 	public boolean isComplete()
 	{
-		return getPercentComplete().equals(new Double(1));
+		// return getPercentComplete().equals(new Double(1));
+		return false;
 	}
 
 	protected List<Account> getManagers()

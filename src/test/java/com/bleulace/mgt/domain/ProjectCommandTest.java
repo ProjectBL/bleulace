@@ -80,7 +80,7 @@ public class ProjectCommandTest implements CommandGatewayAware
 		Account account = EntityManagerReference.get().getReference(
 				Account.class, addManagerCommand.getAccountId());
 
-		Assert.assertTrue(gateway().sendAndWait(
+		Assert.assertTrue((Boolean) gateway().sendAndWait(
 				new LoginCommand(account.getEmail(), "password")));
 
 		Assert.assertTrue(SecurityUtils.getSubject().isPermitted(

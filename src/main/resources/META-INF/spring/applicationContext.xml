@@ -40,8 +40,6 @@
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
 		<property name="commandBus" ref="commandBus" />
-		<property name="gatewayInterface"
-			value="com.bleulace.cqrs.command.MasterCommandGateway" />
 		<property name="commandDispatchInterceptors">
 			<array>
 				<bean
@@ -94,7 +92,7 @@
 
 	<bean id="entityManagerProvider"
 		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
-		
+
 	<beans profile="dev,prod">
 		<bean id="commandBus"
 			class="org.axonframework.commandhandling.AsynchronousCommandBus">

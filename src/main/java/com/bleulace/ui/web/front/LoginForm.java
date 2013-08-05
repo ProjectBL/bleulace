@@ -1,8 +1,10 @@
 package com.bleulace.ui.web.front;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.crm.application.command.LoginCommand;
-import com.bleulace.crm.presentation.AccountDTO;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -54,16 +56,15 @@ public class LoginForm extends CustomComponent implements ClickListener,
 	@Override
 	public void buttonClick(ClickEvent event)
 	{
-		LoginCommand command = new LoginCommand(usernameField.getValue(),
-				passwordField.getValue(), rememberMeField.getValue());
-		if (gateway().sendAndWait(command))
+		try
 		{
-			Notification.show("Welcome back "
-					+ AccountDTO.FINDER.findByUsername(command.getUsername())
-							.getFirstName());
+			SecurityUtils.getSubject().login(
+					new UsernamePasswordToken(usernameField.getValue(),
+							passwordField.getValue(), rememberMeField
+									.getValue()));
 			UI.getCurrent().getNavigator().navigateTo("scheduleView");
 		}
-		else
+		catch (AuthenticationException e)
 		{
 			Notification.show("Authentication Failure");
 		}

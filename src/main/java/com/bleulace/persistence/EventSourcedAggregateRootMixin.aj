@@ -24,12 +24,19 @@ import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
+import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.cqrs.event.EventBusAware;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
+/**
+ * Copy and paste job...
+ * 
+ * @author Arleigh Dickerson
+ *
+ */
 public interface EventSourcedAggregateRootMixin extends
-		EventSourcedAggregateRoot<String>, EventBusAware, Persistable<String>
+		EventSourcedAggregateRoot<String>, EventBusAware, Persistable<String>,CommandGatewayAware
 {
 	public String getId();
 

@@ -109,14 +109,14 @@ public class CommandFixturesConfig implements CommandGatewayAware
 			CreateAccountCommand createAccountCommand)
 	{
 		gateway().send(createAccountCommand);
-		if (!gateway().sendAndWait(
+		if (!(Boolean) gateway().sendAndWait(
 				new LoginCommand(createAccountCommand.getEmail(), "password")))
 		{
 			throw new AuthenticationException();
 		}
 		CreateGroupCommand command = new CreateGroupCommand();
 		command.setTitle(RandomStringUtils.random(20));
-		gateway().send(new LogoutCommand());
+		gateway().sendAndWait(new LogoutCommand());
 		return command;
 	}
 
@@ -141,7 +141,7 @@ public class CommandFixturesConfig implements CommandGatewayAware
 	{
 		gateway().send(createAccountCommand);
 		gateway().send(createProjectCommand);
-		if (!gateway().sendAndWait(
+		if (!(Boolean) gateway().sendAndWait(
 				new LoginCommand(createAccountCommand.getEmail(),
 						createAccountCommand.getPassword())))
 		{
@@ -150,7 +150,7 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		AddCommentCommand command = new AddCommentCommand(
 				createProjectCommand.getId());
 		command.setContent("foo");
-		gateway().send(new LogoutCommand());
+		gateway().sendAndWait(new LogoutCommand());
 		return command;
 	}
 

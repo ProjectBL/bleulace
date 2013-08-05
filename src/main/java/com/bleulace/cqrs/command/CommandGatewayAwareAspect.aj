@@ -1,5 +1,8 @@
 package com.bleulace.cqrs.command;
 
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
+
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
@@ -12,14 +15,14 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
  */
 aspect CommandGatewayAwareAspect
 {
-	private static final transient MasterCommandGateway GATEWAY = SpringApplicationContext
-			.getBean(MasterCommandGateway.class);
+	private static final transient CommandGateway GATEWAY = SpringApplicationContext
+			.getBean(CommandGateway.class);
 
 	/**
 	 * 
 	 * @return a configured command gateway ready for use
 	 */
-	MasterCommandGateway CommandGatewayAware.gateway()
+	CommandGateway CommandGatewayAware.gateway()
 	{
 		return GATEWAY;
 	}

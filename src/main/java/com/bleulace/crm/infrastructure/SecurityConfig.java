@@ -14,6 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -90,6 +91,7 @@ public class SecurityConfig
 	/**
 	 * @see LifecycleBeanPostProcessor
 	 */
+	@Bean
 	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor()
 	{
 		return new LifecycleBeanPostProcessor();
@@ -102,6 +104,7 @@ public class SecurityConfig
 	 * 1) while using the "test" beans profile 2) while using "dev" or "prod"
 	 * beans profiles and ThreadContext is not available.
 	 * 
+	 * @see ThreadContext
 	 * @param realm
 	 * @return a method invoking factory bean which set the fallback security
 	 *         manager

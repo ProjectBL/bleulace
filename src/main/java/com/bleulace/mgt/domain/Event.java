@@ -50,6 +50,13 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		setId(command.getId());
 		apply(command, new EventCreatedEvent(command.getWindow()));
+
+		String creatorId = command.getCreatorId();
+		if (creatorId != null)
+		{
+			apply(new GuestInvitedEvent(getId(), creatorId));
+			apply(new GuestRSVPEvent(getId(), creatorId, true));
+		}
 	}
 
 	public void on(EventCreatedEvent event)
@@ -128,5 +135,15 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		return window == null ? false : window
 				.equals(new DateWindow(start, end));
+	}
+
+	public Date getStart()
+	{
+		return window.getStart();
+	}
+
+	public Date getEnd()
+	{
+		return window.getEnd();
 	}
 }

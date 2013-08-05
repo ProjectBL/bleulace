@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Scope("session")
+@Scope("prototype")
 @Component
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

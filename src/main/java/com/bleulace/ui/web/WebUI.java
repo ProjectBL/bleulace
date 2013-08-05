@@ -1,5 +1,7 @@
 package com.bleulace.ui.web;
 
+import org.springframework.beans.factory.annotation.Configurable;
+
 import com.bleulace.ui.infrastructure.NavigatorFactory;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -38,6 +40,7 @@ import com.vaadin.ui.UI;
 
 //@formatter:on
 @Push
+@Configurable
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
 public class WebUI extends UI

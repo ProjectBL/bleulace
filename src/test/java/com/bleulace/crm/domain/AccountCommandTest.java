@@ -7,7 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import junit.framework.Assert;
 
-import org.axonframework.commandhandling.CommandBus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
 import com.bleulace.feed.FeedEntry;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -58,7 +56,7 @@ public class AccountCommandTest implements CommandGatewayAware
 	public void testLoginCommand()
 	{
 		gateway().send(command);
-		Assert.assertTrue(gateway().sendAndWait(
+		Assert.assertTrue((Boolean) gateway().sendAndWait(
 				new LoginCommand(command.getEmail(), command.getPassword())));
 	}
 
@@ -69,7 +67,7 @@ public class AccountCommandTest implements CommandGatewayAware
 		String newPassword = "password";
 		Account a = dao.findAll().iterator().next();
 		gateway().send(new ChangePasswordCommand(a.getId(), newPassword));
-		Assert.assertTrue(gateway().sendAndWait(
+		Assert.assertTrue((Boolean) gateway().sendAndWait(
 				new LoginCommand(a.getEmail(), newPassword)));
 	}
 

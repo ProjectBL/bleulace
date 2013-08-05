@@ -17,6 +17,13 @@ import org.springframework.util.Assert;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
+/**
+ * 
+ * Builder for adding entries to newsfeeds
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configurable
 public class NewsFeedEnvelope
 {

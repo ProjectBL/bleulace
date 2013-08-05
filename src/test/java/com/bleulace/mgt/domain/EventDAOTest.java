@@ -24,7 +24,7 @@ import com.bleulace.mgt.application.command.CreateEventCommand;
 @ActiveProfiles("test")
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EventDAOCustomTest implements CommandGatewayAware
+public class EventDAOTest implements CommandGatewayAware
 {
 	@Autowired
 	private EventDAO eventDAO;
@@ -56,6 +56,19 @@ public class EventDAOCustomTest implements CommandGatewayAware
 
 	@Test
 	public void testFindByDates()
+	{
+		gateway().send(createEventCommand);
+
+		Date start = createEventCommand.getStart();
+		Date end = createEventCommand.getEnd();
+		Assert.assertEquals(1, eventDAO.findBetweenDates(start, end).size());
+
+		end = LocalDateTime.fromDateFields(start).minusMinutes(15).toDate();
+		Assert.assertEquals(0, eventDAO.findBetweenDates(start, end).size());
+	}
+
+	@Test
+	public void testFindByDatesAndAttendee()
 	{
 		gateway().send(createEventCommand);
 
