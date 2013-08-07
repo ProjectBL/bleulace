@@ -28,4 +28,9 @@ public class AccountDTO implements Serializable
 	private byte[] image;
 	private String school;
 	private String work;
+
+	public String getCaption()
+	{
+		return firstName + " " + lastName;
+	}
 }
