@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.Days;
+import org.joda.time.LocalDateTime;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.JodaTimeConverters;
+
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
@@ -19,7 +24,7 @@ public interface BasicEventMixin extends EditableCalendarEvent,
 		private String BasicEventMixin.styleName;
 		private transient List<EventChangeListener> BasicEventMixin.listeners = new ArrayList<EventChangeListener>();
 
-		private boolean BasicEventMixin.isAllDay;
+		private static final Converter<Date, LocalDateTime> JODA_CONVERTER = JodaTimeConverters.DateToLocalDateTimeConverter.INSTANCE;
 
 		public String BasicEventMixin.getCaption()
 		{
@@ -48,7 +53,11 @@ public interface BasicEventMixin extends EditableCalendarEvent,
 
 		public boolean BasicEventMixin.isAllDay()
 		{
-			return isAllDay;
+			Days lengthInDays = Days.daysBetween(
+					JODA_CONVERTER.convert(this.getStart()),
+					JODA_CONVERTER.convert(this.getEnd()));
+			return lengthInDays.equals(Days.ONE)
+					|| lengthInDays.isGreaterThan(Days.ONE);
 		}
 
 		public void BasicEventMixin.setCaption(String caption)
@@ -81,12 +90,6 @@ public interface BasicEventMixin extends EditableCalendarEvent,
 			this.fireEventChange();
 		}
 
-		public void BasicEventMixin.setAllDay(boolean isAllDay)
-		{
-			this.isAllDay = isAllDay;
-			this.fireEventChange();
-		}
-
 		public void BasicEventMixin.addEventChangeListener(
 				EventChangeListener listener)
 		{
@@ -97,6 +100,11 @@ public interface BasicEventMixin extends EditableCalendarEvent,
 				EventChangeListener listener)
 		{
 			listeners.remove(listener);
+		}
+
+		public void BasicEventMixin.setAllDay(boolean allDay)
+		{
+			// doesn't do anything
 		}
 
 		void BasicEventMixin.fireEventChange()

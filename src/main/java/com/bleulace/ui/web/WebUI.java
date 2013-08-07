@@ -1,5 +1,7 @@
 package com.bleulace.ui.web;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.bleulace.ui.infrastructure.NavigatorFactory;
@@ -45,12 +47,18 @@ import com.vaadin.ui.UI;
 @Theme("bleulacetheme")
 public class WebUI extends UI
 {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 2191009197124553972L;
 
 	@Override
 	protected void init(VaadinRequest request)
 	{
 		setNavigator(NavigatorFactory.make(this));
-		getNavigator().navigateTo("frontView");
+		SecurityUtils.getSubject().login(
+				new UsernamePasswordToken("arleighdickerson@frugalu.com",
+						"password"));
+		getNavigator().navigateTo("scheduleView");
 	}
 }

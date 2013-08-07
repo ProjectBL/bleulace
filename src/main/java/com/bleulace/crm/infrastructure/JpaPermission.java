@@ -23,6 +23,9 @@ import com.bleulace.crm.domain.Account;
  * A subclass of {@link WildcardPermission} and {@link DomainPermission}
  * configured for persistent storage via JPA.
  * 
+ * Be aware we are using annotatings on METHODS instead of FIELDS for JPA
+ * metadata
+ * 
  * @author Arleigh Dickerson
  * @see Permission
  * 

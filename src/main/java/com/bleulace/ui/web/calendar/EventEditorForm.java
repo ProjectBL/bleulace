@@ -1,4 +1,4 @@
-package com.bleulace.ui.web.schedule;
+package com.bleulace.ui.web.calendar;
 
 import java.util.Date;
 

@@ -21,4 +21,16 @@ public class EventDTO extends ProjectDTO implements BasicEventMixin
 
 	public static final EventFinder FINDER = SpringApplicationContext
 			.getBean(EventFinder.class);
+
+	public boolean isAttending(String accountId)
+	{
+		for (AccountDTO attendee : attendees)
+		{
+			if (attendee.getId().equals(accountId))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

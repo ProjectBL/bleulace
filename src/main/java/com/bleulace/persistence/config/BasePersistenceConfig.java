@@ -67,7 +67,7 @@ public class BasePersistenceConfig
 	{
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("eclipselink.weaving", "static");
-		props.put("eclipselink.ddl-generation.output-mode", "both");
+		props.put("eclipselink.ddl-generation.output-mode", "database");
 		props.put("eclipselink.session.customizer",
 				UUIDSessionCustomizer.class.getName());
 		return props;

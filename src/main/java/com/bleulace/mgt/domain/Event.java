@@ -83,6 +83,7 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		setLocation(event.getLocation());
 		setTitle(event.getTitle());
+		setLocation(event.getLocation());
 		setWindow(event.getWindow());
 	}
 

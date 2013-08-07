@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.application.command.CreateEventCommand;
 import com.bleulace.utils.jpa.DateWindow;
 
 privileged aspect CreateEventCommand_Roo_JavaBean {

@@ -16,6 +16,7 @@ import com.bleulace.crm.domain.Account;
 import com.bleulace.persistence.infrastructure.QueryFactory;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
+//TODO : EventInvitationDTO.FINDER
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "ACCOUNT_ID",
 		"EVENT_ID" }) })

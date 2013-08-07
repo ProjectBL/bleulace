@@ -1,4 +1,4 @@
-package com.bleulace.ui.web.schedule;
+package com.bleulace.ui.web.calendar;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 

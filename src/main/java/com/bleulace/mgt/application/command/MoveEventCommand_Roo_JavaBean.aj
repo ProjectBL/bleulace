@@ -3,6 +3,7 @@
 
 package com.bleulace.mgt.application.command;
 
+import com.bleulace.mgt.application.command.MoveEventCommand;
 import java.util.Date;
 
 privileged aspect MoveEventCommand_Roo_JavaBean {

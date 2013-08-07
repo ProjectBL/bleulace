@@ -1,6 +1,5 @@
-package com.bleulace.ui.web.schedule;
+package com.bleulace.ui.web.calendar;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.MoveEventCommand;
 import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.mgt.presentation.EventDTO;
+import com.bleulace.ui.web.calendar.provider.EventProviderFactory;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Window;
@@ -86,14 +86,8 @@ public class CalendarComponent extends CustomComponent implements
 	@Override
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
-		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
-		List<EventDTO> dtos = EventDTO.FINDER.findByAccountIdAndRange(
-				accountId, startDate, endDate);
-		for (EventDTO dto : dtos)
-		{
-			events.add(dto);
-		}
-		return events;
+		return EventProviderFactory.make(accountId, accountId).getEvents(
+				startDate, endDate);
 	}
 
 	private void buildCalendar()

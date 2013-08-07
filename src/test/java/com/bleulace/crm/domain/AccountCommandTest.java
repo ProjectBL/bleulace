@@ -96,20 +96,24 @@ public class AccountCommandTest implements CommandGatewayAware
 				initiatorId, recipientId);
 		reply.setAccepted(true);
 
+		Assert.assertFalse(areFriends(initiatorId, recipientId));
+
 		gateway().send(reply);
 
 		for (int i = 0; i < 10; i++)
 		{
 			Thread.sleep(100);
-			Account initiator = em.getReference(Account.class, initiatorId);
-			Account recipient = em.getReference(Account.class, recipientId);
-
-			if (initiator.getFriends().contains(recipient)
-					&& recipient.getFriends().contains(initiator))
+			if (areFriends(initiatorId, recipientId))
 			{
 				return;
 			}
 		}
-		Assert.fail();
+		Assert.fail("Friendship status was not achieved.");
+	}
+
+	private boolean areFriends(String initiatorId, String recipientId)
+	{
+		return dao.areFriends(initiatorId, recipientId)
+				&& dao.areFriends(recipientId, initiatorId);
 	}
 }

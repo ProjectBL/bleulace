@@ -29,10 +29,14 @@ public class QueryFactory
 	{
 	}
 
+	public static JPAQuery make()
+	{
+		return new JPAQuery(new QueryFactory().entityManager, TEMPLATES);
+	}
+
 	public static JPAQuery from(EntityPath<?> entity)
 	{
-		return new JPAQuery(new QueryFactory().entityManager, TEMPLATES)
-				.from(entity);
+		return make().from(entity);
 	}
 
 	public static JPADeleteClause delete(EntityPath<?> entity)

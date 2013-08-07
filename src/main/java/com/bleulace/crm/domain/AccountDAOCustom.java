@@ -23,4 +23,6 @@ import org.axonframework.domain.AggregateRoot;
 interface AccountDAOCustom
 {
 	public Account findByEmail(String email);
+
+	public boolean areFriends(String id1, String id2);
 }
