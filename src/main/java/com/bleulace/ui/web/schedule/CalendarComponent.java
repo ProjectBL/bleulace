@@ -5,11 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
-import org.joda.time.LocalDate;
 
+import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.mgt.application.command.MoveEventCommand;
+import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.mgt.presentation.EventDTO;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
@@ -28,59 +31,56 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
  */
 public class CalendarComponent extends CustomComponent implements
 		RangeSelectHandler, EventMoveHandler, EventResizeHandler,
-		EventClickHandler, CalendarEventProvider
+		EventClickHandler, CalendarEventProvider, CommandGatewayAware
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6722940036780750080L;
 
-	private final Calendar calendar;
+	private Calendar calendar;
 
 	private final String accountId;
 
 	public CalendarComponent()
 	{
 		this.accountId = SecurityUtils.getSubject().getId();
-		calendar = new Calendar();
-		calendar.setStartDate(LocalDate.now().toDateMidnight().toDate());
-		calendar.setEndDate(LocalDate.now().plusDays(1).toDateMidnight()
-				.toDate());
-		calendar.setEventProvider(this);
-		// calendar.setHandler((RangeSelectHandler) this);
-		// calendar.setHandler((EventMoveHandler) this);
-		// calendar.setHandler((EventResizeHandler) this);
-		// calendar.setHandler((EventClickHandler) this);
-
-		setCompositionRoot(calendar);
+		buildCalendar();
 	}
 
 	@Override
 	public void eventClick(EventClick event)
 	{
 		EventDTO dto = (EventDTO) event.getCalendarEvent();
-		System.out.println(event);
+		Window editor = new Window();
+		editor.setContent(new EventEditorForm(dto));
+		getUI().addWindow(editor);
+		buildCalendar();
 	}
 
 	@Override
 	public void eventResize(EventResize event)
 	{
 		EventDTO dto = (EventDTO) event.getCalendarEvent();
-		System.out.println(event);
+		gateway().sendAndWait(
+				new ResizeEventCommand(dto.getId(), event.getNewStart(), event
+						.getNewEnd()));
+		buildCalendar();
 	}
 
 	@Override
 	public void eventMove(MoveEvent event)
 	{
 		EventDTO dto = (EventDTO) event.getCalendarEvent();
-		System.out.println(event);
+		gateway().sendAndWait(
+				new MoveEventCommand(dto.getId(), event.getNewStart()));
+		buildCalendar();
 	}
 
 	@Override
 	public void rangeSelect(RangeSelectEvent event)
 	{
-		// TODO Auto-generated method stub
-		System.out.println(event);
+		buildCalendar();
 	}
 
 	@Override
@@ -91,9 +91,19 @@ public class CalendarComponent extends CustomComponent implements
 				accountId, startDate, endDate);
 		for (EventDTO dto : dtos)
 		{
-			System.out.println(dto);
 			events.add(dto);
 		}
 		return events;
+	}
+
+	private void buildCalendar()
+	{
+		calendar = new Calendar();
+		calendar.setEventProvider(this);
+		calendar.setHandler((RangeSelectHandler) this);
+		calendar.setHandler((EventMoveHandler) this);
+		calendar.setHandler((EventResizeHandler) this);
+		calendar.setHandler((EventClickHandler) this);
+		setCompositionRoot(calendar);
 	}
 }

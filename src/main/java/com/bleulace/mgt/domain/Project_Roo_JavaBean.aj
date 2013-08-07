@@ -7,15 +7,14 @@ import com.bleulace.mgt.domain.Bundle;
 import com.bleulace.mgt.domain.JPAManagementPermission;
 import com.bleulace.mgt.domain.Project;
 import java.util.List;
-import java.util.Map;
 
 privileged aspect Project_Roo_JavaBean {
     
-    public Map<String, Bundle> Project.getBundles() {
+    public List<Bundle> Project.getBundles() {
         return this.bundles;
     }
     
-    public void Project.setBundles(Map<String, Bundle> bundles) {
+    public void Project.setBundles(List<Bundle> bundles) {
         this.bundles = bundles;
     }
     

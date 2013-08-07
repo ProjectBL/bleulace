@@ -31,6 +31,5 @@ class EventDAOImpl implements EventDAOCustom
 				.from(e)
 				.where(e.window.start.before(end)
 						.and(e.window.end.after(start))).list(e);
-
 	}
 }

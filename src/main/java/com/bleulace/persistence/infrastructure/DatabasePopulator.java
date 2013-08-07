@@ -14,7 +14,6 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.CreateEventCommand;
-import com.bleulace.mgt.application.command.CreateProjectCommand;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 /**
@@ -49,6 +48,8 @@ public class DatabasePopulator implements
 
 	protected void populate()
 	{
+		int count = 0;
+		int max = 1;
 		for (CreateAccountCommand command : createAccountCommands)
 		{
 			gateway().sendAndWait(command);
@@ -56,14 +57,15 @@ public class DatabasePopulator implements
 					new UsernamePasswordToken(command.getEmail(), command
 							.getPassword()));
 
-			CreateProjectCommand cpc = new CreateProjectCommand();
-			cpc.setTitle("My First Project");
-			gateway().send(cpc);
-
 			CreateEventCommand cec = new CreateEventCommand();
 			cec.setTitle("My First Event");
 			cec.setLocation("An undisclosed location");
 			gateway().send(cec);
+			count++;
+			if (count > max)
+			{
+				break;
+			}
 		}
 	}
 

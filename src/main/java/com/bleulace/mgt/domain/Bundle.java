@@ -18,7 +18,7 @@ public class Bundle extends Project implements EventSourcedEntityMixin,
 	private static final long serialVersionUID = 2492702193852559193L;
 
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(nullable = false, updatable = false)
 	private Project parent;
 
 	private boolean active = true;

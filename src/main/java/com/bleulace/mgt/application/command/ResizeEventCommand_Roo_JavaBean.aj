@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.utils.jpa.DateWindow;
 
 privileged aspect ResizeEventCommand_Roo_JavaBean {

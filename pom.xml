@@ -244,7 +244,7 @@
 		<dependency>
 			<groupId>org.eclipse.persistence</groupId>
 			<artifactId>eclipselink</artifactId>
-			<version>2.4.1</version>
+			<version>2.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -333,6 +333,15 @@
 			<version>1.8.0</version>
 		</dependency>
 	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+		</plugins>
+	</reporting>
 	<build>
 		<plugins>
 			<plugin>
@@ -452,20 +461,8 @@
 					</aspectLibraries>
 					<weaveDependencies>
 						<weaveDependency>
-							<groupId>org.axonframework</groupId>
-							<artifactId>axon-core</artifactId>
-						</weaveDependency>
-						<weaveDependency>
-							<groupId>org.axonframework</groupId>
-							<artifactId>axon-integration</artifactId>
-						</weaveDependency>
-						<weaveDependency>
 							<groupId>org.apache.shiro</groupId>
 							<artifactId>shiro-core</artifactId>
-						</weaveDependency>
-						<weaveDependency>
-							<groupId>joda-time</groupId>
-							<artifactId>joda-time</artifactId>
 						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>
@@ -594,7 +591,7 @@
 					</hostedWebapp>
 					<noServer>true</noServer>
 					<!-- Remove draftCompile when project is ready -->
-					<draftCompile>false</draftCompile>
+					<draftCompile>true</draftCompile>
 					<compileReport>true</compileReport>
 					<style>OBF</style>
 					<strict>true</strict>
@@ -639,7 +636,7 @@
 											vaadin-maven-plugin
 										</artifactId>
 										<versionRange>
-											[7.0.5,)
+											[7.1.1,)
 										</versionRange>
 										<goals>
 											<goal>

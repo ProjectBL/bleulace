@@ -122,6 +122,30 @@
 		</bean>
 	</beans>
 
+	<beans profile="dev,prod">
+		<bean id="commandBus"
+			class="org.axonframework.commandhandling.AsynchronousCommandBus">
+			<constructor-arg ref="executor" />
+			<property name="dispatchInterceptors">
+				<list>
+				</list>
+			</property>
+			<property name="handlerInterceptors">
+				<list>
+					<bean class="org.axonframework.auditing.AuditingInterceptor">
+						<property name="auditDataProvider" ref="auditDataProviderImpl" />
+						<property name="auditLogger" ref="auditLoggerImpl" />
+					</bean>
+				</list>
+			</property>
+			<property name="transactionManager">
+				<bean class="org.axonframework.unitofwork.SpringTransactionManager">
+					<property name="transactionManager" ref="transactionManager"/>
+				</bean>
+			</property>
+		</bean>
+	</beans>
+
 	<beans profile="test">
 		<axon:command-bus id="commandBus"
 			transaction-manager="transactionManager">

@@ -3,7 +3,6 @@
 
 package com.bleulace.mgt.application.command;
 
-import com.bleulace.mgt.application.command.RsvpCommand;
 
 privileged aspect RsvpCommand_Roo_JavaBean {
     

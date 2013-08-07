@@ -3,11 +3,9 @@ package com.bleulace.persistence;
 import java.io.Serializable;
 
 import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.event.EventBusAware;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
  * Enables implementor of {@link EventBusAware} to acquire a reference to the
@@ -19,7 +17,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
  */
 public aspect MessageHandlerAnnotatingAspect
 {
-	interface Command
+	interface Command extends Serializable
 	{
 	}
 

@@ -9,21 +9,24 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.feed.NewsFeedEnvelope;
 import com.bleulace.mgt.application.command.CreateEventCommand;
+import com.bleulace.mgt.application.command.EditEventCommand;
 import com.bleulace.mgt.application.command.InviteGuestsCommand;
 import com.bleulace.mgt.application.command.MoveEventCommand;
 import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.mgt.application.command.RsvpCommand;
 import com.bleulace.mgt.domain.event.EventCreatedEvent;
-import com.bleulace.mgt.domain.event.EventRescheduledEvent;
+import com.bleulace.mgt.domain.event.EventEditedEvent;
 import com.bleulace.mgt.domain.event.GuestInvitedEvent;
 import com.bleulace.mgt.domain.event.GuestRSVPEvent;
 import com.bleulace.mgt.presentation.ScheduleStatus;
 import com.bleulace.persistence.EventSourcedAggregateRootMixin;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.DateWindow;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
@@ -50,7 +53,6 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 	{
 		setId(command.getId());
 		apply(command, new EventCreatedEvent(command.getWindow()));
-
 		String creatorId = command.getCreatorId();
 		if (creatorId != null)
 		{
@@ -70,22 +72,28 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 		}
 	}
 
+	public void handle(EditEventCommand command)
+	{
+		EventEditedEvent event = new EventEditedEvent(command.getWindow());
+		SpringApplicationContext.getBean(ModelMapper.class).map(command, event);
+		apply(event);
+	}
+
+	public void on(EventEditedEvent event)
+	{
+		setLocation(event.getLocation());
+		setTitle(event.getTitle());
+		setWindow(event.getWindow());
+	}
+
 	public void handle(ResizeEventCommand command)
 	{
-		reschedule(command.getStart(), command.getEnd());
+		window = new DateWindow(command.getStart(), command.getEnd());
 	}
 
 	public void handle(MoveEventCommand command)
 	{
-		DateWindow newWindow = window.move(command.getStart());
-		reschedule(newWindow.getStart(), newWindow.getEnd());
-	}
-
-	public void on(EventRescheduledEvent event)
-	{
-		window = event.getWindow();
-		new NewsFeedEnvelope().addAccounts(getManagers())
-				.addAccounts(getAttendees()).withPayloads(this, event).send();
+		window = window.move(command.getStart());
 	}
 
 	public void handle(InviteGuestsCommand command)
@@ -121,20 +129,6 @@ public class Event extends Project implements EventSourcedAggregateRootMixin
 			new NewsFeedEnvelope().addFriends(event.getGuestId())
 					.withPayloads(this, event).send();
 		}
-	}
-
-	private void reschedule(Date start, Date end)
-	{
-		if (!identicalDates(start, end))
-		{
-			apply(new EventRescheduledEvent(new DateWindow(start, end)));
-		}
-	}
-
-	private boolean identicalDates(Date start, Date end)
-	{
-		return window == null ? false : window
-				.equals(new DateWindow(start, end));
 	}
 
 	public Date getStart()

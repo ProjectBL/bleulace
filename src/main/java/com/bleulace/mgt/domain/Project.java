@@ -1,10 +1,8 @@
 package com.bleulace.mgt.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 
 import org.axonframework.eventsourcing.EventSourcedEntity;
@@ -48,9 +45,8 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 
 	@EventSourcedMember
 	@CascadeOnDelete
-	@MapKeyColumn
 	@OneToMany(cascade = CascadeType.ALL)
-	private Map<String, Bundle> bundles = new HashMap<String, Bundle>();
+	private List<Bundle> bundles = new ArrayList<Bundle>();
 
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<JPAManagementPermission> assignees = new ArrayList<JPAManagementPermission>();
@@ -99,7 +95,7 @@ public class Project extends Resource implements EventSourcedAggregateRootMixin
 	public void on(BundleAddedEvent event)
 	{
 		Bundle bundle = new Bundle(this, event);
-		bundles.put(bundle.getId(), bundle);
+		bundles.add(bundle);
 	}
 
 	public void handle(AddTaskCommand command)
