@@ -10,20 +10,14 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.mgt.domain.Event;
 import com.bleulace.mgt.domain.EventDAO;
-import com.bleulace.mgt.domain.EventInvitation;
 import com.bleulace.mgt.domain.EventInvitationDAO;
 import com.bleulace.mgt.domain.ManagementAssignment;
 import com.bleulace.utils.dto.BasicFinder;
-import com.bleulace.utils.dto.DTOConverter;
-import com.bleulace.utils.dto.ModelMappingDTOConverter;
 
 @Component
 public class EventFinderImpl extends BasicFinder<Event, EventDTO> implements
 		EventFinder
 {
-	private final DTOConverter<EventInvitation, EventDTO> invitationConverter = new ModelMappingDTOConverter<EventInvitation, EventDTO>(
-			EventDTO.class);
-
 	@Autowired
 	private EventDAO eventDAO;
 

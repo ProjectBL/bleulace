@@ -132,6 +132,5 @@
 				</bean>
 			</axon:handlerInterceptors>
 		</axon:command-bus>
-
 	</beans>
 </beans>

@@ -2,7 +2,6 @@ package com.bleulace.mgt.presentation;
 
 import java.util.List;
 
-import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
@@ -11,7 +10,6 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.dto.BasicEventMixin;
 
 @RooToString
-@RooEquals
 @RooJavaBean
 public class EventDTO extends ProjectDTO implements BasicEventMixin
 {

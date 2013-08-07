@@ -12,6 +12,7 @@ class SelfEventProcessorProvider implements EventDTOProcessorProvider
 	public EventDTOProcessor[] getProcessors(String ownerId, String viewerId)
 	{
 		List<EventDTOProcessor> processors = new ArrayList<EventDTOProcessor>();
+		processors.add(new SelfColorCodingDTOProcessor(ownerId));
 		return processors.toArray(new EventDTOProcessor[processors.size()]);
 	}
 }

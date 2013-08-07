@@ -40,7 +40,6 @@ public class DatabasePopulator implements
 		if (shouldPopulate())
 		{
 			populate();
-
 		}
 	}
 
@@ -59,9 +58,9 @@ public class DatabasePopulator implements
 		CreateAccountCommand createSomeoneElse = it.next();
 		gateway().sendAndWait(createSomeoneElse);
 
-		// doLogin(createArlsCommand);
-		// makeEvent();
-		// doLogout();
+		doLogin(createArlsCommand);
+		makeEvent();
+		doLogout();
 
 		doLogin(createSomeoneElse);
 		InviteGuestsCommand igc = new InviteGuestsCommand(makeEvent().getId());
