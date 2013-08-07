@@ -10,7 +10,7 @@ import com.bleulace.mgt.domain.JPAManagementPermission;
 import com.bleulace.mgt.domain.Project;
 
 @Component
-public class ProjectPropertyMapping extends PropertyMap<Project, ProjectDTO>
+public class ProjectPropertyMap extends PropertyMap<Project, ProjectDTO>
 {
 	@Autowired
 	private ModelMapper mapper;

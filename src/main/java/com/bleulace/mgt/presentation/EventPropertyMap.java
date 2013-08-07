@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.bleulace.mgt.domain.Event;
 
 @Component
-public class EventPropertyMapping extends PropertyMap<Event, EventDTO>
+public class EventPropertyMap extends PropertyMap<Event, EventDTO>
 {
 	@Override
 	protected void configure()

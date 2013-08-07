@@ -1,5 +1,7 @@
 package com.bleulace.persistence.infrastructure;
 
+import java.util.Iterator;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.CreateEventCommand;
+import com.bleulace.mgt.application.command.InviteGuestsCommand;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 /**
@@ -48,30 +51,49 @@ public class DatabasePopulator implements
 
 	protected void populate()
 	{
-		int count = 0;
-		int max = 1;
-		for (CreateAccountCommand command : createAccountCommands)
-		{
-			gateway().sendAndWait(command);
-			SecurityUtils.getSubject().login(
-					new UsernamePasswordToken(command.getEmail(), command
-							.getPassword()));
+		Iterator<CreateAccountCommand> it = createAccountCommands.iterator();
 
-			CreateEventCommand cec = new CreateEventCommand();
-			cec.setTitle("My First Event");
-			cec.setLocation("An undisclosed location");
-			gateway().send(cec);
-			count++;
-			if (count > max)
-			{
-				break;
-			}
-		}
+		CreateAccountCommand createArlsCommand = it.next();
+		gateway().sendAndWait(createArlsCommand);
+
+		CreateAccountCommand createSomeoneElse = it.next();
+		gateway().sendAndWait(createSomeoneElse);
+
+		// doLogin(createArlsCommand);
+		// makeEvent();
+		// doLogout();
+
+		doLogin(createSomeoneElse);
+		InviteGuestsCommand igc = new InviteGuestsCommand(makeEvent().getId());
+		igc.getGuestIds().add(createArlsCommand.getId());
+		gateway().sendAndWait(igc);
+		doLogout();
 	}
 
 	private Long countAccounts()
 	{
 		return new SimpleJpaRepository<Account, String>(Account.class,
 				EntityManagerReference.get()).count();
+	}
+
+	private CreateEventCommand makeEvent()
+	{
+		CreateEventCommand cec = new CreateEventCommand();
+		cec.setTitle("My First Event");
+		cec.setLocation("An undisclosed location");
+		gateway().sendAndWait(cec);
+		return cec;
+	}
+
+	private void doLogout()
+	{
+		SecurityUtils.getSubject().logout();
+	}
+
+	private void doLogin(CreateAccountCommand command)
+	{
+		SecurityUtils.getSubject().login(
+				new UsernamePasswordToken(command.getEmail(), command
+						.getPassword()));
 	}
 }

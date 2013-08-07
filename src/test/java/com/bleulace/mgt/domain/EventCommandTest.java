@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import junit.framework.Assert;
 
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class EventCommandTest implements CommandGatewayAware
 
 	@Autowired
 	private RsvpCommand rsvpCommand;
+
+	@Autowired
+	private EventInvitationDAO invitationDAO;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -99,8 +103,20 @@ public class EventCommandTest implements CommandGatewayAware
 	public void testInviteGuestsCommand()
 	{
 		gateway().send(inviteGuestsCommand);
-		Assert.assertNotNull(EventInvitation.find(inviteGuestsCommand
-				.getGuestIds().iterator().next(), inviteGuestsCommand.getId()));
+
+		String guestId = inviteGuestsCommand.getGuestIds().iterator().next();
+		String eventId = inviteGuestsCommand.getId();
+
+		Assert.assertNotNull(EventInvitation.find(guestId, eventId));
+
+		// party like it's 1970
+		Date start = new LocalDate(0).toDate();
+
+		// party's over
+		Date end = LocalDate.now().plusYears(30).toDate();
+
+		Assert.assertTrue(invitationDAO.findByByAttendeeAndDates(guestId,
+				start, end).size() > 0);
 	}
 
 	@Test

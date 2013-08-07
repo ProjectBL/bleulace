@@ -142,6 +142,7 @@ public class Account implements EventSourcedAggregateRootMixin
 
 	public void on(FriendRequestSentEvent event)
 	{
+		// TODO : newsfeeds
 	}
 
 	public void handle(ReplyToFriendRequestCommand command)

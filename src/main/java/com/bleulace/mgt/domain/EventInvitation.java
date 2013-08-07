@@ -33,7 +33,7 @@ public class EventInvitation extends AbstractPersistable<Long>
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated = new Date();
 
-	EventInvitation(Account invitee, Event event)
+	public EventInvitation(Account invitee, Event event)
 	{
 		Assert.noNullElements(new Object[] { invitee, event });
 		this.account = invitee;
@@ -55,8 +55,7 @@ public class EventInvitation extends AbstractPersistable<Long>
 		return dateCreated;
 	}
 
-	@SuppressWarnings("unused")
-	private EventInvitation()
+	public EventInvitation()
 	{
 	}
 

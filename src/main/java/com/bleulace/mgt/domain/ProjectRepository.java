@@ -9,7 +9,6 @@ import org.axonframework.eventsourcing.HybridJpaRepository;
 import org.axonframework.eventstore.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProjectRepository extends HybridJpaRepository<Project>
@@ -30,7 +29,6 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 	}
 
 	@Override
-	@Transactional(readOnly = true)
 	protected Project doLoad(Object aggregateIdentifier, Long expectedVersion)
 	{
 		aggregateIdentifier = getProjectIdentifier((String) aggregateIdentifier);
@@ -65,14 +63,12 @@ public class ProjectRepository extends HybridJpaRepository<Project>
 	}
 
 	@Override
-	@Transactional
 	protected void doDeleteWithLock(Project aggregate)
 	{
 		super.doDeleteWithLock(aggregate);
 	}
 
 	@Override
-	@Transactional
 	protected void doSaveWithLock(Project aggregate)
 	{
 		super.doSaveWithLock(aggregate);

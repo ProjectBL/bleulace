@@ -18,7 +18,7 @@ public class BasicFinder<S extends Persistable<String>, T> implements Finder<T>
 
 	public BasicFinder(Class<S> sourceClass, Class<T> dtoClass)
 	{
-		this.converter = new DTOConverterImpl<S, T>(dtoClass);
+		this.converter = new ModelMappingDTOConverter<S, T>(dtoClass);
 		repository = new SimpleJpaRepository<S, String>(sourceClass,
 				EntityManagerReference.get());
 	}

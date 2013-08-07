@@ -93,6 +93,16 @@
 	<bean id="entityManagerProvider"
 		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
 
+
+
+	<int:channel id="eventBusChannel">
+		<int:dispatcher task-executor="executor" />
+	</int:channel>
+
+	<bean id="eventBus"
+		class="org.axonframework.integration.eventbus.SpringIntegrationEventBus">
+		<property name="channel" ref="eventBusChannel" />
+	</bean>
 	<beans profile="dev,prod">
 		<bean id="commandBus"
 			class="org.axonframework.commandhandling.AsynchronousCommandBus">
@@ -111,41 +121,7 @@
 				</util:list>
 			</property>
 		</bean>
-
-		<int:channel id="eventBusChannel">
-			<int:dispatcher task-executor="executor" />
-		</int:channel>
-
-		<bean id="eventBus"
-			class="org.axonframework.integration.eventbus.SpringIntegrationEventBus">
-			<property name="channel" ref="eventBusChannel" />
-		</bean>
 	</beans>
-
-	<beans profile="dev,prod">
-		<bean id="commandBus"
-			class="org.axonframework.commandhandling.AsynchronousCommandBus">
-			<constructor-arg ref="executor" />
-			<property name="dispatchInterceptors">
-				<list>
-				</list>
-			</property>
-			<property name="handlerInterceptors">
-				<list>
-					<bean class="org.axonframework.auditing.AuditingInterceptor">
-						<property name="auditDataProvider" ref="auditDataProviderImpl" />
-						<property name="auditLogger" ref="auditLoggerImpl" />
-					</bean>
-				</list>
-			</property>
-			<property name="transactionManager">
-				<bean class="org.axonframework.unitofwork.SpringTransactionManager">
-					<property name="transactionManager" ref="transactionManager"/>
-				</bean>
-			</property>
-		</bean>
-	</beans>
-
 	<beans profile="test">
 		<axon:command-bus id="commandBus"
 			transaction-manager="transactionManager">
@@ -157,6 +133,5 @@
 			</axon:handlerInterceptors>
 		</axon:command-bus>
 
-		<axon:event-bus id="eventBus" />
 	</beans>
 </beans>

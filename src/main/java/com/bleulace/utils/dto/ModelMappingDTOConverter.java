@@ -7,11 +7,11 @@ import org.modelmapper.ModelMapper;
 
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-class DTOConverterImpl<S, T> implements DTOConverter<S, T>
+public class ModelMappingDTOConverter<S, T> implements DTOConverter<S, T>
 {
 	private Class<T> clazz;
 
-	DTOConverterImpl(Class<T> clazz)
+	public ModelMappingDTOConverter(Class<T> clazz)
 	{
 		this.clazz = clazz;
 	}
