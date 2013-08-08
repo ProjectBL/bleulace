@@ -4,6 +4,8 @@
 package com.bleulace.crm.presentation;
 
 import com.bleulace.crm.presentation.AccountDTO;
+import com.bleulace.crm.presentation.StatusUpdateDTO;
+import java.util.List;
 
 privileged aspect AccountDTO_Roo_JavaBean {
     
@@ -61,6 +63,14 @@ privileged aspect AccountDTO_Roo_JavaBean {
     
     public void AccountDTO.setWork(String work) {
         this.work = work;
+    }
+    
+    public List<StatusUpdateDTO> AccountDTO.getStatusUpdates() {
+        return this.statusUpdates;
+    }
+    
+    public void AccountDTO.setStatusUpdates(List<StatusUpdateDTO> statusUpdates) {
+        this.statusUpdates = statusUpdates;
     }
     
 }

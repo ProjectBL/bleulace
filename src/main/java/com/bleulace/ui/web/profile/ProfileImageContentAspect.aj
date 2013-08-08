@@ -7,8 +7,9 @@ import com.vaadin.ui.Image;
 /**
  * @author Arleigh Dickerson
  * 
+ * TODO : default picture for female users
  */
-aspect DefaultImageContentAspect
+aspect ProfileImageContentAspect
 {
 	pointcut onSetImageSource(Image image, Resource source) : 
 		call(public void Image.setSource(Resource))

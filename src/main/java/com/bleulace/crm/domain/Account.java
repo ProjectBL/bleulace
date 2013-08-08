@@ -3,24 +3,31 @@ package com.bleulace.crm.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.axonframework.eventsourcing.annotation.EventSourcedMember;
+import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.crm.application.command.ChangePasswordCommand;
 import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.application.command.PostStatusUpdateCommand;
 import com.bleulace.crm.application.command.ReplyToFriendRequestCommand;
 import com.bleulace.crm.application.command.SendFriendRequestCommand;
 import com.bleulace.crm.application.event.FriendRequestSentEvent;
 import com.bleulace.crm.application.event.LoggedOutEvent;
 import com.bleulace.crm.application.event.LoginAttemptedEvent;
 import com.bleulace.crm.application.event.RepliedToFriendRequestEvent;
+import com.bleulace.crm.application.event.StatusUpdatePostedEvent;
 import com.bleulace.crm.domain.event.AccountCreatedEvent;
 import com.bleulace.crm.domain.event.AccountInfoUpdatedEvent;
 import com.bleulace.crm.domain.event.PasswordChangedEvent;
@@ -60,6 +67,12 @@ public class Account implements EventSourcedAggregateRootMixin
 
 	@ManyToMany
 	private List<Account> friends = new ArrayList<Account>();
+
+	@OrderBy("message.datePosted DESC")
+	@EventSourcedMember
+	@CascadeOnDelete
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "message.author")
+	private List<StatusUpdate> statusUpdates = new ArrayList<StatusUpdate>();
 
 	Account()
 	{
@@ -158,5 +171,16 @@ public class Account implements EventSourcedAggregateRootMixin
 					.addFriends(event.getInitiatorId())
 					.withPayloads(event, this).send();
 		}
+	}
+
+	public void handle(PostStatusUpdateCommand command)
+	{
+		apply(command, StatusUpdatePostedEvent.class);
+	}
+
+	public void on(StatusUpdatePostedEvent event)
+	{
+		statusUpdates.add(new StatusUpdate(event.getId(), this, event
+				.getContent()));
 	}
 }

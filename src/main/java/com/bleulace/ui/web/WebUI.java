@@ -56,9 +56,10 @@ public class WebUI extends UI
 	protected void init(VaadinRequest request)
 	{
 		setNavigator(NavigatorFactory.make(this));
-		SecurityUtils.getSubject().login(
-				new UsernamePasswordToken("arleighdickerson@frugalu.com",
+		SecurityUtils.getSubject()
+				.login(new UsernamePasswordToken("hamidbundu@facebook.com",
 						"password"));
-		getNavigator().navigateTo("scheduleView");
+		getNavigator().navigateTo(
+				"profileView/" + SecurityUtils.getSubject().getPrincipal());
 	}
 }

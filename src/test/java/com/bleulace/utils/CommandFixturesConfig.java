@@ -16,6 +16,7 @@ import com.bleulace.crm.application.command.CreateGroupCommand;
 import com.bleulace.crm.application.command.JoinGroupCommand;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.application.command.LogoutCommand;
+import com.bleulace.crm.application.command.PostStatusUpdateCommand;
 import com.bleulace.mgt.application.command.AddBundleCommand;
 import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AddTaskCommand;
@@ -131,6 +132,16 @@ public class CommandFixturesConfig implements CommandGatewayAware
 		JoinGroupCommand command = new JoinGroupCommand(
 				createGroupCommand.getId(), createAccountCommand.getId());
 		return command;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public PostStatusUpdateCommand postStatusUpdateCommand(
+			CreateAccountCommand createAccountCommand)
+	{
+		gateway().send(createAccountCommand);
+		return new PostStatusUpdateCommand(createAccountCommand.getId(),
+				"Lorem ipsum dolor.");
 	}
 
 	@Bean

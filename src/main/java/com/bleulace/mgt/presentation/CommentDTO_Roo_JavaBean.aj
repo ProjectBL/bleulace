@@ -3,41 +3,18 @@
 
 package com.bleulace.mgt.presentation;
 
+import com.bleulace.crm.presentation.AccountDTO;
 import com.bleulace.mgt.presentation.CommentDTO;
 import java.util.Date;
 
 privileged aspect CommentDTO_Roo_JavaBean {
     
-    public String CommentDTO.getEmail() {
-        return this.email;
+    public AccountDTO CommentDTO.getAuthor() {
+        return this.author;
     }
     
-    public void CommentDTO.setEmail(String email) {
-        this.email = email;
-    }
-    
-    public String CommentDTO.getFirstName() {
-        return this.firstName;
-    }
-    
-    public void CommentDTO.setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    
-    public String CommentDTO.getLastName() {
-        return this.lastName;
-    }
-    
-    public void CommentDTO.setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    
-    public byte[] CommentDTO.getImage() {
-        return this.image;
-    }
-    
-    public void CommentDTO.setImage(byte[] image) {
-        this.image = image;
+    public void CommentDTO.setAuthor(AccountDTO author) {
+        this.author = author;
     }
     
     public String CommentDTO.getContent() {

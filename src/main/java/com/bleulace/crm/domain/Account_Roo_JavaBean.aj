@@ -4,6 +4,7 @@
 package com.bleulace.crm.domain;
 
 import com.bleulace.crm.domain.Account;
+import com.bleulace.crm.domain.StatusUpdate;
 import java.util.List;
 
 privileged aspect Account_Roo_JavaBean {
@@ -86,6 +87,14 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setFriends(List<Account> friends) {
         this.friends = friends;
+    }
+    
+    public List<StatusUpdate> Account.getStatusUpdates() {
+        return this.statusUpdates;
+    }
+    
+    public void Account.setStatusUpdates(List<StatusUpdate> statusUpdates) {
+        this.statusUpdates = statusUpdates;
     }
     
 }

@@ -3,6 +3,7 @@ package com.bleulace.mgt.domain;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.OrderBy;
 
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.domain.event.CommentAddedEvent;
@@ -18,6 +19,7 @@ public interface Commentable
 	{
 		static aspect Impl
 		{
+			@OrderBy("datePosted ASC")
 			@ElementCollection
 			private List<Comment> Mixin.comments;
 

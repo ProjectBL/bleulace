@@ -12,13 +12,18 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.TabSheet;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Configuration
 class ProfileConfig
 {
 	static final String PROFILE_IMAGE_DATA = "profileImage";
 
 	//@formatter:off
-	private static final String[] CAPTIONS = new String[] {
+	private static final String[] TABSHEET_CAPTIONS = new String[] {
 		"Status",
 		"Image",
 		"Playlist",
@@ -29,8 +34,8 @@ class ProfileConfig
 	};
 	//@formatter:on
 
-	private static final Integer IMAGE_WIDTH = 60;
-	private static final Integer IMAGE_HEIGHT = 60;
+	private static final Integer IMAGE_WIDTH = 300;
+	private static final Integer IMAGE_HEIGHT = 300;
 
 	@Bean
 	@Qualifier("profileTabSheet")
@@ -38,7 +43,7 @@ class ProfileConfig
 	public TabSheet profileTabSheet()
 	{
 		TabSheet bean = new TabSheet();
-		for (String caption : CAPTIONS)
+		for (String caption : TABSHEET_CAPTIONS)
 		{
 			bean.addTab(new CustomComponent(), caption);
 		}
@@ -46,7 +51,7 @@ class ProfileConfig
 	}
 
 	/**
-	 * @see DefaultImageContentAspect
+	 * @see ProfileImageContentAspect
 	 */
 	@Bean
 	@Qualifier("profileImage")
@@ -61,8 +66,7 @@ class ProfileConfig
 		return bean;
 	}
 
-	// I believe using singleton RESOURCE instances is OK, although singleton
-	// Component instances are not
+	// singleton
 	@Bean
 	@Qualifier("defaultProfileImageResource")
 	public Resource defaultProfileImageResource()

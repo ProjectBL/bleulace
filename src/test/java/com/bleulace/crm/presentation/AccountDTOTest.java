@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.crm.application.command.CreateAccountCommand;
+import com.bleulace.crm.application.command.PostStatusUpdateCommand;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
@@ -19,14 +19,15 @@ import com.bleulace.crm.application.command.CreateAccountCommand;
 public class AccountDTOTest implements CommandGatewayAware
 {
 	@Autowired
-	private CreateAccountCommand createAccountCommand;
+	private PostStatusUpdateCommand postStatusUpdateCommand;
 
 	@Test
 	public void testAccountDTO()
 	{
-		gateway().send(createAccountCommand);
-		AccountDTO dto = AccountDTO.FINDER.findById(createAccountCommand
-				.getId());
+		gateway().send(postStatusUpdateCommand);
+		AccountDTO dto = AccountDTO.FINDER.findById(postStatusUpdateCommand
+				.getAccountId());
 		Assert.assertNotNull(dto);
+		Assert.assertTrue(dto.getStatusUpdates().size() > 0);
 	}
 }

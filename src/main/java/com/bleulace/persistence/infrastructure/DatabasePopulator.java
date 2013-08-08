@@ -52,6 +52,8 @@ public class DatabasePopulator implements
 	{
 		Iterator<CreateAccountCommand> it = createAccountCommands.iterator();
 
+		it.next();
+
 		CreateAccountCommand createArlsCommand = it.next();
 		gateway().sendAndWait(createArlsCommand);
 
