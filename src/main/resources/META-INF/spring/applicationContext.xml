@@ -18,7 +18,9 @@
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
 	<context:property-placeholder location="classpath*:META-INF/spring/*.properties" />
+
 	<context:spring-configured />
 
 	<jpa:repositories base-package="com.bleulace"
@@ -38,7 +40,8 @@
 	<axon:annotation-config />
 
 	<bean
-		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean">
+		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean"
+		id="commandGateway">
 		<property name="commandBus" ref="commandBus" />
 		<property name="commandDispatchInterceptors">
 			<array>
@@ -53,84 +56,69 @@
 	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
 
 	<axon:jpa-saga-repository id="sagaRepository"
-		entity-manager-provider="entityManagerProvider" />
+		entity-manager-provider="entityManagerProvider" resource-injector="nullResourceInjector" />
 
 	<axon:saga-manager id="sagaManager" event-bus="eventBus"
 		suppress-exceptions="false">
-		<axon:async executor="executor" transaction-manager="transactionManager" />
+		<axon:async executor="executor" transaction-manager="transactionManager"
+			processor-count="4" />
 		<axon:types>
-			com.bleulace.crm.domain.FriendRequestSaga
-			com.bleulace.mgt.domain.EventInvitationSaga
+		<!-- com.bleulace.crm.domain.FriendRequestSaga
+			com.bleulace.mgt.domain.EventInvitationSaga  -->
 		</axon:types>
 	</axon:saga-manager>
 
-	<axon:aggregate-command-handler id="accountCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.Account"
-		repository="accountRepository" />
-
-	<axon:jpa-repository id="accountRepository"
-		aggregate-type="com.bleulace.crm.domain.Account"
-		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
-		event-store="eventStore" />
-
-	<axon:aggregate-command-handler id="groupCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.crm.domain.AccountGroup"
-		repository="groupRepository" />
-
-	<axon:jpa-repository id="groupRepository"
-		aggregate-type="com.bleulace.crm.domain.AccountGroup"
-		entity-manager-provider="entityManagerProvider" event-bus="eventBus"
-		event-store="eventStore" />
-
-	<axon:aggregate-command-handler id="projectCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.Project"
-		repository="projectRepository" />
-
-	<axon:aggregate-command-handler id="mgtEventCommandHandler"
-		command-bus="commandBus" aggregate-type="com.bleulace.mgt.domain.Event"
-		repository="projectRepository" />
-
 	<bean id="entityManagerProvider"
 		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
-
-
 
 	<int:channel id="eventBusChannel">
 		<int:dispatcher task-executor="executor" />
 	</int:channel>
 
-	<bean id="eventBus"
-		class="org.axonframework.integration.eventbus.SpringIntegrationEventBus">
-		<property name="channel" ref="eventBusChannel" />
-	</bean>
-	<beans profile="dev,prod">
-		<bean id="commandBus"
-			class="org.axonframework.commandhandling.AsynchronousCommandBus">
-			<constructor-arg ref="executor" />
-			<property name="transactionManager">
-				<bean class="org.axonframework.unitofwork.SpringTransactionManager">
-					<constructor-arg ref="transactionManager" />
-				</bean>
-			</property>
-			<property name="handlerInterceptors">
-				<util:list>
-					<bean class="org.axonframework.auditing.AuditingInterceptor">
-						<property name="auditDataProvider" ref="auditDataProviderImpl" />
-						<property name="auditLogger" ref="auditLoggerImpl" />
-					</bean>
-				</util:list>
-			</property>
-		</bean>
-	</beans>
-	<beans profile="test">
-		<axon:command-bus id="commandBus"
-			transaction-manager="transactionManager">
-			<axon:handlerInterceptors>
+
+	<axon:aggregate-command-handler
+		command-bus="commandBus" aggregate-type="com.bleulace.domain.crm.model.Account"
+		repository="resourceRepository" />
+	<axon:aggregate-command-handler
+		command-bus="commandBus" aggregate-type="com.bleulace.domain.crm.model.AccountGroup"
+		repository="resourceRepository" />
+
+	<bean id="abstractCommandBus" abstract="true">
+		<property name="transactionManager">
+			<bean class="org.axonframework.unitofwork.SpringTransactionManager">
+				<constructor-arg ref="transactionManager" />
+			</bean>
+		</property>
+		<property name="handlerInterceptors">
+			<util:list>
 				<bean class="org.axonframework.auditing.AuditingInterceptor">
 					<property name="auditDataProvider" ref="auditDataProviderImpl" />
 					<property name="auditLogger" ref="auditLoggerImpl" />
 				</bean>
-			</axon:handlerInterceptors>
-		</axon:command-bus>
+			</util:list>
+		</property>
+		<property name="dispatchInterceptors">
+			<util:list>
+				<bean class="com.bleulace.cqrs.command.CommandMetaDataInterceptor" />
+			</util:list>
+		</property>
+	</bean>
+
+	<beans profile="dev,prod">
+		<bean id="eventBus"
+			class="org.axonframework.integration.eventbus.SpringIntegrationEventBus">
+			<property name="channel" ref="eventBusChannel" />
+		</bean>
+		<bean id="commandBus"
+			class="org.axonframework.commandhandling.AsynchronousCommandBus"
+			parent="abstractCommandBus">
+			<constructor-arg ref="executor" />
+		</bean>
+	</beans>
+
+	<beans profile="test">
+		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
+			parent="abstractCommandBus" />
+		<axon:event-bus id="eventBus" />
 	</beans>
 </beans>

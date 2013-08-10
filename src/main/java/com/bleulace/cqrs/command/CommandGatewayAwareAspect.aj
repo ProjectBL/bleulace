@@ -1,7 +1,9 @@
 package com.bleulace.cqrs.command;
 
+import java.util.concurrent.TimeUnit;
+
+import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
@@ -13,17 +15,31 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
  * @author Arleigh Dickerson
  * 
  */
+@SuppressWarnings("unchecked")
 aspect CommandGatewayAwareAspect
 {
 	private static final transient CommandGateway GATEWAY = SpringApplicationContext
 			.getBean(CommandGateway.class);
 
-	/**
-	 * 
-	 * @return a configured command gateway ready for use
-	 */
-	CommandGateway CommandGatewayAware.gateway()
+	public <R> void CommandGatewayAware.send(Object command,
+			CommandCallback<R> callback)
 	{
-		return GATEWAY;
+		GATEWAY.send(command, callback);
+	}
+
+	public void CommandGatewayAware.send(Object command)
+	{
+		GATEWAY.send(command);
+	}
+
+	public <R> R CommandGatewayAware.sendAndWait(Object command)
+	{
+		return (R) GATEWAY.sendAndWait(command);
+	}
+
+	public <R> R CommandGatewayAware.sendAndWait(Object command, long timeout,
+			TimeUnit unit)
+	{
+		return (R) GATEWAY.sendAndWait(command, timeout, unit);
 	}
 }

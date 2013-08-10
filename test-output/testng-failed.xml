@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [Default suite]">
+  <test name="Default test(failed)">
+    <classes>
+      <class name="com.bleulace.domain.crm.command.GroupCommandTest">
+        <methods>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="createGroup"/>
+          <include name="logOutUser"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="logInUser"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.crm.command.GroupCommandTest -->
+      <class name="com.bleulace.domain.crm.command.FriendCommandTest">
+        <methods>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="logOutUser"/>
+          <include name="createSecondAccount"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="logInUser"/>
+          <include name="addFriend"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.crm.command.FriendCommandTest -->
+    </classes>
+  </test> <!-- Default test(failed) -->
+</suite> <!-- Failed suite [Default suite] -->

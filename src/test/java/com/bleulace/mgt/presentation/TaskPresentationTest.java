@@ -12,7 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.mgt.application.command.AddTaskCommand;
+import com.bleulace.domain.task.command.AddTaskCommand;
+import com.bleulace.domain.task.presentation.TaskDTO;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")

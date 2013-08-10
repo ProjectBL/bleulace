@@ -12,6 +12,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.RsvpCommand;
 import com.bleulace.mgt.domain.SchedulingConflictException;
+import com.bleulace.mgt.presentation.EventDTO;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")

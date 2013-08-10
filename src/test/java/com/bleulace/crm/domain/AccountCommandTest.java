@@ -115,16 +115,6 @@ public class AccountCommandTest implements CommandGatewayAware
 		Assert.fail("Friendship status was not achieved.");
 	}
 
-	@Test
-	public void testPostStatusUpdateCommand()
-	{
-		String accountId = postStatusUpdateCommand.getAccountId();
-		long before = getAccount(accountId).getStatusUpdates().size();
-		gateway().send(postStatusUpdateCommand);
-		long after = getAccount(accountId).getStatusUpdates().size();
-		Assert.assertEquals(before + 1, after);
-	}
-
 	private boolean areFriends(String initiatorId, String recipientId)
 	{
 		return dao.areFriends(initiatorId, recipientId)

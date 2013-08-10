@@ -20,6 +20,7 @@ import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.mgt.application.command.InviteGuestsCommand;
 import com.bleulace.mgt.application.command.RsvpCommand;
 import com.bleulace.mgt.domain.EventDAO;
+import com.bleulace.mgt.presentation.ScheduleStatus;
 import com.bleulace.utils.jpa.DateWindow;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")

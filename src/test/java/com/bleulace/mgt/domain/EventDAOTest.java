@@ -18,6 +18,8 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.CreateAccountCommand;
 import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.CreateEventCommand;
+import com.bleulace.mgt.domain.EventDAO;
+import com.bleulace.mgt.domain.ManagementAssignment;
 
 @Transactional
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")

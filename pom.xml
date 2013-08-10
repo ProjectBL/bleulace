@@ -6,8 +6,8 @@
 	<packaging>war</packaging>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<properties>
-		<aspectj.version>1.6.12</aspectj.version>
-		<java.version>1.6</java.version>
+		<aspectj.version>1.7.3</aspectj.version>
+		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<roo.version>1.2.3.RELEASE</roo.version>
 		<slf4j.version>1.7.2</slf4j.version>
@@ -100,9 +100,9 @@
 		</dependency>
 		<!-- General dependencies for standard applications -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.3.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -381,11 +381,6 @@
 							<processors>
 								<processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
 							</processors>
-							<excludes>
-								<exclude>com.itella.ptp.model.Revision</exclude>
-							</excludes>
-							<!-- <options> <querydsl.excludedPackages>org.axonframework</querydsl.excludedPackages> 
-								</options> -->
 						</configuration>
 					</execution>
 				</executions>

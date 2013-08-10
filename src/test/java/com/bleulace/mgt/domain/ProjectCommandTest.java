@@ -16,13 +16,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
+import com.bleulace.commenting.command.CommentCommand;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.crm.application.command.LoginCommand;
 import com.bleulace.crm.domain.Account;
 import com.bleulace.mgt.application.command.AddBundleCommand;
-import com.bleulace.mgt.application.command.AddCommentCommand;
 import com.bleulace.mgt.application.command.AssignManagerCommand;
 import com.bleulace.mgt.application.command.CreateProjectCommand;
+import com.bleulace.mgt.domain.Project;
+import com.bleulace.mgt.domain.SingleManagementPermission;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
@@ -41,7 +43,7 @@ public class ProjectCommandTest implements CommandGatewayAware
 	private AddBundleCommand addBundleCommand;
 
 	@Autowired
-	private AddCommentCommand addCommentCommand;
+	private CommentCommand addCommentCommand;
 
 	private JpaRepository<Project, String> finder;
 

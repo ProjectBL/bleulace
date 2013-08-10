@@ -1,5 +1,7 @@
 package com.bleulace.cqrs.command;
 
+import org.axonframework.commandhandling.gateway.CommandGateway;
+
 /**
  * Implementors of this mixin will have access to the Bleulace command gateway,
  * {@link MasterCommandGateway}, by calling Self::gateway()
@@ -8,6 +10,6 @@ package com.bleulace.cqrs.command;
  * @author Arleigh Dickerson
  * 
  */
-public interface CommandGatewayAware
+public interface CommandGatewayAware extends CommandGateway
 {
 }

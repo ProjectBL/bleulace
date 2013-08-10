@@ -1,6 +1,5 @@
 package com.bleulace.utils.jpa;
 
-import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 
 public aspect JodaTimeCompareAspect

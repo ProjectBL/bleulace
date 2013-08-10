@@ -11,6 +11,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.mgt.application.command.AddBundleCommand;
+import com.bleulace.mgt.presentation.ProjectDTO;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")

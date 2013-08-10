@@ -1,7 +1,6 @@
 package com.bleulace.cqrs.event;
 
 import org.axonframework.domain.GenericEventMessage;
-import org.axonframework.domain.MetaData;
 import org.axonframework.eventhandling.EventBus;
 
 import com.bleulace.cqrs.ShiroMetaData;

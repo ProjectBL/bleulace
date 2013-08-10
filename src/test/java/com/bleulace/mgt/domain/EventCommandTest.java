@@ -25,6 +25,10 @@ import com.bleulace.mgt.application.command.InviteGuestsCommand;
 import com.bleulace.mgt.application.command.MoveEventCommand;
 import com.bleulace.mgt.application.command.ResizeEventCommand;
 import com.bleulace.mgt.application.command.RsvpCommand;
+import com.bleulace.mgt.domain.Event;
+import com.bleulace.mgt.domain.EventInvitation;
+import com.bleulace.mgt.domain.EventInvitationDAO;
+import com.bleulace.mgt.domain.SchedulingConflictException;
 
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")

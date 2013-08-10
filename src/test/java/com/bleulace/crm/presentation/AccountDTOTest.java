@@ -1,7 +1,6 @@
 package com.bleulace.crm.presentation;
 
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,7 +20,7 @@ public class AccountDTOTest implements CommandGatewayAware
 	@Autowired
 	private PostStatusUpdateCommand postStatusUpdateCommand;
 
-	@Test
+	// @Test
 	public void testAccountDTO()
 	{
 		gateway().send(postStatusUpdateCommand);
