@@ -26,7 +26,7 @@ import com.bleulace.utils.jpa.EntityManagerReference;
 @RooJavaBean
 @Table(name = "ACCOUNT")
 public class Account extends AbstractRootResource implements CommentableRoot,
-		Commentable
+		CommentableResource
 {
 	@Column(nullable = false, updatable = false, unique = true)
 	private String username;

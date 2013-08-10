@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.command.CreateAccountCommand;
+import com.bleulace.domain.crm.command.CreateGroupCommand;
 import com.bleulace.domain.management.command.CreateBundleCommand;
 import com.bleulace.domain.management.command.CreateProjectCommand;
 import com.bleulace.domain.management.command.CreateTaskCommand;
@@ -55,6 +56,15 @@ public class CommandFixtures implements CommandGatewayAware
 		sendAndWait(cb);
 		CreateTaskCommand c = new CreateTaskCommand(Locator
 				.locate(Bundle.class).getId());
+		c.setTitle(randomString());
+		return c;
+	}
+
+	@Bean
+	@Scope("prototype")
+	public CreateGroupCommand createGroupCommand()
+	{
+		CreateGroupCommand c = new CreateGroupCommand();
 		c.setTitle(randomString());
 		return c;
 	}

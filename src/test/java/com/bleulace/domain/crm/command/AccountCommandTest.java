@@ -1,5 +1,6 @@
 package com.bleulace.domain.crm.command;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.domain.crm.infrastructure.AccountDAO;
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.utils.Locator;
 
 @ActiveProfiles("test")
 @Transactional
@@ -20,14 +22,12 @@ import com.bleulace.domain.crm.infrastructure.AccountDAO;
 public class AccountCommandTest implements CommandGatewayAware
 {
 	@Autowired
-	private AccountDAO dao;
-
-	@Autowired
 	private CreateAccountCommand command;
 
 	@Test
 	public void testCreateAccountCommand()
 	{
 		sendAndWait(command);
+		Assert.assertTrue(Locator.exists(Account.class));
 	}
 }

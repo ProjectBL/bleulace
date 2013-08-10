@@ -61,7 +61,7 @@ public abstract class AbstractResource implements CompositeResource,
 	@Override
 	public boolean isCompatible(Resource child)
 	{
-		return child instanceof AbstractChildResource;
+		return child != null;
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean
-public class CreateBundleCommand extends CreateMgtResourceCommand
+public class CreateBundleCommand extends CreateManageableResourceCommand
 {
 	@TargetAggregateIdentifier
 	private final String id;

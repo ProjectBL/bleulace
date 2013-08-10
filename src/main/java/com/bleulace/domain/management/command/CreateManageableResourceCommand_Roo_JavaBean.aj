@@ -3,15 +3,15 @@
 
 package com.bleulace.domain.management.command;
 
-import com.bleulace.domain.management.command.CreateMgtResourceCommand;
+import com.bleulace.domain.management.command.CreateManageableResourceCommand;
 
-privileged aspect CreateMgtResourceCommand_Roo_JavaBean {
+privileged aspect CreateManageableResourceCommand_Roo_JavaBean {
     
-    public String CreateMgtResourceCommand.getTitle() {
+    public String CreateManageableResourceCommand.getTitle() {
         return this.title;
     }
     
-    public void CreateMgtResourceCommand.setTitle(String title) {
+    public void CreateManageableResourceCommand.setTitle(String title) {
         this.title = title;
     }
     

@@ -4,7 +4,7 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @RooJavaBean
-public class CreateTaskCommand extends CreateMgtResourceCommand
+public class CreateTaskCommand extends CreateManageableResourceCommand
 {
 	@TargetAggregateIdentifier
 	private String id;

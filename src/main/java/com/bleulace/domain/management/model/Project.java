@@ -5,20 +5,22 @@ import javax.persistence.Entity;
 import org.axonframework.common.annotation.MetaData;
 
 import com.bleulace.cqrs.ShiroMetaData;
+import com.bleulace.domain.crm.model.CommentableRoot;
 import com.bleulace.domain.management.command.AssignManagersCommand;
 import com.bleulace.domain.management.command.CreateBundleCommand;
-import com.bleulace.domain.management.command.CreateMgtResourceCommand;
+import com.bleulace.domain.management.command.CreateManageableResourceCommand;
 import com.bleulace.domain.management.command.CreateProjectCommand;
 import com.bleulace.domain.management.command.CreateTaskCommand;
 import com.bleulace.domain.management.event.BundleCreatedEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
-import com.bleulace.domain.management.event.MgtResourceCreatedEvent;
+import com.bleulace.domain.management.event.ManageableResourceCreatedEvent;
 import com.bleulace.domain.management.event.ProjectCreatedEvent;
 import com.bleulace.domain.management.event.TaskCreatedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
 
 @Entity
-public class Project extends AbstractRootResource implements ManagementResource
+public class Project extends AbstractRootResource implements
+		ManageableResource, CommentableRoot
 {
 	Project()
 	{
@@ -81,8 +83,8 @@ public class Project extends AbstractRootResource implements ManagementResource
 		addChild(t);
 	}
 
-	private void initializeCreatedEvent(CreateMgtResourceCommand command,
-			String subjectId, MgtResourceCreatedEvent event)
+	private void initializeCreatedEvent(CreateManageableResourceCommand command,
+			String subjectId, ManageableResourceCreatedEvent event)
 	{
 		mapper().map(command, event);
 		mapper().map(this, event);

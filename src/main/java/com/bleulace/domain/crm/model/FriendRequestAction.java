@@ -10,7 +10,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 
 public enum FriendRequestAction implements FriendRequestActionOps
 {
-	REQUEST(new RequestOps()), ACCEPT(new AcceptOps()), DENY(new CancelOps()), CANCEL(
+	REQUEST(new RequestOps()), ACCEPT(new AcceptOps()), DENY(new DenyOps()), CANCEL(
 			new CancelOps()), REMOVE(new RemoveOps());
 
 	private final FriendRequestActionOps ops;
@@ -44,6 +44,15 @@ public enum FriendRequestAction implements FriendRequestActionOps
 			delete(recipient, initiator);
 			initiator.getFriends().add(recipient);
 			recipient.getFriends().add(initiator);
+		}
+	}
+
+	static class DenyOps implements FriendRequestActionOps
+	{
+		@Override
+		public void execute(Account initiator, Account recipient)
+		{
+			delete(recipient, initiator);
 		}
 	}
 

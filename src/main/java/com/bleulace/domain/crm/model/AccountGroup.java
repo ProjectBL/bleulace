@@ -20,7 +20,8 @@ import com.bleulace.domain.resource.model.AbstractRootResource;
 
 @Entity
 @RooJavaBean
-public class AccountGroup extends AbstractRootResource
+public class AccountGroup extends AbstractRootResource implements
+		CommentableRoot, CommentableResource
 {
 	@Column(unique = true, nullable = false)
 	private String title;

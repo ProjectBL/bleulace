@@ -1,5 +1,5 @@
 package com.bleulace.domain.management.event;
 
-public class TaskCreatedEvent extends MgtResourceCreatedEvent
+public class TaskCreatedEvent extends ManageableResourceCreatedEvent
 {
 }

@@ -5,32 +5,32 @@ import java.util.List;
 import javax.persistence.Column;
 
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.crm.model.CommentableResource;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
-import com.bleulace.domain.resource.model.CompositeResource;
 
-public interface ManagementResource extends CompositeResource
+public interface ManageableResource extends CommentableResource
 {
 	static aspect Impl
 	{
 		@Column(nullable = false)
-		private String ManagementResource.title = "";
+		private String ManageableResource.title = "";
 
-		public String ManagementResource.getTitle()
+		public String ManageableResource.getTitle()
 		{
 			return this.title;
 		}
 
-		public void ManagementResource.setTitle(String title)
+		public void ManageableResource.setTitle(String title)
 		{
 			this.title = title;
 		}
 
-		public List<Account> ManagementResource.getManagers(ManagementRole role)
+		public List<Account> ManageableResource.getManagers(ManagementRole role)
 		{
 			return ManagementRoleAssignment.findManagers(this.getId(), role);
 		}
 
-		public void ManagementResource.on(ManagerAssignedEvent event)
+		public void ManageableResource.on(ManagerAssignedEvent event)
 		{
 			if (event.getRole() == null)
 			{
