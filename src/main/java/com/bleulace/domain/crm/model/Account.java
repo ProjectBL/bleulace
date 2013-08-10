@@ -25,7 +25,8 @@ import com.bleulace.utils.jpa.EntityManagerReference;
 @Entity
 @RooJavaBean
 @Table(name = "ACCOUNT")
-public class Account extends AbstractRootResource
+public class Account extends AbstractRootResource implements CommentableRoot,
+		Commentable
 {
 	@Column(nullable = false, updatable = false, unique = true)
 	private String username;
@@ -47,6 +48,14 @@ public class Account extends AbstractRootResource
 	{
 	}
 
+	public void setPassword(String password)
+	{
+		if (password != null)
+		{
+			map(new Encryptor(password.toCharArray()));
+		}
+	}
+
 	public Account(CreateAccountCommand command)
 	{
 		AccountCreatedEvent event = new AccountCreatedEvent();
@@ -58,7 +67,6 @@ public class Account extends AbstractRootResource
 	public void on(AccountCreatedEvent event)
 	{
 		map(event);
-		map(new Encryptor(event.getPassword().toCharArray()));
 	}
 
 	public void handle(UpdateContactInfoCommand command)

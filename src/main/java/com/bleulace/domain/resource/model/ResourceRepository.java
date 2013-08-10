@@ -2,9 +2,7 @@ package com.bleulace.domain.resource.model;
 
 import static java.lang.String.format;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceContext;
 
 import org.axonframework.common.jpa.EntityManagerProvider;
 import org.axonframework.domain.AggregateRoot;
@@ -16,14 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Repository
 class ResourceRepository extends HybridJpaRepository<AbstractRootResource>
 		implements EventBusAware
 {
-	@PersistenceContext
-	private EntityManager em;
-
 	@Autowired
 	ResourceRepository(EntityManagerProvider entityManagerProvider,
 			EventStore eventStore)
@@ -38,10 +34,10 @@ class ResourceRepository extends HybridJpaRepository<AbstractRootResource>
 	protected AbstractRootResource doLoad(Object aggregateIdentifier,
 			Long expectedVersion)
 	{
-		Resource resource = null;
+		AbstractResource resource;
 		try
 		{
-			resource = em.getReference(AbstractResource.class,
+			resource = EntityManagerReference.load(AbstractResource.class,
 					aggregateIdentifier);
 		}
 		catch (EntityNotFoundException e)
@@ -51,7 +47,7 @@ class ResourceRepository extends HybridJpaRepository<AbstractRootResource>
 					getAggregateType().getSimpleName(), aggregateIdentifier));
 		}
 
-		AggregateRoot<?> aggregate = (AggregateRoot<?>) resource.getRoot();
+		AggregateRoot<?> aggregate = resource.getRoot();
 		if (expectedVersion != null && aggregate.getVersion() != null
 				&& !expectedVersion.equals(aggregate.getVersion()))
 		{
@@ -59,6 +55,6 @@ class ResourceRepository extends HybridJpaRepository<AbstractRootResource>
 					expectedVersion, aggregate.getVersion());
 		}
 
-		return (AbstractRootResource) resource.getRoot();
+		return resource.getRoot();
 	}
 }

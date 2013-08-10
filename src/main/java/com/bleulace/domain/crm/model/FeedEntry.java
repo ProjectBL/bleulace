@@ -17,8 +17,6 @@ import javax.persistence.TemporalType;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
 
-import com.bleulace.domain.crm.model.FeedSubject;
-
 @Entity
 public class FeedEntry implements Persistable<String>
 {

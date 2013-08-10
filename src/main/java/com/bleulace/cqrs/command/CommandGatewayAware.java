@@ -1,6 +1,5 @@
 package com.bleulace.cqrs.command;
 
-import org.axonframework.commandhandling.gateway.CommandGateway;
 
 /**
  * Implementors of this mixin will have access to the Bleulace command gateway,
@@ -10,6 +9,6 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
  * @author Arleigh Dickerson
  * 
  */
-public interface CommandGatewayAware extends CommandGateway
+public interface CommandGatewayAware
 {
 }

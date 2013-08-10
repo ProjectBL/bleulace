@@ -6,8 +6,6 @@ import com.bleulace.utils.jpa.EntityManagerReference;
 
 public interface Resource extends Persistable<String>
 {
-	Resource getRoot();
-
 	static aspect Impl
 	{
 		public boolean Resource.isNew()

@@ -1,5 +1,6 @@
 package com.bleulace.cqrs;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class ShiroMetaData
 {
 	public static final String SUBJECT_ID = "subjectId";
 	public static final String HOST = "host";
+	public static final String TIMESTAMP = "timestamp";
 
 	private ShiroMetaData()
 	{
@@ -20,6 +22,7 @@ public class ShiroMetaData
 	public static Map<String, ?> get()
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(TIMESTAMP, new Date());
 		try
 		{
 			Subject subject = SecurityUtils.getSubject();

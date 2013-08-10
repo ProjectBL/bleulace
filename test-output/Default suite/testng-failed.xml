@@ -3,11 +3,62 @@
 <suite name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
+      <class name="com.bleulace.domain.management.domain.ProjectCommandTest">
+        <methods>
+          <include name="assignManager"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="isUserAuthenticated"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.management.domain.ProjectCommandTest -->
+      <class name="com.bleulace.domain.management.domain.BundleCommandTest">
+        <methods>
+          <include name="assignManager"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="createProject"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="isUserAuthenticated"/>
+          <include name="logInUser"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.management.domain.BundleCommandTest -->
+      <class name="com.bleulace.domain.crm.command.CommentCommandTest">
+        <methods>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="logInUser"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.crm.command.CommentCommandTest -->
+      <class name="com.bleulace.domain.crm.command.FriendCommandTest">
+        <methods>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="isUserAuthenticated"/>
+          <include name="addFriend"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.crm.command.FriendCommandTest -->
+      <class name="com.bleulace.domain.management.domain.TaskCommandTest">
+        <methods>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="createProject"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="addBundle"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="addTask"/>
+          <include name="logInUser"/>
+        </methods>
+      </class> <!-- com.bleulace.domain.management.domain.TaskCommandTest -->
       <class name="com.bleulace.domain.crm.command.GroupCommandTest">
         <methods>
           <include name="springTestContextAfterTestClass"/>
           <include name="createGroup"/>
-          <include name="logOutUser"/>
           <include name="springTestContextBeforeTestClass"/>
           <include name="springTestContextBeforeTestMethod"/>
           <include name="springTestContextPrepareTestInstance"/>
@@ -15,19 +66,6 @@
           <include name="logInUser"/>
         </methods>
       </class> <!-- com.bleulace.domain.crm.command.GroupCommandTest -->
-      <class name="com.bleulace.domain.crm.command.FriendCommandTest">
-        <methods>
-          <include name="springTestContextAfterTestClass"/>
-          <include name="springTestContextBeforeTestClass"/>
-          <include name="logOutUser"/>
-          <include name="createSecondAccount"/>
-          <include name="springTestContextBeforeTestMethod"/>
-          <include name="springTestContextPrepareTestInstance"/>
-          <include name="springTestContextAfterTestMethod"/>
-          <include name="logInUser"/>
-          <include name="addFriend"/>
-        </methods>
-      </class> <!-- com.bleulace.domain.crm.command.FriendCommandTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

@@ -100,10 +100,9 @@
 		</dependency>
 		<!-- General dependencies for standard applications -->
 		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.3.1</version>
-			<scope>test</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

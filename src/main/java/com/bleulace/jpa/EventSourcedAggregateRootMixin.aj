@@ -142,7 +142,7 @@ public interface EventSourcedAggregateRootMixin extends
 					that.getId());
 		}
 
-		void EventSourcedAggregateRootMixin.map(Object source)
+		public void EventSourcedAggregateRootMixin.map(Object source)
 		{
 			mapper().map(source, this);
 		}
@@ -152,7 +152,7 @@ public interface EventSourcedAggregateRootMixin extends
 			return SpringApplicationContext.getBean(ModelMapper.class);
 		}
 
-		void EventSourcedAggregateRootMixin.apply(Object command,
+		public void EventSourcedAggregateRootMixin.apply(Object command,
 				Class<?> eventClazz)
 		{
 			apply(mapper().map(command, eventClazz));
@@ -197,7 +197,7 @@ public interface EventSourcedAggregateRootMixin extends
 			}
 		}
 
-		private void EventSourcedAggregateRootMixin.apply(Object eventPayload)
+		public void EventSourcedAggregateRootMixin.apply(Object eventPayload)
 		{
 			apply(eventPayload, MetaData.emptyInstance());
 		}

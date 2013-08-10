@@ -1,62 +1,67 @@
 package com.bleulace.domain.crm.command;
 
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Iterator;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.domain.AuthenticationTest;
-import com.bleulace.domain.crm.infrastructure.AccountDAO;
+import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.crm.model.FriendRequestAction;
+import com.bleulace.utils.Locator;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
-@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
+@Transactional
 @TransactionConfiguration
-public class FriendCommandTest extends AuthenticationTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
+public class FriendCommandTest implements CommandGatewayAware
 {
-	@Autowired
-	private CommandGateway gate;
+	private String initiatorId;
+	private String recipientId;
 
-	@Autowired
-	private CreateAccountCommand createAccountCommand;
-
-	@Autowired
-	private AccountDAO dao;
-
-	@BeforeClass
-	public void createSecondAccount()
+	@Before
+	public void beforeMethod()
 	{
-		gate.sendAndWait(createAccountCommand);
+		for (int i = 0; i < 2; i++)
+		{
+			sendAndWait(SpringApplicationContext
+					.getBean(CreateAccountCommand.class));
+		}
+
+		Iterator<String> it = Locator.ids(Account.class).iterator();
+		initiatorId = it.next();
+		recipientId = it.next();
 	}
 
 	@Test
-	public void addFriend()
+	public void testFriendRequested()
 	{
-		gate.sendAndWait(new FriendRequestCommand(subjectId(), targetAccount()
-				.getId(), FriendRequestAction.REQUEST));
-
-		gate.sendAndWait(new FriendRequestCommand(targetAccount().getId(),
-				subjectId(), FriendRequestAction.ACCEPT));
-
-		assert executingAccount().getFriends().size() > 0;
-
-		gate.sendAndWait(new FriendRequestCommand(subjectId(), targetAccount()
-				.getId(), FriendRequestAction.REMOVE));
-
-		assert executingAccount().getFriends().size() == 0;
 	}
 
-	private Account executingAccount()
+	@Test
+	public void testFriendAccepted()
 	{
-		return dao.findOne(subjectId());
 	}
 
-	private Account targetAccount()
+	@Test
+	public void testFriendDeclined()
 	{
-		return dao.findByUsername(createAccountCommand.getUsername());
+	}
+
+	@Test
+	public void testFriendCanceled()
+	{
+	}
+
+	@Test
+	public void testFriendRemoved()
+	{
 	}
 }

@@ -10,13 +10,9 @@ import com.bleulace.jpa.EventSourcedAggregateRootMixin;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "ROOT")
-public class AbstractRootResource extends AbstractChildResource implements
+public class AbstractRootResource extends AbstractResource implements
 		CompositeResource, EventSourcedAggregateRootMixin
 {
-	protected AbstractRootResource()
-	{
-	}
-
 	@Override
 	public AbstractRootResource getRoot()
 	{

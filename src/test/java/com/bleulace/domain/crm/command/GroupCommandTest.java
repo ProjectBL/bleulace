@@ -1,45 +1,27 @@
 package com.bleulace.domain.crm.command;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.domain.AuthenticationTest;
-import com.bleulace.domain.crm.infrastructure.GroupDAO;
-
-@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 @ActiveProfiles("test")
+@Transactional
 @TransactionConfiguration
-public class GroupCommandTest extends AuthenticationTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
+public class GroupCommandTest
 {
-	@Autowired
-	private CommandGateway gate;
-
-	@Autowired
-	private GroupDAO dao;
-
-	@BeforeMethod
-	public void createGroup()
+	@Test
+	public void testCreateGroupCommand()
 	{
-		CreateGroupCommand c = new CreateGroupCommand();
-		c.setTitle(RandomStringUtils.random(20));
-		gate.sendAndWait(c);
 	}
 
 	@Test
-	public void isGroupCreated()
+	public void testGroupMembershipCommand()
 	{
-		assert dao.count() > 0;
-	}
-
-	@Test
-	public void isGroupCreatorAddedToGroup()
-	{
-		assert dao.findAll().get(0).getMembers().size() > 0;
 	}
 }

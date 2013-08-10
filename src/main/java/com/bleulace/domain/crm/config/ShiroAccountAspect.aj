@@ -4,8 +4,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
-import com.bleulace.domain.crm.model.AuthenticationTrace;
-
 aspect ShiroAccountAspect
 {
 	public String Subject.getId()

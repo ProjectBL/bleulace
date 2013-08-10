@@ -92,10 +92,14 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 					that.getId());
 		}
 
+		private ModelMapper EventSourcedEntityMixin.mapper()
+		{
+			return SpringApplicationContext.getBean(ModelMapper.class);
+		}
+
 		private void EventSourcedEntityMixin.map(Object event)
 		{
-			SpringApplicationContext.getBean(ModelMapper.class)
-					.map(event, this);
+			this.mapper().map(event, this);
 		}
 
 		@SuppressWarnings("rawtypes")

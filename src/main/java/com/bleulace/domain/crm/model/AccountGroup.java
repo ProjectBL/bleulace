@@ -12,13 +12,11 @@ import org.axonframework.common.annotation.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.ShiroMetaData;
-import com.bleulace.domain.crm.command.ChangeGroupMembershipCommand;
 import com.bleulace.domain.crm.command.CreateGroupCommand;
+import com.bleulace.domain.crm.command.GroupMembershipCommand;
 import com.bleulace.domain.crm.event.GroupCreatedEvent;
-import com.bleulace.domain.crm.event.GroupJoinedEvent;
-import com.bleulace.domain.crm.event.GroupLeftEvent;
+import com.bleulace.domain.crm.event.GroupMembershipChangedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
-import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
@@ -40,8 +38,11 @@ public class AccountGroup extends AbstractRootResource
 		apply(command, GroupCreatedEvent.class);
 		if (creatorId != null)
 		{
-			GroupJoinedEvent event = new GroupJoinedEvent();
+			GroupMembershipChangedEvent event = mapper().map(command,
+					GroupMembershipChangedEvent.class);
+			event.setId(getId());
 			event.setAccountId(creatorId);
+			event.setAction(GroupMembershipAction.JOIN);
 			apply(event);
 		}
 	}
@@ -51,42 +52,20 @@ public class AccountGroup extends AbstractRootResource
 		map(event);
 	}
 
-	public void handle(ChangeGroupMembershipCommand command)
+	public void handle(GroupMembershipCommand command)
 	{
-		if (command.isJoining())
+		for (String accountId : command.getAccountIds())
 		{
-			for (String accountId : command.getAccountIds())
-			{
-				GroupJoinedEvent event = new GroupJoinedEvent();
-				event.setAccountId(accountId);
-				apply(event);
-			}
-		}
-		else
-		{
-			for (String accountId : command.getAccountIds())
-			{
-				GroupLeftEvent event = new GroupLeftEvent();
-				event.setAccountId(accountId);
-				apply(event);
-			}
+			GroupMembershipChangedEvent event = mapper().map(command,
+					GroupMembershipChangedEvent.class);
+			event.setAccountId(accountId);
+			apply(event);
 		}
 	}
 
-	public void on(GroupJoinedEvent event)
+	public void on(GroupMembershipChangedEvent event)
 	{
-		members.add(EntityManagerReference.load(Account.class,
-				event.getAccountId()));
-	}
-
-	public void on(GroupLeftEvent event)
-	{
-		members.remove(EntityManagerReference.load(Account.class,
-				event.getAccountId()));
-		if (members.isEmpty())
-		{
-			markForDeletion();
-		}
+		event.getAction().execute(this, event.getAccountId());
 	}
 
 	@PreRemove
