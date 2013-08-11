@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -11,7 +12,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.domain.management.command.CreateProjectCommand;
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.utils.Locator;
 
@@ -23,12 +23,13 @@ import com.bleulace.utils.Locator;
 public class ProjectCommandTest implements CommandGatewayAware
 {
 	@Autowired
-	private CreateProjectCommand createProject;
+	@Qualifier("createProjectCommand")
+	private CreateProjectCommand createProjectCommand;
 
 	@Test
 	public void testCreateProjectCommand()
 	{
-		sendAndWait(createProject);
+		sendAndWait(createProjectCommand);
 		Assert.assertTrue(Locator.exists(Project.class));
 	}
 }

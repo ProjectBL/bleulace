@@ -81,6 +81,9 @@
 	<axon:aggregate-command-handler
 		command-bus="commandBus" aggregate-type="com.bleulace.domain.management.model.Project"
 		repository="resourceRepository" />
+	<axon:aggregate-command-handler
+		command-bus="commandBus" aggregate-type="com.bleulace.domain.management.model.Event"
+		repository="resourceRepository" />
 
 	<bean id="abstractCommandBus" abstract="true">
 		<property name="transactionManager">

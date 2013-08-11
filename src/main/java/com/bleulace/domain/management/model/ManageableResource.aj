@@ -10,6 +10,8 @@ import com.bleulace.domain.management.event.ManagerAssignedEvent;
 
 public interface ManageableResource extends CommentableResource
 {
+	public void accept(ManageableResourceVisitor visitor);
+
 	static aspect Impl
 	{
 		@Column(nullable = false)
@@ -30,6 +32,13 @@ public interface ManageableResource extends CommentableResource
 			return ManagementRoleAssignment.findManagers(this.getId(), role);
 		}
 
+		public Progress ManageableResource.getProgress()
+		{
+			ProgressCalculatingVisitor visitor = new ProgressCalculatingVisitor();
+			this.accept(visitor);
+			return visitor.getProgress();
+		}
+
 		public void ManageableResource.on(ManagerAssignedEvent event)
 		{
 			if (event.getRole() == null)
@@ -42,6 +51,19 @@ public interface ManageableResource extends CommentableResource
 				ManagementRoleAssignment.assign(this.getId(),
 						event.getAssigneeId(), event.getRole());
 			}
+		}
+
+		public void ManageableResource.accept(ManageableResourceVisitor visitor)
+		{
+			if (!this.isLeaf())
+			{
+				for (ManageableResource child : this
+						.getChildren(ManageableResource.class))
+				{
+					child.accept(visitor);
+				}
+			}
+			visitor.visit(this);
 		}
 	}
 }

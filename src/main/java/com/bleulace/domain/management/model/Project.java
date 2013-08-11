@@ -12,8 +12,8 @@ import com.bleulace.domain.management.command.CreateManageableResourceCommand;
 import com.bleulace.domain.management.command.CreateProjectCommand;
 import com.bleulace.domain.management.command.CreateTaskCommand;
 import com.bleulace.domain.management.event.BundleCreatedEvent;
-import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.domain.management.event.ManageableResourceCreatedEvent;
+import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.domain.management.event.ProjectCreatedEvent;
 import com.bleulace.domain.management.event.TaskCreatedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
@@ -83,8 +83,9 @@ public class Project extends AbstractRootResource implements
 		addChild(t);
 	}
 
-	private void initializeCreatedEvent(CreateManageableResourceCommand command,
-			String subjectId, ManageableResourceCreatedEvent event)
+	private void initializeCreatedEvent(
+			CreateManageableResourceCommand command, String subjectId,
+			ManageableResourceCreatedEvent event)
 	{
 		mapper().map(command, event);
 		mapper().map(this, event);

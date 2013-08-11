@@ -1,7 +1,9 @@
 package com.bleulace.domain.crm.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,7 +44,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	private ContactInformation contactInformation;
 
 	@ManyToMany
-	private List<Account> friends = new ArrayList<Account>();
+	private Set<Account> friends = new HashSet<Account>();
 
 	Account()
 	{

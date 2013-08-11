@@ -7,6 +7,7 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.JpaPermission;
 import java.util.List;
+import java.util.Set;
 
 privileged aspect Account_Roo_JavaBean {
     
@@ -50,11 +51,11 @@ privileged aspect Account_Roo_JavaBean {
         this.contactInformation = contactInformation;
     }
     
-    public List<Account> Account.getFriends() {
+    public Set<Account> Account.getFriends() {
         return this.friends;
     }
     
-    public void Account.setFriends(List<Account> friends) {
+    public void Account.setFriends(Set<Account> friends) {
         this.friends = friends;
     }
     

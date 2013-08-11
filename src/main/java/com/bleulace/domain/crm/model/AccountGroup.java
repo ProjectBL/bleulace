@@ -1,7 +1,7 @@
 package com.bleulace.domain.crm.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ public class AccountGroup extends AbstractRootResource implements
 	private String title;
 
 	@ManyToMany
-	private List<Account> members = new ArrayList<Account>();
+	private Set<Account> members = new HashSet<Account>();
 
 	AccountGroup()
 	{
@@ -67,6 +67,10 @@ public class AccountGroup extends AbstractRootResource implements
 	public void on(GroupMembershipChangedEvent event)
 	{
 		event.getAction().execute(this, event.getAccountId());
+		if (members.isEmpty())
+		{
+			flagForDeletion();
+		}
 	}
 
 	@PreRemove

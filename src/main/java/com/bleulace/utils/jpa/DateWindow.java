@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.Range;
 import org.joda.time.DateTime;
@@ -25,10 +27,14 @@ public class DateWindow implements Serializable
 {
 	private static final long serialVersionUID = -1900206502831675688L;
 
+	@Future
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
 	private Date start;
 
+	@Future
+	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
 	private Date end;
@@ -72,6 +78,11 @@ public class DateWindow implements Serializable
 	public LocalDateTime getStartTime()
 	{
 		return LocalDateTime.fromDateFields(start);
+	}
+
+	public LocalDateTime getEndTime()
+	{
+		return LocalDateTime.fromDateFields(end);
 	}
 
 	public Period getLength()

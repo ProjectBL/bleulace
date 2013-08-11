@@ -58,7 +58,7 @@ public interface EventSourcedAggregateRootMixin extends
 			return this.deletionFlag;
 		}
 
-		void EventSourcedAggregateRootMixin.markForDeletion()
+		void EventSourcedAggregateRootMixin.flagForDeletion()
 		{
 			this.deletionFlag = true;
 		}

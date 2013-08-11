@@ -70,8 +70,11 @@ public class GroupCommandTest implements CommandGatewayAware
 		GroupMembershipCommand command = makeCommand(GroupMembershipAction.LEAVE);
 		command.getAccountIds().add(executingAccount().getId());
 		sendAndWait(command);
-		Assert.assertFalse(Locator.locate(AccountGroup.class).getMembers()
-				.contains(executingAccount()));
+
+		// last member leaves,group is deleted
+		Assert.assertFalse(Locator.exists(AccountGroup.class));
+
+		// TODO : test case for when there are still members in group
 	}
 
 	private GroupMembershipCommand makeCommand(GroupMembershipAction action)

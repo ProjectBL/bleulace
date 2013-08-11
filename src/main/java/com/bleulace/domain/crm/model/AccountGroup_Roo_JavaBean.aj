@@ -5,7 +5,7 @@ package com.bleulace.domain.crm.model;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.AccountGroup;
-import java.util.List;
+import java.util.Set;
 
 privileged aspect AccountGroup_Roo_JavaBean {
     
@@ -17,11 +17,11 @@ privileged aspect AccountGroup_Roo_JavaBean {
         this.title = title;
     }
     
-    public List<Account> AccountGroup.getMembers() {
+    public Set<Account> AccountGroup.getMembers() {
         return this.members;
     }
     
-    public void AccountGroup.setMembers(List<Account> members) {
+    public void AccountGroup.setMembers(Set<Account> members) {
         this.members = members;
     }
     
