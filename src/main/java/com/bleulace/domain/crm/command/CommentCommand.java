@@ -1,22 +1,20 @@
 package com.bleulace.domain.crm.command;
 
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.cqrs.DomainEventPayload;
+
 @RequiresAuthentication
 @RooJavaBean
-public class CommentCommand
+public class CommentCommand implements DomainEventPayload
 {
-	@TargetAggregateIdentifier
-	private String id;
-
 	@NotEmpty
 	private String content = "";
 
 	public CommentCommand(String id)
 	{
-		this.id = id;
+		setId(id);
 	}
 }

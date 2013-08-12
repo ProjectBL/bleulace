@@ -1,16 +1,18 @@
-package com.bleulace.jpa;
+package com.bleulace.cqrs;
 
 import java.util.Collection;
 
+import org.axonframework.common.annotation.MessageHandlerInvoker;
+import org.axonframework.common.annotation.MethodMessageHandler;
 import org.axonframework.domain.DomainEventMessage;
 import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
+import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Persistable;
 
-import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.domain.management.model.Task;
 
 public interface EventSourcedEntityMixin extends EventSourcedEntity,
 		Persistable<String>
@@ -90,16 +92,6 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 
 			return null == this.getId() ? false : this.getId().equals(
 					that.getId());
-		}
-
-		private ModelMapper EventSourcedEntityMixin.mapper()
-		{
-			return SpringApplicationContext.getBean(ModelMapper.class);
-		}
-
-		private void EventSourcedEntityMixin.map(Object event)
-		{
-			this.mapper().map(event, this);
 		}
 
 		@SuppressWarnings("rawtypes")

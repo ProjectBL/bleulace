@@ -8,10 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.PreRemove;
 
-import org.axonframework.common.annotation.MetaData;
+import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.ShiroMetaData;
+import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.CreateEventCommand;
 import com.bleulace.domain.management.command.RescheduleEventCommand;
@@ -35,14 +35,14 @@ public class Event extends Project
 	{
 	}
 
-	public Event(CreateEventCommand command,
-			@MetaData(ShiroMetaData.SUBJECT_ID) String creatorId)
+	public Event(CreateEventCommand command, MetaData metaData)
 	{
+		String creatorId = metaData.getSubjectId();
 		EventCreatedEvent event = new EventCreatedEvent();
 		event.setId(getId());
 		event.setCreatorId(creatorId);
-		mapper().map(command, event);
-		apply(event);
+		MappingAspect.map(command, event);
+		apply(event, metaData);
 		if (creatorId != null)
 		{
 			ManagerAssignedEvent assignment = new ManagerAssignedEvent();
@@ -50,18 +50,13 @@ public class Event extends Project
 			assignment.setAssignerId(creatorId);
 			assignment.setAssigneeId(creatorId);
 			assignment.setRole(ManagementRole.OWN);
-			apply(assignment);
+			apply(assignment, metaData);
 		}
 	}
 
-	public void on(EventCreatedEvent event)
+	public void handle(RsvpCommand command, MetaData metaData)
 	{
-		map(event);
-	}
-
-	public void handle(RsvpCommand command)
-	{
-		apply(command);
+		apply(command, metaData);
 	}
 
 	public void on(RsvpCommand event)
@@ -78,9 +73,9 @@ public class Event extends Project
 		}
 	}
 
-	public void handle(RescheduleEventCommand command)
+	public void handle(RescheduleEventCommand command, MetaData metaData)
 	{
-		apply(command);
+		apply(command, metaData);
 	}
 
 	public void on(RescheduleEventCommand event)

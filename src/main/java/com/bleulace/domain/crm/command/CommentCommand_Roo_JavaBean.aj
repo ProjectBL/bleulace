@@ -7,14 +7,6 @@ import com.bleulace.domain.crm.command.CommentCommand;
 
 privileged aspect CommentCommand_Roo_JavaBean {
     
-    public String CommentCommand.getId() {
-        return this.id;
-    }
-    
-    public void CommentCommand.setId(String id) {
-        this.id = id;
-    }
-    
     public String CommentCommand.getContent() {
         return this.content;
     }

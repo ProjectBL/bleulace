@@ -4,7 +4,7 @@ import org.apache.shiro.UnavailableSecurityManagerException;
 import org.axonframework.commandhandling.CommandDispatchInterceptor;
 import org.axonframework.commandhandling.CommandMessage;
 
-import com.bleulace.cqrs.ShiroMetaData;
+import com.bleulace.cqrs.MetaDataAspect;
 
 public class CommandMetaDataInterceptor implements CommandDispatchInterceptor
 {
@@ -13,7 +13,8 @@ public class CommandMetaDataInterceptor implements CommandDispatchInterceptor
 	{
 		try
 		{
-			commandMessage = commandMessage.andMetaData(ShiroMetaData.get());
+			commandMessage = commandMessage.andMetaData(MetaDataAspect
+					.acquireMetaData());
 		}
 		catch (UnavailableSecurityManagerException e)
 		{

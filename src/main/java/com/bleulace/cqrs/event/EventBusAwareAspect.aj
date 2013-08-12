@@ -1,9 +1,7 @@
 package com.bleulace.cqrs.event;
 
-import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
 
-import com.bleulace.cqrs.ShiroMetaData;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 aspect EventBusAwareAspect
@@ -18,11 +16,5 @@ aspect EventBusAwareAspect
 	EventBus EventBusAware.eventBus()
 	{
 		return EVENTBUS;
-	}
-
-	void EventBusPublisher.post(Object event)
-	{
-		EVENTBUS.publish(GenericEventMessage.asEventMessage(event)
-				.withMetaData(ShiroMetaData.get()));
 	}
 }

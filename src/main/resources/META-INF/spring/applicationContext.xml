@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xmlns:axon="http://www.axonframework.org/schema/core" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:axon="http://www.axonframework.org/schema/core"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:util="http://www.springframework.org/schema/util"
@@ -41,6 +45,14 @@
 
 	<!-- Axon -->
 	<axon:annotation-config />
+
+	<bean id="axonTxManager" class="org.axonframework.unitofwork.SpringTransactionManager">
+		<constructor-arg ref="transactionManager" />
+	</bean>
+
+	<bean id="unitOfWorkFactory" class="org.axonframework.unitofwork.DefaultUnitOfWorkFactory">
+		<constructor-arg ref="axonTxManager" />
+	</bean>
 
 	<bean
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean"
@@ -86,11 +98,7 @@
 		repository="resourceRepository" />
 
 	<bean id="abstractCommandBus" abstract="true">
-		<property name="transactionManager">
-			<bean class="org.axonframework.unitofwork.SpringTransactionManager">
-				<constructor-arg ref="transactionManager" />
-			</bean>
-		</property>
+		<property name="transactionManager" ref="axonTxManager" />
 		<property name="handlerInterceptors">
 			<util:list>
 				<bean class="org.axonframework.auditing.AuditingInterceptor">

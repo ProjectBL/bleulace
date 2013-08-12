@@ -7,8 +7,6 @@ import com.bleulace.domain.management.model.ManagementRole;
 @RooJavaBean
 public class ManagerAssignedEvent
 {
-	private String id;
-
 	private String assignerId;
 
 	private String assigneeId;

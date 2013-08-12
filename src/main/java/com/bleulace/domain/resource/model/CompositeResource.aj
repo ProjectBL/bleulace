@@ -22,7 +22,7 @@ public interface CompositeResource extends Resource
 			List<T> childList = new ArrayList<T>();
 			for (Resource child : this.getChildren())
 			{
-				if (child.getClass().isAssignableFrom(clazz))
+				if (clazz.isAssignableFrom(child.getClass()))
 				{
 					childList.add((T) child);
 				}

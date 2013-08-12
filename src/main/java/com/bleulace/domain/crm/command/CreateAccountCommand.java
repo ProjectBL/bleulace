@@ -21,4 +21,9 @@ public class CreateAccountCommand
 		this.username = username;
 		this.password = password;
 	}
+
+	public String getId()
+	{
+		return null;
+	}
 }

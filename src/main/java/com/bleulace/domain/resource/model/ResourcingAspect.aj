@@ -1,7 +1,5 @@
 package com.bleulace.domain.resource.model;
 
-import org.axonframework.commandhandling.annotation.CommandHandler;
-import org.axonframework.domain.IdentifierFactory;
 
 privileged aspect ResourcingAspect
 {
@@ -29,14 +27,5 @@ privileged aspect ResourcingAspect
 		{
 			throw new IllegalArgumentException();
 		}
-	}
-
-	pointcut initByCommand(AbstractResource resource) : 
-		execution(@CommandHandler AbstractResource+.new(*)) 
-		&& this(resource);
-
-	before(AbstractResource resource) : initByCommand(resource)
-	{
-		resource.id = IdentifierFactory.getInstance().generateIdentifier();
 	}
 }

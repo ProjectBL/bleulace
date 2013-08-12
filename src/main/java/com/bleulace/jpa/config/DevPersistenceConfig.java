@@ -29,7 +29,8 @@ public class DevPersistenceConfig
 		dataSource.setDriverClassName(Driver.class.getName());
 
 		// database in memory
-		dataSource.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
+		dataSource
+				.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE;MVCC=true");
 
 		// database on hard drive
 		// dataSource.setUrl("jdbc:h2:~/bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");

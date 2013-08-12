@@ -14,7 +14,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.domain.resource.model.AbstractChildResource;
 
 @Entity
-@RooJavaBean
+@RooJavaBean(settersByDefault = false)
 public class Comment extends AbstractChildResource
 {
 	@Column(nullable = false, updatable = false)
@@ -28,7 +28,15 @@ public class Comment extends AbstractChildResource
 	@Column(nullable = false, updatable = false)
 	private Date datePosted;
 
-	Comment()
+	public Comment(String content, Account author, Date datePosted)
+	{
+		this.content = content;
+		this.author = author;
+		this.datePosted = datePosted;
+	}
+
+	@SuppressWarnings("unused")
+	private Comment()
 	{
 	}
 

@@ -1,22 +1,23 @@
 package com.bleulace.domain.crm.model;
 
-import org.modelmapper.ModelMapper;
+import org.axonframework.domain.MetaData;
 
-import com.bleulace.domain.crm.event.CommentedEvent;
+import com.bleulace.cqrs.MappingAspect;
+import com.bleulace.domain.crm.command.CommentCommand;
 import com.bleulace.domain.resource.model.CompositeResource;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 public interface CommentableResource extends CompositeResource
 {
 	static aspect Impl
 	{
-		public void CommentableResource.on(CommentedEvent event)
+		public void CommentableResource.on(CommentCommand event,
+				MetaData metaData)
 		{
-			Comment c = new Comment();
-			SpringApplicationContext.getBean(ModelMapper.class).map(event, c);
-			c.setAuthor(EntityManagerReference.load(Account.class,
-					event.getAccountId()));
+			Comment c = new Comment(event.getContent(),
+					EntityManagerReference.load(Account.class,
+							metaData.getSubjectId()), metaData.getTimestamp());
+			MappingAspect.map(event, c);
 			this.addChild(c);
 		}
 	}

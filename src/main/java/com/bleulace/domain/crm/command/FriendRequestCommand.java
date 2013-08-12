@@ -34,4 +34,9 @@ public class FriendRequestCommand
 		this.recipientId = recipientId;
 		this.action = action;
 	}
+
+	public String getId()
+	{
+		return initiatorId;
+	}
 }

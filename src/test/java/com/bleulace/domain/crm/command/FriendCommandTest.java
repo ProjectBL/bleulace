@@ -84,7 +84,8 @@ public class FriendCommandTest implements CommandGatewayAware
 	@Test
 	public void testFriendRemoved()
 	{
-		testFriendAccepted();
+		doActionsInSequence(FriendRequestAction.REQUEST,
+				FriendRequestAction.ACCEPT);
 		sendAndWait(new FriendRequestCommand(initiatorId, recipientId,
 				FriendRequestAction.REMOVE));
 		Assert.assertFalse(areFriends());

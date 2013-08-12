@@ -1,11 +1,14 @@
-package com.bleulace.jpa;
+package com.bleulace.cqrs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import javax.persistence.Basic;
 import javax.persistence.Transient;
 
 import org.axonframework.common.Assert;
+import org.axonframework.common.annotation.MessageHandlerInvoker;
+import org.axonframework.common.annotation.MethodMessageHandler;
 import org.axonframework.domain.AggregateIdentifierNotInitializedException;
 import org.axonframework.domain.DomainEventMessage;
 import org.axonframework.domain.DomainEventStream;
@@ -15,13 +18,14 @@ import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.domain.MetaData;
 import org.axonframework.domain.SimpleDomainEventStream;
 import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
+import org.axonframework.eventhandling.annotation.EventHandler;
+import org.axonframework.eventhandling.annotation.EventHandlerInvocationException;
 import org.axonframework.eventsourcing.EventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Persistable;
 
-import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 /**
@@ -31,7 +35,7 @@ import com.bleulace.utils.jpa.EntityManagerReference;
  * 
  */
 public interface EventSourcedAggregateRootMixin extends
-		EventSourcedAggregateRoot<String>
+		EventSourcedAggregateRoot<String>, Persistable<String>
 {
 	public String getId();
 
@@ -50,7 +54,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public boolean EventSourcedAggregateRootMixin.isNew()
 		{
-			return EntityManagerReference.get().find(getClass(), this.getId()) != null;
+			return EntityManagerReference.get().find(getClass(), this.getId()) == null;
 		}
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
@@ -142,36 +146,39 @@ public interface EventSourcedAggregateRootMixin extends
 					that.getId());
 		}
 
-		public void EventSourcedAggregateRootMixin.map(Object source)
-		{
-			mapper().map(source, this);
-		}
-
-		ModelMapper EventSourcedAggregateRootMixin.mapper()
-		{
-			return SpringApplicationContext.getBean(ModelMapper.class);
-		}
-
-		public void EventSourcedAggregateRootMixin.apply(Object command,
-				Class<?> eventClazz)
-		{
-			apply(mapper().map(command, eventClazz));
-		}
-
-		public void EventSourcedAggregateRootMixin.apply(Object command,
-				Object event)
-		{
-			mapper().map(command, event);
-			apply(event);
-		}
-
 		@SuppressWarnings("rawtypes")
 		private void EventSourcedAggregateRootMixin.handle(
 				DomainEventMessage event)
 		{
 			ensureInspectorInitialized();
-			ensureInvokerInitialized();
-			eventHandlerInvoker.invokeEventHandlerMethod(event);
+			try
+			{
+				MethodMessageHandler handler = new MessageHandlerInvoker(this,
+						EventHandler.class, false).findHandlerMethod(event);
+				if (handler == null)
+				{
+					MappingAspect.map(event.getPayload(), this);
+				}
+				else
+				{
+					handler.invoke(this, event);
+				}
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new EventHandlerInvocationException(
+						"Access to the event handler method was denied.", e);
+			}
+			catch (InvocationTargetException e)
+			{
+				if (e.getCause() instanceof RuntimeException)
+				{
+					throw (RuntimeException) e.getCause();
+				}
+				throw new EventHandlerInvocationException(
+						"An exception occurred while invoking the handler method.",
+						e);
+			}
 		}
 
 		private Collection<EventSourcedEntity> EventSourcedAggregateRootMixin.getChildEntities()
@@ -197,12 +204,7 @@ public interface EventSourcedAggregateRootMixin extends
 			}
 		}
 
-		public void EventSourcedAggregateRootMixin.apply(Object eventPayload)
-		{
-			apply(eventPayload, MetaData.emptyInstance());
-		}
-
-		private void EventSourcedAggregateRootMixin.apply(Object eventPayload,
+		public void EventSourcedAggregateRootMixin.apply(Object eventPayload,
 				MetaData metaData)
 		{
 			if (this.getIdentifier() == null)

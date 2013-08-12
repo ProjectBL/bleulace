@@ -8,10 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.PreRemove;
 
-import org.axonframework.common.annotation.MetaData;
+import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.ShiroMetaData;
+import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.command.CreateGroupCommand;
 import com.bleulace.domain.crm.command.GroupMembershipCommand;
 import com.bleulace.domain.crm.event.GroupCreatedEvent;
@@ -33,34 +33,29 @@ public class AccountGroup extends AbstractRootResource implements
 	{
 	}
 
-	public AccountGroup(CreateGroupCommand command,
-			@MetaData(ShiroMetaData.SUBJECT_ID) String creatorId)
+	public AccountGroup(CreateGroupCommand command, MetaData metaData)
 	{
-		apply(command, GroupCreatedEvent.class);
+		String creatorId = metaData.getSubjectId();
+		apply(MappingAspect.map(command, GroupCreatedEvent.class), metaData);
 		if (creatorId != null)
 		{
-			GroupMembershipChangedEvent event = mapper().map(command,
+			GroupMembershipChangedEvent event = MappingAspect.map(command,
 					GroupMembershipChangedEvent.class);
 			event.setId(getId());
 			event.setAccountId(creatorId);
 			event.setAction(GroupMembershipAction.JOIN);
-			apply(event);
+			apply(event, metaData);
 		}
 	}
 
-	public void on(GroupCreatedEvent event)
-	{
-		map(event);
-	}
-
-	public void handle(GroupMembershipCommand command)
+	public void handle(GroupMembershipCommand command, MetaData metaData)
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			GroupMembershipChangedEvent event = mapper().map(command,
+			GroupMembershipChangedEvent event = MappingAspect.map(command,
 					GroupMembershipChangedEvent.class);
 			event.setAccountId(accountId);
-			apply(event);
+			apply(event, metaData);
 		}
 	}
 

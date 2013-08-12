@@ -8,18 +8,36 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.axonframework.domain.MetaData;
 
-public class ShiroMetaData
+public aspect MetaDataAspect
 {
-	public static final String SUBJECT_ID = "subjectId";
-	public static final String HOST = "host";
-	public static final String TIMESTAMP = "timestamp";
+	static final String AGGREGATE_ID = "aggregateId";
+	static final String SUBJECT_ID = "subjectId";
+	static final String HOST = "host";
+	static final String TIMESTAMP = "timestamp";
 
-	private ShiroMetaData()
+	public String MetaData.getSubjectId()
 	{
+		return (String) this.get(SUBJECT_ID);
+	}
+	
+	public String MetaData.getHost()
+	{
+		return (String) this.get(HOST);
 	}
 
-	public static Map<String, ?> get()
+	public Date MetaData.getTimestamp()
+	{
+		return (Date) this.get(TIMESTAMP);
+	}
+	
+	public String MetaData.getAggregateId()
+	{
+		return (String) this.get(AGGREGATE_ID);
+	}
+
+	public static Map<String, ?> acquireMetaData()
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(TIMESTAMP, new Date());

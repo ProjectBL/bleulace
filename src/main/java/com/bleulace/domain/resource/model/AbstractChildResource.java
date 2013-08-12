@@ -6,7 +6,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.bleulace.jpa.EventSourcedEntityMixin;
+import com.bleulace.cqrs.EventSourcedEntityMixin;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

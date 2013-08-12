@@ -10,4 +10,9 @@ public class CreateGroupCommand
 {
 	@NotEmpty
 	private String title = "";
+
+	public String getId()
+	{
+		return null;
+	}
 }

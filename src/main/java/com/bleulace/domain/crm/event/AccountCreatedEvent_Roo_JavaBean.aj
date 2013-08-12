@@ -7,14 +7,6 @@ import com.bleulace.domain.crm.event.AccountCreatedEvent;
 
 privileged aspect AccountCreatedEvent_Roo_JavaBean {
     
-    public String AccountCreatedEvent.getId() {
-        return this.id;
-    }
-    
-    public void AccountCreatedEvent.setId(String id) {
-        this.id = id;
-    }
-    
     public String AccountCreatedEvent.getUsername() {
         return this.username;
     }

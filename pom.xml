@@ -458,6 +458,14 @@
 							<groupId>org.apache.shiro</groupId>
 							<artifactId>shiro-core</artifactId>
 						</weaveDependency>
+						<weaveDependency>
+							<groupId>org.axonframework</groupId>
+							<artifactId>axon-core</artifactId>
+						</weaveDependency>
+						<weaveDependency>
+							<groupId>org.axonframework</groupId>
+							<artifactId>axon-integration</artifactId>
+						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

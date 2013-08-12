@@ -5,13 +5,15 @@ import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.modelmapper.ModelMapper;
 import org.springframework.util.Assert;
 
+import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
 @RequiresAuthentication
-public class UpdateContactInfoCommand extends ContactInformation
+public class UpdateContactInfoCommand extends ContactInformation implements
+		DomainEventPayload
 {
 	@TargetAggregateIdentifier
 	private final String id;

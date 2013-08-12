@@ -7,8 +7,6 @@ import com.bleulace.domain.crm.model.GroupMembershipAction;
 @RooJavaBean
 public class GroupMembershipChangedEvent
 {
-	private String id;
-
 	private String accountId;
 
 	private GroupMembershipAction action;

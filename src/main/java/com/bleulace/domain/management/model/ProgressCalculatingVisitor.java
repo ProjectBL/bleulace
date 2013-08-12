@@ -1,5 +1,8 @@
 package com.bleulace.domain.management.model;
 
+import org.springframework.roo.addon.tostring.RooToString;
+
+@RooToString
 class ProgressCalculatingVisitor implements ManageableResourceVisitor
 {
 	private int completed = 0;

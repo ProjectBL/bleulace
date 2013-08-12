@@ -5,7 +5,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import com.bleulace.jpa.EventSourcedAggregateRootMixin;
+import com.bleulace.cqrs.EventSourcedAggregateRootMixin;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)

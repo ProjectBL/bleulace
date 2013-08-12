@@ -8,14 +8,6 @@ import com.bleulace.domain.crm.model.GroupMembershipAction;
 
 privileged aspect GroupMembershipChangedEvent_Roo_JavaBean {
     
-    public String GroupMembershipChangedEvent.getId() {
-        return this.id;
-    }
-    
-    public void GroupMembershipChangedEvent.setId(String id) {
-        this.id = id;
-    }
-    
     public String GroupMembershipChangedEvent.getAccountId() {
         return this.accountId;
     }

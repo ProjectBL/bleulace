@@ -13,24 +13,12 @@ privileged aspect Comment_Roo_JavaBean {
         return this.content;
     }
     
-    public void Comment.setContent(String content) {
-        this.content = content;
-    }
-    
     public Account Comment.getAuthor() {
         return this.author;
     }
     
-    public void Comment.setAuthor(Account author) {
-        this.author = author;
-    }
-    
     public Date Comment.getDatePosted() {
         return this.datePosted;
-    }
-    
-    public void Comment.setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
     }
     
 }
