@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class FeedEntryFactoryLocaterImpl implements
-		FeedEntryFactoryLocater, ApplicationContextAware
+public class FeedEntryProviderLocaterImpl implements
+		FeedEntryProviderLocater, ApplicationContextAware
 {
 	private final Map<Class, FeedEntryProvider> map = new HashMap<Class, FeedEntryProvider>();
 

@@ -1,6 +1,6 @@
 package com.bleulace.domain.feed.infrastructure;
 
-public interface FeedEntryFactoryLocater
+public interface FeedEntryProviderLocater
 {
 	public FeedEntryProvider<?> locate(Class<?> clazz);
 }

@@ -46,7 +46,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	private List<JpaPermission> permissions = new ArrayList<JpaPermission>();
 
 	@Embedded
-	private ContactInformation contactInformation;
+	private ContactInformation contactInformation = new ContactInformation();
 
 	@ManyToMany
 	private Set<Account> friends = new HashSet<Account>();
@@ -78,6 +78,11 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	public void handle(UpdateContactInfoCommand command, MetaData data)
 	{
 		apply(command, data);
+	}
+
+	public void on(UpdateContactInfoCommand command, MetaData data)
+	{
+		MappingAspect.map(command, contactInformation);
 	}
 
 	public void handle(FriendRequestCommand command, MetaData data)

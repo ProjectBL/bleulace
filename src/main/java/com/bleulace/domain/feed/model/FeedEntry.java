@@ -14,6 +14,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
@@ -24,6 +25,7 @@ public class FeedEntry implements Serializable
 	private static final long serialVersionUID = 1150763613614458205L;
 
 	static final String GENERATING_EVENT_FLAG = "GENERATOR";
+	static final String METADATA_FLAG = "METADATA";
 
 	private Map<String, Serializable> data = new HashMap<String, Serializable>();
 
@@ -31,21 +33,23 @@ public class FeedEntry implements Serializable
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateCreated;
 
-	public FeedEntry(Serializable generatingEvent, List<Serializable> metaData)
+	public FeedEntry(Serializable generatingEvent, MetaData metaData,
+			List<Serializable> data)
 	{
 		setGeneratingEvent(generatingEvent);
-		for (Serializable metaDatum : metaData)
+		setMetaData(metaData);
+		for (Serializable datum : data)
 		{
-			addMetaDatum(metaDatum);
+			addDatum(datum);
 		}
 	}
 
-	public FeedEntry(Serializable generatingEvent, Serializable... metaData)
+	public FeedEntry(Serializable generatingEvent, MetaData metaData,
+			Serializable... data)
 	{
-		this(generatingEvent, Arrays.asList(metaData));
+		this(generatingEvent, metaData, Arrays.asList(data));
 	}
 
-	@SuppressWarnings("unused")
 	private FeedEntry()
 	{
 	}
@@ -55,12 +59,17 @@ public class FeedEntry implements Serializable
 		return data.get(GENERATING_EVENT_FLAG);
 	}
 
+	public MetaData getMetaData()
+	{
+		return (MetaData) data.get(METADATA_FLAG);
+	}
+
 	public Collection<Serializable> retrieveMetaData(
 			Class<? extends Serializable> clazz)
 	{
 		List<Serializable> relevantMetaData = new ArrayList<Serializable>();
 
-		final String typeIdentifier = makeMetaDatumTypeIdentifier(clazz);
+		final String typeIdentifier = makeDatumTypeIdentifier(clazz);
 		int index = 0;
 		String key = null;
 
@@ -73,27 +82,42 @@ public class FeedEntry implements Serializable
 		return relevantMetaData;
 	}
 
+	@Override
+	public FeedEntry clone()
+	{
+		FeedEntry f = new FeedEntry();
+		f.data = data;
+		f.dateCreated = dateCreated;
+		return f;
+	}
+
 	private void setGeneratingEvent(Serializable generatingEvent)
 	{
 		data.put(GENERATING_EVENT_FLAG, generatingEvent);
 	}
 
-	private void addMetaDatum(Serializable metaDatum)
+	private void setMetaData(MetaData metaData)
+	{
+		data.put(METADATA_FLAG, metaData);
+	}
+
+	private void addDatum(Serializable metaDatum)
 	{
 		data.put(makeMetaDatumKey(metaDatum), metaDatum);
 	}
 
-	private String makeMetaDatumTypeIdentifier(Class<?> clazz)
+	private String makeDatumTypeIdentifier(Class<?> clazz)
 	{
 		return clazz.getSimpleName();
 	}
 
 	private String makeMetaDatumKey(Serializable datum)
 	{
-		String metaDatumTypeIdentifier = makeMetaDatumTypeIdentifier(datum
+		String metaDatumTypeIdentifier = makeDatumTypeIdentifier(datum
 				.getClass());
 		Assert.isTrue(!metaDatumTypeIdentifier
 				.equals(FeedEntry.GENERATING_EVENT_FLAG));
+		Assert.isTrue(!metaDatumTypeIdentifier.equals(FeedEntry.METADATA_FLAG));
 		Integer index = 0;
 		while (data.containsKey(metaDatumTypeIdentifier + index))
 		{

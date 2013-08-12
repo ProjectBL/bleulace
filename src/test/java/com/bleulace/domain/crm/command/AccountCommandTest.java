@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.Locator;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 @ActiveProfiles("test")
 @Transactional
@@ -29,5 +30,21 @@ public class AccountCommandTest implements CommandGatewayAware
 	{
 		sendAndWait(command);
 		Assert.assertTrue(Locator.exists(Account.class));
+	}
+
+	@Test
+	public void testUpateInfoCommand()
+	{
+		sendAndWait(command);
+		String id = Locator.locate(Account.class).getId();
+		UpdateContactInfoCommand com = new UpdateContactInfoCommand(id);
+		String name = "baz";
+		com.setFirstName(name);
+		sendAndWait(com);
+		String other = EntityManagerReference.load(Account.class, id)
+				.getContactInformation().getFirstName();
+		System.out.println(other);
+		Assert.assertTrue(EntityManagerReference.load(Account.class, id)
+				.getContactInformation().getFirstName().equals(name));
 	}
 }

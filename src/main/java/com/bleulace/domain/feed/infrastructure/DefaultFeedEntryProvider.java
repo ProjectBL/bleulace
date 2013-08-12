@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.utils.jpa.EntityManagerReference;
 
 public class DefaultFeedEntryProvider<T extends DomainEventPayload> implements
 		FeedEntryProvider<T>
@@ -33,19 +35,17 @@ public class DefaultFeedEntryProvider<T extends DomainEventPayload> implements
 	}
 
 	@Override
-	public Set<String> provideAccountIds(T event, MetaData metaData)
+	public Set<Account> provideAccounts(T event, MetaData metaData)
 	{
-		Set<String> ids = new HashSet<String>();
-		String creatorId = (String) metaData.get("subjectId");
-		if (creatorId != null)
+		Set<Account> accounts = new HashSet<Account>();
+		Account creator = EntityManagerReference.load(Account.class,
+				metaData.getSubjectId());
+		accounts.add(creator);
+		if (postToFriends)
 		{
-			ids.add(creatorId);
-			if (postToFriends)
-			{
-				ids.addAll(dao.findFriendIds(creatorId));
-			}
+			accounts.addAll(creator.getFriends());
 		}
-		return ids;
+		return accounts;
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class DefaultFeedEntryProvider<T extends DomainEventPayload> implements
 	}
 
 	@Override
-	public Serializable[] provideMetaData(T event, MetaData metaData)
+	public Serializable[] provideData(T event, MetaData metaData)
 	{
 		return new Serializable[] {};
 	}

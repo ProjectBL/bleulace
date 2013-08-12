@@ -1,8 +1,11 @@
 package com.bleulace.domain.feed.event;
 
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.domain.MetaData;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
@@ -15,15 +18,15 @@ import org.springframework.stereotype.Component;
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.feed.infrastructure.DefaultFeedEntryProvider;
-import com.bleulace.domain.feed.infrastructure.FeedEntryFactoryLocater;
 import com.bleulace.domain.feed.infrastructure.FeedEntryProvider;
+import com.bleulace.domain.feed.infrastructure.FeedEntryProviderLocater;
 import com.bleulace.domain.feed.model.FeedEntry;
 
 @Component
 class FeedUpdatingListener implements SaveAggregateCallback<Account>
 {
 	@Autowired
-	private FeedEntryFactoryLocater locater;
+	private FeedEntryProviderLocater locater;
 
 	@Autowired
 	private EventBus eventBus;
@@ -45,16 +48,29 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>
 			final UnitOfWork uow = uowFactory.createUnitOfWork();
 			try
 			{
-				final FeedEntry entry = new FeedEntry(event,
-						provider.provideMetaData(event, metaData));
-				for (String id : provider.provideAccountIds(event, metaData))
+				final FeedEntry entry = new FeedEntry(event, metaData,
+						provider.provideData(event, metaData));
+				Set<Account> accounts = provider.provideAccounts(event,
+						metaData);
+				for (Account account : accounts)
 				{
-					doFeedUpdate(id, entry, uow);
+					uow.registerAggregate(account, eventBus, this);
+					account.getFeedEntries().add(entry.clone());
 				}
+
 				uow.commit();
+				em.flush();
+
+				for (Account account : accounts)
+				{
+					eventBus.publish(GenericEventMessage
+							.asEventMessage(new FeedUpdatedEvent(account
+									.getId())));
+				}
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 				uow.rollback(e);
 			}
 		}
@@ -71,13 +87,6 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>
 		{
 			em.merge(aggregate);
 		}
-	}
-
-	private void doFeedUpdate(String id, FeedEntry entry, UnitOfWork uow)
-	{
-		Account account = em.getReference(Account.class, id);
-		uow.registerAggregate(account, eventBus, this);
-		account.getFeedEntries().add(entry);
 	}
 
 	@SuppressWarnings("unchecked")
