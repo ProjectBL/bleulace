@@ -21,6 +21,8 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.command.CreateAccountCommand;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.Event;
+import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.Locator;
 import com.bleulace.utils.jpa.DateWindow;
 
@@ -88,6 +90,7 @@ public class EventCommandTest implements CommandGatewayAware
 	public void testRsvpCommand()
 	{
 		sendAndWait(createAccountCommand);
+		sendAndWait(new InviteGuestsCommand(eventId(), accountId()));
 		doRsvpAndAssertion(true);
 		doRsvpAndAssertion(false);
 	}
@@ -100,8 +103,12 @@ public class EventCommandTest implements CommandGatewayAware
 
 	private void assertRsvp(boolean rsvp)
 	{
-		Assert.assertTrue(rsvp == Locator.locate(Event.class).getAttendees()
-				.contains(account()));
+		EventInvitee inv = Locator.locate(Event.class).getInvitees()
+				.get(account());
+		Assert.assertNotNull(inv);
+		RsvpStatus targetStatus = rsvp ? RsvpStatus.ACCEPTED
+				: RsvpStatus.DECLINED;
+		Assert.assertEquals(targetStatus, inv.getStatus());
 	}
 
 	private String eventId()

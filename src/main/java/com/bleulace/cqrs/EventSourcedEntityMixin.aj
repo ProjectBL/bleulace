@@ -1,18 +1,14 @@
 package com.bleulace.cqrs;
 
+import java.beans.Transient;
 import java.util.Collection;
 
-import org.axonframework.common.annotation.MessageHandlerInvoker;
-import org.axonframework.common.annotation.MethodMessageHandler;
 import org.axonframework.domain.DomainEventMessage;
 import org.axonframework.eventhandling.annotation.AnnotationEventHandlerInvoker;
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.axonframework.eventsourcing.AbstractEventSourcedAggregateRoot;
 import org.axonframework.eventsourcing.EventSourcedEntity;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.springframework.data.domain.Persistable;
-
-import com.bleulace.domain.management.model.Task;
 
 public interface EventSourcedEntityMixin extends EventSourcedEntity,
 		Persistable<String>
@@ -21,11 +17,14 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 
 	static aspect Impl
 	{
+		@javax.persistence.Transient
 		private transient AggregateAnnotationInspector EventSourcedEntityMixin.inspector;
 
+		@javax.persistence.Transient
 		private transient AnnotationEventHandlerInvoker EventSourcedEntityMixin.eventHandlerInvoker = new AnnotationEventHandlerInvoker(
 				this);
 
+		@javax.persistence.Transient
 		private volatile EventSourcedAggregateRootMixin EventSourcedEntityMixin.aggregateRoot;
 
 		public boolean EventSourcedEntityMixin.isNew()

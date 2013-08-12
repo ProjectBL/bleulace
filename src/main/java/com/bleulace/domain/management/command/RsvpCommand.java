@@ -2,15 +2,13 @@ package com.bleulace.domain.management.command;
 
 import javax.validation.constraints.NotNull;
 
-import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-@RooJavaBean
-public class RsvpCommand
-{
-	@TargetAggregateIdentifier
-	private final String id;
+import com.bleulace.cqrs.DomainEventPayload;
 
+@RooJavaBean
+public class RsvpCommand implements DomainEventPayload
+{
 	@NotNull
 	private final String accountId;
 
@@ -18,7 +16,7 @@ public class RsvpCommand
 
 	public RsvpCommand(String id, String accountId, boolean accepted)
 	{
-		this.id = id;
+		setId(id);
 		this.accountId = accountId;
 		this.accepted = accepted;
 	}

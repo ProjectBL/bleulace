@@ -1,22 +1,26 @@
 package com.bleulace.domain.management.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.PreRemove;
 
 import org.axonframework.domain.MetaData;
+import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.CreateEventCommand;
+import com.bleulace.domain.management.command.InviteGuestsCommand;
 import com.bleulace.domain.management.command.RescheduleEventCommand;
 import com.bleulace.domain.management.command.RsvpCommand;
 import com.bleulace.domain.management.event.EventCreatedEvent;
+import com.bleulace.domain.management.event.GuestInvitedEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.utils.jpa.DateWindow;
 import com.bleulace.utils.jpa.EntityManagerReference;
@@ -28,8 +32,10 @@ public class Event extends Project
 	@Embedded
 	private DateWindow window = DateWindow.defaultValue();
 
-	@ManyToMany
-	private Set<Account> attendees = new HashSet<Account>();
+	@MapKeyColumn(name = "GUEST_ID")
+	@EventSourcedMember
+	@ElementCollection
+	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
 
 	Event()
 	{
@@ -54,23 +60,30 @@ public class Event extends Project
 		}
 	}
 
+	public void handle(InviteGuestsCommand command, MetaData metaData)
+	{
+		for (String accountId : command.getAccountIds())
+		{
+			apply(new GuestInvitedEvent(getId(), accountId), metaData);
+		}
+	}
+
+	public void on(GuestInvitedEvent event, MetaData metaData)
+	{
+		Account guest = EntityManagerReference.load(Account.class,
+				event.getAccountId());
+		Account host = null;
+		if (metaData.getSubjectId() != null)
+		{
+			host = EntityManagerReference.load(Account.class,
+					metaData.getSubjectId());
+		}
+		invitees.put(guest, new EventInvitee(guest, host));
+	}
+
 	public void handle(RsvpCommand command, MetaData metaData)
 	{
 		apply(command, metaData);
-	}
-
-	public void on(RsvpCommand event)
-	{
-		Account account = EntityManagerReference.load(Account.class,
-				event.getAccountId());
-		if (event.isAccepted())
-		{
-			attendees.add(account);
-		}
-		else
-		{
-			attendees.remove(account);
-		}
 	}
 
 	public void handle(RescheduleEventCommand command, MetaData metaData)
@@ -94,9 +107,9 @@ public class Event extends Project
 	@PreRemove
 	protected void preRemove()
 	{
-		for (Account a : attendees)
+		for (Account a : invitees.keySet())
 		{
-			attendees.remove(a);
+			invitees.remove(a);
 		}
 	}
 }

@@ -5,8 +5,9 @@ package com.bleulace.domain.management.model;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.Event;
+import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.utils.jpa.DateWindow;
-import java.util.Set;
+import java.util.Map;
 
 privileged aspect Event_Roo_JavaBean {
     
@@ -18,12 +19,12 @@ privileged aspect Event_Roo_JavaBean {
         this.window = window;
     }
     
-    public Set<Account> Event.getAttendees() {
-        return this.attendees;
+    public Map<Account, EventInvitee> Event.getInvitees() {
+        return this.invitees;
     }
     
-    public void Event.setAttendees(Set<Account> attendees) {
-        this.attendees = attendees;
+    public void Event.setInvitees(Map<Account, EventInvitee> invitees) {
+        this.invitees = invitees;
     }
     
 }

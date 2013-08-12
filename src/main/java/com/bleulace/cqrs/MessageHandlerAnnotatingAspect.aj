@@ -25,18 +25,18 @@ public aspect MessageHandlerAnnotatingAspect
 	declare @method : public * com.bleulace..*.handle*(CommandPayload+,..) : @CommandHandler;
 	declare @constructor : public com.bleulace..new(CommandPayload+,..) : @CommandHandler;
 
-	pointcut resourceEventHandler(EventSourcedAggregateRootMixin resource,
+	pointcut resourceEventHandler(EventSourcedEntityMixin resource,
 			DomainEventPayload event) : 
-		execution(@EventHandler void EventSourcedAggregateRootMixin+.*(..,DomainEventPayload+,..))
+		execution(@EventHandler void EventSourcedEntityMixin+.*(..,DomainEventPayload+,..))
 		&& target(resource)
 		&& args(event);
 
-	void around(EventSourcedAggregateRootMixin resource,
-			DomainEventPayload event) : 
+	void around(EventSourcedEntityMixin resource, DomainEventPayload event) : 
 		resourceEventHandler(resource,event)
 	{
 		String eventId = event.getId();
-		if (eventId == null || resource.getId().equals(eventId))
+		if (eventId == null || resource.getId() == null
+				|| resource.getId().equals(eventId))
 		{
 			proceed(resource, event);
 		}
