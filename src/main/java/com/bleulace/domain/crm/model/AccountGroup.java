@@ -3,6 +3,7 @@ package com.bleulace.domain.crm.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -26,7 +27,7 @@ public class AccountGroup extends AbstractRootResource implements
 	@Column(unique = true, nullable = false)
 	private String title;
 
-	@ManyToMany
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Account> members = new HashSet<Account>();
 
 	AccountGroup()

@@ -8,14 +8,9 @@ import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.bleulace.IntegrationTest;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.AuthenticatingTest;
 import com.bleulace.domain.management.model.Event;
@@ -24,13 +19,8 @@ import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.Locator;
 import com.bleulace.utils.jpa.DateWindow;
 
-@ActiveProfiles("test")
-@Transactional
-@TransactionConfiguration
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
 public class EventCommandTest extends AuthenticatingTest implements
-		CommandGatewayAware
+		IntegrationTest, CommandGatewayAware
 {
 	@Autowired
 	private ManagementCommandFactory factory;
