@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.jpa.ReadOnlyDAO;
 
-public interface AccountDAO extends ReadOnlyDAO<Account>, AccountDAOCustom
+public interface AccountDAO extends ReadOnlyDAO<Account>
 {
 	public Account findByUsername(String username);
 

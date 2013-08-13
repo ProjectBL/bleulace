@@ -1,17 +1,16 @@
 package com.bleulace.domain.management.command;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.management.model.ProgressValue;
 import com.bleulace.domain.management.model.Task;
 import com.bleulace.utils.Locator;
@@ -21,27 +20,38 @@ import com.bleulace.utils.Locator;
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
-public class TaskCommandTest implements CommandGatewayAware
+public class TaskCommandTest extends BundleCommandTest
 {
 	@Autowired
-	@Qualifier("createTaskCommand")
-	private CreateTaskCommand command;
+	private ManagementCommandFactory factory;
+
+	@Before
+	public void createTask()
+	{
+		factory.createTask(getBundle().getId());
+	}
 
 	@Test
-	public void testCreateTaskCommand() throws Exception
+	public void createdTaskExistsInDb()
 	{
-		sendAndWait(command);
-		Assert.assertTrue(Locator.exists(Task.class));
+		Assert.assertNotNull(getTask());
 	}
 
 	@Test
 	public void testMarkTaskCommand() throws Exception
 	{
-		sendAndWait(command);
-		sendAndWait(new MarkTaskCommand(Locator.locate(Task.class).getId(),
-				true));
-		Assert.assertTrue(Locator.locate(Task.class).isComplete());
-		Assert.assertEquals(Locator.locate(Task.class).getProgress(),
-				new ProgressValue(1, 1));
+		sendAndWait(new MarkTaskCommand(getTaskId(), true));
+		Assert.assertTrue(getTask().isComplete());
+		Assert.assertEquals(getTask().getProgress(), new ProgressValue(1, 1));
+	}
+
+	public String getTaskId()
+	{
+		return getTask().getId();
+	}
+
+	private Task getTask()
+	{
+		return Locator.locate(Task.class);
 	}
 }

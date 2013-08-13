@@ -1,6 +1,7 @@
 package com.bleulace.domain.crm.command;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.Locator;
-import com.bleulace.utils.jpa.EntityManagerReference;
 
 @ActiveProfiles("test")
 @Transactional
@@ -23,27 +23,36 @@ import com.bleulace.utils.jpa.EntityManagerReference;
 public class AccountCommandTest implements CommandGatewayAware
 {
 	@Autowired
-	private CreateAccountCommand command;
+	private CrmCommandFactory factory;
+
+	@Before
+	public void createAccount()
+	{
+		factory.createAccount();
+	}
 
 	@Test
 	public void testCreateAccountCommand()
 	{
-		sendAndWait(command);
-		Assert.assertTrue(Locator.exists(Account.class));
+		Assert.assertNotNull(getAccount());
 	}
 
 	@Test
 	public void testUpateInfoCommand()
 	{
-		sendAndWait(command);
-		String id = Locator.locate(Account.class).getId();
+		String id = getAccount().getId();
 		EditInfoCommand com = new EditInfoCommand(id);
 		String name = "baz";
 		com.setFirstName(name);
 		sendAndWait(com);
-		Assert.assertTrue(EntityManagerReference.load(Account.class, id)
-				.getContactInfo().getFirstName().equals(name));
+		Assert.assertTrue(getAccount().getContactInfo().getFirstName()
+				.equals(name));
 
 		Assert.assertTrue(new EditInfoCommand(id).getFirstName().equals(name));
+	}
+
+	public Account getAccount()
+	{
+		return Locator.locate(Account.class);
 	}
 }

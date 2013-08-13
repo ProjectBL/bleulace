@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -18,8 +17,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.domain.crm.command.CreateAccountCommand;
-import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.AuthenticatingTest;
 import com.bleulace.domain.management.model.Event;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.RsvpStatus;
@@ -31,25 +29,22 @@ import com.bleulace.utils.jpa.DateWindow;
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
-public class EventCommandTest implements CommandGatewayAware
+public class EventCommandTest extends AuthenticatingTest implements
+		CommandGatewayAware
 {
 	@Autowired
-	@Qualifier("createEventCommand")
-	private CreateEventCommand createEventCommand;
-
-	@Autowired
-	private CreateAccountCommand createAccountCommand;
+	private ManagementCommandFactory factory;
 
 	@Before
-	public void beforeMethod()
+	public void createEvent()
 	{
-		sendAndWait(createEventCommand);
+		factory.createEvent();
 	}
 
 	@Test
-	public void testCreateEventCommand()
+	public void createdEventExistsInDb()
 	{
-		Assert.assertTrue(Locator.exists(Event.class));
+		Assert.assertNotNull(getEvent());
 	}
 
 	@Test
@@ -59,9 +54,9 @@ public class EventCommandTest implements CommandGatewayAware
 		DateWindow oldDates = Locator.locate(Event.class).getWindow();
 
 		final int minutes = 15;
-		sendAndWait(new RescheduleEventCommand(eventId(), LocalDateTime
-				.fromDateFields(oldDates.getStart()).plusMinutes(minutes)
-				.toDate()));
+		sendAndWait(new RescheduleEventCommand(getEvent().getId(),
+				LocalDateTime.fromDateFields(oldDates.getStart())
+						.plusMinutes(minutes).toDate()));
 
 		DateWindow newDates = Locator.locate(Event.class).getWindow();
 
@@ -79,7 +74,8 @@ public class EventCommandTest implements CommandGatewayAware
 		Date newStart = LocalDateTime.now().plusMinutes(15).toDate();
 		Date newEnd = LocalDateTime.now().plusMinutes(60).toDate();
 
-		sendAndWait(new RescheduleEventCommand(eventId(), newStart, newEnd));
+		sendAndWait(new RescheduleEventCommand(getEvent().getId(), newStart,
+				newEnd));
 		DateWindow newDates = Locator.locate(Event.class).getWindow();
 
 		Assert.assertTrue(closeEnough(newStart, newDates.getStart()));
@@ -89,41 +85,32 @@ public class EventCommandTest implements CommandGatewayAware
 	@Test
 	public void testRsvpCommand()
 	{
-		sendAndWait(createAccountCommand);
-		sendAndWait(new InviteGuestsCommand(eventId(), accountId()));
+		sendAndWait(new InviteGuestsCommand(getEvent().getId(), getAccount()
+				.getId()));
 		doRsvpAndAssertion(true);
 		doRsvpAndAssertion(false);
 	}
 
 	private void doRsvpAndAssertion(boolean rsvp)
 	{
-		sendAndWait(new RsvpCommand(eventId(), accountId(), rsvp));
+		sendAndWait(new RsvpCommand(getEvent().getId(), getAccount().getId(),
+				rsvp));
 		assertRsvp(rsvp);
 	}
 
 	private void assertRsvp(boolean rsvp)
 	{
 		EventInvitee inv = Locator.locate(Event.class).getInvitees()
-				.get(account());
+				.get(getAccount());
 		Assert.assertNotNull(inv);
 		RsvpStatus targetStatus = rsvp ? RsvpStatus.ACCEPTED
 				: RsvpStatus.DECLINED;
 		Assert.assertEquals(targetStatus, inv.getStatus());
 	}
 
-	private String eventId()
+	public Event getEvent()
 	{
-		return Locator.locate(Event.class).getId();
-	}
-
-	private Account account()
-	{
-		return Locator.locate(Account.class);
-	}
-
-	private String accountId()
-	{
-		return account().getId();
+		return Locator.locate(Event.class);
 	}
 
 	private boolean closeEnough(Date o1, Date o2)

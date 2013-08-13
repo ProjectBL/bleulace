@@ -25,7 +25,7 @@
 	<context:spring-configured />
 
 	<jdbc:initialize-database data-source="dataSource"
-		enabled="true" ignore-failures="DROPS">
+		enabled="true" ignore-failures="ALL">
 		<jdbc:script encoding="UTF-8"
 			location="classpath:META-INF/db/migration/quartz-h2-createDDL.sql"
 			execution="INIT" />

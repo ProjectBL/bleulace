@@ -11,10 +11,16 @@ import com.bleulace.cqrs.DomainEventPayload;
 public class CommentCommand implements DomainEventPayload
 {
 	@NotEmpty
-	private String content = "";
+	private String content;
 
 	public CommentCommand(String id)
 	{
+		this(id, "");
+	}
+
+	public CommentCommand(String id, String content)
+	{
 		setId(id);
+		this.content = content;
 	}
 }

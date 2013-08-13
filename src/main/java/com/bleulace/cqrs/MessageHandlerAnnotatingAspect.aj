@@ -1,8 +1,12 @@
 package com.bleulace.cqrs;
 
+import java.lang.reflect.Method;
+
+import org.aspectj.lang.reflect.MethodSignature;
 import org.axonframework.commandhandling.annotation.CommandHandler;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
+import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.cqrs.event.EventBusAware;
 
 /**
@@ -13,9 +17,8 @@ import com.bleulace.cqrs.event.EventBusAware;
  * @author Arleigh Dickerson
  * 
  */
-public aspect MessageHandlerAnnotatingAspect
+public aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
 {
-
 	declare parents : com.bleulace..event..*Event implements DomainEventPayload;
 	declare parents : com.bleulace..command..*Command implements CommandPayload;
 
@@ -30,6 +33,34 @@ public aspect MessageHandlerAnnotatingAspect
 		execution(@EventHandler void EventSourcedEntityMixin+.*(..,DomainEventPayload+,..))
 		&& target(resource)
 		&& args(event);
+
+	pointcut sendAnnotatedMethod() : 
+		execution(@Send Object+ *.*(..));
+
+	pointcut sendAnnotatedClass() : 
+		execution(CommandPayload+ *.*(..)) && within(@Send *);
+
+	after() returning(Object commandPayload) : 
+		sendAnnotatedMethod() || sendAnnotatedClass()
+	{
+		Method method = ((MethodSignature) thisJoinPoint.getSignature())
+				.getMethod();
+
+		Send annotation = method.getAnnotation(Send.class);
+		if (annotation == null)
+		{
+			annotation = method.getDeclaringClass().getAnnotation(Send.class);
+		}
+		
+		if(annotation.async())
+		{
+			send(commandPayload);
+		}
+		else
+		{
+			sendAndWait(commandPayload);
+		}
+	}
 
 	void around(EventSourcedEntityMixin resource, DomainEventPayload event) : 
 		resourceEventHandler(resource,event)

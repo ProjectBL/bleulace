@@ -1,8 +1,12 @@
 package com.bleulace.domain.management.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.MapKeyColumn;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.CommentableResource;
@@ -17,6 +21,10 @@ public interface ManageableResource extends CommentableResource
 		@Column(nullable = false)
 		private String ManageableResource.title = "";
 
+		@MapKeyColumn(name = "MANAGER_ID")
+		@ElementCollection
+		private Map<Account, ManagementAssignment> assignments = new HashMap<Account, ManagementAssignment>();
+
 		public String ManageableResource.getTitle()
 		{
 			return this.title;
@@ -25,11 +33,6 @@ public interface ManageableResource extends CommentableResource
 		public void ManageableResource.setTitle(String title)
 		{
 			this.title = title;
-		}
-
-		public List<Account> ManageableResource.getManagers(ManagementRole role)
-		{
-			return ManagementRoleAssignment.findManagers(this.getId(), role);
 		}
 
 		public Progress ManageableResource.getProgress()
@@ -41,16 +44,7 @@ public interface ManageableResource extends CommentableResource
 
 		public void ManageableResource.on(ManagerAssignedEvent event)
 		{
-			if (event.getRole() == null)
-			{
-				ManagementRoleAssignment.revoke(this.getId(),
-						event.getAssigneeId());
-			}
-			else
-			{
-				ManagementRoleAssignment.assign(this.getId(),
-						event.getAssigneeId(), event.getRole());
-			}
+			//TODO : fix me
 		}
 
 		public void ManageableResource.accept(ManageableResourceVisitor visitor)

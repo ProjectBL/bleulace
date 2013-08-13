@@ -1,6 +1,5 @@
 package com.bleulace.domain.crm.command;
 
-import org.apache.shiro.SecurityUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,48 +12,69 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.domain.AuthenticatingTest;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.AccountGroup;
 import com.bleulace.domain.crm.model.GroupMembershipAction;
 import com.bleulace.utils.Locator;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @ActiveProfiles("test")
 @Transactional
 @TransactionConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
-public class GroupCommandTest implements CommandGatewayAware
+public class GroupCommandTest extends AuthenticatingTest implements
+		CommandGatewayAware
 {
+	@Autowired
+	private CrmCommandFactory factory;
+
 	@Autowired
 	private AccountDAO dao;
 
-	@Autowired
-	private CreateAccountCommand accountCommand;
-
-	@Autowired
-	private CreateGroupCommand groupCommand;
-
 	@Before
-	public void beforeMethod()
+	public void createGroup()
 	{
-		sendAndWait(accountCommand);
-		SecurityUtils.getSubject().login(accountCommand.getUsername(),
-				accountCommand.getPassword());
-
-		sendAndWait(groupCommand);
-		AccountGroup g = Locator.locate(AccountGroup.class);
-		Assert.assertTrue(g.getMembers().contains(executingAccount()));
+		factory.createGroup();
 	}
 
 	@Test
-	public void testJoinGroupCommand()
+	public void createdGroupExistsInDb()
 	{
-		CreateAccountCommand c = SpringApplicationContext
-				.getBean(CreateAccountCommand.class);
-		sendAndWait(c);
-		Account other = dao.findByUsername(c.getUsername());
+		assertGroupExists(true);
+	}
+
+	@Test
+	public void groupCreatorIsAddedAsMember()
+	{
+		getGroup().getMembers().contains(getAccount());
+	}
+
+	@Test
+	public void groupNotDeletedWhenNonFinalMemberLeaves()
+	{
+		joinGroup();
+		leaveGroup();
+		assertGroupExists(true);
+	}
+
+	@Test
+	public void groupDeletedWhenFinalMemberLeaves()
+	{
+		leaveGroup();
+		assertGroupExists(false);
+	}
+
+	private void assertGroupExists(boolean exists)
+	{
+		Assert.assertTrue((getGroup() != null) == exists);
+	}
+
+	private void joinGroup()
+	{
+		Account other = dao.findByUsername(factory.createAccount()
+				.getUsername());
 
 		GroupMembershipCommand command = makeCommand(GroupMembershipAction.JOIN);
 		command.getAccountIds().add(other.getId());
@@ -64,17 +84,11 @@ public class GroupCommandTest implements CommandGatewayAware
 				.contains(other));
 	}
 
-	@Test
-	public void testLeaveGroupCommand()
+	private void leaveGroup()
 	{
 		GroupMembershipCommand command = makeCommand(GroupMembershipAction.LEAVE);
-		command.getAccountIds().add(executingAccount().getId());
+		command.getAccountIds().add(getAccount().getId());
 		sendAndWait(command);
-
-		// last member leaves,group is deleted
-		Assert.assertFalse(Locator.exists(AccountGroup.class));
-
-		// TODO : test case for when there are still members in group
 	}
 
 	private GroupMembershipCommand makeCommand(GroupMembershipAction action)
@@ -83,8 +97,8 @@ public class GroupCommandTest implements CommandGatewayAware
 				.getId(), action);
 	}
 
-	private Account executingAccount()
+	public AccountGroup getGroup()
 	{
-		return dao.findByUsername(accountCommand.getUsername());
+		return Locator.locate(AccountGroup.class);
 	}
 }

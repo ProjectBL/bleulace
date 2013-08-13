@@ -28,7 +28,7 @@ public class EventSchedulerTest
 	private EventListenerForTest listener;
 
 	@Test
-	public void test() throws Exception
+	public void eventScheduledAndFired() throws Exception
 	{
 		executor.execute(new EventForTest(EVENT_DELAY));
 		Thread.sleep(GRACE_PERIOD.getMillis());
