@@ -13,6 +13,7 @@ import org.axonframework.unitofwork.DefaultUnitOfWorkFactory;
 import org.axonframework.unitofwork.SaveAggregateCallback;
 import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.DomainEventPayload;
@@ -23,6 +24,7 @@ import com.bleulace.domain.feed.infrastructure.FeedEntryProviderLocater;
 import com.bleulace.domain.feed.model.FeedEntry;
 
 @Component
+@Profile({ "dev", "prod" })
 class FeedUpdatingListener implements SaveAggregateCallback<Account>
 {
 	@Autowired

@@ -130,11 +130,6 @@
 		</property>
 		<property name="dispatchInterceptors">
 			<util:list>
-				<bean
-					class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor">
-					<constructor-arg ref="validator" />
-				</bean>
-				<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
 				<bean class="com.bleulace.cqrs.command.CommandMetaDataInterceptor" />
 			</util:list>
 		</property>
@@ -155,6 +150,15 @@
 			class="org.axonframework.commandhandling.AsynchronousCommandBus"
 			parent="abstractCommandBus">
 			<constructor-arg ref="executor" />
+			<property name="dispatchInterceptors">
+				<util:list>
+					<bean
+						class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor">
+						<constructor-arg ref="validator" />
+					</bean>
+					<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
+				</util:list>
+			</property>
 		</bean>
 	</beans>
 

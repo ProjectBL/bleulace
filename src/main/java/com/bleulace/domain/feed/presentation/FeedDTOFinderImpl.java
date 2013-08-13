@@ -7,12 +7,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.feed.model.FeedEntry;
 
 @Component
+@Profile({ "dev", "prod" })
 class FeedDTOFinderImpl implements FeedDTOFinder
 {
 	@PersistenceContext

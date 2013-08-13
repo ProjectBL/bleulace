@@ -37,14 +37,13 @@ public class AccountCommandTest implements CommandGatewayAware
 	{
 		sendAndWait(command);
 		String id = Locator.locate(Account.class).getId();
-		UpdateContactInfoCommand com = new UpdateContactInfoCommand(id);
+		EditInfoCommand com = new EditInfoCommand(id);
 		String name = "baz";
 		com.setFirstName(name);
 		sendAndWait(com);
-		String other = EntityManagerReference.load(Account.class, id)
-				.getContactInformation().getFirstName();
-		System.out.println(other);
 		Assert.assertTrue(EntityManagerReference.load(Account.class, id)
-				.getContactInformation().getFirstName().equals(name));
+				.getContactInfo().getFirstName().equals(name));
+
+		Assert.assertTrue(new EditInfoCommand(id).getFirstName().equals(name));
 	}
 }

@@ -22,8 +22,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.command.CreateAccountCommand;
+import com.bleulace.domain.crm.command.EditInfoCommand;
 import com.bleulace.domain.crm.command.FriendRequestCommand;
-import com.bleulace.domain.crm.command.UpdateContactInfoCommand;
 import com.bleulace.domain.crm.event.AccountCreatedEvent;
 import com.bleulace.domain.feed.model.FeedEntry;
 import com.bleulace.domain.resource.model.AbstractRootResource;
@@ -46,7 +46,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	private List<JpaPermission> permissions = new ArrayList<JpaPermission>();
 
 	@Embedded
-	private ContactInformation contactInformation = new ContactInformation();
+	private ContactInformation contactInfo = ContactInformation.defaultValues();
 
 	@ManyToMany
 	private Set<Account> friends = new HashSet<Account>();
@@ -75,14 +75,15 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 		apply(event, metaData);
 	}
 
-	public void handle(UpdateContactInfoCommand command, MetaData data)
+	public void handle(EditInfoCommand command, MetaData data)
 	{
 		apply(command, data);
 	}
 
-	public void on(UpdateContactInfoCommand command, MetaData data)
+	public void on(EditInfoCommand command, MetaData data)
 	{
-		MappingAspect.map(command, contactInformation);
+		contactInfo = command.getInformation();
+		setPassword(command.getPassword());
 	}
 
 	public void handle(FriendRequestCommand command, MetaData data)

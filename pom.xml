@@ -331,6 +331,11 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -461,10 +466,6 @@
 						<weaveDependency>
 							<groupId>org.axonframework</groupId>
 							<artifactId>axon-core</artifactId>
-						</weaveDependency>
-						<weaveDependency>
-							<groupId>org.axonframework</groupId>
-							<artifactId>axon-integration</artifactId>
 						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>

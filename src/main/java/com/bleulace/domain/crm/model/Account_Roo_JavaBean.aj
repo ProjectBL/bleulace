@@ -44,12 +44,12 @@ privileged aspect Account_Roo_JavaBean {
         this.permissions = permissions;
     }
     
-    public ContactInformation Account.getContactInformation() {
-        return this.contactInformation;
+    public ContactInformation Account.getContactInfo() {
+        return this.contactInfo;
     }
     
-    public void Account.setContactInformation(ContactInformation contactInformation) {
-        this.contactInformation = contactInformation;
+    public void Account.setContactInfo(ContactInformation contactInfo) {
+        this.contactInfo = contactInfo;
     }
     
     public Set<Account> Account.getFriends() {
