@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import com.bleulace.utils.jpa.DateWindow;
+import com.bleulace.jpa.DateWindow;
 
 public class CreateEventCommand extends CreateProjectCommand
 {

@@ -12,12 +12,12 @@ import javax.persistence.PreRemove;
 import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.command.CreateGroupCommand;
 import com.bleulace.domain.crm.command.GroupMembershipCommand;
 import com.bleulace.domain.crm.event.GroupCreatedEvent;
 import com.bleulace.domain.crm.event.GroupMembershipChangedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.utils.dto.Mapper;
 
 @Entity
 @RooJavaBean
@@ -37,10 +37,10 @@ public class AccountGroup extends AbstractRootResource implements
 	public AccountGroup(CreateGroupCommand command, MetaData metaData)
 	{
 		String creatorId = metaData.getSubjectId();
-		apply(MappingAspect.map(command, GroupCreatedEvent.class), metaData);
+		apply(Mapper.map(command, GroupCreatedEvent.class), metaData);
 		if (creatorId != null)
 		{
-			GroupMembershipChangedEvent event = MappingAspect.map(command,
+			GroupMembershipChangedEvent event = Mapper.map(command,
 					GroupMembershipChangedEvent.class);
 			event.setId(getId());
 			event.setAccountId(creatorId);
@@ -53,7 +53,7 @@ public class AccountGroup extends AbstractRootResource implements
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			GroupMembershipChangedEvent event = MappingAspect.map(command,
+			GroupMembershipChangedEvent event = Mapper.map(command,
 					GroupMembershipChangedEvent.class);
 			event.setAccountId(accountId);
 			apply(event, metaData);

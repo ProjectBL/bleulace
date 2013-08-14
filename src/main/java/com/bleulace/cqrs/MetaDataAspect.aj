@@ -16,8 +16,8 @@ import org.axonframework.domain.MetaData;
 import org.springframework.core.env.Environment;
 
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.utils.ctx.SpringApplicationContext;
-import com.bleulace.utils.jpa.EntityManagerReference;
 
 public aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 {

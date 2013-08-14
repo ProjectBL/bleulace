@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bleulace.cqrs.event.EventBusAware;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 @Repository
 class ResourceRepository extends HybridJpaRepository<AbstractRootResource>

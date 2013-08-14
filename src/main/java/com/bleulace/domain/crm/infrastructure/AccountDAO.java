@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.utils.jpa.ReadOnlyDAO;
+import com.bleulace.jpa.ReadOnlyDAO;
 
 public interface AccountDAO extends ReadOnlyDAO<Account>
 {

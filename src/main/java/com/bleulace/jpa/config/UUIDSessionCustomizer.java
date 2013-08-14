@@ -1,4 +1,4 @@
-package com.bleulace.jpa.infrastructure;
+package com.bleulace.jpa.config;
 
 import org.eclipse.persistence.config.SessionCustomizer;
 import org.eclipse.persistence.sequencing.UUIDSequence;

@@ -12,6 +12,8 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OrderBy;
@@ -21,16 +23,17 @@ import javax.persistence.Table;
 import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.command.CreateAccountCommand;
 import com.bleulace.domain.crm.command.EditInfoCommand;
 import com.bleulace.domain.crm.command.FriendRequestCommand;
 import com.bleulace.domain.crm.event.AccountCreatedEvent;
 import com.bleulace.domain.feed.model.FeedEntry;
 import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.utils.chrono.TimeZoneEnum;
+import com.bleulace.utils.dto.Mapper;
 
 @Entity
-@RooJavaBean
+@RooJavaBean(settersByDefault = true)
 @Table(name = "ACCOUNT")
 public class Account extends AbstractRootResource implements CommentableRoot,
 		CommentableResource
@@ -38,8 +41,8 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	@Column(nullable = false, updatable = false, unique = true)
 	private String username;
 
-	private byte[] hash;
-	private byte[] salt;
+	@Embedded
+	private HashedPassword password = new HashedPassword();
 
 	@Embedded
 	private ContactInformation contactInfo = ContactInformation.defaultValues();
@@ -55,6 +58,10 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	@ElementCollection
 	private List<FeedEntry> feedEntries = new ArrayList<FeedEntry>();
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private TimeZoneEnum timeZone = TimeZoneEnum.DEFAULT;
+
 	Account()
 	{
 	}
@@ -63,9 +70,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	{
 		if (password != null)
 		{
-			Encryptor en = new Encryptor(password.toCharArray());
-			this.salt = en.getSalt();
-			this.hash = en.getHash();
+			this.password = new HashedPassword(password);
 		}
 	}
 
@@ -73,7 +78,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	{
 		AccountCreatedEvent event = new AccountCreatedEvent();
 		event.setId(getId());
-		MappingAspect.map(command, event);
+		Mapper.map(command, event);
 		apply(event, metaData);
 	}
 

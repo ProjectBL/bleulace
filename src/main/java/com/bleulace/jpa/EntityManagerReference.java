@@ -1,4 +1,4 @@
-package com.bleulace.utils.jpa;
+package com.bleulace.jpa;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

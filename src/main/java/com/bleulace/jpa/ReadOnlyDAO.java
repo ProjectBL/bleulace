@@ -1,4 +1,4 @@
-package com.bleulace.utils.jpa;
+package com.bleulace.jpa;
 
 import java.util.List;
 

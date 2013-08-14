@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 public class DefaultFeedEntryProvider<T extends DomainEventPayload> implements
 		FeedEntryProvider<T>

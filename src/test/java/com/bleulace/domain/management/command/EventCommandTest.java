@@ -16,8 +16,9 @@ import com.bleulace.domain.AuthenticatingTest;
 import com.bleulace.domain.management.model.Event;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.RsvpStatus;
+import com.bleulace.jpa.DateWindow;
+import com.bleulace.jpa.JodaDateWindow;
 import com.bleulace.utils.Locator;
-import com.bleulace.utils.jpa.DateWindow;
 
 public class EventCommandTest extends AuthenticatingTest implements
 		IntegrationTest, CommandGatewayAware
@@ -41,20 +42,19 @@ public class EventCommandTest extends AuthenticatingTest implements
 	public void testMoveEvent()
 	{
 
-		DateWindow oldDates = Locator.locate(Event.class).getWindow();
+		JodaDateWindow oldDates = Locator.locate(Event.class)
+				.getWindow().getDecorator();
 
 		final int minutes = 15;
-		sendAndWait(new RescheduleEventCommand(getEvent().getId(),
-				LocalDateTime.fromDateFields(oldDates.getStart())
-						.plusMinutes(minutes).toDate()));
+		sendAndWait(new RescheduleEventCommand(getEvent().getId(), oldDates
+				.getStart().plusMinutes(minutes).toDate()));
 
-		DateWindow newDates = Locator.locate(Event.class).getWindow();
+		JodaDateWindow newDates = Locator.locate(Event.class)
+				.getWindow().getDecorator();
 
 		Assert.assertEquals(oldDates.getLength(), newDates.getLength());
-		Assert.assertEquals(
-				Minutes.minutes(minutes),
-				Minutes.minutesBetween(oldDates.getStartTime(),
-						newDates.getStartTime()));
+		Assert.assertEquals(Minutes.minutes(minutes), Minutes.minutesBetween(
+				oldDates.getStart(), newDates.getStart()));
 
 	}
 

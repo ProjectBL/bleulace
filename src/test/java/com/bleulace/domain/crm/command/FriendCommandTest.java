@@ -10,7 +10,7 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.FriendRequestAction;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 public class FriendCommandTest implements IntegrationTest, CommandGatewayAware
 {

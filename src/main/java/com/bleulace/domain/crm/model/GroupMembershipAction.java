@@ -1,6 +1,6 @@
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 public enum GroupMembershipAction implements GroupMembershipActionOps
 {

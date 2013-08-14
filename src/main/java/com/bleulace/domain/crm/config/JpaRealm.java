@@ -13,6 +13,7 @@ import org.apache.shiro.util.ByteSource;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.crm.model.HashedPassword;
 import com.bleulace.domain.crm.model.JpaPermission;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
@@ -54,8 +55,9 @@ public class JpaRealm extends AuthorizingRealm
 			return null;
 		}
 
-		return new SimpleAuthenticationInfo(identity.getIdentifier(),
-				identity.getHash(), ByteSource.Util.bytes(identity.getSalt()),
+		HashedPassword password = identity.getPassword();
+		return new SimpleAuthenticationInfo(identity.getId(),
+				password.getHash(), ByteSource.Util.bytes(password.getSalt()),
 				getName());
 	}
 

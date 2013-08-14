@@ -6,7 +6,9 @@ package com.bleulace.domain.crm.model;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.FriendRequest;
+import com.bleulace.domain.crm.model.HashedPassword;
 import com.bleulace.domain.feed.model.FeedEntry;
+import com.bleulace.utils.chrono.TimeZoneEnum;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,20 +23,12 @@ privileged aspect Account_Roo_JavaBean {
         this.username = username;
     }
     
-    public byte[] Account.getHash() {
-        return this.hash;
+    public HashedPassword Account.getPassword() {
+        return this.password;
     }
     
-    public void Account.setHash(byte[] hash) {
-        this.hash = hash;
-    }
-    
-    public byte[] Account.getSalt() {
-        return this.salt;
-    }
-    
-    public void Account.setSalt(byte[] salt) {
-        this.salt = salt;
+    public void Account.setPassword(HashedPassword password) {
+        this.password = password;
     }
     
     public ContactInformation Account.getContactInfo() {
@@ -67,6 +61,14 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setFeedEntries(List<FeedEntry> feedEntries) {
         this.feedEntries = feedEntries;
+    }
+    
+    public TimeZoneEnum Account.getTimeZone() {
+        return this.timeZone;
+    }
+    
+    public void Account.setTimeZone(TimeZoneEnum timeZone) {
+        this.timeZone = timeZone;
     }
     
 }

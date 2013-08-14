@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.bleulace.domain.crm.command.CommentCommand;
 import com.bleulace.domain.feed.infrastructure.DefaultFeedEntryProvider;
 import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 @Component
 class CommentEventFeedEntryProvider extends

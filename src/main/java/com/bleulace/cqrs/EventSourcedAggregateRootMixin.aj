@@ -26,7 +26,8 @@ import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.eventsourcing.annotation.AggregateAnnotationInspector;
 import org.springframework.data.domain.Persistable;
 
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.dto.Mapper;
 
 /**
  * Copy and paste job...
@@ -157,7 +158,7 @@ public interface EventSourcedAggregateRootMixin extends
 						EventHandler.class, false).findHandlerMethod(event);
 				if (handler == null)
 				{
-					MappingAspect.map(event.getPayload(), this);
+					Mapper.map(event.getPayload(), this);
 				}
 				else
 				{

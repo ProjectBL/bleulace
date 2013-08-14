@@ -18,7 +18,7 @@ import com.bleulace.domain.management.command.CreateProjectCommand;
 import com.bleulace.domain.management.command.CreateTaskCommand;
 import com.bleulace.domain.management.model.Bundle;
 import com.bleulace.domain.management.model.Project;
-import com.bleulace.utils.jpa.DateWindow;
+import com.bleulace.jpa.DateWindow;
 
 @Profile("test")
 @Configuration

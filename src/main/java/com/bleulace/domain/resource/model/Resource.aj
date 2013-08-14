@@ -2,7 +2,7 @@ package com.bleulace.domain.resource.model;
 
 import org.springframework.data.domain.Persistable;
 
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 public interface Resource extends Persistable<String>
 {

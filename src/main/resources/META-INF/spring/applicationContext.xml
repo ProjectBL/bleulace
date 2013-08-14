@@ -53,7 +53,7 @@
 	<jpa:repositories base-package="com.bleulace"
 		repository-impl-postfix="Impl">
 		<repository:include-filter type="assignable"
-			expression="com.bleulace.utils.jpa.ReadOnlyDAO" />
+			expression="com.bleulace.jpa.ReadOnlyDAO" />
 	</jpa:repositories>
 
 	<context:component-scan base-package="com.bleulace">

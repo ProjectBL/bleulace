@@ -7,11 +7,11 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.Password;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.dto.Mapper;
 
 @RooJavaBean
 public class EditInfoCommand
@@ -51,7 +51,7 @@ public class EditInfoCommand
 
 	public void setToPersistentValues()
 	{
-		MappingAspect.map(persistentValues(), this);
+		Mapper.map(persistentValues(), this);
 		password = null;
 	}
 

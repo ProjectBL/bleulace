@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean(settersByDefault = false)

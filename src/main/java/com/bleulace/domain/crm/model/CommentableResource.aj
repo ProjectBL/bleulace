@@ -2,10 +2,10 @@ package com.bleulace.domain.crm.model;
 
 import org.axonframework.domain.MetaData;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.command.CommentCommand;
 import com.bleulace.domain.resource.model.CompositeResource;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.dto.Mapper;
 
 public interface CommentableResource extends CompositeResource
 {
@@ -17,7 +17,7 @@ public interface CommentableResource extends CompositeResource
 			Comment c = new Comment(event.getContent(),
 					EntityManagerReference.load(Account.class,
 							metaData.getSubjectId()), metaData.getTimestamp());
-			MappingAspect.map(event, c);
+			Mapper.map(event, c);
 			this.addChild(c);
 		}
 	}

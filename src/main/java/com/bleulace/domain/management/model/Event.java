@@ -13,7 +13,6 @@ import org.axonframework.domain.MetaData;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.CreateEventCommand;
 import com.bleulace.domain.management.command.InviteGuestsCommand;
@@ -22,8 +21,9 @@ import com.bleulace.domain.management.command.RsvpCommand;
 import com.bleulace.domain.management.event.EventCreatedEvent;
 import com.bleulace.domain.management.event.GuestInvitedEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
-import com.bleulace.utils.jpa.DateWindow;
-import com.bleulace.utils.jpa.EntityManagerReference;
+import com.bleulace.jpa.DateWindow;
+import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.dto.Mapper;
 
 @Entity
 @RooJavaBean
@@ -47,7 +47,7 @@ public class Event extends Project
 		EventCreatedEvent event = new EventCreatedEvent();
 		event.setId(getId());
 		event.setCreatorId(creatorId);
-		MappingAspect.map(command, event);
+		Mapper.map(command, event);
 		apply(event, metaData);
 		if (creatorId != null)
 		{

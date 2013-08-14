@@ -17,8 +17,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.bleulace.jpa.infrastructure.UUIDSessionCustomizer;
-
 /**
  * Persistence Configuration shared across all profiles.
  * 

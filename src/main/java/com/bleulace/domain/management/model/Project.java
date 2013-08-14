@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 
 import org.axonframework.domain.MetaData;
 
-import com.bleulace.cqrs.MappingAspect;
 import com.bleulace.domain.crm.model.CommentableRoot;
 import com.bleulace.domain.management.command.AssignManagersCommand;
 import com.bleulace.domain.management.command.CreateBundleCommand;
@@ -19,6 +18,7 @@ import com.bleulace.domain.management.event.ProjectCreatedEvent;
 import com.bleulace.domain.management.event.TaskCreatedEvent;
 import com.bleulace.domain.management.event.TaskMarkedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.utils.dto.Mapper;
 
 @Entity
 public class Project extends AbstractRootResource implements
@@ -39,9 +39,9 @@ public class Project extends AbstractRootResource implements
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			ManagerAssignedEvent event = MappingAspect.map(this,
+			ManagerAssignedEvent event = Mapper.map(this,
 					ManagerAssignedEvent.class);
-			MappingAspect.map(command, event);
+			Mapper.map(command, event);
 			event.setAssigneeId(accountId);
 			apply(event, metaData);
 		}
@@ -56,7 +56,7 @@ public class Project extends AbstractRootResource implements
 
 	public void on(BundleCreatedEvent event)
 	{
-		addChild(MappingAspect.map(event, Bundle.class));
+		addChild(Mapper.map(event, Bundle.class));
 	}
 
 	public void handle(CreateTaskCommand command, MetaData metaData)
@@ -69,20 +69,20 @@ public class Project extends AbstractRootResource implements
 	public void on(TaskCreatedEvent event)
 	{
 		Task t = new Task();
-		MappingAspect.map(event, t);
+		Mapper.map(event, t);
 		addChild(t);
 	}
 
 	public void handle(MarkTaskCommand command, MetaData metaData)
 	{
-		apply(MappingAspect.map(command, TaskMarkedEvent.class), metaData);
+		apply(Mapper.map(command, TaskMarkedEvent.class), metaData);
 	}
 
 	private void initializeCreatedEvent(
 			CreateManageableResourceCommand command, String subjectId,
 			ManageableResourceCreatedEvent event)
 	{
-		MappingAspect.map(command, event);
-		MappingAspect.map(this, event);
+		Mapper.map(command, event);
+		Mapper.map(this, event);
 	}
 }
