@@ -8,12 +8,8 @@ import com.bleulace.domain.crm.model.FriendRequestAction;
 
 privileged aspect FriendRequestCommand_Roo_JavaBean {
     
-    public String FriendRequestCommand.getInitiatorId() {
-        return this.initiatorId;
-    }
-    
-    public String FriendRequestCommand.getRecipientId() {
-        return this.recipientId;
+    public String FriendRequestCommand.getTargetAccountId() {
+        return this.targetAccountId;
     }
     
     public FriendRequestAction FriendRequestCommand.getAction() {

@@ -18,25 +18,21 @@ import com.bleulace.domain.crm.model.FriendRequestAction;
 public class FriendRequestCommand
 {
 	@TargetAggregateIdentifier
-	private final String initiatorId;
-
-	@NotNull
-	private final String recipientId;
+	private final String targetAccountId;
 
 	@NotNull
 	private FriendRequestAction action;
 
-	public FriendRequestCommand(String initiatorId, String recipientId,
+	public FriendRequestCommand(String targetAccountId,
 			FriendRequestAction action)
 	{
-		Assert.noNullElements(new Object[] { initiatorId, recipientId });
-		this.initiatorId = initiatorId;
-		this.recipientId = recipientId;
+		Assert.noNullElements(new Object[] { targetAccountId, action });
+		this.targetAccountId = targetAccountId;
 		this.action = action;
 	}
 
 	public String getId()
 	{
-		return initiatorId;
+		return targetAccountId;
 	}
 }

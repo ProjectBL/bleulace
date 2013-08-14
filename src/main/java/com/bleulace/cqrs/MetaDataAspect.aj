@@ -1,63 +1,91 @@
 package com.bleulace.cqrs;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.aspectj.lang.annotation.SuppressAjWarnings;
+import org.axonframework.auditing.AuditDataProvider;
+import org.axonframework.commandhandling.CommandDispatchInterceptor;
+import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.domain.MetaData;
+import org.springframework.core.env.Environment;
 
-public aspect MetaDataAspect
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.utils.jpa.EntityManagerReference;
+
+public aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 {
-	static final String AGGREGATE_ID = "aggregateId";
-	static final String SUBJECT_ID = "subjectId";
-	static final String HOST = "host";
+	static final String SUBJECT = "subject";
 	static final String TIMESTAMP = "timestamp";
+
+	static final String[] FLAGS = { SUBJECT, TIMESTAMP };
+
+	@SuppressAjWarnings
+	before(MetaData metaData, String key) : execution(public * MetaData.put(String,..)) 
+		&& args(key) 
+		&& target(metaData)
+	{
+		if (Arrays.asList(FLAGS).contains(key))
+		{
+			throw new IllegalArgumentException(
+					"You are using a reserved word as a metadata key. Use something else.");
+		}
+	}
 
 	public String MetaData.getSubjectId()
 	{
-		return (String) this.get(SUBJECT_ID);
+		return this.getSubject().getId();
 	}
-	
-	public String MetaData.getHost()
+
+	public Subject MetaData.getSubject()
 	{
-		return (String) this.get(HOST);
+		return (Subject) this.get(SUBJECT);
 	}
 
 	public Date MetaData.getTimestamp()
 	{
 		return (Date) this.get(TIMESTAMP);
 	}
-	
-	public String MetaData.getAggregateId()
+
+	public Account MetaData.getAccount()
 	{
-		return (String) this.get(AGGREGATE_ID);
+		return this.getSubjectId() == null ? null : EntityManagerReference
+				.load(Account.class, this.getSubjectId());
 	}
 
-	public static Map<String, ?> acquireMetaData()
-	{
+    public CommandMessage<?> handle(CommandMessage<?> commandMessage)
+    {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(TIMESTAMP, new Date());
 		try
 		{
-			Subject subject = SecurityUtils.getSubject();
-
-			map.put(SUBJECT_ID, subject.getPrincipal());
-
-			Session session = subject.getSession();
-			map.put(HOST, session.getHost());
-			for (Object key : session.getAttributeKeys())
-			{
-				map.put(key.toString(), session.getAttribute(key));
-			}
+			map.put(SUBJECT, SecurityUtils.getSubject());
 		}
 		catch (UnavailableSecurityManagerException e)
 		{
+			if (!isTestEnvironment())
+			{
+				throw e;
+			}
 		}
+		return commandMessage.andMetaData(map);
+    }
 
-		return map;
+	public Map<String, Object> provideAuditDataFor(CommandMessage<?> command)
+	{
+		return command.getMetaData();
+	}
+
+	private boolean isTestEnvironment()
+	{
+		return Arrays.asList(
+				SpringApplicationContext.getBean(Environment.class)
+						.getActiveProfiles()).contains("test");
 	}
 }

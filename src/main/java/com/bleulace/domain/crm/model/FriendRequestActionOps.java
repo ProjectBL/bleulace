@@ -1,7 +1,8 @@
 package com.bleulace.domain.crm.model;
 
+import org.axonframework.domain.MetaData;
 
 interface FriendRequestActionOps
 {
-	void execute(Account initiator, Account recipient);
+	public void execute(Account target, MetaData metaData);
 }

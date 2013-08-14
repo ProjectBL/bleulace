@@ -7,97 +7,81 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.IntegrationTest;
 import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.domain.AuthenticatingTest;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.FriendRequestAction;
 import com.bleulace.utils.jpa.EntityManagerReference;
 
-public class FriendCommandTest extends AuthenticatingTest implements
-		IntegrationTest, CommandGatewayAware
+public class FriendCommandTest implements IntegrationTest, CommandGatewayAware
 {
 	@Autowired
 	private AccountDAO accountDAO;
 
-	@Autowired
-	private CrmCommandFactory factory;
-
-	private String recipientId;
+	private AccountManager initiator;
+	private AccountManager recipient;
 
 	@Before
-	public void createRecipient()
+	public void setUp()
 	{
-		recipientId = accountDAO.findByUsername(
-				factory.createAccount().getUsername()).getId();
+		initiator = new AccountManager();
+		recipient = new AccountManager();
+	}
+
+	@Test
+	public void testFriendRequested()
+	{
+		sendCommand(initiator, FriendRequestAction.REQUEST);
+		Assert.assertTrue(hasRequest(initiator, recipient));
 	}
 
 	@Test
 	public void testFriendAccepted()
 	{
-		doActionsInSequence(FriendRequestAction.REQUEST,
-				FriendRequestAction.ACCEPT);
-		Assert.assertTrue(areFriends());
+		sendCommand(initiator, FriendRequestAction.REQUEST);
+		sendCommand(recipient, FriendRequestAction.ACCEPT);
+		Assert.assertFalse(hasRequest(initiator, recipient));
+		Assert.assertTrue(areFriends(initiator, recipient));
 	}
 
 	@Test
 	public void testFriendDeclined()
 	{
-		doActionsInSequence(FriendRequestAction.REQUEST,
-				FriendRequestAction.DENY);
-		Assert.assertFalse(areFriends());
+		sendCommand(initiator, FriendRequestAction.REQUEST);
+		sendCommand(recipient, FriendRequestAction.DENY);
+		Assert.assertFalse(hasRequest(initiator, recipient));
+		Assert.assertFalse(areFriends(initiator, recipient));
 	}
 
 	@Test
-	public void testFriendCanceled()
+	public void testFriendRequestCanceled()
 	{
-		sendAndWait(new FriendRequestCommand(initiatorId(), recipientId,
-				FriendRequestAction.REQUEST));
-		sendAndWait(new FriendRequestCommand(initiatorId(), recipientId,
-				FriendRequestAction.CANCEL));
-		Assert.assertFalse(areFriends());
+		sendCommand(initiator, FriendRequestAction.REQUEST);
+		sendCommand(initiator, FriendRequestAction.CANCEL);
+		Assert.assertFalse(hasRequest(initiator, recipient));
+		Assert.assertFalse(areFriends(initiator, recipient));
 	}
 
-	@Test
-	public void testFriendRemoved()
+	private void sendCommand(AccountManager sender, FriendRequestAction action)
 	{
-		doActionsInSequence(FriendRequestAction.REQUEST,
-				FriendRequestAction.ACCEPT);
-		sendAndWait(new FriendRequestCommand(initiatorId(), recipientId,
-				FriendRequestAction.REMOVE));
-		Assert.assertFalse(areFriends());
+		sender.login();
+		String targetId = sender == initiator ? recipient.getId() : initiator
+				.getId();
+		sendAndWait(new FriendRequestCommand(targetId, action));
 	}
 
-	private void doActionsInSequence(FriendRequestAction cause,
-			FriendRequestAction effect)
+	private boolean hasRequest(AccountManager initiator,
+			AccountManager recipient)
 	{
-		sendAndWait(new FriendRequestCommand(initiatorId(), recipientId, cause));
-		sendAndWait(new FriendRequestCommand(recipientId, initiatorId(), effect));
+		return recipient.getAccount().getFriendRequests()
+				.containsKey(initiator.getAccount());
 	}
 
-	private boolean areFriends()
+	private boolean areFriends(AccountManager initiator,
+			AccountManager recipient)
 	{
-		return recipient().getFriends().contains(initiator())
-				&& initiator().getFriends().contains(recipient());
-	}
-
-	private String initiatorId()
-	{
-		return getAccount().getId();
-	}
-
-	private String recipientId()
-	{
-		return recipientId;
-	}
-
-	private Account initiator()
-	{
-		return getAccount();
-	}
-
-	private Account recipient()
-	{
-		return loadAccount(recipientId);
+		Account a = initiator.getAccount();
+		Account b = recipient.getAccount();
+		return a.getFriends().contains(b) && b.getFriends().contains(a);
 	}
 
 	private Account loadAccount(String id)

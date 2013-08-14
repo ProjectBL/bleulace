@@ -1,12 +1,8 @@
 package com.bleulace.domain.crm.model;
 
-import javax.persistence.EntityNotFoundException;
+import org.axonframework.domain.MetaData;
 
-import com.bleulace.domain.crm.infrastructure.FriendRequest;
-import com.bleulace.domain.crm.infrastructure.QFriendRequest;
-import com.bleulace.jpa.infrastructure.QueryFactory;
-import com.bleulace.utils.jpa.EntityManagerReference;
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.bleulace.domain.crm.infrastructure.WithUnitOfWork;
 
 public enum FriendRequestAction implements FriendRequestActionOps
 {
@@ -16,9 +12,9 @@ public enum FriendRequestAction implements FriendRequestActionOps
 	private final FriendRequestActionOps ops;
 
 	@Override
-	public void execute(Account initiator, Account recipient)
+	public void execute(Account initiator, MetaData metaData)
 	{
-		ops.execute(initiator, recipient);
+		ops.execute(initiator, metaData);
 	}
 
 	private FriendRequestAction(FriendRequestActionOps ops)
@@ -29,77 +25,57 @@ public enum FriendRequestAction implements FriendRequestActionOps
 	static class RequestOps implements FriendRequestActionOps
 	{
 		@Override
-		public void execute(Account initiator, Account recipient)
+		public void execute(Account target, MetaData metaData)
 		{
-			EntityManagerReference.get().persist(
-					new FriendRequest(initiator, recipient));
-		}
-	}
-
-	static class AcceptOps implements FriendRequestActionOps
-	{
-		@Override
-		public void execute(Account initiator, Account recipient)
-		{
-			delete(recipient, initiator);
-			initiator.getFriends().add(recipient);
-			recipient.getFriends().add(initiator);
+			Account executor = metaData.getAccount();
+			target.getFriendRequests().put(executor,
+					new FriendRequest(executor));
 		}
 	}
 
 	static class DenyOps implements FriendRequestActionOps
 	{
 		@Override
-		public void execute(Account initiator, Account recipient)
+		public void execute(Account target, MetaData metaData)
 		{
-			delete(recipient, initiator);
+			Account executor = metaData.getAccount();
+			executor.getFriendRequests().remove(target);
 		}
 	}
 
-	static class CancelOps implements FriendRequestActionOps
+	static class AcceptOps implements FriendRequestActionOps
 	{
 		@Override
-		public void execute(Account initiator, Account recipient)
+		public void execute(Account friendToAdd, MetaData metaData)
 		{
-			delete(initiator, recipient);
+			Account executor = metaData.getAccount();
+			if (executor.getFriendRequests().containsKey(friendToAdd))
+			{
+				executor.getFriendRequests().remove(friendToAdd);
+				executor.getFriends().add(friendToAdd);
+				friendToAdd.getFriends().add(executor);
+			}
 		}
 	}
 
 	static class RemoveOps implements FriendRequestActionOps
 	{
 		@Override
-		public void execute(Account initiator, Account recipient)
+		public void execute(Account friendToRemove, MetaData metaData)
 		{
-			initiator.getFriends().remove(recipient);
-			recipient.getFriends().remove(initiator);
+			Account executor = metaData.getAccount();
+			WithUnitOfWork.register(friendToRemove);
+			executor.getFriends().remove(friendToRemove);
+			friendToRemove.getFriends().remove(executor);
 		}
 	}
 
-	private static final QFriendRequest R = QFriendRequest.friendRequest;
-
-	private static FriendRequest find(Account initiator, Account recipient)
+	static class CancelOps implements FriendRequestActionOps
 	{
-		FriendRequest r = query(initiator, recipient).singleResult(R);
-		if (r == null)
+		@Override
+		public void execute(Account toCancel, MetaData metaData)
 		{
-			throw new EntityNotFoundException();
+			toCancel.getFriendRequests().remove(metaData.getAccount());
 		}
-		return r;
-	}
-
-	private static void delete(Account initiator, Account recipient)
-	{
-		if (QueryFactory.delete(R)
-				.where(R.initiator.eq(initiator).and(R.acceptor.eq(recipient)))
-				.execute() == 0)
-		{
-			throw new EntityNotFoundException();
-		}
-	}
-
-	private static JPAQuery query(Account initiator, Account recipient)
-	{
-		return QueryFactory.from(R).where(
-				R.initiator.eq(recipient).and(R.acceptor.eq(initiator)));
 	}
 }

@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import org.axonframework.domain.IdentifierFactory;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
@@ -21,7 +20,6 @@ import org.springframework.roo.addon.equals.RooEquals;
 @RooEquals
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "RESOURCE")
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {

@@ -5,9 +5,10 @@ package com.bleulace.domain.crm.model;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
-import com.bleulace.domain.crm.model.JpaPermission;
+import com.bleulace.domain.crm.model.FriendRequest;
 import com.bleulace.domain.feed.model.FeedEntry;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 privileged aspect Account_Roo_JavaBean {
@@ -36,20 +37,20 @@ privileged aspect Account_Roo_JavaBean {
         this.salt = salt;
     }
     
-    public List<JpaPermission> Account.getPermissions() {
-        return this.permissions;
-    }
-    
-    public void Account.setPermissions(List<JpaPermission> permissions) {
-        this.permissions = permissions;
-    }
-    
     public ContactInformation Account.getContactInfo() {
         return this.contactInfo;
     }
     
     public void Account.setContactInfo(ContactInformation contactInfo) {
         this.contactInfo = contactInfo;
+    }
+    
+    public Map<Account, FriendRequest> Account.getFriendRequests() {
+        return this.friendRequests;
+    }
+    
+    public void Account.setFriendRequests(Map<Account, FriendRequest> friendRequests) {
+        this.friendRequests = friendRequests;
     }
     
     public Set<Account> Account.getFriends() {

@@ -118,19 +118,18 @@
 		command-bus="commandBus" aggregate-type="com.bleulace.domain.management.model.Event"
 		repository="resourceRepository" />
 
+	<bean id="metaDataAspect" class="com.bleulace.cqrs.MetaDataAspect"
+		factory-method="aspectOf" />
+
 	<bean id="abstractCommandBus" abstract="true">
+		<property name="dispatchInterceptors" ref="metaDataAspect"/>
 		<property name="transactionManager" ref="axonTxManager" />
 		<property name="handlerInterceptors">
 			<util:list>
 				<bean class="org.axonframework.auditing.AuditingInterceptor">
-					<property name="auditDataProvider" ref="auditDataProviderImpl" />
+					<property name="auditDataProvider" ref="metaDataAspect" />
 					<property name="auditLogger" ref="auditLoggerImpl" />
 				</bean>
-			</util:list>
-		</property>
-		<property name="dispatchInterceptors">
-			<util:list>
-				<bean class="com.bleulace.cqrs.command.CommandMetaDataInterceptor" />
 			</util:list>
 		</property>
 	</bean>

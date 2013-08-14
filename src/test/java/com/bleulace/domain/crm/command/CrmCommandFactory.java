@@ -7,9 +7,9 @@ import com.bleulace.cqrs.Send;
 
 @Send
 @Component
-class CrmCommandFactory
+public class CrmCommandFactory
 {
-	static final String ACCOUNT_PASSWORD = "password";
+	public static final String ACCOUNT_PASSWORD = "password";
 
 	public CreateAccountCommand createAccount()
 	{

@@ -1,8 +1,10 @@
 package com.bleulace.domain.crm.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,13 +13,12 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OrderBy;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
 import org.axonframework.domain.MetaData;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.MappingAspect;
@@ -27,7 +28,6 @@ import com.bleulace.domain.crm.command.FriendRequestCommand;
 import com.bleulace.domain.crm.event.AccountCreatedEvent;
 import com.bleulace.domain.feed.model.FeedEntry;
 import com.bleulace.domain.resource.model.AbstractRootResource;
-import com.bleulace.utils.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean
@@ -41,14 +41,14 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	private byte[] hash;
 	private byte[] salt;
 
-	@CascadeOnDelete
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<JpaPermission> permissions = new ArrayList<JpaPermission>();
-
 	@Embedded
 	private ContactInformation contactInfo = ContactInformation.defaultValues();
 
-	@ManyToMany
+	@ElementCollection
+	@MapKeyColumn
+	private Map<Account, FriendRequest> friendRequests = new HashMap<Account, FriendRequest>();
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Set<Account> friends = new HashSet<Account>();
 
 	@OrderBy("dateCreated DESC")
@@ -63,7 +63,9 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	{
 		if (password != null)
 		{
-			MappingAspect.map(new Encryptor(password.toCharArray()), this);
+			Encryptor en = new Encryptor(password.toCharArray());
+			this.salt = en.getSalt();
+			this.hash = en.getHash();
 		}
 	}
 
@@ -91,12 +93,9 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 		apply(command, data);
 	}
 
-	public void on(FriendRequestCommand event)
+	public void on(FriendRequestCommand event, MetaData metaData)
 	{
-		event.getAction().execute(
-				this,
-				EntityManagerReference.load(Account.class,
-						event.getRecipientId()));
+		event.getAction().execute(this, metaData);
 	}
 
 	@PreRemove

@@ -73,10 +73,7 @@ public class JpaRealm extends AuthorizingRealm
 			Account account = getDAO().findOne(accountId);
 			if (account != null)
 			{
-				for (JpaPermission p : account.getPermissions())
-				{
-					info.addObjectPermission(p);
-				}
+				// TODO : add permissions
 			}
 		}
 		return info;
