@@ -2,7 +2,7 @@ package com.bleulace.domain.management.event;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.ManagementLevel;
 
 @RooJavaBean
 public class ManagerAssignedEvent
@@ -11,5 +11,5 @@ public class ManagerAssignedEvent
 
 	private String assigneeId;
 
-	private ManagementRole role;
+	private ManagementLevel role;
 }

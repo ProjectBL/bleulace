@@ -5,7 +5,8 @@ package com.bleulace.domain.management.model;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.ManagementAssignment;
-import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.ManagementLevel;
+import com.bleulace.domain.resource.model.AbstractResource;
 
 privileged aspect ManagementAssignment_Roo_JavaBean {
     
@@ -13,7 +14,11 @@ privileged aspect ManagementAssignment_Roo_JavaBean {
         return this.account;
     }
     
-    public ManagementRole ManagementAssignment.getRole() {
+    public AbstractResource ManagementAssignment.getResource() {
+        return this.resource;
+    }
+    
+    public ManagementLevel ManagementAssignment.getRole() {
         return this.role;
     }
     

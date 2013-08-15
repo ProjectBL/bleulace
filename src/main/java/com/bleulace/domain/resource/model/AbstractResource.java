@@ -68,11 +68,5 @@ public abstract class AbstractResource implements CompositeResource,
 		return children;
 	}
 
-	protected abstract AbstractRootResource getRoot();
-
-	@Override
-	public boolean isLeaf()
-	{
-		return false;
-	}
+	public abstract AbstractRootResource getRoot();
 }

@@ -1,11 +1,15 @@
 package com.bleulace.domain.crm.config;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -14,7 +18,9 @@ import org.apache.shiro.util.ByteSource;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.HashedPassword;
-import com.bleulace.domain.crm.model.JpaPermission;
+import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.QManagementAssignment;
+import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 /**
@@ -30,6 +36,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
  */
 public class JpaRealm extends AuthorizingRealm
 {
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -75,7 +82,7 @@ public class JpaRealm extends AuthorizingRealm
 			Account account = getDAO().findOne(accountId);
 			if (account != null)
 			{
-				// TODO : add permissions
+				info.addObjectPermissions(getManagementPermissions(account));
 			}
 		}
 		return info;
@@ -88,5 +95,19 @@ public class JpaRealm extends AuthorizingRealm
 	private AccountDAO getDAO()
 	{
 		return SpringApplicationContext.get().getBean(AccountDAO.class);
+	}
+
+	private List<Permission> getManagementPermissions(Account account)
+	{
+		List<Permission> permissions = new LinkedList<Permission>();
+		QManagementAssignment a = QManagementAssignment.managementAssignment;
+
+		for (ManagementAssignment assignment : QueryFactory.from(a)
+				.where(a.account.eq(account)).list(a))
+		{
+			permissions.add(assignment.getRole().on(assignment.getId()));
+		}
+		System.out.println(permissions.size());
+		return permissions;
 	}
 }

@@ -1,21 +1,22 @@
 package com.bleulace.domain.management.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.MapKeyColumn;
 
+import org.apache.log4j.Logger;
+
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.CommentableResource;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
+import com.bleulace.domain.resource.model.AbstractResource;
+import com.bleulace.jpa.EntityManagerReference;
 
 public interface ManageableResource extends CommentableResource
 {
-	public void accept(ManageableResourceVisitor visitor);
-
 	static aspect Impl
 	{
 		@Column(nullable = false)
@@ -23,7 +24,7 @@ public interface ManageableResource extends CommentableResource
 
 		@MapKeyColumn(name = "MANAGER_ID")
 		@ElementCollection
-		private Map<Account, ManagementAssignment> assignments = new HashMap<Account, ManagementAssignment>();
+		private Map<Account, ManagementAssignment> managers = new HashMap<Account, ManagementAssignment>();
 
 		public String ManageableResource.getTitle()
 		{
@@ -37,27 +38,16 @@ public interface ManageableResource extends CommentableResource
 
 		public Progress ManageableResource.getProgress()
 		{
-			ProgressCalculatingVisitor visitor = new ProgressCalculatingVisitor();
-			this.accept(visitor);
+			ProgressCalculatingInspector visitor = new ProgressCalculatingInspector();
+			this.acceptInspector(visitor);
 			return visitor.getProgress();
 		}
 
 		public void ManageableResource.on(ManagerAssignedEvent event)
 		{
-			//TODO : fix me
-		}
-
-		public void ManageableResource.accept(ManageableResourceVisitor visitor)
-		{
-			if (!this.isLeaf())
-			{
-				for (ManageableResource child : this
-						.getChildren(ManageableResource.class))
-				{
-					child.accept(visitor);
-				}
-			}
-			visitor.visit(this);
+			this.addChild(new ManagementAssignment((AbstractResource) this,
+					EntityManagerReference.load(Account.class,
+							event.getAssigneeId()), event.getRole()));
 		}
 	}
 }

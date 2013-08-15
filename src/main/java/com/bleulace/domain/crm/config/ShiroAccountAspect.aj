@@ -3,6 +3,7 @@ package com.bleulace.domain.crm.config;
 import java.util.TimeZone;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.Subject;
 import org.springframework.util.Assert;
 
@@ -12,6 +13,17 @@ import com.bleulace.jpa.EntityManagerReference;
 aspect ShiroAccountAspect
 {
 	private static final String TIMEZONE_KEY = "timezone";
+
+	boolean around(Permission p) : 
+		execution(public boolean Permission.implies(Permission+)) 
+		&& args(p)
+	{
+		if (p == null)
+		{
+			return false;
+		}
+		return proceed(p);
+	}
 
 	after(Subject subject)  returning() : call(* Subject+.login(..))
 	&&!within(ShiroAccountAspect)

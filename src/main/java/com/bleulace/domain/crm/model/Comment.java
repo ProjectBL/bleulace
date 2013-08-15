@@ -39,10 +39,4 @@ public class Comment extends AbstractChildResource
 	private Comment()
 	{
 	}
-
-	@Override
-	public boolean isLeaf()
-	{
-		return true;
-	}
 }

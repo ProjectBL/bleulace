@@ -11,16 +11,8 @@ privileged aspect TaskMarkedEvent_Roo_JavaBean {
         return this.id;
     }
     
-    public void TaskMarkedEvent.setId(String id) {
-        this.id = id;
-    }
-    
     public boolean TaskMarkedEvent.isComplete() {
         return this.complete;
-    }
-    
-    public void TaskMarkedEvent.setComplete(boolean complete) {
-        this.complete = complete;
     }
     
 }

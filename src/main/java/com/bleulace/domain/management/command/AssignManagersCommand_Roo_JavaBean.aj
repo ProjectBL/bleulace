@@ -4,7 +4,7 @@
 package com.bleulace.domain.management.command;
 
 import com.bleulace.domain.management.command.AssignManagersCommand;
-import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.ManagementLevel;
 import java.util.Set;
 
 privileged aspect AssignManagersCommand_Roo_JavaBean {
@@ -21,11 +21,11 @@ privileged aspect AssignManagersCommand_Roo_JavaBean {
         this.accountIds = accountIds;
     }
     
-    public ManagementRole AssignManagersCommand.getRole() {
+    public ManagementLevel AssignManagersCommand.getRole() {
         return this.role;
     }
     
-    public void AssignManagersCommand.setRole(ManagementRole role) {
+    public void AssignManagersCommand.setRole(ManagementLevel role) {
         this.role = role;
     }
     

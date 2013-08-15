@@ -39,7 +39,7 @@ public aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
 
 	pointcut sendAnnotatedClass() : 
 		execution(CommandPayload+ *.*(..)) && within(@Send *);
-
+	
 	after() returning(Object commandPayload) : 
 		sendAnnotatedMethod() || sendAnnotatedClass()
 	{

@@ -55,7 +55,7 @@ public class Event extends Project
 			assignment.setId(getId());
 			assignment.setAssignerId(creatorId);
 			assignment.setAssigneeId(creatorId);
-			assignment.setRole(ManagementRole.OWN);
+			assignment.setRole(ManagementLevel.OWN);
 			apply(assignment, metaData);
 		}
 	}

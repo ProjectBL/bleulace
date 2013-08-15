@@ -4,7 +4,7 @@
 package com.bleulace.domain.management.event;
 
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
-import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.ManagementLevel;
 
 privileged aspect ManagerAssignedEvent_Roo_JavaBean {
     
@@ -24,11 +24,11 @@ privileged aspect ManagerAssignedEvent_Roo_JavaBean {
         this.assigneeId = assigneeId;
     }
     
-    public ManagementRole ManagerAssignedEvent.getRole() {
+    public ManagementLevel ManagerAssignedEvent.getRole() {
         return this.role;
     }
     
-    public void ManagerAssignedEvent.setRole(ManagementRole role) {
+    public void ManagerAssignedEvent.setRole(ManagementLevel role) {
         this.role = role;
     }
     

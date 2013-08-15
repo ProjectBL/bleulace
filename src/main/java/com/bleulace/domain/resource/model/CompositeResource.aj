@@ -29,5 +29,14 @@ public interface CompositeResource extends Resource
 			}
 			return childList;
 		}
+		
+		public void CompositeResource.acceptInspector(ResourceInspector inspector)
+		{
+			for(Resource child : this.getChildren())
+			{
+				child.acceptInspector(inspector);
+			}
+			inspector.inspect(this);
+		}
 	}
 }

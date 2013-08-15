@@ -103,7 +103,6 @@ public interface EventSourcedEntityMixin extends EventSourcedEntity,
 
 		private Collection<EventSourcedEntity> EventSourcedEntityMixin.getChildEntities()
 		{
-			ensureInspectorInitialized();
 			return inspector.getChildEntities(this);
 		}
 

@@ -82,6 +82,12 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 		apply(event, metaData);
 	}
 
+	public void on(AccountCreatedEvent event, MetaData metaData)
+	{
+		username = event.getUsername();
+		setPassword(event.getPassword());
+	}
+
 	public void handle(EditInfoCommand command, MetaData data)
 	{
 		apply(command, data);

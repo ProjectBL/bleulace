@@ -9,7 +9,7 @@ import com.bleulace.cqrs.Send;
 @Component
 @Send
 @ActiveProfiles("test")
-class ManagementCommandFactory
+public class ManagementCommandFactory
 {
 	public CreateProjectCommand createProject()
 	{

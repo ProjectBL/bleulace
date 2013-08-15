@@ -1,31 +1,12 @@
 package com.bleulace.domain.resource.model;
 
+import javax.persistence.EntityManager;
 
-privileged aspect ResourcingAspect
+aspect ResourcingAspect
 {
-	pointcut requiresCompatibility(CompositeResource composite,
-			Resource component) : 
-		execution(public * CompositeResource+.*(..,Resource+,..)) 
-		&& target(composite) 
-		&& args(component);
+	pointcut merge() : call(public void EntityManager.persist(*)) 
+	&& within(org.axonframework..*);
 
-	pointcut compatibilityCheck() : 
-		execution(boolean CompositeResource+.isCompatible(*));
-
-	before(CompositeResource composite, Resource component) : 
-		requiresCompatibility(composite,component)
-		&& !compatibilityCheck()
-
-	{
-		doCompatibilityCheck(composite, component);
-	}
-
-	private void doCompatibilityCheck(CompositeResource composite,
-			Resource component)
-	{
-		if (!composite.isCompatible(component))
-		{
-			throw new IllegalArgumentException();
-		}
+	before() : merge() {
 	}
 }

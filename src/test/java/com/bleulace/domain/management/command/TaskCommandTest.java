@@ -26,6 +26,7 @@ public class TaskCommandTest extends BundleCommandTest implements
 	public void createdTaskExistsInDb()
 	{
 		Assert.assertNotNull(getTask());
+		Assert.assertNotNull(getTask().getRoot());
 	}
 
 	@Test
@@ -33,7 +34,7 @@ public class TaskCommandTest extends BundleCommandTest implements
 	{
 		sendAndWait(new MarkTaskCommand(getTaskId(), true));
 		Assert.assertTrue(getTask().isComplete());
-		Assert.assertEquals(getTask().getProgress(), new ProgressValue(1, 1));
+		Assert.assertEquals(new ProgressValue(1, 1), getTask().getProgress());
 	}
 
 	public String getTaskId()

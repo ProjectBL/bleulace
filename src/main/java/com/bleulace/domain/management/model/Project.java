@@ -41,8 +41,8 @@ public class Project extends AbstractRootResource implements
 		{
 			ManagerAssignedEvent event = Mapper.map(this,
 					ManagerAssignedEvent.class);
-			Mapper.map(command, event);
 			event.setAssigneeId(accountId);
+			event.setRole(command.getRole());
 			apply(event, metaData);
 		}
 	}
@@ -66,16 +66,10 @@ public class Project extends AbstractRootResource implements
 		apply(event, metaData);
 	}
 
-	public void on(TaskCreatedEvent event)
-	{
-		Task t = new Task();
-		Mapper.map(event, t);
-		addChild(t);
-	}
-
 	public void handle(MarkTaskCommand command, MetaData metaData)
 	{
-		apply(Mapper.map(command, TaskMarkedEvent.class), metaData);
+		apply(new TaskMarkedEvent(command.getId(), command.isComplete()),
+				metaData);
 	}
 
 	private void initializeCreatedEvent(

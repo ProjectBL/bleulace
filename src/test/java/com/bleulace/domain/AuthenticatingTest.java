@@ -1,7 +1,6 @@
 package com.bleulace.domain;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.junit.After;
 import org.junit.Assert;
@@ -29,13 +28,7 @@ public abstract class AuthenticatingTest
 		SpringApplicationContext.getBean(CommandGateway.class).sendAndWait(
 				command);
 		username = command.getUsername();
-		try
-		{
-			SecurityUtils.getSubject().login(username, command.getPassword());
-		}
-		catch (AuthenticationException e)
-		{
-		}
+		SecurityUtils.getSubject().login(username, command.getPassword());
 	}
 
 	@Test

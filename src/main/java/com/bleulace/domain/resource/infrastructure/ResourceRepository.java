@@ -1,4 +1,4 @@
-package com.bleulace.domain.resource.model;
+package com.bleulace.domain.resource.infrastructure;
 
 import static java.lang.String.format;
 
@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bleulace.cqrs.event.EventBusAware;
+import com.bleulace.domain.resource.model.AbstractResource;
+import com.bleulace.domain.resource.model.AbstractRootResource;
 import com.bleulace.jpa.EntityManagerReference;
 
 @Repository
