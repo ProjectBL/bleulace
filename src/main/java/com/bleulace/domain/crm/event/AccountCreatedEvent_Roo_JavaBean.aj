@@ -4,6 +4,7 @@
 package com.bleulace.domain.crm.event;
 
 import com.bleulace.domain.crm.event.AccountCreatedEvent;
+import com.bleulace.domain.crm.model.ContactInformation;
 
 privileged aspect AccountCreatedEvent_Roo_JavaBean {
     
@@ -21,6 +22,14 @@ privileged aspect AccountCreatedEvent_Roo_JavaBean {
     
     public void AccountCreatedEvent.setPassword(String password) {
         this.password = password;
+    }
+    
+    public ContactInformation AccountCreatedEvent.getContactInformation() {
+        return this.contactInformation;
+    }
+    
+    public void AccountCreatedEvent.setContactInformation(ContactInformation contactInformation) {
+        this.contactInformation = contactInformation;
     }
     
 }

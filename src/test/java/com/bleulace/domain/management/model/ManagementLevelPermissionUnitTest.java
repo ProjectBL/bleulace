@@ -1,4 +1,4 @@
-package com.bleulace.domain.resource.model;
+package com.bleulace.domain.management.model;
 
 import org.apache.shiro.authz.Permission;
 import org.junit.Test;

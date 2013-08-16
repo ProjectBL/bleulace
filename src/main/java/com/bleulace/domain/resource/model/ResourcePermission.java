@@ -3,12 +3,13 @@ package com.bleulace.domain.resource.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.shiro.authz.Permission;
 import org.springframework.util.Assert;
 
 import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.authz.GenericPermission;
 
-public class ResourcePermission implements Permission
+public class ResourcePermission implements
+		GenericPermission<ResourcePermission>
 {
 	private final String targetId;
 
@@ -19,14 +20,9 @@ public class ResourcePermission implements Permission
 	}
 
 	@Override
-	public boolean implies(Permission p)
+	public boolean implies(ResourcePermission p)
 	{
-		if (p instanceof ResourcePermission)
-		{
-			return new ResourcePermissionInspector().childIds
-					.contains(((ResourcePermission) p).targetId);
-		}
-		return false;
+		return new ResourcePermissionInspector().childIds.contains(p.targetId);
 	}
 
 	class ResourcePermissionInspector implements ResourceInspector

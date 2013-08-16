@@ -2,8 +2,11 @@ package com.bleulace.cqrs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Basic;
+import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import org.axonframework.common.Assert;
@@ -42,7 +45,7 @@ public interface EventSourcedAggregateRootMixin extends
 
 	static aspect Impl
 	{
-		private transient boolean EventSourcedAggregateRootMixin.deletionFlag = false;
+		private static final Set<EventSourcedAggregateRootMixin> DELETED = new HashSet<EventSourcedAggregateRootMixin>();
 
 		@Transient
 		private volatile EventContainer EventSourcedAggregateRootMixin.eventContainer;
@@ -60,12 +63,12 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
-			return this.deletionFlag;
+			return DELETED.contains(this);
 		}
 
 		void EventSourcedAggregateRootMixin.flagForDeletion()
 		{
-			this.deletionFlag = true;
+			DELETED.add(this);
 		}
 
 		public void EventSourcedAggregateRootMixin.addEventRegistrationCallback(
@@ -180,6 +183,12 @@ public interface EventSourcedAggregateRootMixin extends
 						"An exception occurred while invoking the handler method.",
 						e);
 			}
+		}
+		
+		@PreRemove
+		void preRemove()
+		{
+			DELETED.remove(this);
 		}
 
 		private Collection<EventSourcedEntity> EventSourcedAggregateRootMixin.getChildEntities()

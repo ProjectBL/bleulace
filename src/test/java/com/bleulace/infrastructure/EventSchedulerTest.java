@@ -3,7 +3,7 @@ package com.bleulace.infrastructure;
 import java.util.concurrent.Executor;
 
 import org.joda.time.Duration;
-import org.joda.time.Seconds;
+import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +35,8 @@ public class EventSchedulerTest
 		Assert.assertTrue(listener.isCaught());
 	}
 
-	private static final Duration EVENT_DELAY = Seconds.seconds(2)
+	private static final Duration EVENT_DELAY = Period.millis(100)
 			.toStandardDuration();
-	private static final Duration GRACE_PERIOD = Seconds.seconds(2)
+	private static final Duration GRACE_PERIOD = Period.millis(200)
 			.toStandardDuration();
 }

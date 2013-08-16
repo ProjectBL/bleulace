@@ -37,8 +37,7 @@ public class DateWindow implements Serializable
 	@Column(nullable = false)
 	private Date end;
 
-	@SuppressWarnings("unused")
-	private DateWindow()
+	DateWindow()
 	{
 	}
 
@@ -86,8 +85,7 @@ public class DateWindow implements Serializable
 
 	public boolean isAllDay()
 	{
-		return new JodaDateWindow(getStart(), getEnd()).getLength()
-				.getDays() > 0;
+		return new JodaDateWindow(getStart(), getEnd()).getLength().getDays() > 0;
 	}
 
 	public JodaDateWindow getDecorator()

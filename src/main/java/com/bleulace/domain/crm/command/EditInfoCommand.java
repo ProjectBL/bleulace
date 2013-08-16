@@ -57,6 +57,7 @@ public class EditInfoCommand
 
 	private ContactInformation persistentValues()
 	{
-		return EntityManagerReference.load(Account.class, id).getContactInfo();
+		return EntityManagerReference.load(Account.class, id)
+				.getContactInformation();
 	}
 }

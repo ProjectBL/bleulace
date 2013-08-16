@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @EnableJpaRepositories(basePackages = "com.bleulace")
-@EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
+@EnableTransactionManagement(mode = AdviceMode.ASPECTJ, proxyTargetClass = true)
 public class BasePersistenceConfig
 {
 	@Resource(name = "jpaPropsMap")

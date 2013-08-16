@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
-import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.OrderBy;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
@@ -45,10 +45,10 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	private HashedPassword password = new HashedPassword();
 
 	@Embedded
-	private ContactInformation contactInfo = ContactInformation.defaultValues();
+	private ContactInformation contactInformation = new ContactInformation();
 
 	@ElementCollection
-	@MapKeyColumn
+	@MapKeyJoinColumn
 	private Map<Account, FriendRequest> friendRequests = new HashMap<Account, FriendRequest>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -62,7 +62,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	@Enumerated(EnumType.STRING)
 	private TimeZoneEnum timeZone = TimeZoneEnum.DEFAULT;
 
-	Account()
+	public Account()
 	{
 	}
 
@@ -78,14 +78,14 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	{
 		AccountCreatedEvent event = new AccountCreatedEvent();
 		event.setId(getId());
-		Mapper.map(command, event);
-		apply(event, metaData);
+		apply(Mapper.map(command, event), metaData);
 	}
 
 	public void on(AccountCreatedEvent event, MetaData metaData)
 	{
-		username = event.getUsername();
+		this.username = event.getUsername();
 		setPassword(event.getPassword());
+		this.contactInformation = event.getContactInformation();
 	}
 
 	public void handle(EditInfoCommand command, MetaData data)
@@ -95,7 +95,7 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 
 	public void on(EditInfoCommand command, MetaData data)
 	{
-		contactInfo = command.getInformation();
+		contactInformation = command.getInformation();
 		setPassword(command.getPassword());
 	}
 

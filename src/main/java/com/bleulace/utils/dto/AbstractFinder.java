@@ -10,13 +10,14 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import com.bleulace.jpa.EntityManagerReference;
 
 @Configurable
-public class BasicFinder<S extends Persistable<String>, T> implements Finder<T>
+public class AbstractFinder<S extends Persistable<String>, T> implements
+		Finder<T>
 {
 	private final DTOConverter<S, T> converter;
 
 	private final JpaRepository<S, String> repository;
 
-	public BasicFinder(Class<S> sourceClass, Class<T> dtoClass)
+	public AbstractFinder(Class<S> sourceClass, Class<T> dtoClass)
 	{
 		this.converter = new ModelMappingDTOConverter<S, T>(dtoClass);
 		repository = new SimpleJpaRepository<S, String>(sourceClass,
@@ -35,8 +36,13 @@ public class BasicFinder<S extends Persistable<String>, T> implements Finder<T>
 		return converter.convert(repository.findAll());
 	}
 
-	protected DTOConverter<S, T> getConverter()
+	protected T convert(S source)
 	{
-		return converter;
+		return converter.convert(source);
+	}
+
+	protected List<T> convert(Iterable<S> source)
+	{
+		return converter.convert(source);
 	}
 }

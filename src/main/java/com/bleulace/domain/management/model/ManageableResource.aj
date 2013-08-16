@@ -1,13 +1,6 @@
 package com.bleulace.domain.management.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.MapKeyColumn;
-
-import org.apache.log4j.Logger;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.CommentableResource;
@@ -22,9 +15,10 @@ public interface ManageableResource extends CommentableResource
 		@Column(nullable = false)
 		private String ManageableResource.title = "";
 
-		@MapKeyColumn(name = "MANAGER_ID")
-		@ElementCollection
-		private Map<Account, ManagementAssignment> managers = new HashMap<Account, ManagementAssignment>();
+		public String ManageableResource.title()
+		{
+			return this.title;
+		}
 
 		public String ManageableResource.getTitle()
 		{

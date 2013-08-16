@@ -3,6 +3,7 @@ package com.bleulace.domain.management.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -36,6 +37,9 @@ public class Event extends Project
 	@EventSourcedMember
 	@ElementCollection
 	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
+
+	@Column(nullable = false)
+	private String location = "";
 
 	Event()
 	{

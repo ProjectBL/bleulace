@@ -29,15 +29,17 @@ public class AccountManager implements CommandGatewayAware
 		return dao.findByUsername(username);
 	}
 
-	public void login()
+	public AccountManager login()
 	{
 		SecurityUtils.getSubject().login(username,
 				CrmCommandFactory.ACCOUNT_PASSWORD);
+		return this;
 	}
 
-	public void logout()
+	public AccountManager logout()
 	{
 		SecurityUtils.getSubject().logout();
+		return this;
 	}
 
 	public String getId()

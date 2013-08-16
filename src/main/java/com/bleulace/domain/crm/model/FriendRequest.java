@@ -10,11 +10,9 @@ import javax.persistence.TemporalType;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.EventSourcedEntityMixin;
-
 @Embeddable
 @RooJavaBean(settersByDefault = false)
-public class FriendRequest implements EventSourcedEntityMixin
+public class FriendRequest
 {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
@@ -31,11 +29,5 @@ public class FriendRequest implements EventSourcedEntityMixin
 	FriendRequest(Account requestor)
 	{
 		this.requestor = requestor;
-	}
-
-	@Override
-	public String getId()
-	{
-		return null;
 	}
 }

@@ -35,7 +35,7 @@ public class AccountCommandTest implements IntegrationTest, CommandGatewayAware
 		String name = "baz";
 		com.setFirstName(name);
 		sendAndWait(com);
-		Assert.assertTrue(getAccount().getContactInfo().getFirstName()
+		Assert.assertTrue(getAccount().getContactInformation().getFirstName()
 				.equals(name));
 
 		Assert.assertTrue(new EditInfoCommand(id).getFirstName().equals(name));

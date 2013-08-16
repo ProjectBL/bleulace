@@ -2,18 +2,16 @@ package com.bleulace.domain.management.model;
 
 import org.apache.shiro.authz.Permission;
 
-public enum ManagementLevel implements Permission
+import com.bleulace.utils.authz.GenericPermission;
+
+public enum ManagementLevel implements GenericPermission<ManagementLevel>
 {
 	LOOP, MIX, OWN;
 
 	@Override
-	public boolean implies(Permission p)
+	public boolean implies(ManagementLevel level)
 	{
-		if (p instanceof ManagementLevel)
-		{
-			return ((ManagementLevel) p).ordinal() <= this.ordinal();
-		}
-		return false;
+		return this.ordinal() >= level.ordinal();
 	}
 
 	public Permission on(String id)

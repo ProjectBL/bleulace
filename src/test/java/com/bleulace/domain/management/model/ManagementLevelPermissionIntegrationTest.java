@@ -1,4 +1,4 @@
-package com.bleulace.domain.resource.model;
+package com.bleulace.domain.management.model;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.Permission;
@@ -16,6 +16,7 @@ import com.bleulace.domain.management.command.AssignManagersCommand;
 import com.bleulace.domain.management.command.ManagementCommandFactory;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.Project;
+import com.bleulace.domain.resource.model.ResourcePermission;
 import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.utils.Locator;
 
@@ -49,7 +50,7 @@ public class ManagementLevelPermissionIntegrationTest implements
 		Assert.assertTrue(p.implies(q));
 
 		q = ManagementLevel.MIX;
-		Assert.assertTrue(q.implies(p));
+		Assert.assertFalse(q.implies(p));
 	}
 
 	@Test
@@ -59,14 +60,18 @@ public class ManagementLevelPermissionIntegrationTest implements
 		final Subject s = SecurityUtils.getSubject();
 		Assert.assertTrue(s.isAuthenticated());
 		addPermissions(SecurityUtils.getSubject().getId());
-		SecurityUtils.getSubject().checkPermission(
-				ManagementLevel.OWN.on(resourceId));
+		Assert.assertFalse(SecurityUtils.getSubject().isPermitted(
+				ManagementLevel.OWN.on(resourceId)));
+		Assert.assertTrue(SecurityUtils.getSubject().isPermitted(
+				ManagementLevel.MIX.on(resourceId)));
+		Assert.assertTrue(SecurityUtils.getSubject().isPermitted(
+				ManagementLevel.LOOP.on(resourceId)));
 	}
 
 	@Send
 	private AssignManagersCommand addPermissions(String userId)
 	{
-		return new AssignManagersCommand(resourceId, ManagementLevel.OWN,
+		return new AssignManagersCommand(resourceId, ManagementLevel.MIX,
 				userId);
 	}
 
@@ -76,7 +81,7 @@ public class ManagementLevelPermissionIntegrationTest implements
 				CrmCommandFactory.ACCOUNT_PASSWORD);
 	}
 
-	public Project getResource()
+	private Project getResource()
 	{
 		return EntityManagerReference.load(Project.class, resourceId);
 	}

@@ -4,6 +4,7 @@
 package com.bleulace.domain.crm.command;
 
 import com.bleulace.domain.crm.command.CreateAccountCommand;
+import com.bleulace.domain.crm.model.ContactInformation;
 
 privileged aspect CreateAccountCommand_Roo_JavaBean {
     
@@ -21,6 +22,10 @@ privileged aspect CreateAccountCommand_Roo_JavaBean {
     
     public void CreateAccountCommand.setPassword(String password) {
         this.password = password;
+    }
+    
+    public ContactInformation CreateAccountCommand.getContactInformation() {
+        return this.contactInformation;
     }
     
 }

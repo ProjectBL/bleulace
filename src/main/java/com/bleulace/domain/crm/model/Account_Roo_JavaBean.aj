@@ -31,12 +31,12 @@ privileged aspect Account_Roo_JavaBean {
         this.password = password;
     }
     
-    public ContactInformation Account.getContactInfo() {
-        return this.contactInfo;
+    public ContactInformation Account.getContactInformation() {
+        return this.contactInformation;
     }
     
-    public void Account.setContactInfo(ContactInformation contactInfo) {
-        this.contactInfo = contactInfo;
+    public void Account.setContactInformation(ContactInformation contactInformation) {
+        this.contactInformation = contactInformation;
     }
     
     public Map<Account, FriendRequest> Account.getFriendRequests() {
