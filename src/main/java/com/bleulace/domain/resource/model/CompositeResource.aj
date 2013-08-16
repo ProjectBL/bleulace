@@ -1,6 +1,5 @@
 package com.bleulace.domain.resource.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface CompositeResource extends Resource
@@ -12,27 +11,16 @@ public interface CompositeResource extends Resource
 	boolean isCompatible(Resource child);
 
 	List<? extends Resource> getChildren();
-	
+
+	public <T extends Resource> List<T> getChildren(Class<T> clazz);
+
 	static aspect Impl
 	{
-		@SuppressWarnings("unchecked")
-		public <T extends Resource> List<T> CompositeResource.getChildren(
-				Class<T> clazz)
+
+		public void CompositeResource.acceptInspector(
+				ResourceInspector inspector)
 		{
-			List<T> childList = new ArrayList<T>();
 			for (Resource child : this.getChildren())
-			{
-				if (clazz.isAssignableFrom(child.getClass()))
-				{
-					childList.add((T) child);
-				}
-			}
-			return childList;
-		}
-		
-		public void CompositeResource.acceptInspector(ResourceInspector inspector)
-		{
-			for(Resource child : this.getChildren())
 			{
 				child.acceptInspector(inspector);
 			}

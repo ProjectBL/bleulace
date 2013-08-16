@@ -17,6 +17,9 @@ import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.equals.RooEquals;
 
+import com.bleulace.domain.resource.infrastructure.ResourceDAO;
+import com.bleulace.utils.ctx.SpringApplicationContext;
+
 @RooEquals
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -66,6 +69,16 @@ public abstract class AbstractResource implements CompositeResource,
 	public List<? extends Resource> getChildren()
 	{
 		return children;
+	}
+
+	@Override
+	public <T extends Resource> List<T> getChildren(Class<T> clazz)
+	{
+		System.out.println(clazz);
+		return (List<T>) (AbstractChildResource.class.isAssignableFrom(clazz) ? SpringApplicationContext
+				.getBean(ResourceDAO.class).findChildren(id,
+						(Class<? extends AbstractChildResource>) clazz)
+				: new ArrayList<T>());
 	}
 
 	public abstract AbstractRootResource getRoot();
