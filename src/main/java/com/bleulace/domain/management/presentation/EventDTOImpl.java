@@ -8,7 +8,10 @@ import java.util.Map;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
+import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.RsvpStatus;
+import com.bleulace.domain.resource.model.Resource;
+import com.bleulace.utils.dto.Mapper;
 
 class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 {
@@ -22,6 +25,11 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		}
 	}
 
+	public void setLocation(String location)
+	{
+		setDescription(location);
+	}
+
 	@Override
 	public List<UserDTO> getInvitees(RsvpStatus status)
 	{
@@ -30,18 +38,24 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 	}
 
 	@Override
-	public void addInvitee(UserDTO dto, RsvpStatus status)
+	public void setChildren(List<Resource> resources)
+	{
+		super.setChildren(resources);
+		for (Resource resource : resources)
+		{
+			if (resource instanceof EventInvitee)
+			{
+				EventInvitee invitee = (EventInvitee) resource;
+				addInvitee(Mapper.map(invitee.getGuest(), UserDTO.class),
+						invitee.getStatus());
+			}
+		}
+	}
+
+	private void addInvitee(UserDTO dto, RsvpStatus status)
 	{
 		Assert.notNull(dto);
 		Assert.notNull(status);
 		invitees.get(status).add(dto);
-	}
-
-	public void addInvitees(Iterable<UserDTO> dtos, RsvpStatus status)
-	{
-		for (UserDTO dto : dtos)
-		{
-			addInvitee(dto, status);
-		}
 	}
 }

@@ -35,11 +35,10 @@ aspect EventDTOAspect
 
 	// ---------------------------------------------------
 	void around(EventDTO dto, Object newValue) :
-		call(public void EditableCalendarEvent.set*(*)) 
-		&& this(dto) 
+		call(public void EventDTO+.set*(*)) 
+		&& target(dto) 
 		&& args(newValue) 
 	{
-		Assert.notNull(newValue);
 		String methodName = thisJoinPoint.getSignature().getName()
 				.replace("set", "get");
 		Object oldValue = null;
@@ -48,18 +47,19 @@ aspect EventDTOAspect
 			Method m = MethodUtils.getAccessibleMethod(dto.getClass(),
 					methodName);
 			oldValue = m == null ? null : m.invoke(dto);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			proceed(dto, newValue);
 			if (oldValue != newValue || !oldValue.equals(newValue))
 			{
 				dto.fireEventChange();
 			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			proceed(dto, newValue);
+		}
+		finally
+		{
+
 		}
 	}
 

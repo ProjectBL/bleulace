@@ -2,24 +2,23 @@ package com.bleulace.utils.dto;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import com.bleulace.jpa.EntityManagerReference;
 
-@Configurable
 public class AbstractFinder<S extends Persistable<String>, T> implements
 		Finder<T>
 {
-	private final DTOConverter<S, T> converter;
+	private final IterableConverter<S, T> converter;
 
 	private final JpaRepository<S, String> repository;
 
 	public AbstractFinder(Class<S> sourceClass, Class<T> dtoClass)
 	{
-		this.converter = new ModelMappingDTOConverter<S, T>(dtoClass);
+		this.converter = new ModelMappingDTOConverter<S, T>(sourceClass,
+				dtoClass);
 		repository = new SimpleJpaRepository<S, String>(sourceClass,
 				EntityManagerReference.get());
 	}

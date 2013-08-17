@@ -49,6 +49,7 @@ public class ManagementCommandFactory
 	public Map<Class<?>, String> initializeDefaultGroup()
 	{
 		Map<Class<?>, String> ids = new HashMap<Class<?>, String>();
+
 		createProject();
 		ids.put(Project.class, Locator.locate(Project.class).getId());
 

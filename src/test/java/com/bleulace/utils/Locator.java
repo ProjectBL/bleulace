@@ -8,6 +8,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
+import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.jpa.EntityManagerReference;
 
 public class Locator
@@ -19,13 +20,20 @@ public class Locator
 
 	public static <T extends Persistable<String>> T locate(Class<T> clazz)
 	{
-		List<T> obj = new SimpleJpaRepository<T, String>(clazz,
-				EntityManagerReference.get()).findAll();
-		if (obj.isEmpty())
+		List<AbstractResource> results = new SimpleJpaRepository<AbstractResource, String>(
+				AbstractResource.class, EntityManagerReference.get()).findAll();
+		if (results.isEmpty())
 		{
 			return null;
 		}
-		return obj.get(0);
+		for (AbstractResource result : results)
+		{
+			if (result.getClass().equals(clazz))
+			{
+				return (T) result;
+			}
+		}
+		return null;
 	}
 
 	public static <T extends Persistable<String>> void remove(Class<T> clazz)

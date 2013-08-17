@@ -30,6 +30,12 @@ import com.bleulace.utils.dto.Mapper;
 @RooJavaBean
 public class Event extends Project
 {
+	@Override
+	public String getId()
+	{
+		return super.getId();
+	}
+
 	@Embedded
 	private DateWindow window = DateWindow.defaultValue();
 

@@ -11,6 +11,4 @@ public interface EventDTO extends ProjectDTO, EditableCalendarEvent,
 		EventChangeNotifier
 {
 	public List<UserDTO> getInvitees(RsvpStatus status);
-
-	public void addInvitee(UserDTO dto, RsvpStatus status);
 }
