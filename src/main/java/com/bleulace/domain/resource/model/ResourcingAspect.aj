@@ -1,7 +1,6 @@
 package com.bleulace.domain.resource.model;
 
 import org.axonframework.eventhandling.annotation.EventHandler;
-import org.axonframework.eventsourcing.EventSourcedEntity;
 
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.cqrs.EventSourcedEntityMixin;

@@ -1,5 +1,6 @@
 package com.bleulace.domain.management.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.axonframework.domain.MetaData;
@@ -24,6 +25,9 @@ import com.bleulace.utils.dto.Mapper;
 public class Project extends AbstractRootResource implements
 		ManageableResource, CommentableRoot
 {
+	@Column(nullable = false)
+	private String title = "";
+
 	Project()
 	{
 	}

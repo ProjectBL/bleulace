@@ -36,7 +36,7 @@ public final class Mapper
 			for (Class<?> targetClass : bean.getClass()
 					.getAnnotation(Factory.class).makes())
 			{
-				if (targetClass.isAssignableFrom(clazz))
+				if (targetClass.equals(clazz))
 				{
 					if (factory == null)
 					{
