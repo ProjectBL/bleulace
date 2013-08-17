@@ -8,28 +8,12 @@ import java.util.Date;
 
 privileged aspect EventCreatedEvent_Roo_JavaBean {
     
-    public String EventCreatedEvent.getCreatorId() {
-        return this.creatorId;
-    }
-    
-    public void EventCreatedEvent.setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
-    }
-    
     public Date EventCreatedEvent.getStart() {
         return this.start;
     }
     
-    public void EventCreatedEvent.setStart(Date start) {
-        this.start = start;
-    }
-    
     public Date EventCreatedEvent.getEnd() {
         return this.end;
-    }
-    
-    public void EventCreatedEvent.setEnd(Date end) {
-        this.end = end;
     }
     
 }

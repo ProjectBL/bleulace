@@ -2,7 +2,7 @@ package com.bleulace.domain.management.event;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-@RooJavaBean
+@RooJavaBean(settersByDefault = false)
 public class GuestInvitedEvent
 {
 	private String id;

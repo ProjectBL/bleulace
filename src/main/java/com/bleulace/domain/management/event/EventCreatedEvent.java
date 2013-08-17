@@ -4,11 +4,9 @@ import java.util.Date;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-@RooJavaBean
+@RooJavaBean(settersByDefault = false)
 public class EventCreatedEvent extends ProjectCreatedEvent
 {
-	private String creatorId;
-
 	private Date start;
 
 	private Date end;

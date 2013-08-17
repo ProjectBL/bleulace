@@ -11,8 +11,4 @@ privileged aspect GroupCreatedEvent_Roo_JavaBean {
         return this.title;
     }
     
-    public void GroupCreatedEvent.setTitle(String title) {
-        this.title = title;
-    }
-    
 }

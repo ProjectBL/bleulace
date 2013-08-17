@@ -11,16 +11,8 @@ privileged aspect GuestInvitedEvent_Roo_JavaBean {
         return this.id;
     }
     
-    public void GuestInvitedEvent.setId(String id) {
-        this.id = id;
-    }
-    
     public String GuestInvitedEvent.getAccountId() {
         return this.accountId;
-    }
-    
-    public void GuestInvitedEvent.setAccountId(String accountId) {
-        this.accountId = accountId;
     }
     
 }

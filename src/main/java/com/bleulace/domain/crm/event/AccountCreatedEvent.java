@@ -4,7 +4,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.ContactInformation;
 
-@RooJavaBean
+@RooJavaBean(settersByDefault = false)
 public class AccountCreatedEvent
 {
 	private String username;

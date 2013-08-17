@@ -1,8 +1,6 @@
 package com.bleulace.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,14 +17,12 @@ import com.bleulace.domain.management.command.CreateTaskCommand;
 import com.bleulace.domain.management.model.Bundle;
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.jpa.DateWindow;
+import com.bleulace.utils.dto.Mapper;
 
 @Profile("test")
 @Configuration
 public class CommandFixtures implements CommandGatewayAware
 {
-	@Autowired
-	private ModelMapper mapper;
-
 	@Bean
 	@Scope("prototype")
 	public CreateAccountCommand createAccountCommand()
@@ -54,7 +50,7 @@ public class CommandFixtures implements CommandGatewayAware
 		sendAndWait(cp);
 		CreateBundleCommand c = new CreateBundleCommand(Locator.locate(
 				Project.class).getId());
-		mapper.map(cp, c);
+		Mapper.map(cp, c);
 		return c;
 	}
 
@@ -65,7 +61,7 @@ public class CommandFixtures implements CommandGatewayAware
 		sendAndWait(cb);
 		CreateTaskCommand c = new CreateTaskCommand(Locator
 				.locate(Bundle.class).getId());
-		mapper.map(cb, c);
+		Mapper.map(cb, c);
 		return c;
 	}
 
@@ -74,8 +70,8 @@ public class CommandFixtures implements CommandGatewayAware
 	public CreateEventCommand createEventCommand(
 			@Qualifier("createProjectCommand") CreateProjectCommand cp)
 	{
-		CreateEventCommand c = mapper.map(cp, CreateEventCommand.class);
-		mapper.map(DateWindow.defaultValue(), c);
+		CreateEventCommand c = Mapper.map(cp, CreateEventCommand.class);
+		Mapper.map(DateWindow.defaultValue(), c);
 		return c;
 	}
 

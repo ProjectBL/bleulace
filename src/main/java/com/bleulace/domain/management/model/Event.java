@@ -56,16 +56,13 @@ public class Event extends Project
 		String creatorId = metaData.getSubjectId();
 		EventCreatedEvent event = new EventCreatedEvent();
 		event.setId(getId());
-		event.setCreatorId(creatorId);
 		Mapper.map(command, event);
 		apply(event, metaData);
 		if (creatorId != null)
 		{
-			ManagerAssignedEvent assignment = new ManagerAssignedEvent();
+			ManagerAssignedEvent assignment = new ManagerAssignedEvent(
+					creatorId, ManagementLevel.OWN);
 			assignment.setId(getId());
-			assignment.setAssignerId(creatorId);
-			assignment.setAssigneeId(creatorId);
-			assignment.setRole(ManagementLevel.OWN);
 			apply(assignment, metaData);
 		}
 	}

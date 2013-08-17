@@ -17,5 +17,4 @@ class TaskDTOImpl extends ManageableResourceDTOImpl implements TaskDTO
 	{
 		this.complete = complete;
 	}
-
 }

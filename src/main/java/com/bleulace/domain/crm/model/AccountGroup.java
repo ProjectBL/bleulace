@@ -40,11 +40,8 @@ public class AccountGroup extends AbstractRootResource implements
 		apply(Mapper.map(command, GroupCreatedEvent.class), metaData);
 		if (creatorId != null)
 		{
-			GroupMembershipChangedEvent event = Mapper.map(command,
-					GroupMembershipChangedEvent.class);
-			event.setId(getId());
-			event.setAccountId(creatorId);
-			event.setAction(GroupMembershipAction.JOIN);
+			GroupMembershipChangedEvent event = new GroupMembershipChangedEvent(
+					creatorId, GroupMembershipAction.JOIN);
 			apply(event, metaData);
 		}
 	}
@@ -53,10 +50,8 @@ public class AccountGroup extends AbstractRootResource implements
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			GroupMembershipChangedEvent event = Mapper.map(command,
-					GroupMembershipChangedEvent.class);
-			event.setAccountId(accountId);
-			apply(event, metaData);
+			apply(Mapper.map(command, new GroupMembershipChangedEvent(
+					accountId, command.getAction())), metaData);
 		}
 	}
 

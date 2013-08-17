@@ -8,28 +8,12 @@ import com.bleulace.domain.management.model.ManagementLevel;
 
 privileged aspect ManagerAssignedEvent_Roo_JavaBean {
     
-    public String ManagerAssignedEvent.getAssignerId() {
-        return this.assignerId;
-    }
-    
-    public void ManagerAssignedEvent.setAssignerId(String assignerId) {
-        this.assignerId = assignerId;
-    }
-    
     public String ManagerAssignedEvent.getAssigneeId() {
         return this.assigneeId;
     }
     
-    public void ManagerAssignedEvent.setAssigneeId(String assigneeId) {
-        this.assigneeId = assigneeId;
-    }
-    
     public ManagementLevel ManagerAssignedEvent.getRole() {
         return this.role;
-    }
-    
-    public void ManagerAssignedEvent.setRole(ManagementLevel role) {
-        this.role = role;
     }
     
 }

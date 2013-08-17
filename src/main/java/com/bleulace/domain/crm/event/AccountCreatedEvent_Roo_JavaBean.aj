@@ -12,24 +12,12 @@ privileged aspect AccountCreatedEvent_Roo_JavaBean {
         return this.username;
     }
     
-    public void AccountCreatedEvent.setUsername(String username) {
-        this.username = username;
-    }
-    
     public String AccountCreatedEvent.getPassword() {
         return this.password;
     }
     
-    public void AccountCreatedEvent.setPassword(String password) {
-        this.password = password;
-    }
-    
     public ContactInformation AccountCreatedEvent.getContactInformation() {
         return this.contactInformation;
-    }
-    
-    public void AccountCreatedEvent.setContactInformation(ContactInformation contactInformation) {
-        this.contactInformation = contactInformation;
     }
     
 }

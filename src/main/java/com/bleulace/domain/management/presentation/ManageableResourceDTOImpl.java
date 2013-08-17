@@ -43,11 +43,8 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		return id;
 	}
 
-	@Override
 	public void setId(String id)
 	{
-		System.out.println(getClass());
-		System.out.println(id);
 		this.id = id;
 	}
 
@@ -57,7 +54,6 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		return caption;
 	}
 
-	@Override
 	public void setCaption(String caption)
 	{
 		this.caption = caption;
@@ -69,7 +65,6 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		return description;
 	}
 
-	@Override
 	public void setDescription(String description)
 	{
 		this.description = description;
@@ -82,7 +77,6 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		return managers.get(level);
 	}
 
-	@Override
 	public void setChildren(List<Resource> resources)
 	{
 		for (Resource resource : resources)

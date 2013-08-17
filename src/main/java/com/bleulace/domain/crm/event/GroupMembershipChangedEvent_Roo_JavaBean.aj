@@ -12,16 +12,8 @@ privileged aspect GroupMembershipChangedEvent_Roo_JavaBean {
         return this.accountId;
     }
     
-    public void GroupMembershipChangedEvent.setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-    
     public GroupMembershipAction GroupMembershipChangedEvent.getAction() {
         return this.action;
-    }
-    
-    public void GroupMembershipChangedEvent.setAction(GroupMembershipAction action) {
-        this.action = action;
     }
     
 }

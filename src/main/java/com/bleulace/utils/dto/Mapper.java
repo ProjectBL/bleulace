@@ -1,13 +1,13 @@
 package com.bleulace.utils.dto;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationContext;
 
+import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 public final class Mapper
 {
-	private static final ModelMapper DEFAULT_INSTANCE = getInstance();
-
 	public static <T> T map(Object source, T destination)
 	{
 		getMapper(source.getClass(), destination.getClass()).map(source,
@@ -56,12 +56,9 @@ public final class Mapper
 	public static <S, T> ModelMapper getMapper(Class<S> source,
 			Class<T> destination)
 	{
-		return DEFAULT_INSTANCE;
-	}
-
-	private static ModelMapper getInstance()
-	{
-		return SpringApplicationContext.getBean(ModelMapper.class,
-				ModelMappingConfig.DEFAULT);
+		ApplicationContext ctx = SpringApplicationContext.get();
+		String name = DomainEventPayload.class.isAssignableFrom(destination) ? ModelMappingConfig.COMMAND_EVENT
+				: ModelMappingConfig.DEFAULT;
+		return ctx.getBean(name, ModelMapper.class);
 	}
 }
