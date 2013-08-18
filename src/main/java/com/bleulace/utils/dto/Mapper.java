@@ -8,6 +8,10 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 public final class Mapper
 {
+	private Mapper()
+	{
+	}
+
 	public static <T> T map(Object source, T destination)
 	{
 		getMapper(source.getClass(), destination.getClass()).map(source,
@@ -27,6 +31,7 @@ public final class Mapper
 		return instance;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static <T> T acquireInstance(Class<T> clazz)
 	{
 		DTOFactory<T> factory = null;

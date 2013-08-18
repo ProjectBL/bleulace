@@ -9,6 +9,7 @@ public interface GenericPermission<T extends GenericPermission<T>> extends
 
 	static abstract aspect Impl<T>
 	{
+		@SuppressWarnings("unchecked")
 		public boolean GenericPermission.implies(Permission p)
 		{
 			if (getClass().isAssignableFrom(p.getClass()))
