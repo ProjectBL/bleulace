@@ -14,7 +14,7 @@ import org.springframework.roo.addon.tostring.RooToString;
 @Embeddable
 @RooEquals
 @RooToString
-@RooJavaBean(settersByDefault = false)
+@RooJavaBean
 public class ContactInformation implements Serializable
 {
 	@NotEmpty

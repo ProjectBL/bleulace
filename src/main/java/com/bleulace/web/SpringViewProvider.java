@@ -1,23 +1,20 @@
-package com.bleulace.utils.ui;
+package com.bleulace.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
 import com.vaadin.navigator.Navigator.StaticViewProvider;
 import com.vaadin.navigator.View;
 
-@Configurable
 class SpringViewProvider extends StaticViewProvider
 {
 	private static final long serialVersionUID = -3847157174338421311L;
 
-	@Autowired
-	private ApplicationContext ctx;
+	private final ApplicationContext ctx;
 
-	public SpringViewProvider(String viewName)
+	public SpringViewProvider(String viewName, ApplicationContext ctx)
 	{
 		super(viewName, null);
+		this.ctx = ctx;
 	}
 
 	@Override

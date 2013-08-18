@@ -43,4 +43,14 @@ public class CreateAccountCommand
 	{
 		return null;
 	}
+
+	public void setFirstName(String firstName)
+	{
+		contactInformation.setFirstName(firstName);
+	}
+
+	public void setLastName(String lastName)
+	{
+		contactInformation.setLastName(lastName);
+	}
 }
