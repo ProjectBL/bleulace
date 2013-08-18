@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.EventSourcedEntityMixin;
@@ -33,16 +34,16 @@ public class EventInvitee implements EventSourcedEntityMixin
 	{
 	}
 
-	public EventInvitee(Account guest, Account host)
+	EventInvitee(Account guest, Account host)
 	{
 		this.host = host;
 		this.guest = guest;
 		status = RsvpStatus.PENDING;
 	}
 
-	public void on(RsvpCommand event)
+	public void on(RsvpCommand event, MetaData metaData)
 	{
-		if (guest.getId().equals(event.getAccountId()))
+		if (guest.getId().equals(metaData.getSubjectId()))
 		{
 			status = event.isAccepted() ? RsvpStatus.ACCEPTED
 					: RsvpStatus.DECLINED;

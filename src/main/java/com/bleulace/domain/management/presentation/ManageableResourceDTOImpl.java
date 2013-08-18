@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.ManagementLevel;
+import com.bleulace.domain.management.model.Progress;
 import com.bleulace.domain.resource.model.Resource;
 import com.bleulace.utils.dto.Mapper;
 
@@ -25,6 +26,9 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 
 	@NotNull
 	private String description = "";
+
+	@NotNull
+	private Float progress;
 
 	@NotNull
 	private final Map<ManagementLevel, List<UserDTO>> managers = new HashMap<ManagementLevel, List<UserDTO>>();
@@ -46,6 +50,12 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 	public void setId(String id)
 	{
 		this.id = id;
+	}
+
+	@Override
+	public boolean isComplete()
+	{
+		return !(progress < new Float(1));
 	}
 
 	@Override
@@ -75,6 +85,17 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 	{
 		Assert.notNull(level);
 		return managers.get(level);
+	}
+
+	@Override
+	public Float getProgress()
+	{
+		return progress;
+	}
+
+	public void setProgress(Progress progress)
+	{
+		this.progress = progress.getValue();
 	}
 
 	public void setChildren(List<Resource> resources)

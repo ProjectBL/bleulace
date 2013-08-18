@@ -4,15 +4,16 @@
 package com.bleulace.domain.management.model;
 
 import com.bleulace.domain.management.model.Task;
+import java.util.Date;
 
 privileged aspect Task_Roo_JavaBean {
     
-    public boolean Task.isComplete() {
-        return this.complete;
+    public Date Task.getDateCompleted() {
+        return this.dateCompleted;
     }
     
-    public void Task.setComplete(boolean complete) {
-        this.complete = complete;
+    public void Task.setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
     }
     
 }

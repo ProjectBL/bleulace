@@ -6,7 +6,7 @@ package com.bleulace.utils.spec;
  * 
  * @param <T>
  */
-class ConjunctionSpecification<T> implements Specification<T>
+public class ConjunctionSpecification<T> extends CompositeSpecification<T>
 {
 	private Specification<T>[] conjunction;
 

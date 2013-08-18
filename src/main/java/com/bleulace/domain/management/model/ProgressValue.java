@@ -49,4 +49,20 @@ public class ProgressValue implements Progress, Serializable
 	{
 		Assert.assertTrue(i >= 0);
 	}
+
+	@Override
+	public Float getValue()
+	{
+		if (total == 0)
+		{
+			return new Float(0);
+		}
+		return new Float(completed) / new Float(total);
+	}
+
+	@Override
+	public boolean isComplete()
+	{
+		return total != 0 && total == completed;
+	}
 }

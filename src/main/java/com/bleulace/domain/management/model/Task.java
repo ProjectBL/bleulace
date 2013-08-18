@@ -1,7 +1,11 @@
 package com.bleulace.domain.management.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -15,11 +19,12 @@ import com.bleulace.domain.resource.model.AbstractChildResource;
 @RooJavaBean
 public class Task extends AbstractChildResource implements ManageableResource
 {
-	@Column(nullable = false)
-	private boolean complete = false;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = true)
+	private Date dateCompleted;
 
 	public void on(TaskMarkedEvent event, MetaData metaData)
 	{
-		complete = event.isComplete();
+		this.dateCompleted = new Date();
 	}
 }

@@ -14,4 +14,8 @@ public interface ManageableResourceDTO
 	public String getDescription();
 
 	public List<UserDTO> getManagers(ManagementLevel level);
+
+	public Float getProgress();
+
+	public boolean isComplete();
 }

@@ -53,7 +53,7 @@ aspect ShiroAccountAspect
 		if (isAuthenticated())
 		{
 			return EntityManagerReference.load(Account.class, getId())
-					.getTimeZone().getTimeZone();
+					.getTimeZone().toTimeZone();
 		}
 		return TimeZone.getDefault();
 	}

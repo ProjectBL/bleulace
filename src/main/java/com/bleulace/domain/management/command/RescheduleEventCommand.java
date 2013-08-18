@@ -5,11 +5,15 @@ import java.util.Date;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
+import org.apache.shiro.authz.Permission;
 import org.axonframework.commandhandling.annotation.TargetAggregateIdentifier;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.cqrs.AuthorizableCommandPayload;
+import com.bleulace.domain.management.model.ManagementLevel;
+
 @RooJavaBean
-public class RescheduleEventCommand
+public class RescheduleEventCommand implements AuthorizableCommandPayload
 {
 	@TargetAggregateIdentifier
 	private final String id;
@@ -30,5 +34,11 @@ public class RescheduleEventCommand
 		this.id = id;
 		this.start = newStart;
 		this.end = newEnd;
+	}
+
+	@Override
+	public Permission getPermission()
+	{
+		return ManagementLevel.OWN.on(id);
 	}
 }

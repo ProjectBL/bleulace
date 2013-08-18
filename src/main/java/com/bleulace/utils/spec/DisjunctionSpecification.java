@@ -6,7 +6,7 @@ package com.bleulace.utils.spec;
  * 
  * @param <T>
  */
-class DisjunctionSpecification<T> implements Specification<T>
+public class DisjunctionSpecification<T> extends CompositeSpecification<T>
 {
 	private Specification<T>[] disjunction;
 

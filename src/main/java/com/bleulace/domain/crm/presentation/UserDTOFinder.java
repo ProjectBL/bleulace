@@ -8,6 +8,8 @@ import com.bleulace.utils.dto.Finder;
 
 public interface UserDTOFinder extends Finder<UserDTO>
 {
+	public List<UserDTO> findBySearch(String searchTerm);
+
 	public List<UserDTO> findFriends(String id);
 
 	public List<UserDTO> findFriendRequests(String id);

@@ -45,7 +45,8 @@ public interface EventSourcedAggregateRootMixin extends
 
 	static aspect Impl
 	{
-		private static final Set<EventSourcedAggregateRootMixin> DELETED = new HashSet<EventSourcedAggregateRootMixin>();
+		@Transient
+		private boolean EventSourcedAggregateRootMixin.deleted = false;
 
 		@Transient
 		private volatile EventContainer EventSourcedAggregateRootMixin.eventContainer;
@@ -63,12 +64,12 @@ public interface EventSourcedAggregateRootMixin extends
 
 		public boolean EventSourcedAggregateRootMixin.isDeleted()
 		{
-			return DELETED.contains(this);
+			return deleted;
 		}
 
 		void EventSourcedAggregateRootMixin.flagForDeletion()
 		{
-			DELETED.add(this);
+			deleted = true;
 		}
 
 		public void EventSourcedAggregateRootMixin.addEventRegistrationCallback(
@@ -184,12 +185,6 @@ public interface EventSourcedAggregateRootMixin extends
 						e);
 			}
 		}
-		
-		@PreRemove
-		void preRemove()
-		{
-			DELETED.remove(this);
-		}
 
 		private Collection<EventSourcedEntity> EventSourcedAggregateRootMixin.getChildEntities()
 		{
@@ -249,8 +244,7 @@ public interface EventSourcedAggregateRootMixin extends
 			{
 				for (EventSourcedEntity entity : childEntities)
 				{
-					if (entity != null
-							&& entity instanceof EventSourcedEntityMixin)
+					if (entity != null)
 					{
 						((EventSourcedEntityMixin) entity)
 								.registerAggregateRoot(this);

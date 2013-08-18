@@ -10,5 +10,7 @@ import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 public interface EventDTO extends ProjectDTO, EditableCalendarEvent,
 		EventChangeNotifier
 {
+	public RsvpStatus getRsvpStatus(String accountId);
+
 	public List<UserDTO> getInvitees(RsvpStatus status);
 }

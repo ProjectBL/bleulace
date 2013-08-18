@@ -6,7 +6,7 @@ package com.bleulace.utils.spec;
  * 
  * @param <T>
  */
-class OrSpecification<T> implements Specification<T>
+class OrSpecification<T> extends CompositeSpecification<T>
 {
 	private Specification<T> a;
 	private Specification<T> b;

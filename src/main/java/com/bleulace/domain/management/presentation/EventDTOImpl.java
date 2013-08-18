@@ -17,6 +17,8 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 {
 	private final Map<RsvpStatus, List<UserDTO>> invitees = new HashMap<RsvpStatus, List<UserDTO>>();
 
+	private final Map<String, RsvpStatus> rsvpStatuses = new HashMap<String, RsvpStatus>();
+
 	EventDTOImpl()
 	{
 		for (RsvpStatus status : RsvpStatus.values())
@@ -28,6 +30,11 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 	public void setLocation(String location)
 	{
 		setDescription(location);
+	}
+
+	public RsvpStatus getRsvpStatus(String accountId)
+	{
+		return rsvpStatuses.get(accountId);
 	}
 
 	@Override
@@ -57,5 +64,6 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		Assert.notNull(dto);
 		Assert.notNull(status);
 		invitees.get(status).add(dto);
+		rsvpStatuses.put(dto.getId(), status);
 	}
 }

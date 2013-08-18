@@ -2,6 +2,8 @@ package com.bleulace.utils.chrono;
 
 import java.util.TimeZone;
 
+import org.joda.time.DateTimeZone;
+
 /**
  * @see http://snipplr.com/view/23131/
  */
@@ -541,8 +543,13 @@ public enum TimeZoneEnum
 		this.tz = tz;
 	}
 
-	public final TimeZone getTimeZone()
+	public final TimeZone toTimeZone()
 	{
 		return tz;
+	}
+
+	public final DateTimeZone toDateTimeZone()
+	{
+		return DateTimeZone.forTimeZone(toTimeZone());
 	}
 }

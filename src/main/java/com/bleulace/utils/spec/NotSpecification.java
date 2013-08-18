@@ -6,7 +6,7 @@ package com.bleulace.utils.spec;
  * 
  * @param <T>
  */
-class NotSpecification<T> implements Specification<T>
+class NotSpecification<T> extends CompositeSpecification<T>
 {
 	private Specification<T> wrapped;
 

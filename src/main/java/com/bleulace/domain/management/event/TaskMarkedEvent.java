@@ -3,8 +3,8 @@ package com.bleulace.domain.management.event;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
-@RooJavaBean
 @RooToString
+@RooJavaBean(settersByDefault = false)
 public class TaskMarkedEvent
 {
 	private final String id;

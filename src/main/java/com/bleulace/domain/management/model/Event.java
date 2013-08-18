@@ -15,10 +15,12 @@ import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.management.command.CancelEventCommand;
 import com.bleulace.domain.management.command.CreateEventCommand;
 import com.bleulace.domain.management.command.InviteGuestsCommand;
 import com.bleulace.domain.management.command.RescheduleEventCommand;
 import com.bleulace.domain.management.command.RsvpCommand;
+import com.bleulace.domain.management.event.EventCanceledEvent;
 import com.bleulace.domain.management.event.EventCreatedEvent;
 import com.bleulace.domain.management.event.GuestInvitedEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
@@ -64,6 +66,8 @@ public class Event extends Project
 					creatorId, ManagementLevel.OWN);
 			assignment.setId(getId());
 			apply(assignment, metaData);
+			apply(new GuestInvitedEvent(getId(), creatorId), metaData);
+			apply(new RsvpCommand(getId(), true), metaData);
 		}
 	}
 
@@ -90,7 +94,7 @@ public class Event extends Project
 
 	public void handle(RsvpCommand command, MetaData metaData)
 	{
-		apply(command, metaData);
+		apply(new RsvpCommand(command.isAccepted()), metaData);
 	}
 
 	public void handle(RescheduleEventCommand command, MetaData metaData)
@@ -109,6 +113,23 @@ public class Event extends Project
 			window = new DateWindow(event.getStart(), event.getEnd());
 		}
 		// TODO : process scheduling conflicts
+	}
+
+	public void handle(CancelEventCommand command, MetaData metaData)
+	{
+		apply(Mapper.map(command, EventCanceledEvent.class), metaData);
+	}
+
+	public void on(EventCanceledEvent event)
+	{
+		flagForDeletion();
+	}
+
+	public RsvpStatus getRsvpStatus(String accountId)
+	{
+		EventInvitee invitee = getInvitees().get(
+				EntityManagerReference.load(Account.class, accountId));
+		return invitee == null ? null : invitee.getStatus();
 	}
 
 	@PreRemove

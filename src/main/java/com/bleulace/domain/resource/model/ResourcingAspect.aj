@@ -3,30 +3,29 @@ package com.bleulace.domain.resource.model;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.DomainEventPayload;
-import com.bleulace.cqrs.EventSourcedEntityMixin;
 
 aspect ResourcingAspect
 {
 	pointcut eventHandlerAnnotated() : 
 		execution(@EventHandler * *.*(..));
 
-	pointcut eventSourcedExecution(EventSourcedEntityMixin entity) : 
+	pointcut resourceExecution(Resource resource) : 
 		execution(* *.*(..))
-		&& this(entity);
+		&& this(resource+);
 
 	pointcut eventArgs(DomainEventPayload event) : 
-		execution(* *.*(DomainEventPayload+,..))
+		execution(* *.*(*,..))
 		&& args(event);
 
-	void around(EventSourcedEntityMixin entity, DomainEventPayload payload) : 
+	void around(Resource resource, DomainEventPayload payload) : 
 		eventHandlerAnnotated() 
-		&& eventArgs(payload) 
-		&& eventSourcedExecution(entity)
+		&& eventArgs(payload+) 
+		&& resourceExecution(resource+)
 	{
-		if (payload.getId() == null || entity.getId() == null
-				|| payload.getId().equals(entity.getId()))
+		if (payload.getId() == null || resource.getId() == null
+				|| payload.getId().equals(resource.getId()))
 		{
-			proceed(entity, payload);
+			proceed(resource, payload);
 		}
 	}
 }

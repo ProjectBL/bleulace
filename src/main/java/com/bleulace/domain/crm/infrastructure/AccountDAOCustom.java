@@ -11,4 +11,6 @@ interface AccountDAOCustom
 	public List<Account> findFriends(String id);
 
 	public List<Account> findFriendRequests(String id);
+
+	public List<Account> findBySearch(String searchTerm);
 }

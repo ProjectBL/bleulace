@@ -8,6 +8,10 @@ import java.util.Date;
 
 privileged aspect EventCreatedEvent_Roo_JavaBean {
     
+    public String EventCreatedEvent.getLocation() {
+        return this.location;
+    }
+    
     public Date EventCreatedEvent.getStart() {
         return this.start;
     }

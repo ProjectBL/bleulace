@@ -52,4 +52,10 @@ class UserDTOFinderImpl extends AbstractFinder<Account, UserDTO> implements
 		}
 		return map;
 	}
+
+	@Override
+	public List<UserDTO> findBySearch(String searchTerm)
+	{
+		return convert(accountDAO.findBySearch(searchTerm));
+	}
 }

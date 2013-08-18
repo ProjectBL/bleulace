@@ -61,15 +61,4 @@ public aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
 			sendAndWait(commandPayload);
 		}
 	}
-
-	void around(EventSourcedEntityMixin resource, DomainEventPayload event) : 
-		resourceEventHandler(resource,event)
-	{
-		String eventId = event.getId();
-		if (eventId == null || resource.getId() == null
-				|| resource.getId().equals(eventId))
-		{
-			proceed(resource, event);
-		}
-	}
 }

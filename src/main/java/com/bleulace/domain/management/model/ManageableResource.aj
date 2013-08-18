@@ -12,13 +12,13 @@ public interface ManageableResource extends CommentableResource
 {
 	static aspect Impl
 	{
+		public boolean ManageableResource.isComplete()
+		{
+			return getProgress().isComplete();
+		}
+
 		@Column(nullable = false)
 		private String ManageableResource.title = "";
-
-		public String ManageableResource.title()
-		{
-			return this.title;
-		}
 
 		public String ManageableResource.getTitle()
 		{

@@ -42,15 +42,15 @@ public class EventCommandTest extends AuthenticatingTest implements
 	public void testMoveEvent()
 	{
 
-		JodaDateWindow oldDates = Locator.locate(Event.class)
-				.getWindow().getDecorator();
+		JodaDateWindow oldDates = Locator.locate(Event.class).getWindow()
+				.getDecorator();
 
 		final int minutes = 15;
 		sendAndWait(new RescheduleEventCommand(getEvent().getId(), oldDates
 				.getStart().plusMinutes(minutes).toDate()));
 
-		JodaDateWindow newDates = Locator.locate(Event.class)
-				.getWindow().getDecorator();
+		JodaDateWindow newDates = Locator.locate(Event.class).getWindow()
+				.getDecorator();
 
 		Assert.assertEquals(oldDates.getLength(), newDates.getLength());
 		Assert.assertEquals(Minutes.minutes(minutes), Minutes.minutesBetween(
@@ -83,8 +83,7 @@ public class EventCommandTest extends AuthenticatingTest implements
 
 	private void doRsvpAndAssertion(boolean rsvp)
 	{
-		sendAndWait(new RsvpCommand(getEvent().getId(), getAccount().getId(),
-				rsvp));
+		sendAndWait(new RsvpCommand(getEvent().getId(), rsvp));
 		assertRsvp(rsvp);
 	}
 

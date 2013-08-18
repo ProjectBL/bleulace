@@ -13,6 +13,8 @@ import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.axonframework.commandhandling.CommandDispatchInterceptor;
 import org.axonframework.commandhandling.CommandMessage;
 
+import com.bleulace.cqrs.AuthorizableCommandPayload;
+
 /**
  * Checks authorizations before dispatching commands implementing the
  * {@link Permission} interface.
@@ -45,9 +47,10 @@ class AuthorizationInterceptor implements CommandDispatchInterceptor
 			}
 		}
 
-		if (payload instanceof Permission)
+		if (payload instanceof AuthorizableCommandPayload)
 		{
-			Permission permission = (Permission) payload;
+			Permission permission = ((AuthorizableCommandPayload) payload)
+					.getPermission();
 
 			// throw exception on authorization failure
 			SecurityUtils.getSubject().checkPermission(permission);

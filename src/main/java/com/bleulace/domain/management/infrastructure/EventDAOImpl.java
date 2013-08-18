@@ -1,7 +1,9 @@
 package com.bleulace.domain.management.infrastructure;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.util.Assert;
 
@@ -27,6 +29,15 @@ class EventDAOImpl implements EventDAOCustom
 						i.status.ne(RsvpStatus.DECLINED))).list(e);
 	}
 
+	@Override
+	public Set<RsvpStatus> findRsvps(Date start, Date end, String accountId)
+	{
+		return new HashSet<RsvpStatus>(dateQuery(start, end)
+				.innerJoin(e.invitees, i)
+				.where(i.guest.id.eq(accountId).and(
+						i.status.ne(RsvpStatus.DECLINED))).list(i.status));
+	}
+
 	private JPAQuery dateQuery(Date start, Date end)
 	{
 		Assert.notNull(start);
@@ -36,5 +47,11 @@ class EventDAOImpl implements EventDAOCustom
 				.where(e.window.start.before(end)
 						.and(e.window.end.after(start)))
 				.orderBy(e.window.start.asc());
+	}
+
+	@Override
+	public List<Event> findEvents(Date instant, String accountId)
+	{
+		return findEvents(instant, instant, accountId);
 	}
 }

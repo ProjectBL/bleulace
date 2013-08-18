@@ -14,7 +14,6 @@ class ProgressCalculatingInspector implements ResourceInspector
 	@Override
 	public void inspect(Resource resource)
 	{
-		System.out.println(resource);
 		if (shouldAddToTotal(resource))
 		{
 			total++;
@@ -32,7 +31,7 @@ class ProgressCalculatingInspector implements ResourceInspector
 
 	private boolean isComplete(Resource resource)
 	{
-		return ((Task) resource).isComplete();
+		return ((Task) resource).getDateCompleted() != null;
 	}
 
 	public Progress getProgress()

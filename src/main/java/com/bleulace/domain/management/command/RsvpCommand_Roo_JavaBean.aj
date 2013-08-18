@@ -7,10 +7,6 @@ import com.bleulace.domain.management.command.RsvpCommand;
 
 privileged aspect RsvpCommand_Roo_JavaBean {
     
-    public String RsvpCommand.getAccountId() {
-        return this.accountId;
-    }
-    
     public boolean RsvpCommand.isAccepted() {
         return this.accepted;
     }
