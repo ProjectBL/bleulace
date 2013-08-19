@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
 import com.vaadin.ui.UI;
 
 @Configuration
@@ -17,7 +16,7 @@ class WebUIConfig
 	private ApplicationContext ctx;
 
 	@Bean
-	@Scope("session")
+	@Scope("prototype")
 	public WebUI webUI()
 	{
 		WebUI ui = new WebUI();
@@ -28,9 +27,12 @@ class WebUIConfig
 	private Navigator makeNavigator(UI ui)
 	{
 		Navigator navigator = new Navigator(ui, ui);
-		for (String viewName : ctx.getBeanNamesForType(View.class))
+
+		for (BusRegisteringViewProvider provider : ctx.getBeansOfType(
+				BusRegisteringViewProvider.class).values())
 		{
-			navigator.addProvider(new SpringViewProvider(viewName, ctx));
+			navigator.addProvider(provider);
+			navigator.addViewChangeListener(provider);
 		}
 		return navigator;
 	}

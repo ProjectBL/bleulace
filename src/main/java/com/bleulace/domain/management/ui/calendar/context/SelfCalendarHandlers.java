@@ -17,28 +17,24 @@ import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 
 @Component
-class SelfCalendarHandlers implements CalendarViewContext.CalendarHandlers,
-		CommandGatewayAware
+class SelfCalendarHandlers implements CommandGatewayAware
 {
 	private static final EventMoveHandler BASIC_EVENT_MOVE_HANDLER = new BasicEventMoveHandler();
 
 	private static final EventResizeHandler BASIC_EVENT_RESIZE_HANDLER = new BasicEventResizeHandler();
 
-	@Override
 	public void eventClick(EventClick event)
 	{
 		// calendar.addEvent(bla);
 
 	}
 
-	@Override
 	public void dateClick(DateClickEvent event)
 	{
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void eventResize(EventResize event)
 	{
 		try
@@ -57,7 +53,6 @@ class SelfCalendarHandlers implements CalendarViewContext.CalendarHandlers,
 		}
 	}
 
-	@Override
 	public void eventMove(MoveEvent event)
 	{
 		try
@@ -76,7 +71,6 @@ class SelfCalendarHandlers implements CalendarViewContext.CalendarHandlers,
 		}
 	}
 
-	@Override
 	public void rangeSelect(RangeSelectEvent event)
 	{
 		// TODO Auto-generated method stub

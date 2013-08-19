@@ -7,9 +7,6 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
 class OtherCalendarViewContext implements CalendarViewContext
 {
-	@Autowired
-	private OtherCalendarViewHandlers handlers;
-
 	private final String ownerId;
 	private final String viewerId;
 
@@ -40,11 +37,5 @@ class OtherCalendarViewContext implements CalendarViewContext
 	public CalendarEventProvider getEventProvider()
 	{
 		return new EventDTOProvider(this);
-	}
-
-	@Override
-	public CalendarHandlers getHandlers()
-	{
-		return handlers;
 	}
 }

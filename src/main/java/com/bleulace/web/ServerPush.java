@@ -1,4 +1,4 @@
-package com.bleulace.utils.ui;
+package com.bleulace.web;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

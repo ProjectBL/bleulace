@@ -9,9 +9,6 @@ import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 @Configurable
 class SelfCalendarViewContext implements CalendarViewContext
 {
-	@Autowired
-	private SelfCalendarHandlers handlers;
-
 	private final String ownerId;
 
 	SelfCalendarViewContext(String ownerId)
@@ -41,11 +38,5 @@ class SelfCalendarViewContext implements CalendarViewContext
 	public CalendarEditableEventProvider getEventProvider()
 	{
 		return new EventDTOProvider(this);
-	}
-
-	@Override
-	public CalendarHandlers getHandlers()
-	{
-		return handlers;
 	}
 }

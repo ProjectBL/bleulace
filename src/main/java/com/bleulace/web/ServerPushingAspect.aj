@@ -1,6 +1,5 @@
-package com.bleulace.utils.ui;
+package com.bleulace.web;
 
-import com.vaadin.navigator.View;
 import com.vaadin.ui.Component;
 
 aspect ServerPushingAspect
