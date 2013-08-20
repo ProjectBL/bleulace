@@ -4,6 +4,7 @@
 package com.bleulace.domain.crm.presentation;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
+import java.util.TimeZone;
 
 privileged aspect UserDTO_Roo_JavaBean {
     
@@ -21,6 +22,14 @@ privileged aspect UserDTO_Roo_JavaBean {
     
     public void UserDTO.setImage(byte[] image) {
         this.image = image;
+    }
+    
+    public TimeZone UserDTO.getTimeZone() {
+        return this.timeZone;
+    }
+    
+    public void UserDTO.setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
     
     public String UserDTO.getUsername() {

@@ -63,10 +63,6 @@ privileged aspect Account_Roo_JavaBean {
         this.feedEntries = feedEntries;
     }
     
-    public TimeZoneEnum Account.getTimeZone() {
-        return this.timeZone;
-    }
-    
     public void Account.setTimeZone(TimeZoneEnum timeZone) {
         this.timeZone = timeZone;
     }

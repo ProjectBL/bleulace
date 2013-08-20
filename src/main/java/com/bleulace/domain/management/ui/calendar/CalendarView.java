@@ -1,19 +1,18 @@
 package com.bleulace.domain.management.ui.calendar;
 
+import java.util.Date;
+
+import org.apache.commons.lang3.Range;
 import org.joda.time.LocalTime;
 
 import com.bleulace.domain.management.presentation.ScheduleStatus;
-import com.bleulace.domain.management.ui.calendar.context.CalendarViewContext;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
+import com.vaadin.ui.Calendar;
 
 public interface CalendarView
 {
-	CalendarViewContext getContext();
-
 	void setTitle(String title);
+
+	void setCalendar(Calendar calendar);
 
 	void addTimeSlot(LocalTime time, ScheduleStatus status);
 
@@ -21,20 +20,18 @@ public interface CalendarView
 
 	void clearTimeslots();
 
-	void setCalendarType(CalendarType type);
+	Range<Date> getDates();
+
+	void setDates(Range<Date> dates);
 
 	void addViewListener(CalendarViewListener listener);
 
-	public enum CalendarType
+	public interface CalendarViewListener
 	{
-		DAY, WEEK, MONTH;
-	}
+		void viewEntered(String params);
 
-	public interface CalendarViewListener extends DateClickHandler,
-			RangeSelectHandler, ForwardHandler, BackwardHandler
-	{
-		void timeslotSelect(TimeSlot time);
+		void timeslotSelected(TimeSlot time);
 
-		void calendarTypeSelect(CalendarType type);
+		void calendarTypeSelected(CalendarType type);
 	}
 }

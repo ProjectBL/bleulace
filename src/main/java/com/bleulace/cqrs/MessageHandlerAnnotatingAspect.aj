@@ -17,7 +17,7 @@ import com.bleulace.cqrs.event.EventBusAware;
  * @author Arleigh Dickerson
  * 
  */
-public aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
+aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
 {
 	declare parents : com.bleulace..event..*Event implements DomainEventPayload;
 	declare parents : com.bleulace..command..*Command implements CommandPayload;

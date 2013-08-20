@@ -552,4 +552,19 @@ public enum TimeZoneEnum
 	{
 		return DateTimeZone.forTimeZone(toTimeZone());
 	}
+
+	public static TimeZoneEnum fromTimeZone(TimeZone tz)
+	{
+		if (tz != null)
+		{
+			for (TimeZoneEnum tze : TimeZoneEnum.values())
+			{
+				if (tze.toTimeZone().equals(tz))
+				{
+					return tze;
+				}
+			}
+		}
+		return null;
+	}
 }

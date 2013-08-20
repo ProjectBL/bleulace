@@ -14,8 +14,8 @@ class CalendarViewContextFactoryImpl implements CalendarViewContextFactory
 		Assert.notNull(viewerId);
 		if (ownerId.equals(viewerId))
 		{
-			return new SelfCalendarViewContext(ownerId);
+			return new MyCalendarViewContext(ownerId);
 		}
-		return new OtherCalendarViewContext(ownerId, viewerId);
+		return new ClientCalendarViewContext(ownerId, viewerId);
 	}
 }

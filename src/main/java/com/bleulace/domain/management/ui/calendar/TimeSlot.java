@@ -59,7 +59,7 @@ class TimeSlot extends CustomComponent implements ClickListener
 	{
 		for (CalendarViewListener listener : listeners)
 		{
-			listener.timeslotSelect(this);
+			listener.timeslotSelected(this);
 		}
 	}
 }

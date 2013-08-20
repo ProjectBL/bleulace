@@ -1,17 +1,26 @@
 package com.bleulace.domain.management.ui.calendar.context;
 
+import java.util.TimeZone;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
+import com.bleulace.domain.crm.presentation.UserDTOFinder;
 import com.bleulace.domain.management.presentation.EventDTO;
+import com.bleulace.domain.management.ui.calendar.handlers.DelegatingHandlers;
 import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 
 @Configurable
-class SelfCalendarViewContext implements CalendarViewContext
+class MyCalendarViewContext implements CalendarViewContext
 {
+	@Autowired
+	private UserDTOFinder finder;
+
 	private final String ownerId;
 
-	SelfCalendarViewContext(String ownerId)
+	private final Handlers handlers = new DelegatingHandlers();
+
+	MyCalendarViewContext(String ownerId)
 	{
 		this.ownerId = ownerId;
 	}
@@ -38,5 +47,17 @@ class SelfCalendarViewContext implements CalendarViewContext
 	public CalendarEditableEventProvider getEventProvider()
 	{
 		return new EventDTOProvider(this);
+	}
+
+	@Override
+	public TimeZone getTimeZone()
+	{
+		return finder.findById(ownerId).getTimeZone();
+	}
+
+	@Override
+	public Handlers getHandlers()
+	{
+		return handlers;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,8 +33,8 @@ import com.bleulace.domain.resource.model.AbstractRootResource;
 import com.bleulace.utils.chrono.TimeZoneEnum;
 import com.bleulace.utils.dto.Mapper;
 
+@RooJavaBean
 @Entity
-@RooJavaBean(settersByDefault = true)
 @Table(name = "ACCOUNT")
 public class Account extends AbstractRootResource implements CommentableRoot,
 		CommentableResource
@@ -61,6 +62,16 @@ public class Account extends AbstractRootResource implements CommentableRoot,
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TimeZoneEnum timeZone = TimeZoneEnum.DEFAULT;
+
+	public TimeZone getTimeZone()
+	{
+		return timeZone.toTimeZone();
+	}
+
+	public void setTimeZone(TimeZone timeZone)
+	{
+		this.timeZone = TimeZoneEnum.fromTimeZone(timeZone);
+	}
 
 	public Account()
 	{

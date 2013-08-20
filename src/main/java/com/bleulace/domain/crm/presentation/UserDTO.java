@@ -1,5 +1,7 @@
 package com.bleulace.domain.crm.presentation;
 
+import java.util.TimeZone;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -13,6 +15,8 @@ public class UserDTO
 
 	private byte[] image;
 
+	private TimeZone timeZone;
+
 	@NotEmpty
 	private String username;
 
@@ -21,4 +25,9 @@ public class UserDTO
 
 	@NotEmpty
 	private String lastName;
+
+	public String getFullName()
+	{
+		return firstName + " " + lastName;
+	}
 }

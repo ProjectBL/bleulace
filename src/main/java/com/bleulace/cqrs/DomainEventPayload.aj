@@ -17,7 +17,6 @@ public interface DomainEventPayload extends MessagePayload
 		
 		public void DomainEventPayload.setId(String id)
 		{
-			//Assert.notNull(id);
 			this.id = id;
 		}
 	}

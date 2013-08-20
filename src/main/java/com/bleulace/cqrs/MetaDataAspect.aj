@@ -19,7 +19,7 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-public aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
+aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 {
 	static final String SUBJECT = "subject";
 	static final String TIMESTAMP = "timestamp";

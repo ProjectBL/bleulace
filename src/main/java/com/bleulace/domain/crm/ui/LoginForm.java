@@ -58,7 +58,8 @@ public class LoginForm extends CustomComponent implements ClickListener,
 		{
 			SecurityUtils.getSubject().login(usernameField.getValue(),
 					passwordField.getValue(), rememberMeField.getValue());
-			getUI().getNavigator().navigateTo("calendarView");
+			getUI().getNavigator().navigateTo(
+					"calendarView/" + SecurityUtils.getSubject().getId());
 		}
 		catch (AuthenticationException e)
 		{

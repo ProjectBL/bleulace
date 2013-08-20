@@ -1,6 +1,5 @@
 package com.bleulace.cqrs;
 
-import java.beans.Transient;
 import java.util.Collection;
 
 import org.axonframework.domain.DomainEventMessage;
