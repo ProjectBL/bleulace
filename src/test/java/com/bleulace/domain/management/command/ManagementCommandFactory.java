@@ -1,5 +1,6 @@
 package com.bleulace.domain.management.command;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class ManagementCommandFactory
 
 	public CreateEventCommand createEvent()
 	{
-		CreateEventCommand c = new CreateEventCommand();
+		CreateEventCommand c = new CreateEventCommand(new Date(), new Date());
 		c.setTitle(randomString());
 		return c;
 	}

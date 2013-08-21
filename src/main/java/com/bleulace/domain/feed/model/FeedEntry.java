@@ -22,8 +22,6 @@ import org.springframework.util.Assert;
 @RooJavaBean(settersByDefault = false)
 public class FeedEntry implements Serializable
 {
-	private static final long serialVersionUID = 1150763613614458205L;
-
 	static final String GENERATING_EVENT_FLAG = "GENERATOR";
 	static final String METADATA_FLAG = "METADATA";
 

@@ -11,22 +11,22 @@ import com.bleulace.jpa.DateWindow;
 public class CreateEventCommand extends CreateProjectCommand
 {
 	@Valid
-	private DateWindow window = DateWindow.defaultValue();
+	private DateWindow window;
 
 	@NotEmpty
 	private String location = "";
 
-	public CreateEventCommand()
+	public CreateEventCommand(Date start, Date end)
 	{
+		window = new DateWindow(start, end);
 	}
 
 	public CreateEventCommand(String title, String location, Date start,
 			Date end)
 	{
+		this(start, end);
 		setTitle(title);
 		setLocation(location);
-		setStart(start);
-		setEnd(end);
 	}
 
 	public Date getStart()
@@ -47,6 +47,11 @@ public class CreateEventCommand extends CreateProjectCommand
 	public void setEnd(Date end)
 	{
 		window = new DateWindow(window.getStart(), end);
+	}
+
+	public DateWindow getWindow()
+	{
+		return window;
 	}
 
 	public String getLocation()

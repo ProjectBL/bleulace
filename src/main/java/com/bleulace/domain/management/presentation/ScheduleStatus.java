@@ -60,6 +60,5 @@ public enum ScheduleStatus
 		{
 			return candidate.contains(status);
 		}
-
 	}
 }

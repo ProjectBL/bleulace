@@ -1,10 +1,12 @@
 package com.bleulace.domain.crm.config;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DelegatingSubject;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.model.Account;
@@ -13,6 +15,8 @@ import com.bleulace.jpa.EntityManagerReference;
 aspect ShiroAccountAspect
 {
 	private static final String TIMEZONE_KEY = "timezone";
+	
+	declare parents : DelegatingSubject extends Serializable;
 
 	boolean around(Permission p) : 
 		execution(public boolean Permission.implies(Permission+)) 

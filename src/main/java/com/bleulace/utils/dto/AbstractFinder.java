@@ -11,9 +11,9 @@ import com.bleulace.jpa.EntityManagerReference;
 public class AbstractFinder<S extends Persistable<String>, T> implements
 		Finder<T>
 {
-	private final IterableConverter<S, T> converter;
+	private transient final IterableConverter<S, T> converter;
 
-	private final JpaRepository<S, String> repository;
+	private transient final JpaRepository<S, String> repository;
 
 	public AbstractFinder(Class<S> sourceClass, Class<T> dtoClass)
 	{

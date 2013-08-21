@@ -15,8 +15,6 @@ import org.joda.time.LocalDateTime;
  */
 public class LocalDateTimeConverter implements Converter
 {
-	private static final long serialVersionUID = 362089437264505921L;
-
 	@Override
 	public Object convertDataValueToObjectValue(Object dataValue,
 			Session session)

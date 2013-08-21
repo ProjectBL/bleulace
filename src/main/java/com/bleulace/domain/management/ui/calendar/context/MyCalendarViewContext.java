@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 
 import com.bleulace.domain.crm.presentation.UserDTOFinder;
 import com.bleulace.domain.management.presentation.EventDTO;
-import com.bleulace.domain.management.ui.calendar.handlers.DelegatingHandlers;
-import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
 @Configurable
 class MyCalendarViewContext implements CalendarViewContext
@@ -16,9 +15,9 @@ class MyCalendarViewContext implements CalendarViewContext
 	@Autowired
 	private UserDTOFinder finder;
 
-	private final String ownerId;
+	private final CalendarEventProvider provider = new EventDTOProvider(this);
 
-	private final Handlers handlers = new DelegatingHandlers();
+	private final String ownerId;
 
 	MyCalendarViewContext(String ownerId)
 	{
@@ -40,24 +39,18 @@ class MyCalendarViewContext implements CalendarViewContext
 	@Override
 	public void decorate(EventDTO dto)
 	{
-		dto.setStyleName(dto.getRsvpStatus(ownerId).getStyleName());
+		// dto.setStyleName(dto.getRsvpStatus(ownerId).getStyleName());
 	}
 
 	@Override
-	public CalendarEditableEventProvider getEventProvider()
+	public CalendarEventProvider getEventProvider()
 	{
-		return new EventDTOProvider(this);
+		return provider;
 	}
 
 	@Override
 	public TimeZone getTimeZone()
 	{
 		return finder.findById(ownerId).getTimeZone();
-	}
-
-	@Override
-	public Handlers getHandlers()
-	{
-		return handlers;
 	}
 }

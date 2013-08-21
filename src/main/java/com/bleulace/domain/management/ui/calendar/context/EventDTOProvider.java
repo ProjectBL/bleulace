@@ -7,18 +7,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import com.bleulace.cqrs.command.CommandGatewayAware;
-import com.bleulace.domain.management.command.CancelEventCommand;
-import com.bleulace.domain.management.command.CreateEventCommand;
 import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.domain.management.presentation.EventFinder;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeListener;
+import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
 
 @Configurable
-class EventDTOProvider extends BasicEventProvider implements
-		CommandGatewayAware
+class EventDTOProvider implements CalendarEventProvider,
+		EventSetChangeNotifier, EventSetChangeListener
 {
+	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
+
 	private final CalendarViewContext context;
 
 	@Autowired
@@ -27,36 +28,41 @@ class EventDTOProvider extends BasicEventProvider implements
 	EventDTOProvider(CalendarViewContext context)
 	{
 		this.context = context;
+		context.addEventSetChangeListener(this);
 	}
 
 	@Override
-	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
+	public List<CalendarEvent> getEvents(Date start, Date end)
 	{
-		List<CalendarEvent> activeEvents = new ArrayList<CalendarEvent>();
-		for (EventDTO dto : finder.findByAccountForDates(context.getOwnerId(),
-				startDate, endDate))
+		List<EventDTO> dtos = finder.findByAccountForDates(
+				context.getOwnerId(), start, end);
+		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
+		for (EventDTO dto : dtos)
 		{
 			context.decorate(dto);
-			eventList.add(dto);
-			activeEvents.add(dto);
+			events.add(dto);
 		}
-		return activeEvents;
+		return events;
 	}
 
 	@Override
-	public void addEvent(CalendarEvent event)
+	public void addEventSetChangeListener(EventSetChangeListener listener)
 	{
-		sendAndWait(new CreateEventCommand(event.getCaption(),
-				event.getDescription(), event.getStart(), event.getEnd()));
-		((EventDTO) event).addEventChangeListener(this);
-		super.addEvent(event);
+		listeners.add(listener);
 	}
 
 	@Override
-	public void removeEvent(CalendarEvent event)
+	public void removeEventSetChangeListener(EventSetChangeListener listener)
 	{
-		sendAndWait(new CancelEventCommand(((EventDTO) event).getId()));
-		((EventDTO) event).removeEventChangeListener(this);
-		super.removeEvent(event);
+		listeners.remove(listener);
+	}
+
+	@Override
+	public void eventSetChange(EventSetChangeEvent changeEvent)
+	{
+		for (EventSetChangeListener listener : listeners)
+		{
+			listener.eventSetChange(changeEvent);
+		}
 	}
 }

@@ -8,7 +8,7 @@ import org.joda.time.LocalDateTime;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.Assert;
 
-enum CalendarType implements Converter<Date, Range<Date>>
+public enum CalendarType implements Converter<Date, Range<Date>>
 {
 	DAY(new DayConverter()), WEEK(new WeekConverter()), MONTH(
 			new MonthConverter());

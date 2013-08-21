@@ -11,8 +11,6 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.Range;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Period;
 import org.springframework.data.convert.JodaTimeConverters.DateToLocalDateTimeConverter;
 import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
@@ -23,8 +21,6 @@ import org.springframework.util.Assert;
 @RooJavaBean(settersByDefault = false)
 public class DateWindow implements Serializable
 {
-	private static final long serialVersionUID = -1900206502831675688L;
-
 	@Future
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -39,12 +35,6 @@ public class DateWindow implements Serializable
 
 	DateWindow()
 	{
-	}
-
-	public static DateWindow defaultValue()
-	{
-		return new JodaDateWindow(LocalDateTime.now().plusMinutes(15),
-				Period.hours(1)).getDateWindow();
 	}
 
 	public DateWindow(Date from, Date to)

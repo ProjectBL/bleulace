@@ -23,11 +23,6 @@ import com.vaadin.ui.TextField;
 public class LoginForm extends CustomComponent implements ClickListener,
 		CommandGatewayAware
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3155867696094372161L;
-
 	private static final String USERNAME_FIELD_CAPTION = "Username";
 	private static final String PASSWORD_FIELD_CAPTION = "Password";
 	private static final String REMEMBER_ME_FIELD_CAPTION = "Remember Me";

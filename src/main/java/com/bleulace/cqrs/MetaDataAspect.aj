@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
-import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.axonframework.auditing.AuditDataProvider;
 import org.axonframework.commandhandling.CommandDispatchInterceptor;
@@ -21,10 +20,11 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 {
-	static final String SUBJECT = "subject";
+	static final String SUBJECT_ID = "subjectId";
+	static final String HOST = "host";
 	static final String TIMESTAMP = "timestamp";
 
-	static final String[] FLAGS = { SUBJECT, TIMESTAMP };
+	static final String[] FLAGS = { SUBJECT_ID, TIMESTAMP };
 
 	@SuppressAjWarnings
 	before(MetaData metaData, String key) : execution(public * MetaData.put(String,..)) 
@@ -40,12 +40,12 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 
 	public String MetaData.getSubjectId()
 	{
-		return this.getSubject().getId();
+		return (String) this.get(SUBJECT_ID);
 	}
-
-	public Subject MetaData.getSubject()
+	
+	public String MetaData.getHost()
 	{
-		return (Subject) this.get(SUBJECT);
+		return (String) this.get(HOST);
 	}
 
 	public Date MetaData.getTimestamp()
@@ -59,13 +59,14 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 				.load(Account.class, this.getSubjectId());
 	}
 
-    public CommandMessage<?> handle(CommandMessage<?> commandMessage)
-    {
+	public CommandMessage<?> handle(CommandMessage<?> commandMessage)
+	{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(TIMESTAMP, new Date());
 		try
 		{
-			map.put(SUBJECT, SecurityUtils.getSubject());
+			map.put(SUBJECT_ID, SecurityUtils.getSubject().getId());
+			map.put(HOST, SecurityUtils.getSubject().getSession().getHost());
 		}
 		catch (UnavailableSecurityManagerException e)
 		{
@@ -75,7 +76,7 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 			}
 		}
 		return commandMessage.andMetaData(map);
-    }
+	}
 
 	public Map<String, Object> provideAuditDataFor(CommandMessage<?> command)
 	{

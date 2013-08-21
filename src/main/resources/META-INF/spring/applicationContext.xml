@@ -79,6 +79,7 @@
 		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean"
 		id="commandGateway">
 		<property name="commandBus" ref="commandBus" />
+		<property name="commandDispatchInterceptors" ref="metaDataAspect"/>
 	</bean>
 
 	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
@@ -122,15 +123,12 @@
 		factory-method="aspectOf" />
 
 	<bean id="abstractCommandBus" abstract="true">
-		<property name="dispatchInterceptors" ref="metaDataAspect"/>
 		<property name="transactionManager" ref="axonTxManager" />
 		<property name="handlerInterceptors">
-			<util:list>
-				<bean class="org.axonframework.auditing.AuditingInterceptor">
-					<property name="auditDataProvider" ref="metaDataAspect" />
-					<property name="auditLogger" ref="auditLoggerImpl" />
-				</bean>
-			</util:list>
+			<bean class="org.axonframework.auditing.AuditingInterceptor">
+				<property name="auditDataProvider" ref="metaDataAspect" />
+				<property name="auditLogger" ref="auditLoggerImpl" />
+			</bean>
 		</property>
 	</bean>
 
@@ -145,10 +143,8 @@
 			<property name="channel" ref="eventBusChannel" />
 		</bean>
 
-		<bean id="commandBus"
-			class="org.axonframework.commandhandling.AsynchronousCommandBus"
+		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
 			parent="abstractCommandBus">
-			<constructor-arg ref="executor" />
 			<property name="dispatchInterceptors">
 				<util:list>
 					<bean

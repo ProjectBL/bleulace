@@ -3,6 +3,7 @@ package com.bleulace.domain.resource.model;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.DomainEventPayload;
+import com.vaadin.ui.Component;
 
 aspect ResourcingAspect
 {

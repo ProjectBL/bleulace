@@ -1,5 +1,7 @@
 package com.bleulace.utils;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -71,7 +73,7 @@ public class CommandFixtures implements CommandGatewayAware
 			@Qualifier("createProjectCommand") CreateProjectCommand cp)
 	{
 		CreateEventCommand c = Mapper.map(cp, CreateEventCommand.class);
-		Mapper.map(DateWindow.defaultValue(), c);
+		Mapper.map(new DateWindow(new Date(), new Date()), c);
 		return c;
 	}
 

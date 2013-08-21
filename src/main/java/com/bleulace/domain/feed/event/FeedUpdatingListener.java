@@ -1,5 +1,6 @@
 package com.bleulace.domain.feed.event;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.model.Account;
@@ -22,24 +24,27 @@ import com.bleulace.domain.feed.infrastructure.DefaultFeedEntryProvider;
 import com.bleulace.domain.feed.infrastructure.FeedEntryProvider;
 import com.bleulace.domain.feed.infrastructure.FeedEntryProviderLocater;
 import com.bleulace.domain.feed.model.FeedEntry;
+import com.bleulace.utils.SystemProfiles;
 
 @Component
-@Profile({ "dev", "prod" })
-class FeedUpdatingListener implements SaveAggregateCallback<Account>
+@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+class FeedUpdatingListener implements SaveAggregateCallback<Account>,
+		Serializable
 {
 	@Autowired
-	private FeedEntryProviderLocater locater;
+	private transient FeedEntryProviderLocater locater;
 
 	@Autowired
-	private EventBus eventBus;
+	private transient EventBus eventBus;
 
 	@Autowired
-	private DefaultUnitOfWorkFactory uowFactory;
+	private transient DefaultUnitOfWorkFactory uowFactory;
 
 	@PersistenceContext
-	private EntityManager em;
+	private transient EntityManager em;
 
 	@EventHandler
+	@Transactional
 	public void handle(DomainEventPayload event, MetaData metaData)
 	{
 		final FeedEntryProvider<DomainEventPayload> provider = getProvider(event

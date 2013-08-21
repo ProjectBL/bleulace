@@ -17,6 +17,7 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.CancelEventCommand;
 import com.bleulace.domain.management.command.CreateEventCommand;
+import com.bleulace.domain.management.command.EditEventCommand;
 import com.bleulace.domain.management.command.InviteGuestsCommand;
 import com.bleulace.domain.management.command.RescheduleEventCommand;
 import com.bleulace.domain.management.command.RsvpCommand;
@@ -32,14 +33,8 @@ import com.bleulace.utils.dto.Mapper;
 @RooJavaBean
 public class Event extends Project
 {
-	@Override
-	public String getId()
-	{
-		return super.getId();
-	}
-
 	@Embedded
-	private DateWindow window = DateWindow.defaultValue();
+	private DateWindow window;
 
 	@MapKeyColumn(name = "GUEST_ID")
 	@EventSourcedMember
@@ -71,6 +66,14 @@ public class Event extends Project
 		}
 	}
 
+	public void on(EventCreatedEvent event)
+	{
+		System.out.println(event);
+		setTitle(event.getTitle());
+		this.location = event.getLocation();
+		window = new DateWindow(event.getStart(), event.getEnd());
+	}
+
 	public void handle(InviteGuestsCommand command, MetaData metaData)
 	{
 		for (String accountId : command.getAccountIds())
@@ -90,6 +93,11 @@ public class Event extends Project
 					metaData.getSubjectId());
 		}
 		invitees.put(guest, new EventInvitee(guest, host));
+	}
+
+	public void handle(EditEventCommand command, MetaData metaData)
+	{
+		apply(command, metaData);
 	}
 
 	public void handle(RsvpCommand command, MetaData metaData)
