@@ -3,14 +3,14 @@ package com.bleulace.domain.resource.model;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.DomainEventPayload;
-import com.vaadin.ui.Component;
+import com.bleulace.cqrs.EventSourcedEntityMixin;
 
 aspect ResourcingAspect
 {
 	pointcut eventHandlerAnnotated() : 
 		execution(@EventHandler * *.*(..));
 
-	pointcut resourceExecution(Resource resource) : 
+	pointcut resourceExecution(EventSourcedEntityMixin resource) : 
 		execution(* *.*(..))
 		&& this(resource+);
 
@@ -18,7 +18,7 @@ aspect ResourcingAspect
 		execution(* *.*(*,..))
 		&& args(event);
 
-	void around(Resource resource, DomainEventPayload payload) : 
+	void around(EventSourcedEntityMixin resource, DomainEventPayload payload) : 
 		eventHandlerAnnotated() 
 		&& eventArgs(payload+) 
 		&& resourceExecution(resource+)

@@ -1,43 +1,34 @@
 package com.bleulace.domain.management.ui.calendar.view;
 
 import java.util.Date;
-import java.util.Map;
 
-import org.apache.commons.lang3.Range;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-
-import com.bleulace.domain.management.presentation.ScheduleStatus;
-import com.bleulace.domain.management.ui.calendar.component.CalendarComponent.CalendarComponentListener;
-import com.bleulace.domain.management.ui.calendar.context.CalendarViewContext;
-import com.bleulace.domain.management.ui.calendar.modal.CalendarModal;
-import com.bleulace.domain.management.ui.calendar.model.EventModel;
-import com.bleulace.domain.management.ui.calendar.timeslot.TimeSlotComponent.TimeSlotListener;
+import com.bleulace.domain.management.presentation.EventDTO;
+import com.bleulace.domain.management.ui.calendar.CalendarType;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
-public interface CalendarView extends TimeSlotListener, View
+public interface CalendarView extends View
 {
-	void initialize(CalendarViewContext ctx);
-
-	void setTitle(String title);
-
-	void showTimeSlots(Map<LocalTime, ScheduleStatus> timeSlots);
-
-	public Range<Date> getRange();
-
 	void addViewListener(CalendarViewListener listener);
 
-	void showModalWindow(CalendarViewListener listener, EventModel model);
+	public void setVisibleDates(Date start, Date end);
 
-	public interface CalendarViewListener extends CalendarComponentListener
+	void showModal(EventDTO dto, EventDTOCommandCallback<?> callback);
+
+	void refreshCalendar();
+
+	interface EventDTOCommandCallback<T>
 	{
-		void viewEntered(ViewChangeEvent event);
+		public T getCommand(EventDTO dto);
+	}
 
-		void timeSlotSelected(LocalTime time, LocalDate start, LocalDate end);
+	public interface CalendarViewListener
+	{
+		void eventSelected(EventDTO dto);
 
-		void applyModal(CalendarModal modal);
+		void calendarTypeChanged(CalendarType type);
 
-		void cancelModal(CalendarModal modal);
+		void eventMoved(EventDTO dto, Date newStart, Date newEnd);
+
+		void rangeSelected(Date start, Date end);
 	}
 }

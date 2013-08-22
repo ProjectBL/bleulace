@@ -3,40 +3,30 @@ package com.bleulace.domain.management.ui.calendar.view;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.apache.shiro.SecurityUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
+import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
+import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.domain.management.command.CreateEventCommand;
+import com.bleulace.domain.management.command.EditEventCommand;
 import com.bleulace.domain.management.presentation.EventDTO;
-import com.bleulace.domain.management.presentation.ScheduleStatusFinder;
-import com.bleulace.domain.management.ui.calendar.context.CalendarViewContext;
-import com.bleulace.domain.management.ui.calendar.context.CalendarViewContextFactory;
-import com.bleulace.domain.management.ui.calendar.modal.CalendarModal;
-import com.bleulace.domain.management.ui.calendar.model.EventModelAdapter;
-import com.bleulace.domain.management.ui.calendar.model.EventModelFactory;
+import com.bleulace.domain.management.ui.calendar.CalendarType;
 import com.bleulace.domain.management.ui.calendar.view.CalendarView.CalendarViewListener;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Notification;
+import com.bleulace.domain.management.ui.calendar.view.CalendarView.EventDTOCommandCallback;
+import com.bleulace.utils.dto.DTOFactory;
 
 @Configurable
-class CalendarViewPresenter implements CalendarViewListener, Serializable
+class CalendarViewPresenter implements CommandGatewayAware,
+		CalendarViewListener, Serializable
 {
 	private final CalendarView view;
 
 	@Autowired
-	private transient CalendarViewContextFactory ctxFactory;
+	private DTOFactory<EventDTO> eventDTOFactory;
 
-	@Autowired
-	private transient ScheduleStatusFinder finder;
-
-	@Autowired
-	private transient EventModelFactory modelFactory;
-
-	private CalendarViewContext ctx;
-
-	private EventModelAdapter<?> adapter;
+	private static final CreateCallback CREATE_CALLBACK = new CreateCallback();
+	private static final EditCallback EDIT_CALLBACK = new EditCallback();
 
 	CalendarViewPresenter(CalendarView view)
 	{
@@ -44,55 +34,55 @@ class CalendarViewPresenter implements CalendarViewListener, Serializable
 	}
 
 	@Override
-	public void visibleDatesChange(Date oldStart, Date oldEnd, Date newStart,
-			Date newEnd)
-	{
-		view.showTimeSlots(finder.findScheduleStatus(ctx.getOwnerId(),
-				newStart, newEnd, ctx.getTimeZone()));
-	}
-
-	@Override
 	public void eventSelected(EventDTO dto)
 	{
-		view.showModalWindow(this, modelFactory.make(dto, ctx));
+		view.showModal(dto, EDIT_CALLBACK);
 	}
 
 	@Override
-	public void eventDragged(EventDTO dto, Date newStart, Date newEnd)
+	public void eventMoved(EventDTO dto, Date newStart, Date newEnd)
 	{
 		dto.setStart(newStart);
 		dto.setEnd(newEnd);
-		eventSelected(dto);
+		sendAndWait(EDIT_CALLBACK.getCommand(dto));
+		view.refreshCalendar();
 	}
 
 	@Override
 	public void rangeSelected(Date start, Date end)
 	{
-		adapter = modelFactory.make(start, end, ctx);
-		view.showModalWindow(this, adapter);
+		EventDTO dto = eventDTOFactory.make();
+		dto.setStart(start);
+		dto.setEnd(end);
+		view.showModal(dto, CREATE_CALLBACK);
 	}
 
 	@Override
-	public void viewEntered(ViewChangeEvent event)
+	public void calendarTypeChanged(CalendarType type)
 	{
-		ctx = ctxFactory.make(event.getParameters(), SecurityUtils.getSubject()
-				.getId());
-		view.initialize(ctx);
+		Range<Date> range = type.convert(new Date());
+		view.setVisibleDates(range.getMinimum(), range.getMaximum());
 	}
 
-	@Override
-	public void applyModal(CalendarModal modal)
+	private static class CreateCallback implements
+			EventDTOCommandCallback<CreateEventCommand>
 	{
+		@Override
+		public CreateEventCommand getCommand(EventDTO dto)
+		{
+			return new CreateEventCommand(dto.getCaption(),
+					dto.getDescription(), dto.getStart(), dto.getEnd());
+		}
 	}
 
-	@Override
-	public void cancelModal(CalendarModal modal)
+	private static class EditCallback implements
+			EventDTOCommandCallback<EditEventCommand>
 	{
-	}
-
-	@Override
-	public void timeSlotSelected(LocalTime time, LocalDate start, LocalDate end)
-	{
-		Notification.show("IMPLEMENT ME!");
+		@Override
+		public EditEventCommand getCommand(EventDTO dto)
+		{
+			return new EditEventCommand(dto.getId(), dto.getCaption(),
+					dto.getDescription(), dto.getStart(), dto.getEnd());
+		}
 	}
 }

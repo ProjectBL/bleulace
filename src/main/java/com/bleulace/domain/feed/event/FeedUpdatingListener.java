@@ -16,7 +16,6 @@ import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bleulace.cqrs.DomainEventPayload;
 import com.bleulace.domain.crm.model.Account;
@@ -44,7 +43,6 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>,
 	private transient EntityManager em;
 
 	@EventHandler
-	@Transactional
 	public void handle(DomainEventPayload event, MetaData metaData)
 	{
 		final FeedEntryProvider<DomainEventPayload> provider = getProvider(event
@@ -66,7 +64,6 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>,
 				}
 
 				uow.commit();
-				em.flush();
 
 				for (Account account : accounts)
 				{

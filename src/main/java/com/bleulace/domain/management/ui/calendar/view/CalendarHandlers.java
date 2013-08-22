@@ -1,26 +1,25 @@
-package com.bleulace.domain.management.ui.calendar.component;
+package com.bleulace.domain.management.ui.calendar.view;
 
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.Range;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.bleulace.domain.management.presentation.EventDTO;
-import com.bleulace.domain.management.ui.calendar.component.CalendarComponent.CalendarComponentListener;
+import com.bleulace.domain.management.ui.calendar.view.CalendarView.CalendarViewListener;
 import com.bleulace.jpa.DateWindow;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResize;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.MoveEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.WeekClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.WeekClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicBackwardHandler;
@@ -28,23 +27,18 @@ import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicForwardHandler;
 import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-class CalendarComponentHandlersImpl implements CalendarComponentHandlers
+class CalendarHandlers implements EventClickHandler, RangeSelectHandler,
+		EventResizeHandler, EventMoveHandler, ForwardHandler, BackwardHandler,
+		DateClickHandler, WeekClickHandler
 {
-	private List<CalendarComponentListener> listeners;
+	private List<CalendarViewListener> listeners;
 
 	private static final BackwardHandler BACKWARD = new BasicBackwardHandler();
 	private static final ForwardHandler FORWARD = new BasicForwardHandler();
 	private static final DateClickHandler DATECLICK = new BasicDateClickHandler();
 	private static final WeekClickHandler WEEKCLICK = new BasicWeekClickHandler();
 
-	CalendarComponentHandlersImpl()
-	{
-	}
-
-	@Override
-	public void setComponentListeners(List<CalendarComponentListener> listeners)
+	CalendarHandlers(List<CalendarViewListener> listeners)
 	{
 		this.listeners = listeners;
 	}
@@ -52,7 +46,7 @@ class CalendarComponentHandlersImpl implements CalendarComponentHandlers
 	@Override
 	public void eventClick(EventClick event)
 	{
-		for (CalendarComponentListener l : listeners)
+		for (CalendarViewListener l : listeners)
 		{
 			l.eventSelected((EventDTO) event.getCalendarEvent());
 		}
@@ -61,7 +55,7 @@ class CalendarComponentHandlersImpl implements CalendarComponentHandlers
 	@Override
 	public void rangeSelect(RangeSelectEvent event)
 	{
-		for (CalendarComponentListener l : listeners)
+		for (CalendarViewListener l : listeners)
 		{
 			l.rangeSelected(event.getStart(), event.getEnd());
 		}
@@ -107,32 +101,11 @@ class CalendarComponentHandlersImpl implements CalendarComponentHandlers
 		FORWARD.forward(event);
 	}
 
-	@Override
-	public void datesChanged(Range<Date> oldDates, Range<Date> newDates)
-	{
-		if (!oldDates.equals(newDates))
-		{
-			doDateChangeNotification(oldDates.getMinimum(),
-					oldDates.getMaximum(), newDates.getMinimum(),
-					newDates.getMaximum());
-		}
-	}
-
-	@Override
-	public void doDateChangeNotification(Date oldStart, Date oldEnd,
-			Date newStart, Date newEnd)
-	{
-		for (CalendarComponentListener l : listeners)
-		{
-			l.visibleDatesChange(oldStart, oldEnd, newStart, newEnd);
-		}
-	}
-
 	private void notifyEventDragged(EventDTO dto, Date start, Date end)
 	{
-		for (CalendarComponentListener l : listeners)
+		for (CalendarViewListener l : listeners)
 		{
-			l.eventDragged(dto, start, end);
+			l.eventMoved(dto, start, end);
 		}
 	}
 }

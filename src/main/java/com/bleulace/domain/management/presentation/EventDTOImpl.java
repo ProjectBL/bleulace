@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.util.Assert;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.RsvpStatus;
@@ -32,6 +34,7 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		setDescription(location);
 	}
 
+	@Override
 	public RsvpStatus getRsvpStatus(String accountId)
 	{
 		return rsvpStatuses.get(accountId);
@@ -59,11 +62,35 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		}
 	}
 
+	public void setInvitees(Map<Account, EventInvitee> invitees)
+	{
+		for (Entry<Account, EventInvitee> entry : invitees.entrySet())
+		{
+			addInvitee(Mapper.map(entry.getKey(), UserDTO.class), entry
+					.getValue().getStatus());
+		}
+	}
+
 	private void addInvitee(UserDTO dto, RsvpStatus status)
 	{
 		Assert.notNull(dto);
 		Assert.notNull(status);
 		invitees.get(status).add(dto);
 		rsvpStatuses.put(dto.getId(), status);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof EventDTO)
+		{
+			EventDTO that = (EventDTO) obj;
+			if (this.getId() == null)
+			{
+				return this == that;
+			}
+			return this.getId().equals(that.getId());
+		}
+		return false;
 	}
 }

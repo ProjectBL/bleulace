@@ -34,33 +34,12 @@ aspect EventDTOAspect
 	private transient List<EventChangeListener> EventDTO.listeners = new ArrayList<EventChangeListener>();
 
 	// ---------------------------------------------------
-	void around(EventDTO dto, Object newValue) :
+	void around(EventDTO dto) :
 		call(public void EventDTO+.set*(*)) 
 		&& target(dto) 
-		&& args(newValue) 
 	{
-		String methodName = thisJoinPoint.getSignature().getName()
-				.replace("set", "get");
-		Object oldValue = null;
-		try
-		{
-			Method m = MethodUtils.getAccessibleMethod(dto.getClass(),
-					methodName);
-			oldValue = m == null ? null : m.invoke(dto);
-			if (oldValue != newValue || !oldValue.equals(newValue))
-			{
-				dto.fireEventChange();
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			proceed(dto, newValue);
-		}
-		finally
-		{
-
-		}
+		dto.fireEventChange();
+		proceed(dto);
 	}
 
 	// PUBLIC ACCESSORS AND MUTATORS

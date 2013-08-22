@@ -28,7 +28,7 @@ public enum ScheduleStatus
 		return spec.isSatisfiedBy(rsvps);
 	}
 
-	static ScheduleStatus getStatus(Set<RsvpStatus> rsvps)
+	public static ScheduleStatus getStatus(Set<RsvpStatus> rsvps)
 	{
 		for (ScheduleStatus status : ScheduleStatus.values())
 		{

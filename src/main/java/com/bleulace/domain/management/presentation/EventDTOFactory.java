@@ -11,5 +11,4 @@ class EventDTOFactory implements DTOFactory<EventDTO>
 	{
 		return new EventDTOImpl();
 	}
-
 }

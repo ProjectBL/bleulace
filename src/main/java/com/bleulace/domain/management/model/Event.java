@@ -68,7 +68,6 @@ public class Event extends Project
 
 	public void on(EventCreatedEvent event)
 	{
-		System.out.println(event);
 		setTitle(event.getTitle());
 		this.location = event.getLocation();
 		window = new DateWindow(event.getStart(), event.getEnd());

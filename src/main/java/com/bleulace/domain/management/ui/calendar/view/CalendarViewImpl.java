@@ -3,112 +3,154 @@ package com.bleulace.domain.management.ui.calendar.view;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.Range;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Configurable;
 
-import com.bleulace.domain.management.presentation.ScheduleStatus;
-import com.bleulace.domain.management.ui.calendar.component.CalendarComponent;
-import com.bleulace.domain.management.ui.calendar.context.CalendarViewContext;
-import com.bleulace.domain.management.ui.calendar.modal.ModalFactory;
-import com.bleulace.domain.management.ui.calendar.model.EventModel;
-import com.bleulace.domain.management.ui.calendar.timeslot.TimeSlotComponent;
-import com.bleulace.domain.management.ui.calendar.timeslot.TimeSlotComponent.TimeSlotListener;
+import com.bleulace.domain.management.presentation.EventDTO;
+import com.bleulace.domain.management.ui.calendar.CalendarType;
+import com.vaadin.navigator.Navigator.EmptyView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.BackwardHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.ForwardHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.WeekClickHandler;
 
 @Configurable
-class CalendarViewImpl extends CustomComponent implements CalendarView, View,
-		TimeSlotListener
+class CalendarViewImpl extends CustomComponent implements CalendarView, View
 {
 	private final List<CalendarViewListener> listeners = new LinkedList<CalendarViewListener>();
 
-	private Label title = new Label("");
+	private final CalendarHandlers handlers = new CalendarHandlers(listeners);
 
-	private CalendarComponent calendarComponent;
+	private final EventDTOProvider provider = new EventDTOProvider();
 
-	private TimeSlotComponent timeSlotComponent;
+	private final CalendarContainer container = new CalendarContainer();
 
-	@Autowired
-	private ModalFactory modalFactory;
+	private final TabSheet tabs = makeTabs();
 
-	CalendarViewImpl(CalendarComponent calendarComponent,
-			TimeSlotComponent timeSlotComponent)
+	private Calendar calendar;
+
+	CalendarViewImpl()
 	{
-		this.calendarComponent = calendarComponent;
-		this.timeSlotComponent = timeSlotComponent;
-
-		HorizontalLayout layout = new HorizontalLayout();
-		layout.addComponent((com.vaadin.ui.Component) calendarComponent);
-
-		// TODO : fix me
-		// timeSlotComponent.addListener(this);
-		// layout.addComponent(panels);
-
+		VerticalLayout layout = new VerticalLayout(tabs, container);
 		setCompositionRoot(layout);
 	}
 
 	@Override
-	public Range<Date> getRange()
+	public void showModal(EventDTO dto, EventDTOCommandCallback<?> callback)
 	{
-		return calendarComponent.getRange();
+		getUI().addWindow(new CalendarModal(this, dto, callback));
 	}
 
 	@Override
-	public void enter(ViewChangeEvent event)
+	public void setVisibleDates(Date start, Date end)
 	{
-		for (CalendarViewListener l : listeners)
-		{
-			l.viewEntered(event);
-		}
-	}
-
-	@Override
-	public void initialize(CalendarViewContext ctx)
-	{
-		calendarComponent.initialize(ctx);
-	}
-
-	@Override
-	public void timeSelected(LocalTime time)
-	{
-		for (CalendarViewListener l : listeners)
-		{
-			Range<Date> range = calendarComponent.getRange();
-			l.timeSlotSelected(time,
-					LocalDate.fromDateFields(range.getMinimum()),
-					LocalDate.fromDateFields(range.getMaximum()));
-		}
-	}
-
-	@Override
-	public void setTitle(String title)
-	{
-		this.title.setCaption(title);
-	}
-
-	@Override
-	public void showTimeSlots(Map<LocalTime, ScheduleStatus> timeSlots)
-	{
-		timeSlotComponent.showTimeSlots(timeSlots);
+		calendar.setStartDate(start);
+		calendar.setEndDate(end);
 	}
 
 	@Override
 	public void addViewListener(CalendarViewListener listener)
 	{
 		listeners.add(listener);
-		calendarComponent.addListener(listener);
 	}
 
 	@Override
-	public void showModalWindow(CalendarViewListener listener, EventModel model)
+	public void refreshCalendar()
 	{
+		container.refresh();
+	}
+
+	@Override
+	@RequiresAuthentication
+	public void enter(ViewChangeEvent event)
+	{
+		provider.setOwnerId(event.getParameters());
+		provider.setViewerId(SecurityUtils.getSubject().getId());
+	}
+
+	private Calendar makeCalendar()
+	{
+		Calendar calendar = new Calendar(provider);
+		calendar.setHandler((BackwardHandler) handlers);
+		calendar.setHandler((ForwardHandler) handlers);
+		calendar.setHandler((WeekClickHandler) handlers);
+		calendar.setHandler((DateClickHandler) handlers);
+		calendar.setHandler((EventMoveHandler) handlers);
+		calendar.setHandler((EventResizeHandler) handlers);
+		calendar.setHandler((EventClickHandler) handlers);
+		calendar.setHandler((RangeSelectHandler) handlers);
+		if (this.calendar != null)
+		{
+			calendar.setStartDate(this.calendar.getStartDate());
+			calendar.setEndDate(this.calendar.getEndDate());
+		}
+		return calendar;
+	}
+
+	private TabSheet makeTabs()
+	{
+		TabSheet tabSheet = new TabSheet();
+		for (CalendarType type : CalendarType.values())
+		{
+			Tab tab = tabSheet.addTab(new EmptyView(), type.toString());
+			tabSheet.addSelectedTabChangeListener(new CalendarTypeTabListener(
+					tab, type));
+		}
+		return tabSheet;
+	}
+
+	private class CalendarTypeTabListener implements SelectedTabChangeListener
+	{
+		private final Tab tab;
+		private final CalendarType type;
+
+		CalendarTypeTabListener(Tab tab, CalendarType type)
+		{
+			this.tab = tab;
+			this.type = type;
+		}
+
+		@Override
+		public void selectedTabChange(SelectedTabChangeEvent event)
+		{
+			TabSheet tabSheet = event.getTabSheet();
+			Tab tab = tabSheet.getTab(tabSheet.getSelectedTab());
+			if (this.tab.equals(tab))
+			{
+				for (CalendarViewListener l : listeners)
+				{
+					l.calendarTypeChanged(type);
+				}
+			}
+		}
+	}
+
+	private class CalendarContainer extends CustomComponent
+	{
+		CalendarContainer()
+		{
+			refresh();
+		}
+
+		void refresh()
+		{
+			calendar = makeCalendar();
+			setCompositionRoot(calendar);
+		}
 	}
 }

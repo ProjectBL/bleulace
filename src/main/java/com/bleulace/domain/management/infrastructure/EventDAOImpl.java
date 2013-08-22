@@ -24,6 +24,7 @@ class EventDAOImpl implements EventDAOCustom
 	{
 		Assert.notNull(accountId);
 		return dateQuery(start, end)
+				.distinct()
 				.innerJoin(e.invitees, i)
 				.where(i.guest.id.eq(accountId).and(
 						i.status.ne(RsvpStatus.DECLINED))).list(e);
