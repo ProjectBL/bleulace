@@ -3,6 +3,7 @@ package com.bleulace.domain.feed.event;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -33,7 +34,7 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>,
 	@Autowired
 	private transient FeedEntryProviderLocater locater;
 
-	@Autowired
+	@Inject
 	private transient EventBus eventBus;
 
 	@Autowired

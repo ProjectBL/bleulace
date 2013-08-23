@@ -15,6 +15,8 @@ import com.bleulace.domain.management.ui.calendar.CalendarType;
 import com.bleulace.domain.management.ui.calendar.view.CalendarView.CalendarViewListener;
 import com.bleulace.domain.management.ui.calendar.view.CalendarView.EventDTOCommandCallback;
 import com.bleulace.utils.dto.DTOFactory;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 @Configurable
 class CalendarViewPresenter implements CommandGatewayAware,
@@ -42,9 +44,18 @@ class CalendarViewPresenter implements CommandGatewayAware,
 	@Override
 	public void eventMoved(EventDTO dto, Date newStart, Date newEnd)
 	{
-		dto.setStart(newStart);
-		dto.setEnd(newEnd);
-		sendAndWait(EDIT_CALLBACK.getCommand(dto));
+		if (newStart.after(new Date()))
+		{
+			dto.setStart(newStart);
+			dto.setEnd(newEnd);
+			sendAndWait(EDIT_CALLBACK.getCommand(dto));
+		}
+		else
+		{
+			Notification.show(
+					"Can not schedule an event in the past. Aborting.",
+					Type.WARNING_MESSAGE);
+		}
 		view.refreshCalendar();
 	}
 

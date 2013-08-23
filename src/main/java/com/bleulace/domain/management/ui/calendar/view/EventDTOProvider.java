@@ -53,15 +53,11 @@ class EventDTOProvider implements CalendarEventProvider, EventChangeListener,
 		return events;
 	}
 
-	public void setOwnerId(String ownerId)
+	public void setContext(String ownerId, String viewerId)
 	{
 		Assert.notNull(ownerId);
-		this.ownerId = ownerId;
-	}
-
-	public void setViewerId(String viewerId)
-	{
 		Assert.notNull(viewerId);
+		this.ownerId = ownerId;
 		this.viewerId = viewerId;
 	}
 

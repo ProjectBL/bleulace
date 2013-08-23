@@ -5,6 +5,7 @@ import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.domain.management.ui.calendar.view.CalendarView.EventDTOCommandCallback;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -13,13 +14,10 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
 
-class CalendarModal extends Window implements ClickListener,
-		CommandGatewayAware
+class CalendarModal extends Window implements CommandGatewayAware
 {
 	private final BeanFieldGroup<EventDTO> group = new BeanFieldGroup<EventDTO>(
 			EventDTO.class);
-
-	private final Button apply = new Button("Apply", this);
 
 	private final EventDTOCommandCallback<?> callback;
 
@@ -51,22 +49,37 @@ class CalendarModal extends Window implements ClickListener,
 		group.bind(end, "end");
 		layout.addComponent(end);
 
-		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.addComponent(apply);
+		HorizontalLayout buttons = new HorizontalLayout(new Button("Apply",
+				new ApplyClickListener()), new Button("Cancel",
+				new CancelClickListener()));
 		layout.addComponent(buttons);
+		layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
 
 		setContent(layout);
 	}
 
-	@Override
-	public void buttonClick(ClickEvent event)
+	private class ApplyClickListener implements ClickListener
 	{
-		if (group.isValid())
+		@Override
+		public void buttonClick(ClickEvent event)
 		{
-			sendAndWait(callback
-					.getCommand(group.getItemDataSource().getBean()));
-			view.refreshCalendar();
+			if (group.isValid())
+			{
+				sendAndWait(callback.getCommand(group.getItemDataSource()
+						.getBean()));
+				view.refreshCalendar();
+				close();
+			}
+		}
+	}
+
+	private class CancelClickListener implements ClickListener
+	{
+		@Override
+		public void buttonClick(ClickEvent event)
+		{
 			close();
 		}
+
 	}
 }

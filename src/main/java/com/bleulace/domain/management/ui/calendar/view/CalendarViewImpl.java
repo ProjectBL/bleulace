@@ -79,8 +79,9 @@ class CalendarViewImpl extends CustomComponent implements CalendarView, View
 	@RequiresAuthentication
 	public void enter(ViewChangeEvent event)
 	{
-		provider.setOwnerId(event.getParameters());
-		provider.setViewerId(SecurityUtils.getSubject().getId());
+		String viewerId = SecurityUtils.getSubject().getId();
+		String ownerId = event.getParameters();
+		provider.setContext(ownerId, viewerId);
 	}
 
 	private Calendar makeCalendar()

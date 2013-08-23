@@ -1,7 +1,13 @@
-package com.bleulace.domain.crm.ui;
+package com.bleulace.domain.crm.ui.front;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.axonframework.domain.GenericEventMessage;
+import org.axonframework.eventhandling.EventBus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -20,9 +26,15 @@ import com.vaadin.ui.TextField;
  * @author Arleigh Dickerson
  * 
  */
+@Component
+@Scope("session")
 public class LoginForm extends CustomComponent implements ClickListener,
 		CommandGatewayAware
 {
+	@Autowired
+	@Qualifier("uiBus")
+	private EventBus uiBus;
+
 	private static final String USERNAME_FIELD_CAPTION = "Username";
 	private static final String PASSWORD_FIELD_CAPTION = "Password";
 	private static final String REMEMBER_ME_FIELD_CAPTION = "Remember Me";
@@ -49,6 +61,7 @@ public class LoginForm extends CustomComponent implements ClickListener,
 	@Override
 	public void buttonClick(ClickEvent event)
 	{
+		uiBus.publish(GenericEventMessage.asEventMessage(event.toString()));
 		try
 		{
 			SecurityUtils.getSubject().login(usernameField.getValue(),

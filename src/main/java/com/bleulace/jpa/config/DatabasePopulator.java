@@ -1,6 +1,5 @@
 package com.bleulace.jpa.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -8,34 +7,17 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.Send;
 import com.bleulace.domain.crm.command.CreateAccountCommand;
-import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.utils.SystemProfiles;
 
 @Component
 @Profile(SystemProfiles.DEV)
-class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
+public class DatabasePopulator implements
+		ApplicationListener<ContextRefreshedEvent>
 {
 	private static final String PASSWORD = "password";
 
-	@Autowired
-	private AccountDAO dao;
-
-	@Override
-	public void onApplicationEvent(ContextRefreshedEvent event)
-	{
-		if (shouldPopulate())
-		{
-			populate();
-		}
-	}
-
-	private boolean shouldPopulate()
-	{
-		return dao.count() == 0;
-	}
-
-	private void populate()
+	public void populate()
 	{
 		makeAccount("arleighdickerson@frugalu.com", "Arleigh", "Dickerson");
 	}
@@ -49,5 +31,18 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 		info.setLastName(lastName);
 		info.setEmail(username);
 		return new CreateAccountCommand(username, PASSWORD, info);
+	}
+
+	@Override
+	public void onApplicationEvent(ContextRefreshedEvent event)
+	{
+		try
+		{
+			populate();
+		}
+		catch (Throwable t)
+		{
+			return;
+		}
 	}
 }

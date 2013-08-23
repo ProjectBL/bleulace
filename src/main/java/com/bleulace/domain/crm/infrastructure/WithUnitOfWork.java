@@ -1,5 +1,7 @@
 package com.bleulace.domain.crm.infrastructure;
 
+import javax.inject.Inject;
+
 import org.axonframework.common.jpa.EntityManagerProvider;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.unitofwork.CurrentUnitOfWork;
@@ -15,10 +17,11 @@ public class WithUnitOfWork implements EventBusAware,
 		SaveAggregateCallback<AbstractRootResource>
 {
 	private static final WithUnitOfWork INSTANCE = new WithUnitOfWork();
+
 	@Autowired
 	private EntityManagerProvider provider;
 
-	@Autowired
+	@Inject
 	private EventBus eventBus;
 
 	private WithUnitOfWork()
