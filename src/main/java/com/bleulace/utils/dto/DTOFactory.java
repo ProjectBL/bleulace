@@ -1,6 +1,8 @@
 package com.bleulace.utils.dto;
 
-public interface DTOFactory<T>
+import java.io.Serializable;
+
+public interface DTOFactory<T> extends Serializable
 {
 	public T make();
 }

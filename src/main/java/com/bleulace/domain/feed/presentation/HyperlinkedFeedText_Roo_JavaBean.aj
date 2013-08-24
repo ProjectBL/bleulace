@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.feed.presentation;
 
-import com.bleulace.domain.feed.presentation.HyperlinkedFeedText;
 
 privileged aspect HyperlinkedFeedText_Roo_JavaBean {
     

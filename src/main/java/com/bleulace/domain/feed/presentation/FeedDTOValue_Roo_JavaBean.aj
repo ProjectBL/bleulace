@@ -3,8 +3,6 @@
 
 package com.bleulace.domain.feed.presentation;
 
-import com.bleulace.domain.feed.presentation.FeedDTOValue;
-import com.bleulace.domain.feed.presentation.FeedText;
 import java.util.List;
 
 privileged aspect FeedDTOValue_Roo_JavaBean {

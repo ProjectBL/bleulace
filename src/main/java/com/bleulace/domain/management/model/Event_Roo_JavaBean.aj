@@ -3,11 +3,10 @@
 
 package com.bleulace.domain.management.model;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.model.Event;
-import com.bleulace.domain.management.model.EventInvitee;
-import com.bleulace.jpa.DateWindow;
 import java.util.Map;
+
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.jpa.DateWindow;
 
 privileged aspect Event_Roo_JavaBean {
     

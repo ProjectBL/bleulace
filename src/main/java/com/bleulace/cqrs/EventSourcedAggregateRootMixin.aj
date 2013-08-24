@@ -2,11 +2,8 @@ package com.bleulace.cqrs;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Basic;
-import javax.persistence.PreRemove;
 import javax.persistence.Transient;
 
 import org.axonframework.common.Assert;

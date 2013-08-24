@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.AuthenticationTrace;
 import java.util.Date;
 
 privileged aspect AuthenticationTrace_Roo_JavaBean {

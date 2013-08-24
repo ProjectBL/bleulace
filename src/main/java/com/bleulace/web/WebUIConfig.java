@@ -19,7 +19,7 @@ class WebUIConfig
 	private ApplicationContext ctx;
 
 	@Bean
-	@Scope("prototype")
+	@Scope("session")
 	public WebUI webUI()
 	{
 		WebUI ui = new WebUI();

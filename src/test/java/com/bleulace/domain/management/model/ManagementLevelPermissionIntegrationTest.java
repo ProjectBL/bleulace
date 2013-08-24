@@ -14,8 +14,6 @@ import com.bleulace.cqrs.command.CommandGatewayAware;
 import com.bleulace.domain.crm.command.CrmCommandFactory;
 import com.bleulace.domain.management.command.AssignManagersCommand;
 import com.bleulace.domain.management.command.ManagementCommandFactory;
-import com.bleulace.domain.management.model.ManagementLevel;
-import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.model.ResourcePermission;
 import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.utils.Locator;

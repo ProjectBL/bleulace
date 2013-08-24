@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.management.command;
 
-import com.bleulace.domain.management.command.InviteGuestsCommand;
 import java.util.Set;
 
 privileged aspect InviteGuestsCommand_Roo_JavaBean {

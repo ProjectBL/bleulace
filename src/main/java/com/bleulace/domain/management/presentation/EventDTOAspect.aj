@@ -1,19 +1,14 @@
 package com.bleulace.domain.management.presentation;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
-import org.springframework.util.Assert;
-
 import com.bleulace.jpa.DateWindow;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeListener;
-import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 aspect EventDTOAspect
 {

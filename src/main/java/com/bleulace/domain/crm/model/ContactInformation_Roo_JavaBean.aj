@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.ContactInformation;
 
 privileged aspect ContactInformation_Roo_JavaBean {
     

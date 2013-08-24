@@ -1,7 +1,6 @@
 package com.bleulace.domain.crm.ui.front;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
@@ -33,7 +31,7 @@ public class LoginForm extends CustomComponent implements ClickListener,
 {
 	@Autowired
 	@Qualifier("uiBus")
-	private EventBus uiBus;
+	private transient EventBus uiBus;
 
 	private static final String USERNAME_FIELD_CAPTION = "Username";
 	private static final String PASSWORD_FIELD_CAPTION = "Password";
@@ -61,17 +59,9 @@ public class LoginForm extends CustomComponent implements ClickListener,
 	@Override
 	public void buttonClick(ClickEvent event)
 	{
-		uiBus.publish(GenericEventMessage.asEventMessage(event.toString()));
-		try
-		{
-			SecurityUtils.getSubject().login(usernameField.getValue(),
-					passwordField.getValue(), rememberMeField.getValue());
-			getUI().getNavigator().navigateTo(
-					"calendarView/" + SecurityUtils.getSubject().getId());
-		}
-		catch (AuthenticationException e)
-		{
-			Notification.show("Authentication Failure");
-		}
+		uiBus.publish(GenericEventMessage
+				.asEventMessage(new UsernamePasswordToken(usernameField
+						.getValue(), passwordField.getValue(), rememberMeField
+						.getValue())));
 	}
 }

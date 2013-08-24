@@ -4,7 +4,6 @@ import org.apache.shiro.authz.Permission;
 import org.junit.Test;
 
 import com.bleulace.UnitTest;
-import com.bleulace.domain.management.model.ManagementLevel;
 
 public class ManagementLevelPermissionUnitTest implements UnitTest
 {

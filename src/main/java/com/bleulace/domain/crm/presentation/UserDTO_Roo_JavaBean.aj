@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.crm.presentation;
 
-import com.bleulace.domain.crm.presentation.UserDTO;
 import java.util.TimeZone;
 
 privileged aspect UserDTO_Roo_JavaBean {
