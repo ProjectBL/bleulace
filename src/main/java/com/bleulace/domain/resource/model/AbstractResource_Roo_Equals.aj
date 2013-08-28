@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.resource.model;
 
-import com.bleulace.domain.resource.model.AbstractResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

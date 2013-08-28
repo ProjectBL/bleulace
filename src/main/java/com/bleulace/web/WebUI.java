@@ -1,5 +1,7 @@
 package com.bleulace.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
@@ -41,9 +43,19 @@ import com.vaadin.ui.UI;
 @Theme("bleulacetheme")
 public class WebUI extends UI
 {
+	@Autowired
+	private transient SecurityContext ctx;
+
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		getNavigator().navigateTo("frontView");
+		String navState = (String) ctx.getSubject().getSession()
+				.getAttribute("navState");
+		System.out.println(navState);
+		if (navState == null)
+		{
+			navState = "frontView";
+		}
+		getNavigator().navigateTo(navState);
 	}
 }

@@ -2,7 +2,6 @@ package com.bleulace.cqrs.command;
 
 import java.lang.annotation.Annotation;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.aop.AuthenticatedAnnotationHandler;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationHandler;
@@ -12,8 +11,10 @@ import org.apache.shiro.authz.aop.RoleAnnotationHandler;
 import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.axonframework.commandhandling.CommandDispatchInterceptor;
 import org.axonframework.commandhandling.CommandMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.cqrs.AuthorizableCommandPayload;
+import com.bleulace.web.SecurityContext;
 
 /**
  * Checks authorizations before dispatching commands implementing the
@@ -24,6 +25,9 @@ import com.bleulace.cqrs.AuthorizableCommandPayload;
  */
 class AuthorizationInterceptor implements CommandDispatchInterceptor
 {
+	@Autowired
+	private SecurityContext ctx;
+
 	//@formatter:off
 	private AuthorizingAnnotationHandler[] annotationHandlers = new AuthorizingAnnotationHandler[] {
 			new AuthenticatedAnnotationHandler(),
@@ -53,7 +57,7 @@ class AuthorizationInterceptor implements CommandDispatchInterceptor
 					.getPermission();
 
 			// throw exception on authorization failure
-			SecurityUtils.getSubject().checkPermission(permission);
+			ctx.getSubject().checkPermission(permission);
 		}
 		return commandMessage;
 	}

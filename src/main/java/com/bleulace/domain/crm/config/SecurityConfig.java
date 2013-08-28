@@ -12,15 +12,13 @@ import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -91,7 +89,7 @@ public class SecurityConfig
 	/**
 	 * @see LifecycleBeanPostProcessor
 	 */
-	@Bean
+	@Bean(name = "lifecycleBeanPostProcessor")
 	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor()
 	{
 		return new LifecycleBeanPostProcessor();
@@ -128,23 +126,18 @@ public class SecurityConfig
 	 *         ready to use
 	 */
 	@Bean(name = "securityManager")
-	public SecurityManager securityManager(AuthorizingRealm realm)
+	public SecurityManager securityManager(AuthorizingRealm realm,
+			SessionManager sessionManager)
 	{
-		return new DefaultWebSecurityManager(realm);
+		// DefaultWebSecurityManager mgr = new DefaultWebSecurityManager(realm);
+		DefaultSecurityManager mgr = new DefaultSecurityManager(realm);
+		mgr.setSessionManager(sessionManager);
+		return mgr;
 	}
 
-	/**
-	 * 
-	 * @param securityManager
-	 * @return a shiroFilterFactoryBean with reference to the primary security
-	 *         manager
-	 */
-	@Bean(name = "shiroFilter")
-	@DependsOn("securityManager")
-	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager)
+	@Bean
+	public ShiroAccountAspect shiroAccountAspect()
 	{
-		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
-		bean.setSecurityManager(securityManager);
-		return bean;
+		return ShiroAccountAspect.aspectOf();
 	}
 }

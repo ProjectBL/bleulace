@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.crm.event;
 
-import com.bleulace.domain.crm.event.GroupMembershipChangedEvent;
 import com.bleulace.domain.crm.model.GroupMembershipAction;
 
 privileged aspect GroupMembershipChangedEvent_Roo_JavaBean {

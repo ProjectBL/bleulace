@@ -23,7 +23,7 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 	static final String SUBJECT_ID = "subjectId";
 	static final String HOST = "host";
 	static final String TIMESTAMP = "timestamp";
-
+	
 	static final String[] FLAGS = { SUBJECT_ID, TIMESTAMP };
 
 	@SuppressAjWarnings

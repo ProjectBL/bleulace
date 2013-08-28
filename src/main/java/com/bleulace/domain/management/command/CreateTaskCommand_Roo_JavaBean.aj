@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.management.command;
 
-import com.bleulace.domain.management.command.CreateTaskCommand;
 
 privileged aspect CreateTaskCommand_Roo_JavaBean {
     

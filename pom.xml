@@ -14,7 +14,7 @@
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<vaadin.version>7.1.1</vaadin.version>
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
-		<shiro.version>1.2.1</shiro.version>
+		<shiro.version>1.2.2</shiro.version>
 		<querydsl.version>3.2.0</querydsl.version>
 		<axon.version>2.0.3</axon.version>
 	</properties>

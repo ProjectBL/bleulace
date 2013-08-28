@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.ContactInformation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

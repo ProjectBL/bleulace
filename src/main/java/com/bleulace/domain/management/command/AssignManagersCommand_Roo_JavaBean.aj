@@ -3,9 +3,9 @@
 
 package com.bleulace.domain.management.command;
 
-import com.bleulace.domain.management.command.AssignManagersCommand;
-import com.bleulace.domain.management.model.ManagementLevel;
 import java.util.Set;
+
+import com.bleulace.domain.management.model.ManagementLevel;
 
 privileged aspect AssignManagersCommand_Roo_JavaBean {
     

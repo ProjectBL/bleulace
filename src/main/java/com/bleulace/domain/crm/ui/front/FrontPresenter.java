@@ -7,11 +7,15 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.web.Presenter;
+import com.bleulace.web.SecurityContext;
 import com.vaadin.ui.UI;
 
 @Presenter(viewNames = "frontView")
 class FrontPresenter
 {
+	@Autowired
+	private SecurityContext ctx;
+
 	@Autowired
 	private FrontView view;
 
@@ -22,10 +26,8 @@ class FrontPresenter
 		{
 			view.setEnabled(false);
 			SecurityUtils.getSubject().login(token);
-			UI.getCurrent()
-					.getNavigator()
-					.navigateTo(
-							"profileView/" + SecurityUtils.getSubject().getId());
+			UI.getCurrent().getNavigator()
+					.navigateTo("profileView/" + ctx.getSubject().getId());
 		}
 		catch (AuthenticationException e)
 		{

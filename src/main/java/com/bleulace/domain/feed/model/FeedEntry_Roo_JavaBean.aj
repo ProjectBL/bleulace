@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.feed.model;
 
-import com.bleulace.domain.feed.model.FeedEntry;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;

@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.management.command;
 
-import com.bleulace.domain.management.command.CreateManageableResourceCommand;
 
 privileged aspect CreateManageableResourceCommand_Roo_JavaBean {
     
