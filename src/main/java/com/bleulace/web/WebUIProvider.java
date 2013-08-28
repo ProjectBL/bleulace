@@ -15,12 +15,19 @@ public class WebUIProvider extends UIProvider
 	@Override
 	public UI createInstance(UICreateEvent event)
 	{
-		return SpringApplicationContext.getBean(WebUI.class);
+		return SpringApplicationContext.getBean(UIInstanceProvider.class)
+				.getInstance();
 	}
 
 	@Override
 	public Class<? extends UI> getUIClass(UIClassSelectionEvent event)
 	{
 		return WebUI.class;
+	}
+
+	@Override
+	public boolean isPreservedOnRefresh(UICreateEvent event)
+	{
+		return false;
 	}
 }

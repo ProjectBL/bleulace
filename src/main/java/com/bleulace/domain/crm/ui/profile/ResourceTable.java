@@ -39,13 +39,6 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 				"uiBus"));
 	}
 
-	@Override
-	public void setWidth(String width)
-	{
-		super.setWidth(width);
-		table.setWidth(width);
-	}
-
 	public void addResource(String id, String title)
 	{
 		container.addBean(new ResourceTableEntry(id, title));
@@ -97,6 +90,7 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 	private Table makeTable()
 	{
 		Table table = new Table("", container);
+		table.setSizeFull();
 		table.setVisibleColumns("title");
 		table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		table.addItemClickListener(this);

@@ -6,5 +6,5 @@ import com.bleulace.utils.dto.Finder;
 
 public interface ProjectFinder extends Finder<ProjectDTO>
 {
-	public List<ProjectDTO> findByAccountId(String accountId);
+	public List<ProjectDTO> findByManager(String accountId);
 }

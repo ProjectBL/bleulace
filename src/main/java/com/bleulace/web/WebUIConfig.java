@@ -24,7 +24,7 @@ class WebUIConfig
 	private ApplicationContext ctx;
 
 	@Bean
-	@Scope("session")
+	@Scope(value = "prototype")
 	public WebUI webUI(PresenterSubscribingListener listener)
 	{
 		WebUI ui = new WebUI();

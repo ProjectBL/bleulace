@@ -22,7 +22,7 @@ class ProjectFinderImpl extends AbstractFinder<Project, ProjectDTO> implements
 	}
 
 	@Override
-	public List<ProjectDTO> findByAccountId(String accountId)
+	public List<ProjectDTO> findByManager(String accountId)
 	{
 		return convert(dao.findByManager(accountId, Project.class));
 	}

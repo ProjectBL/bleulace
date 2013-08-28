@@ -4,7 +4,7 @@ import org.aspectj.lang.annotation.SuppressAjWarnings;
 
 import com.vaadin.ui.Component;
 
-aspect PushEnablingAspect
+privileged aspect PushEnablingAspect
 {
 	@SuppressAjWarnings
 	void around(final Component component) : 

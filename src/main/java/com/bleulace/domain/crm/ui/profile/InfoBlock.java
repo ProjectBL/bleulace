@@ -19,8 +19,6 @@ import com.vaadin.ui.themes.Reindeer;
 @Configurable(preConstruction = true)
 class InfoBlock extends CustomComponent
 {
-	private static final Integer WIDTH_PX = 200;
-
 	@Autowired
 	@Qualifier("defaultAvatar")
 	private Image avatar;
@@ -31,13 +29,12 @@ class InfoBlock extends CustomComponent
 
 	public InfoBlock()
 	{
-		setWidth(WIDTH_PX + "px");
-		avatar.setWidth(WIDTH_PX + "px");
+		avatar.setSizeFull();
 		name.setStyleName(Reindeer.LABEL_H1);
 
 		Table infoTable = new Table("", container);
 		infoTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
-		infoTable.setWidth(WIDTH_PX + "px");
+		infoTable.setSizeFull();
 		infoTable.setPageLength(container.size());
 
 		VerticalLayout layout = new VerticalLayout();
