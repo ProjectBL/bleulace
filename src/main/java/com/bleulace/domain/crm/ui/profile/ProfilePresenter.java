@@ -3,6 +3,7 @@ package com.bleulace.domain.crm.ui.profile;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.SecurityUtils;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import com.bleulace.domain.management.presentation.EventFinder;
 import com.bleulace.domain.management.presentation.ManageableResourceDTO;
 import com.bleulace.domain.management.presentation.ProjectFinder;
 import com.bleulace.web.Presenter;
-import com.bleulace.web.SecurityContext;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
 @Presenter(viewNames = "profileView")
@@ -38,13 +38,10 @@ class ProfilePresenter
 	@Autowired
 	private transient UserFinder userFinder;
 
-	@Autowired
-	private transient SecurityContext securityCtx;
-
 	@EventHandler
 	public void on(ViewChangeEvent event)
 	{
-		viewerId = securityCtx.getSubject().getId();
+		viewerId = SecurityUtils.getSubject().getId();
 		ownerId = event.getParameters();
 
 		Assert.notNull(viewerId);

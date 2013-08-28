@@ -1,8 +1,8 @@
 package com.bleulace.web;
 
+import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 
-import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.ui.Component;
 
@@ -11,8 +11,7 @@ privileged aspect WebUIAspect
 	after(String state) : 
 		call(public void Navigator.navigateTo(*)) && args(state)
 	{
-		SpringApplicationContext.getBean(SecurityContext.class).getSubject()
-				.getSession().setAttribute("navState", state);
+		SecurityUtils.getSubject().getSession().setAttribute("navState", state);
 	}
 
 	@SuppressAjWarnings

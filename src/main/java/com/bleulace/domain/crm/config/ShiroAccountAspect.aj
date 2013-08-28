@@ -1,8 +1,6 @@
 package com.bleulace.domain.crm.config;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.apache.shiro.SecurityUtils;
@@ -11,26 +9,20 @@ import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DelegatingSubject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
-import com.bleulace.utils.SystemProfiles;
 import com.bleulace.web.SecurityContext;
 
 aspect ShiroAccountAspect
 {
-	@Autowired
-	private SecurityContext ctx;
+	private static SecurityContext ctx;
 
-	private static boolean SHOULD_PROXY = false;
-
-	@Autowired
-	public void setEnvironment(Environment environment)
+	@Autowired(required = false)
+	public void setSecurityContext(SecurityContext context)
 	{
-		SHOULD_PROXY = !Arrays.asList(environment.getActiveProfiles())
-				.contains(SystemProfiles.TEST);
+		ctx = context;
 	}
 
 	private static final String TIMEZONE_KEY = "timezone";
@@ -41,7 +33,7 @@ aspect ShiroAccountAspect
 		"don't do that. Use a SecurityContext bean to get references to Subject.";
 
 	Subject around() : call(Subject SecurityUtils.getSubject()) && 
-	if(SHOULD_PROXY)
+	if(ctx != null)
 	{
 		try
 		{

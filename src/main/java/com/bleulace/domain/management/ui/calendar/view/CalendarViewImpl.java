@@ -4,13 +4,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
 import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.domain.management.ui.calendar.CalendarType;
-import com.bleulace.web.SecurityContext;
 import com.vaadin.navigator.Navigator.EmptyView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -44,9 +43,6 @@ class CalendarViewImpl extends CustomComponent implements CalendarView, View
 	private final TabSheet tabs = makeTabs();
 
 	private Calendar calendar;
-
-	@Autowired
-	private SecurityContext securityCtx;
 
 	CalendarViewImpl()
 	{
@@ -84,7 +80,7 @@ class CalendarViewImpl extends CustomComponent implements CalendarView, View
 	public void enter(ViewChangeEvent event)
 	{
 		String ownerId = event.getParameters();
-		String viewerId = securityCtx.getSubject().getId();
+		String viewerId = SecurityUtils.getSubject().getId();
 		provider.setContext(ownerId, viewerId);
 	}
 

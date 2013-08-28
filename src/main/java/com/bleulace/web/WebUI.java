@@ -1,6 +1,6 @@
 package com.bleulace.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.shiro.SecurityUtils;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -43,15 +43,11 @@ import com.vaadin.ui.UI;
 @Theme("bleulacetheme")
 public class WebUI extends UI
 {
-	@Autowired
-	private transient SecurityContext ctx;
-
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		String navState = (String) ctx.getSubject().getSession()
+		String navState = (String) SecurityUtils.getSubject().getSession()
 				.getAttribute("navState");
-		System.out.println(navState);
 		if (navState == null)
 		{
 			navState = "frontView";
