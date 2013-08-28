@@ -6,7 +6,7 @@ import java.util.Map;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.utils.dto.Finder;
 
-public interface UserDTOFinder extends Finder<UserDTO>
+public interface UserFinder extends Finder<UserDTO>
 {
 	public List<UserDTO> findBySearch(String searchTerm);
 

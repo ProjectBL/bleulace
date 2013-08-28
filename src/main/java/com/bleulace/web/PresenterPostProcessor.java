@@ -7,6 +7,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Component
 class PresenterPostProcessor implements BeanPostProcessor
 {

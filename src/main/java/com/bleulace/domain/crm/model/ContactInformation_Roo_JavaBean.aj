@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.ContactInformation;
 
 privileged aspect ContactInformation_Roo_JavaBean {
     
@@ -44,6 +45,14 @@ privileged aspect ContactInformation_Roo_JavaBean {
     
     public void ContactInformation.setWork(String work) {
         this.work = work;
+    }
+    
+    public String ContactInformation.getLocation() {
+        return this.location;
+    }
+    
+    public void ContactInformation.setLocation(String location) {
+        this.location = location;
     }
     
 }

@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.command;
 
+import com.bleulace.domain.crm.command.EditInfoCommand;
 
 privileged aspect EditInfoCommand_Roo_JavaBean {
     
@@ -48,6 +49,14 @@ privileged aspect EditInfoCommand_Roo_JavaBean {
     
     public void EditInfoCommand.setWork(String work) {
         this.work = work;
+    }
+    
+    public String EditInfoCommand.getLocation() {
+        return this.location;
+    }
+    
+    public void EditInfoCommand.setLocation(String location) {
+        this.location = location;
     }
     
     public String EditInfoCommand.getPassword() {

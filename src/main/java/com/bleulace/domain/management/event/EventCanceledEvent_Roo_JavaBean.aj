@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.event;
 
+import com.bleulace.domain.management.event.EventCanceledEvent;
 
 privileged aspect EventCanceledEvent_Roo_JavaBean {
     

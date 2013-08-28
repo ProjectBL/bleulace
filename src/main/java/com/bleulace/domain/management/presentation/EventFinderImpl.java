@@ -23,7 +23,7 @@ class EventFinderImpl extends AbstractFinder<Event, EventDTO> implements
 	private EventDAO dao;
 
 	@Override
-	public List<EventDTO> findByAccountForDates(String accountId, Date start,
+	public List<EventDTO> findByAccountIdForDates(String accountId, Date start,
 			Date end)
 	{
 		return convert(dao.findEvents(start, end, accountId));

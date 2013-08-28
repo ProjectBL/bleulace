@@ -26,6 +26,15 @@ public class UserDTO
 	@NotEmpty
 	private String lastName;
 
+	@NotEmpty
+	private String school;
+
+	@NotEmpty
+	private String work;
+
+	@NotEmpty
+	private String location;
+
 	public String getFullName()
 	{
 		return firstName + " " + lastName;

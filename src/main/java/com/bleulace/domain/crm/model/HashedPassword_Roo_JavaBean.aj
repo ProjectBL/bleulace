@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.HashedPassword;
 
 privileged aspect HashedPassword_Roo_JavaBean {
     

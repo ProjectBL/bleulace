@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.command;
 
+import com.bleulace.domain.crm.command.CreateAccountCommand;
 import com.bleulace.domain.crm.model.ContactInformation;
 
 privileged aspect CreateAccountCommand_Roo_JavaBean {

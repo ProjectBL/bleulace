@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.feed.event;
 
+import com.bleulace.domain.feed.event.FeedUpdatedEvent;
 
 privileged aspect FeedUpdatedEvent_Roo_JavaBean {
     

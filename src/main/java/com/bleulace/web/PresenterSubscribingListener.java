@@ -15,6 +15,11 @@ import org.springframework.stereotype.Component;
 
 import com.vaadin.navigator.ViewChangeListener;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Component
 @Scope("session")
 class PresenterSubscribingListener implements ViewChangeListener

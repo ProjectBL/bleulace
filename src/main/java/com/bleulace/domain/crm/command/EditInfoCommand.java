@@ -35,6 +35,9 @@ public class EditInfoCommand
 	@NotNull
 	private String work;
 
+	@NotNull
+	private String location;
+
 	@Password
 	private String password;
 
@@ -46,7 +49,8 @@ public class EditInfoCommand
 
 	public ContactInformation getInformation()
 	{
-		return new ContactInformation(firstName, lastName, email, school, work);
+		return new ContactInformation(firstName, lastName, email, school, work,
+				location);
 	}
 
 	public void setToPersistentValues()

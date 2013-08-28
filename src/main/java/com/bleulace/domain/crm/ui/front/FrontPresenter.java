@@ -25,8 +25,7 @@ class FrontPresenter
 			UI.getCurrent()
 					.getNavigator()
 					.navigateTo(
-							"calendarView/"
-									+ SecurityUtils.getSubject().getId());
+							"profileView/" + SecurityUtils.getSubject().getId());
 		}
 		catch (AuthenticationException e)
 		{

@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.event;
 
+import com.bleulace.domain.management.event.GuestInvitedEvent;
 
 privileged aspect GuestInvitedEvent_Roo_JavaBean {
     

@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.ContactInformation;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -16,11 +17,11 @@ privileged aspect ContactInformation_Roo_Equals {
             return true;
         }
         ContactInformation rhs = (ContactInformation) obj;
-        return new EqualsBuilder().append(email, rhs.email).append(firstName, rhs.firstName).append(lastName, rhs.lastName).append(school, rhs.school).append(work, rhs.work).isEquals();
+        return new EqualsBuilder().append(email, rhs.email).append(firstName, rhs.firstName).append(lastName, rhs.lastName).append(location, rhs.location).append(school, rhs.school).append(work, rhs.work).isEquals();
     }
     
     public int ContactInformation.hashCode() {
-        return new HashCodeBuilder().append(email).append(firstName).append(lastName).append(school).append(work).toHashCode();
+        return new HashCodeBuilder().append(email).append(firstName).append(lastName).append(location).append(school).append(work).toHashCode();
     }
     
 }

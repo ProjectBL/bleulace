@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface EventFinder
 {
-	public List<EventDTO> findByAccountForDates(String accountId, Date start,
+	public List<EventDTO> findByAccountIdForDates(String accountId, Date start,
 			Date end);
 }

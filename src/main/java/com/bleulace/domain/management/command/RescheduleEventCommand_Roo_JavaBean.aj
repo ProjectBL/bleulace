@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.command;
 
+import com.bleulace.domain.management.command.RescheduleEventCommand;
 import java.util.Date;
 
 privileged aspect RescheduleEventCommand_Roo_JavaBean {

@@ -18,5 +18,8 @@ class UserDTOPropertyMap extends PropertyMap<Account, UserDTO>
 	{
 		map().setFirstName(source.getContactInformation().getFirstName());
 		map().setLastName(source.getContactInformation().getLastName());
+		map().setSchool(source.getContactInformation().getSchool());
+		map().setWork(source.getContactInformation().getWork());
+		map().setLocation(source.getContactInformation().getLocation());
 	}
 }

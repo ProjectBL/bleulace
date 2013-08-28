@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.feed.presentation;
 
+import com.bleulace.domain.feed.presentation.DefaultFeedText;
 
 privileged aspect DefaultFeedText_Roo_JavaBean {
     

@@ -15,8 +15,8 @@ import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.utils.dto.AbstractFinder;
 
 @Component
-class UserDTOFinderImpl extends AbstractFinder<Account, UserDTO> implements
-		UserDTOFinder
+class UserFinderImpl extends AbstractFinder<Account, UserDTO> implements
+		UserFinder
 {
 	@Autowired
 	private ResourceDAO resourceDAO;
@@ -24,7 +24,7 @@ class UserDTOFinderImpl extends AbstractFinder<Account, UserDTO> implements
 	@Autowired
 	private AccountDAO accountDAO;
 
-	UserDTOFinderImpl()
+	UserFinderImpl()
 	{
 		super(Account.class, UserDTO.class);
 	}

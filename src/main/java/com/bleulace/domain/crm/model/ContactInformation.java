@@ -32,18 +32,22 @@ public class ContactInformation implements Serializable
 	@NotNull
 	private String work;
 
+	@NotNull
+	private String location;
+
 	public ContactInformation(String firstName, String lastName, String email,
-			String school, String work)
+			String school, String work, String location)
 	{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.school = school;
 		this.work = work;
+		this.location = location;
 	}
 
 	public ContactInformation()
 	{
-		this("", "", "", "", "");
+		this("", "", "", "", "", "");
 	}
 }

@@ -3,9 +3,9 @@
 
 package com.bleulace.domain.crm.command;
 
-import java.util.Set;
-
+import com.bleulace.domain.crm.command.GroupMembershipCommand;
 import com.bleulace.domain.crm.model.GroupMembershipAction;
+import java.util.Set;
 
 privileged aspect GroupMembershipCommand_Roo_JavaBean {
     

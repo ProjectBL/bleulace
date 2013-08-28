@@ -36,7 +36,7 @@ class EventDTOProvider implements CalendarEventProvider
 		Assert.notNull(viewerId);
 		Assert.notNull(ownerId);
 		EventDTOProcessor processor = factory.make(ownerId, viewerId);
-		List<EventDTO> dtos = finder.findByAccountForDates(ownerId, start, end);
+		List<EventDTO> dtos = finder.findByAccountIdForDates(ownerId, start, end);
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		for (EventDTO dto : dtos)
 		{

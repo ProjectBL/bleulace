@@ -1,13 +1,12 @@
 package com.bleulace.domain.crm.infrastructure;
 
-import javax.inject.Inject;
-
 import org.axonframework.common.jpa.EntityManagerProvider;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.unitofwork.CurrentUnitOfWork;
 import org.axonframework.unitofwork.SaveAggregateCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.bleulace.cqrs.event.EventBusAware;
 import com.bleulace.domain.resource.model.AbstractRootResource;
@@ -21,8 +20,9 @@ public class WithUnitOfWork implements EventBusAware,
 	@Autowired
 	private EntityManagerProvider provider;
 
-	@Inject
-	private EventBus eventBus;
+	@Autowired
+	@Qualifier("eventBus")
+	private transient EventBus eventBus;
 
 	private WithUnitOfWork()
 	{

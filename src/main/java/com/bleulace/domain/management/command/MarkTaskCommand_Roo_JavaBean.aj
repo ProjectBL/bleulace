@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.command;
 
+import com.bleulace.domain.management.command.MarkTaskCommand;
 
 privileged aspect MarkTaskCommand_Roo_JavaBean {
     

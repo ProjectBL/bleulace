@@ -14,7 +14,7 @@ public class CrmCommandFactory
 
 	private static final ContactInformation INFO = new ContactInformation(
 			"Arleigh", "Dickerson", "arleighdickerson@frugalu.com", "Marshall",
-			"Work my ass off");
+			"Work my ass off", "Nowhere");
 
 	public ContactInformation getContactInformation()
 	{

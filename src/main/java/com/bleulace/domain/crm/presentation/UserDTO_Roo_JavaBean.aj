@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.presentation;
 
+import com.bleulace.domain.crm.presentation.UserDTO;
 import java.util.TimeZone;
 
 privileged aspect UserDTO_Roo_JavaBean {
@@ -53,6 +54,30 @@ privileged aspect UserDTO_Roo_JavaBean {
     
     public void UserDTO.setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    
+    public String UserDTO.getSchool() {
+        return this.school;
+    }
+    
+    public void UserDTO.setSchool(String school) {
+        this.school = school;
+    }
+    
+    public String UserDTO.getWork() {
+        return this.work;
+    }
+    
+    public void UserDTO.setWork(String work) {
+        this.work = work;
+    }
+    
+    public String UserDTO.getLocation() {
+        return this.location;
+    }
+    
+    public void UserDTO.setLocation(String location) {
+        this.location = location;
     }
     
 }
