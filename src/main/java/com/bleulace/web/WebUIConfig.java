@@ -2,7 +2,10 @@ package com.bleulace.web;
 
 import java.util.Map.Entry;
 
+import org.axonframework.eventhandling.EventBus;
+import org.axonframework.eventhandling.SimpleEventBus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +23,20 @@ class WebUIConfig
 
 	@Bean
 	@Scope("session")
-	public WebUI webUI()
+	public WebUI webUI(PresenterSubscribingListener listener)
 	{
 		WebUI ui = new WebUI();
 		ui.setNavigator(makeNavigator(ui));
+		ui.getNavigator().addViewChangeListener(listener);
 		return ui;
+	}
+
+	@Bean
+	@Scope("session")
+	@Qualifier("uiBus")
+	public EventBus uiBus()
+	{
+		return new SimpleEventBus();
 	}
 
 	private Navigator makeNavigator(UI ui)
@@ -36,6 +48,10 @@ class WebUIConfig
 		{
 			navigator.addView(entry.getKey(), entry.getValue());
 		}
+
+		// hack to eagerly load presenters
+		ctx.getBeansWithAnnotation(Presenter.class).values();
+
 		return navigator;
 	}
 }

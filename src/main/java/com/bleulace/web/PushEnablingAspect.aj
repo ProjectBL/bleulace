@@ -1,11 +1,14 @@
 package com.bleulace.web;
 
+import org.aspectj.lang.annotation.SuppressAjWarnings;
+
 import com.vaadin.ui.Component;
 
-aspect ServerPushingAspect
+aspect PushEnablingAspect
 {
+	@SuppressAjWarnings
 	void around(final Component component) : 
-		execution(@ServerPush void *(..)) && this(component)
+		execution(@EnablePush void *(..)) && this(component)
 	{
 		component.getUI().access(new Runnable()
 		{

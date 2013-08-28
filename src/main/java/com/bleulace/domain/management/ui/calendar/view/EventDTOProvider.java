@@ -11,17 +11,11 @@ import org.springframework.util.Assert;
 import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.domain.management.presentation.EventFinder;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeListener;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
 
 @Configurable
-class EventDTOProvider implements CalendarEventProvider, EventChangeListener,
-		EventSetChangeNotifier
+class EventDTOProvider implements CalendarEventProvider
 {
-	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
-
 	@Autowired
 	private EventFinder finder;
 
@@ -47,7 +41,6 @@ class EventDTOProvider implements CalendarEventProvider, EventChangeListener,
 		for (EventDTO dto : dtos)
 		{
 			processor.process(dto);
-			dto.addEventChangeListener(this);
 			events.add(dto);
 		}
 		return events;
@@ -59,34 +52,6 @@ class EventDTOProvider implements CalendarEventProvider, EventChangeListener,
 		Assert.notNull(viewerId);
 		this.ownerId = ownerId;
 		this.viewerId = viewerId;
-	}
-
-	@Override
-	public void eventChange(EventChangeEvent changeEvent)
-	{
-		fireEventSetChange();
-	}
-
-	@Override
-	public void addEventSetChangeListener(EventSetChangeListener listener)
-	{
-		listeners.add(listener);
-	}
-
-	@Override
-	public void removeEventSetChangeListener(EventSetChangeListener listener)
-	{
-		listeners.remove(listener);
-	}
-
-	protected void fireEventSetChange()
-	{
-		EventSetChangeEvent event = new EventSetChangeEvent(this);
-
-		for (EventSetChangeListener listener : listeners)
-		{
-			listener.eventSetChange(event);
-		}
 	}
 
 	interface EventDTOProcessor

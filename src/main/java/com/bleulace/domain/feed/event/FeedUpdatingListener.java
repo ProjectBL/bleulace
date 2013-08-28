@@ -3,7 +3,6 @@ package com.bleulace.domain.feed.event;
 import java.io.Serializable;
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,6 +14,7 @@ import org.axonframework.unitofwork.DefaultUnitOfWorkFactory;
 import org.axonframework.unitofwork.SaveAggregateCallback;
 import org.axonframework.unitofwork.UnitOfWork;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +34,8 @@ class FeedUpdatingListener implements SaveAggregateCallback<Account>,
 	@Autowired
 	private transient FeedEntryProviderLocater locater;
 
-	@Inject
+	@Autowired
+	@Qualifier("eventBus")
 	private transient EventBus eventBus;
 
 	@Autowired

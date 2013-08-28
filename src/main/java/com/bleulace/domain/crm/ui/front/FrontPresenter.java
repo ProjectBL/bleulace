@@ -5,13 +5,11 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("session")
-@DependsOn("presenterPostProcessor")
+import com.bleulace.web.Presenter;
+import com.vaadin.ui.UI;
+
+@Presenter(viewNames = "frontView")
 class FrontPresenter
 {
 	@Autowired
@@ -20,11 +18,15 @@ class FrontPresenter
 	@EventHandler
 	public void on(UsernamePasswordToken token)
 	{
-		System.out.println(token);
 		try
 		{
 			view.setEnabled(false);
 			SecurityUtils.getSubject().login(token);
+			UI.getCurrent()
+					.getNavigator()
+					.navigateTo(
+							"calendarView/"
+									+ SecurityUtils.getSubject().getId());
 		}
 		catch (AuthenticationException e)
 		{
