@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.bleulace.web.VaadinView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
@@ -32,8 +34,9 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 
 	private final ResourceTable projects = new ResourceTable("project");
 	private final ResourceTable events = new ResourceTable("events");
-
 	private final InfoBlock infoBlock = new InfoBlock();
+
+	private static final int SIDE_COL_WIDTH_PX = 200;
 
 	ProfileViewImpl()
 	{
@@ -42,12 +45,26 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	@PostConstruct
 	protected void init()
 	{
-		VerticalLayout layout = new VerticalLayout(tabSheet, infoBlock,
-				projects, events);
-		layout.setWidth("400px");
-		setCompositionRoot(layout);
+		HorizontalSplitPanel leftPanel = new HorizontalSplitPanel();
+		leftPanel.setSizeFull();
+		leftPanel.setLocked(true);
+		leftPanel.setSplitPosition(SIDE_COL_WIDTH_PX, Unit.PIXELS);
+		leftPanel.setFirstComponent(new VerticalLayout(infoBlock, projects,
+				events));
+
+		HorizontalSplitPanel rightPanel = new HorizontalSplitPanel();
+		rightPanel.setSizeFull();
+		rightPanel.setLocked(true);
+		rightPanel.setSplitPosition(SIDE_COL_WIDTH_PX, Unit.PIXELS, true);
+		leftPanel.setSecondComponent(rightPanel);
+
+		VerticalLayout mainLayout = new VerticalLayout(tabSheet);
+		rightPanel.setFirstComponent(mainLayout);
+
+		setCompositionRoot(leftPanel);
 	}
 
+	@RequiresAuthentication
 	@Override
 	public void enter(ViewChangeEvent event)
 	{

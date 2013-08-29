@@ -7,38 +7,27 @@
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
 		id="WebApp_ID" version="2.5"> -->
 	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
+	<display-name>Vaadin Web Application</display-name>
 	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/META-INF/spring/applicationContext.xml
-		</param-value>
+		<param-name>productionMode</param-name>
+		<param-value>false</param-value>
 	</context-param>
 	<context-param>
 		<param-name>spring.profiles.default</param-name>
 		<param-value>dev</param-value>
 	</context-param>
-
-	<!-- <filter> <filter-name>shiroFilter</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
-		<init-param> <param-name>targetFilterLifecycle</param-name> <param-value>true</param-value> 
-		</init-param> </filter> <filter-mapping> <filter-name>shiroFilter</filter-name> 
-		<url-pattern>/*</url-pattern> </filter-mapping> -->
-	<listener>
-		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-	</listener>
-
-	<display-name>Vaadin Web Application</display-name>
-	<context-param>
-		<description>Vaadin production mode</description>
-		<param-name>productionMode</param-name>
-		<param-value>false</param-value>
-	</context-param>
 	<servlet>
 		<servlet-name>webServlet</servlet-name>
-		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+		<servlet-class>org.dellroad.stuff.vaadin7.SpringVaadinServlet</servlet-class>
 		<init-param>
-			<param-name>UIProvider</param-name>
-			<param-value>com.bleulace.web.WebUIProvider</param-value>
+			<param-name>UI</param-name>
+			<param-value>com.bleulace.web.WebUI</param-value>
+		</init-param>
+		<init-param>
+			<param-name>configLocation</param-name>
+			<param-value>classpath:/META-INF/spring/applicationContext.xml</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

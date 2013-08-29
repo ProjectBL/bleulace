@@ -27,7 +27,7 @@ import com.vaadin.ui.TextField;
  * 
  */
 @Component
-@Scope("session")
+@Scope("prototype")
 public class LoginForm extends CustomComponent implements ClickListener,
 		CommandGatewayAware
 {

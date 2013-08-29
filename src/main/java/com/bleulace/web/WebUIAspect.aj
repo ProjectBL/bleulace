@@ -1,8 +1,9 @@
 package com.bleulace.web;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.ClientConnector.DetachEvent;
+import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
-aspect WebUIAspect
+privileged aspect WebUIAspect
 {
 	declare parents : @Presenter * implements Serializable;
 	declare parents : @VaadinView * implements IVaadinView;
@@ -33,24 +34,32 @@ aspect WebUIAspect
 		return uiBus;
 	}
 
-	/**
-	 * save nav state in session
-	 */
-	after(String navState):
-		call(public void Navigator.navigateTo(*)) && args(navState) && within(com.bleulace..*)
+	private Set<String> Navigator.viewNames = new HashSet<String>();
+
+	after(Navigator nav) :
+		call(* Navigator.addView(String,..))
+		&& target(nav)
 	{
-		SecurityUtils.getSubject().getSession()
-				.setAttribute("navState", navState);
+		nav.viewNames.add((String) thisJoinPoint.getArgs()[0]);
 	}
 
-	/**
-	 * 
-	 * @param component
-	 *            , the component on which the push-enabled method is declared.
-	 *            Acquiring UI reference through Component.getUI() is safer than
-	 *            calling UI.getCurrent(), or at least that's what the vaadin
-	 *            documentation said...
-	 */
+	declare parents : Navigator implements DetachListener;
+
+	public void Navigator.detach(DetachEvent event)
+	{
+		for (String viewName : viewNames)
+		{
+			this.removeView(viewName);
+		}
+	}
+
+	after(UI ui, Navigator nav) : 
+		call(public void UI+.setNavigator(Navigator+)) 
+		&& target(ui)
+		&& args(nav)
+	{
+	}
+
 	@SuppressAjWarnings
 	void around(final Component component) : 
 		execution(@EnablePush void *(..)) && this(component)
@@ -63,16 +72,5 @@ aspect WebUIAspect
 				proceed(component);
 			}
 		});
-	}
-
-	after(ViewChangeEvent event) throwing(Exception e) : 
-		execution(public void View+.enter(ViewChangeEvent)) && args(event)
-	{
-		// TODO backup logix
-	}
-
-	void around() : execution(void UI+.init(VaadinRequest)) 
-	{
-		// TODO backup logix
 	}
 }

@@ -29,13 +29,13 @@ class VaadinSecurityContext implements SecurityContext
 	 * The attribute name used in the {@link VaadinSession} to store the
 	 * {@link Subject}.
 	 */
-	private final static String SUBJECT_ATTRIBUTE = VaadinSecurityContext.class
+	private static final String SUBJECT_ATTRIBUTE = VaadinSecurityContext.class
 			.getName() + ".subject";
 
 	/**
 	 * The security manager for the application.
 	 */
-	private SecurityManager securityManager;
+	private transient SecurityManager securityManager;
 
 	/**
 	 * Sets the security manager for the application. To support push, normally

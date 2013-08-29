@@ -1,8 +1,9 @@
 package com.bleulace.domain.crm.ui.profile;
 
+import java.io.Serializable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.Assert;
 
 import com.vaadin.data.util.BeanContainer;
@@ -20,7 +21,6 @@ import com.vaadin.ui.themes.Reindeer;
 class InfoBlock extends CustomComponent
 {
 	@Autowired
-	@Qualifier("defaultAvatar")
 	private Image avatar;
 
 	private final Label name = makeBlockLabel();
@@ -34,12 +34,17 @@ class InfoBlock extends CustomComponent
 
 		Table infoTable = new Table("", container);
 		infoTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
+		infoTable.setSizeFull();
+		infoTable.setColumnWidth("key", 50);
+		infoTable.setPageLength(3);
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);
 		layout.addComponent(avatar);
 		layout.addComponent(name);
 		layout.addComponent(infoTable);
+		layout.setSizeFull();
+
 		setCompositionRoot(layout);
 	}
 
@@ -93,7 +98,7 @@ class InfoBlock extends CustomComponent
 		return l;
 	}
 
-	private class InfoBlockEntry
+	private class InfoBlockEntry implements Serializable
 	{
 		private final String key;
 		private final String value;

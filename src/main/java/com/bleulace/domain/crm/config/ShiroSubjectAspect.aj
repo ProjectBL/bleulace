@@ -33,7 +33,6 @@ aspect ShiroSubjectAspect
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 			return proceed();
 		}
 	}

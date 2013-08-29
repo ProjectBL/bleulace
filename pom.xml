@@ -3,6 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bleulace</groupId>
+	<artifactId>projectManagement</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<properties>
@@ -97,6 +98,16 @@
 			<groupId>org.vaadin.addons</groupId>
 			<artifactId>contextmenu</artifactId>
 			<version>4.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.alump.fancylayouts</groupId>
+			<artifactId>fancylayouts-addon</artifactId>
+			<version>1.0.0.beta1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.dellroad</groupId>
+			<artifactId>dellroad-stuff-vaadin</artifactId>
+			<version>1.0.704</version>
 		</dependency>
 		<!-- General dependencies for standard applications -->
 		<dependency>
@@ -658,5 +669,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<artifactId>projectManagement</artifactId>
 </project>

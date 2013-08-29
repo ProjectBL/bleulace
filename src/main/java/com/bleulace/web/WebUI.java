@@ -1,12 +1,17 @@
 package com.bleulace.web;
 
+import java.util.Map.Entry;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.ClientConnector.DetachListener;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
@@ -41,35 +46,47 @@ import com.vaadin.ui.UI;
 
 //@formatter:on
 @Push
+@PreserveOnRefresh
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
-public class WebUI extends UI implements DetachListener
+@Configurable(preConstruction = true)
+public class WebUI extends UI
 {
 	@Autowired
-	private transient ApplicationContext ctx;
+	private ApplicationContext ctx;
 
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		addDetachListener(this);
-		// String navState = (String) SecurityUtils.getSubject().getSession()
-		// .getAttribute("navState");
-		// getNavigator().navigateTo(navState);
+		setNavigator(makeNavigator());
+		getNavigator().navigateTo("frontView");
 	}
 
-	@Override
-	public void detach(DetachEvent event)
+	private Navigator makeNavigator()
 	{
-		for (String viewName : ctx.getBeansWithAnnotation(VaadinView.class)
-				.keySet())
+		Navigator navigator = new Navigator(this, this);
+
+		for (Entry<String, Object> entry : ctx.getBeansWithAnnotation(
+				VaadinView.class).entrySet())
 		{
-			getNavigator().removeView(viewName);
+			navigator.addView(entry.getKey(), (View) entry.getValue());
 		}
 
-		for (String name : ctx.getBeansOfType(NavStateConversion.class)
-				.keySet())
+		for (NavStateConversion bean : ctx.getBeansOfType(
+				NavStateConversion.class).values())
 		{
-			getNavigator().removeView(name);
+			for (String entryState : bean.getEntryStates())
+			{
+				navigator.addView(entryState, bean);
+			}
 		}
+
+		// hack to eagerly load presenters
+		ctx.getBeansWithAnnotation(Presenter.class).values();
+
+		navigator.addViewChangeListener(ctx
+				.getBean(PresenterSubscribingListener.class));
+
+		return navigator;
 	}
 }
