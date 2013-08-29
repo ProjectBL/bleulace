@@ -1,4 +1,4 @@
-package com.bleulace.web;
+package com.bleulace.domain.crm.config;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;

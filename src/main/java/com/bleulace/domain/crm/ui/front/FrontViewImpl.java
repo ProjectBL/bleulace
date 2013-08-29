@@ -2,8 +2,10 @@ package com.bleulace.domain.crm.ui.front;
 
 import javax.annotation.PostConstruct;
 
+import org.axonframework.domain.GenericDomainEventMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.web.VaadinView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -27,13 +29,26 @@ public class FrontViewImpl extends CustomComponent implements FrontView, View
 	}
 
 	@Override
-	public void showFailure()
+	public void showLoginFailure()
 	{
 		Notification.show("FAIL");
 	}
 
 	@Override
+	public void showLoginSuccess(UserDTO dto)
+	{
+		Notification.show("Welcome back, " + dto.getFirstName() + ".");
+	}
+
+	@Override
 	public void enter(ViewChangeEvent event)
 	{
+		getUIBus().publish(GenericDomainEventMessage.asEventMessage(event));
+	}
+
+	@Override
+	public void clearLoginParams()
+	{
+		loginForm.clearValues();
 	}
 }

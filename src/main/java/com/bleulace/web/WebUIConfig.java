@@ -59,10 +59,19 @@ class WebUIConfig
 	{
 		Navigator navigator = new Navigator(ui, ui);
 
-		for (Entry<String, View> entry : ctx.getBeansOfType(View.class)
-				.entrySet())
+		for (Entry<String, Object> entry : ctx.getBeansWithAnnotation(
+				VaadinView.class).entrySet())
 		{
-			navigator.addView(entry.getKey(), entry.getValue());
+			navigator.addView(entry.getKey(), (View) entry.getValue());
+		}
+
+		for (NavStateConversion bean : ctx.getBeansOfType(
+				NavStateConversion.class).values())
+		{
+			for (String entryState : bean.getEntryStates())
+			{
+				navigator.addView(entryState, bean);
+			}
 		}
 
 		// hack to eagerly load presenters

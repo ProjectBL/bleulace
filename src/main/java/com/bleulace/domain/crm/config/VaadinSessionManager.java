@@ -1,4 +1,4 @@
-package com.bleulace.web;
+package com.bleulace.domain.crm.config;
 
 import java.util.UUID;
 

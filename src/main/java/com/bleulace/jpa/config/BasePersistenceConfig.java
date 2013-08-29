@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.eclipse.persistence.jpa.PersistenceProvider;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -15,15 +16,18 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.bleulace.utils.SystemProfiles;
+
 /**
- * Persistence Configuration shared across all profiles.
+ * Persistence Configuration shared across all system profiles.
  * 
  * @author Arleigh Dickerson
+ * @see SystemProfiles
  * 
  */
 @Configuration
-@EnableTransactionManagement
-public class BasePersistenceConfig
+@EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
+class BasePersistenceConfig
 {
 	@Resource(name = "jpaPropsMap")
 	private Map<String, String> jpaPropsMap;

@@ -34,8 +34,6 @@ class InfoBlock extends CustomComponent
 
 		Table infoTable = new Table("", container);
 		infoTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
-		infoTable.setSizeFull();
-		infoTable.setPageLength(container.size());
 
 		VerticalLayout layout = new VerticalLayout();
 		layout.setDefaultComponentAlignment(Alignment.TOP_CENTER);

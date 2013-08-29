@@ -1,5 +1,7 @@
 package com.bleulace.domain.crm.ui.front;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
@@ -54,6 +56,14 @@ public class LoginForm extends CustomComponent implements ClickListener,
 		submitButton.setClickShortcut(KeyCode.ENTER);
 		setCompositionRoot(new FormLayout(usernameField, passwordField,
 				rememberMeField, submitButton));
+	}
+
+	@PostConstruct
+	void clearValues()
+	{
+		usernameField.setValue("");
+		passwordField.setValue("");
+		rememberMeField.setValue(false);
 	}
 
 	@Override

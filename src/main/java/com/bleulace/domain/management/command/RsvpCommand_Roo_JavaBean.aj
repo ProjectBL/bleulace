@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.command;
 
+import com.bleulace.domain.management.command.RsvpCommand;
 
 privileged aspect RsvpCommand_Roo_JavaBean {
     

@@ -15,8 +15,7 @@ public class WebUIProvider extends UIProvider
 	@Override
 	public UI createInstance(UICreateEvent event)
 	{
-		return SpringApplicationContext.getBean(UIInstanceProvider.class)
-				.getInstance();
+		return SpringApplicationContext.getBean(WebUI.class);
 	}
 
 	@Override

@@ -12,13 +12,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.bleulace.utils.SystemProfiles;
+
 /**
  * Persistence configuration for Development and Test profiles
  * 
  * @author Arleigh Dickerson
  * 
  */
-@Profile({ "dev", "test" })
+@Profile({ SystemProfiles.DEV, SystemProfiles.TEST })
 @Configuration
 public class DevPersistenceConfig
 {
@@ -28,13 +30,8 @@ public class DevPersistenceConfig
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(Driver.class.getName());
 
-		// database in memory
 		dataSource
 				.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE;MVCC=true");
-
-		// database on hard drive
-		// dataSource.setUrl("jdbc:h2:~/bleulaceDb;DB_CLOSE_ON_EXIT=FALSE");
-
 		dataSource.setUsername("sa");
 		dataSource.setPassword("");
 		dataSource.setTestOnBorrow(true);

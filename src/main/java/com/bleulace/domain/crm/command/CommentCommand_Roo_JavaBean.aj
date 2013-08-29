@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.command;
 
+import com.bleulace.domain.crm.command.CommentCommand;
 
 privileged aspect CommentCommand_Roo_JavaBean {
     

@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.event;
 
+import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.domain.management.model.ManagementLevel;
 
 privileged aspect ManagerAssignedEvent_Roo_JavaBean {

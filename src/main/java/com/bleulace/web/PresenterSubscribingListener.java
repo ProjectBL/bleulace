@@ -27,13 +27,13 @@ class PresenterSubscribingListener implements ViewChangeListener
 	private static final Logger LOGGER = Logger
 			.getLogger(PresenterSubscribingListener.class);
 
-	private Map<String, Set<AnnotationEventListenerAdapter>> map = new HashMap<String, Set<AnnotationEventListenerAdapter>>();
+	private transient Map<String, Set<AnnotationEventListenerAdapter>> map = new HashMap<String, Set<AnnotationEventListenerAdapter>>();
 
 	@Autowired
 	@Qualifier("uiBus")
-	private EventBus uiBus;
+	private transient EventBus uiBus;
 
-	void registerPresenter(Object presenter)
+	protected void registerPresenter(Object presenter)
 	{
 		for (String viewName : presenter.getClass()
 				.getAnnotation(Presenter.class).viewNames())

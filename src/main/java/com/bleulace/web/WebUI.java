@@ -1,10 +1,12 @@
 package com.bleulace.web;
 
-import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
@@ -41,17 +43,33 @@ import com.vaadin.ui.UI;
 @Push
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Theme("bleulacetheme")
-public class WebUI extends UI
+public class WebUI extends UI implements DetachListener
 {
+	@Autowired
+	private transient ApplicationContext ctx;
+
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		String navState = (String) SecurityUtils.getSubject().getSession()
-				.getAttribute("navState");
-		if (navState == null)
+		addDetachListener(this);
+		// String navState = (String) SecurityUtils.getSubject().getSession()
+		// .getAttribute("navState");
+		// getNavigator().navigateTo(navState);
+	}
+
+	@Override
+	public void detach(DetachEvent event)
+	{
+		for (String viewName : ctx.getBeansWithAnnotation(VaadinView.class)
+				.keySet())
 		{
-			navState = "frontView";
+			getNavigator().removeView(viewName);
 		}
-		getNavigator().navigateTo(navState);
+
+		for (String name : ctx.getBeansOfType(NavStateConversion.class)
+				.keySet())
+		{
+			getNavigator().removeView(name);
+		}
 	}
 }

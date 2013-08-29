@@ -10,11 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Scope("session")
+@Scope("prototype")
 @Component
-public @interface VaadinView
+public @interface UIComponent
 {
-	String value();
-
-	// String[] aliases() default {};
+	String value() default "";
 }

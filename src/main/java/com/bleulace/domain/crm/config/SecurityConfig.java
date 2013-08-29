@@ -136,8 +136,8 @@ public class SecurityConfig
 	}
 
 	@Bean
-	public ShiroAccountAspect shiroAccountAspect()
+	public ShiroSubjectAspect shiroAccountAspect()
 	{
-		return ShiroAccountAspect.aspectOf();
+		return ShiroSubjectAspect.aspectOf();
 	}
 }

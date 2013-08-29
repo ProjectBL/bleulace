@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.command;
 
+import com.bleulace.domain.management.command.CancelEventCommand;
 
 privileged aspect CancelEventCommand_Roo_JavaBean {
     

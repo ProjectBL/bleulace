@@ -3,6 +3,8 @@ package com.bleulace.domain.crm.ui.profile;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
+
 import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.bleulace.web.VaadinView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
 @VaadinView("profileView")
@@ -23,18 +26,25 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	@Qualifier("uiBus")
 	private transient EventBus uiBus;
 
+	@Autowired
+	@Qualifier("actionTabSheet")
+	private TabSheet tabSheet;
+
 	private final ResourceTable projects = new ResourceTable("project");
 	private final ResourceTable events = new ResourceTable("events");
 
 	private final InfoBlock infoBlock = new InfoBlock();
 
-	private static final String WIDTH = "200px";
-
 	ProfileViewImpl()
 	{
-		setWidth(WIDTH);
-		VerticalLayout layout = new VerticalLayout();
-		layout.addComponents(infoBlock, projects, events);
+	}
+
+	@PostConstruct
+	protected void init()
+	{
+		VerticalLayout layout = new VerticalLayout(tabSheet, infoBlock,
+				projects, events);
+		layout.setWidth("400px");
 		setCompositionRoot(layout);
 	}
 

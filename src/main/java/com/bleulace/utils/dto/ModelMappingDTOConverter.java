@@ -25,7 +25,7 @@ class ModelMappingDTOConverter<S, T> implements IterableConverter<S, T>
 	@Override
 	public T convert(S source)
 	{
-		return assembler.convert(source);
+		return source == null ? null : assembler.convert(source);
 	}
 
 	@Override

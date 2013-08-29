@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.command;
 
+import com.bleulace.domain.crm.command.EditInfoCommand;
 
 privileged aspect EditInfoCommand_Roo_JavaBean {
     
