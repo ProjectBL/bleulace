@@ -5,7 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.bleulace.web.UIComponent;
+import org.springframework.context.annotation.Scope;
+
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.DropHandler;
@@ -27,7 +28,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-@UIComponent
+@org.springframework.stereotype.Component
+@Scope("prototype")
 public class ImageDropField extends CustomComponent
 {
 	private ProgressBar progress;

@@ -1,12 +1,9 @@
 package com.bleulace.web;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+import com.bleulace.web.stereotype.UIComponent;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
-@Component
-@Scope("prototype")
+@UIComponent
 class FrontViewConversion extends NavStateConversion
 {
 	protected FrontViewConversion()

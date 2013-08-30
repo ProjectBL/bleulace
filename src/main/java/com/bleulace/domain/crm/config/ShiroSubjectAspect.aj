@@ -25,6 +25,7 @@ aspect ShiroSubjectAspect
 	private static final String TIMEZONE_KEY = "timezone";
 
 	Subject around() : call(Subject SecurityUtils.getSubject()) && 
+
 	if(ctx != null)
 	{
 		try

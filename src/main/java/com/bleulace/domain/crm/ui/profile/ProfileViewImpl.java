@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.utils.dto.Mapper;
-import com.bleulace.web.VaadinView;
+import com.bleulace.web.stereotype.Screen;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
@@ -21,7 +21,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-@VaadinView("profileView")
+@Screen("profileView")
 class ProfileViewImpl extends CustomComponent implements ProfileView, View
 {
 	@Autowired

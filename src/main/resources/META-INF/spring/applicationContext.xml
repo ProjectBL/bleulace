@@ -24,6 +24,13 @@
 
 	<context:spring-configured />
 
+	<context:component-scan base-package="com.bleulace">
+		<context:exclude-filter expression=".*_Roo_.*"
+			type="regex" />
+		<context:exclude-filter type="aspectj"
+			expression="@com.bleulace.web.stereotype.* *" />
+	</context:component-scan>
+
 	<jdbc:initialize-database data-source="dataSource"
 		enabled="true" ignore-failures="ALL">
 		<jdbc:script encoding="UTF-8"
@@ -56,12 +63,10 @@
 			expression="com.bleulace.jpa.ReadOnlyDAO" />
 	</jpa:repositories>
 
-	<context:component-scan base-package="com.bleulace">
-		<context:exclude-filter expression=".*_Roo_.*"
-			type="regex" />
-	</context:component-scan>
-
-	<task:executor id="executor" pool-size="0-4" />
+	<bean id="executor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
+		<property name="maxPoolSize" value="4" />
+	</bean>
 
 	<!-- Axon -->
 	<axon:annotation-config command-bus="commandBus"

@@ -6,13 +6,13 @@ import org.axonframework.domain.GenericDomainEventMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
-import com.bleulace.web.VaadinView;
+import com.bleulace.web.stereotype.Screen;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Notification;
 
-@VaadinView("frontView")
+@Screen("frontView")
 public class FrontViewImpl extends CustomComponent implements FrontView, View
 {
 	@Autowired

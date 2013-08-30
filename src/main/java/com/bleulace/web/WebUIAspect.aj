@@ -1,63 +1,33 @@
 package com.bleulace.web;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.vaadin.navigator.Navigator;
+import com.bleulace.web.stereotype.Presenter;
+import com.bleulace.web.stereotype.Screen;
 import com.vaadin.navigator.View;
-import com.vaadin.server.ClientConnector.DetachEvent;
-import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.UI;
 
-privileged aspect WebUIAspect
+aspect WebUIAspect
 {
 	declare parents : @Presenter * implements Serializable;
-	declare parents : @VaadinView * implements IVaadinView;
+	declare parents : @Screen * implements ScreenView;
 
-	private interface IVaadinView extends View, Component
+	private interface ScreenView extends View, Component
 	{
 	}
 
 	@Autowired
 	@Qualifier("uiBus")
-	private transient EventBus IVaadinView.uiBus;
+	private transient EventBus ScreenView.uiBus;
 
-	EventBus IVaadinView.getUIBus()
+	EventBus ScreenView.getUIBus()
 	{
 		return uiBus;
-	}
-
-	private Set<String> Navigator.viewNames = new HashSet<String>();
-
-	after(Navigator nav) :
-		call(* Navigator.addView(String,..))
-		&& target(nav)
-	{
-		nav.viewNames.add((String) thisJoinPoint.getArgs()[0]);
-	}
-
-	declare parents : Navigator implements DetachListener;
-
-	public void Navigator.detach(DetachEvent event)
-	{
-		for (String viewName : viewNames)
-		{
-			this.removeView(viewName);
-		}
-	}
-
-	after(UI ui, Navigator nav) : 
-		call(public void UI+.setNavigator(Navigator+)) 
-		&& target(ui)
-		&& args(nav)
-	{
 	}
 
 	@SuppressAjWarnings

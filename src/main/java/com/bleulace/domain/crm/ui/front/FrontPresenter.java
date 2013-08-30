@@ -7,7 +7,8 @@ import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.domain.crm.presentation.UserFinder;
-import com.bleulace.web.Presenter;
+import com.bleulace.web.stereotype.Presenter;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.UI;
 
 @Presenter(viewNames = "frontView")
@@ -18,6 +19,12 @@ class FrontPresenter
 
 	@Autowired
 	private UserFinder finder;
+
+	@EventHandler
+	public void on(ViewChangeEvent event)
+	{
+		view.clearLoginParams();
+	}
 
 	@EventHandler
 	public void on(UsernamePasswordToken token)
@@ -31,10 +38,7 @@ class FrontPresenter
 			view.clearLoginParams();
 
 			view.showLoginSuccess(finder.findById(id));
-			UI.getCurrent()
-					.getNavigator()
-					.navigateTo(
-							"profileView/" + SecurityUtils.getSubject().getId());
+			UI.getCurrent().getNavigator().navigateTo("profileView/" + id);
 		}
 		catch (AuthenticationException e)
 		{

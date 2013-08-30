@@ -7,8 +7,12 @@
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
 		id="WebApp_ID" version="2.5"> -->
 	<listener>
-		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/META-INF/spring/applicationContext.xml</param-value>
+	</context-param>
 	<display-name>Vaadin Web Application</display-name>
 	<context-param>
 		<param-name>productionMode</param-name>
@@ -18,6 +22,9 @@
 		<param-name>spring.profiles.default</param-name>
 		<param-value>dev</param-value>
 	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>webServlet</servlet-name>
 		<servlet-class>org.dellroad.stuff.vaadin7.SpringVaadinServlet</servlet-class>
@@ -27,7 +34,7 @@
 		</init-param>
 		<init-param>
 			<param-name>configLocation</param-name>
-			<param-value>classpath:/META-INF/spring/applicationContext.xml</param-value>
+			<param-value>classpath:/META-INF/spring/uiContext.xml</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

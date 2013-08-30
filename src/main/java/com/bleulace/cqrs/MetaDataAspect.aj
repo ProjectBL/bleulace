@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.SystemProfiles;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
@@ -23,7 +24,7 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 	static final String SUBJECT_ID = "subjectId";
 	static final String HOST = "host";
 	static final String TIMESTAMP = "timestamp";
-	
+
 	static final String[] FLAGS = { SUBJECT_ID, TIMESTAMP };
 
 	@SuppressAjWarnings
@@ -42,7 +43,7 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 	{
 		return (String) this.get(SUBJECT_ID);
 	}
-	
+
 	public String MetaData.getHost()
 	{
 		return (String) this.get(HOST);
@@ -68,12 +69,9 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 			map.put(SUBJECT_ID, SecurityUtils.getSubject().getId());
 			map.put(HOST, SecurityUtils.getSubject().getSession().getHost());
 		}
-		catch (UnavailableSecurityManagerException e)
+		catch (Exception e)
 		{
-			if (!isTestEnvironment())
-			{
-				throw e;
-			}
+			e.printStackTrace();
 		}
 		return commandMessage.andMetaData(map);
 	}
@@ -83,10 +81,10 @@ aspect MetaDataAspect implements AuditDataProvider, CommandDispatchInterceptor
 		return command.getMetaData();
 	}
 
-	private boolean isTestEnvironment()
+	private boolean isEnvironment(String env)
 	{
 		return Arrays.asList(
 				SpringApplicationContext.getBean(Environment.class)
-						.getActiveProfiles()).contains("test");
+						.getActiveProfiles()).contains(env);
 	}
 }

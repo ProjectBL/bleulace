@@ -15,7 +15,7 @@ import com.bleulace.domain.crm.presentation.UserFinder;
 import com.bleulace.domain.management.presentation.EventFinder;
 import com.bleulace.domain.management.presentation.ManageableResourceDTO;
 import com.bleulace.domain.management.presentation.ProjectFinder;
-import com.bleulace.web.Presenter;
+import com.bleulace.web.stereotype.Presenter;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
 @Presenter(viewNames = "profileView")

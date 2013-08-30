@@ -7,10 +7,9 @@ import org.axonframework.domain.GenericEventMessage;
 import org.axonframework.eventhandling.EventBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
+import com.bleulace.web.stereotype.UIComponent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -26,8 +25,7 @@ import com.vaadin.ui.TextField;
  * @author Arleigh Dickerson
  * 
  */
-@Component
-@Scope("prototype")
+@UIComponent
 public class LoginForm extends CustomComponent implements ClickListener,
 		CommandGatewayAware
 {
