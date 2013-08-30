@@ -4,9 +4,12 @@ import java.io.Serializable;
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.axonframework.eventhandling.EventBus;
+import org.dellroad.stuff.vaadin7.SpringVaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
+import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.web.stereotype.Presenter;
 import com.bleulace.web.stereotype.Screen;
 import com.vaadin.navigator.View;
@@ -28,6 +31,14 @@ aspect WebUIAspect
 	EventBus ScreenView.getUIBus()
 	{
 		return uiBus;
+	}
+
+	ConfigurableWebApplicationContext around() : 
+		execution(ConfigurableWebApplicationContext SpringVaadinSession.getApplicationContext())
+	{
+		ConfigurableWebApplicationContext ctx = proceed();
+		ctx.setParent(SpringApplicationContext.get());
+		return ctx;
 	}
 
 	@SuppressAjWarnings

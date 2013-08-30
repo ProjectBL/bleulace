@@ -30,10 +30,11 @@
 		<context:exclude-filter expression=".*_Roo_.*"
 			type="regex" />
 	</context:component-scan>
-	
-	<bean id="vaadinApplication" class="org.dellroad.stuff.vaadin7.VaadinApplication"/>
+
+	<bean id="vaadinApplication" class="org.dellroad.stuff.vaadin7.VaadinApplication" />
 
 	<bean id="webUI" class="com.bleulace.web.WebUI" />
 
 	<bean id="uiBus" class="org.axonframework.eventhandling.SimpleEventBus" />
+
 </beans>

@@ -16,9 +16,9 @@ import com.bleulace.utils.dto.Mapper;
 import com.bleulace.web.stereotype.Screen;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
 @Screen("profileView")
@@ -29,12 +29,15 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	private transient EventBus uiBus;
 
 	@Autowired
-	@Qualifier("actionTabSheet")
-	private TabSheet tabSheet;
+	@Qualifier("profileMenuBar")
+	private Component profileMenuBar;
+
+	@Autowired
+	@Qualifier("infoBlock")
+	private Component infoBlock;
 
 	private final ResourceTable projects = new ResourceTable("project");
 	private final ResourceTable events = new ResourceTable("events");
-	private final InfoBlock infoBlock = new InfoBlock();
 
 	private static final int SIDE_COL_WIDTH_PX = 200;
 
@@ -58,9 +61,9 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 		rightPanel.setSplitPosition(SIDE_COL_WIDTH_PX, Unit.PIXELS, true);
 		leftPanel.setSecondComponent(rightPanel);
 
-		VerticalLayout mainLayout = new VerticalLayout(tabSheet);
+		VerticalLayout mainLayout = new VerticalLayout(profileMenuBar);
+		mainLayout.setSizeFull();
 		rightPanel.setFirstComponent(mainLayout);
-
 		setCompositionRoot(leftPanel);
 	}
 

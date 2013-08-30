@@ -477,6 +477,10 @@
 							<groupId>com.vaadin</groupId>
 							<artifactId>vaadin-server</artifactId>
 						</weaveDependency>
+						<weaveDependency>
+						<groupId>org.dellroad</groupId>
+						<artifactId>dellroad-stuff-vaadin</artifactId>
+						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>
 					<target>${java.version}</target>

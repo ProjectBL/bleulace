@@ -2,12 +2,14 @@ package com.bleulace.domain.crm.ui.profile;
 
 import java.io.Serializable;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import javax.annotation.PostConstruct;
+
 import org.springframework.util.Assert;
 
+import com.bleulace.web.stereotype.UIComponent;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.DefaultItemSorter;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Image;
@@ -17,17 +19,22 @@ import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-@Configurable(preConstruction = true)
+@UIComponent("infoBlock")
 class InfoBlock extends CustomComponent
 {
-	@Autowired
-	private Image avatar;
+	private final Image avatar = new Image("", new ThemeResource(
+			"img/ProfilePlaceholder.png"));
 
 	private final Label name = makeBlockLabel();
 
 	private final BeanContainer<String, InfoBlockEntry> container = makeContainer();
 
 	public InfoBlock()
+	{
+	}
+
+	@PostConstruct
+	protected void init()
 	{
 		avatar.setSizeFull();
 		name.setStyleName(Reindeer.LABEL_H1);
