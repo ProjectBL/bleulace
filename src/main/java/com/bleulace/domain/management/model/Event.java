@@ -1,7 +1,11 @@
 package com.bleulace.domain.management.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -27,6 +31,7 @@ import com.bleulace.domain.management.event.GuestInvitedEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.jpa.DateWindow;
 import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.dto.Mapper;
 
 @Entity
@@ -50,6 +55,21 @@ public class Event extends Project
 
 	public Event(CreateEventCommand command, MetaData metaData)
 	{
+		EventCreatedEvent event = new EventCreatedEvent();
+		event.setId(getId());
+		Mapper.map(command, event);
+		apply(event, metaData);
+
+		command.getInviteeIds().add(metaData.getSubjectId());
+		updateInvitees(new HashSet<String>(command.getInviteeIds()), metaData);
+		apply(new RsvpCommand(getId(), true), metaData);
+
+		apply(new ManagerAssignedEvent(getId(), metaData.getSubjectId(),
+				ManagementLevel.OWN), metaData);
+	}
+
+	private Event(CreateEventCommand command, MetaData metaData, String foo)
+	{
 		String creatorId = metaData.getSubjectId();
 		EventCreatedEvent event = new EventCreatedEvent();
 		event.setId(getId());
@@ -57,12 +77,17 @@ public class Event extends Project
 		apply(event, metaData);
 		if (creatorId != null)
 		{
-			ManagerAssignedEvent assignment = new ManagerAssignedEvent(
+			ManagerAssignedEvent assignment = new ManagerAssignedEvent(getId(),
 					creatorId, ManagementLevel.OWN);
-			assignment.setId(getId());
 			apply(assignment, metaData);
-			apply(new GuestInvitedEvent(getId(), creatorId), metaData);
 			apply(new RsvpCommand(getId(), true), metaData);
+		}
+		for (String accountId : command.getInviteeIds())
+		{
+			if (!invitees.containsKey(accountId))
+			{
+				apply(new GuestInvitedEvent(getId(), accountId), metaData);
+			}
 		}
 	}
 
@@ -83,20 +108,20 @@ public class Event extends Project
 
 	public void on(GuestInvitedEvent event, MetaData metaData)
 	{
+		String hostId = metaData.getSubjectId();
+		Account host = hostId == null ? null : EntityManagerReference.load(
+				Account.class, hostId);
+
 		Account guest = EntityManagerReference.load(Account.class,
 				event.getAccountId());
-		Account host = null;
-		if (metaData.getSubjectId() != null)
-		{
-			host = EntityManagerReference.load(Account.class,
-					metaData.getSubjectId());
-		}
+
 		invitees.put(guest, new EventInvitee(guest, host));
 	}
 
 	public void handle(EditEventCommand command, MetaData metaData)
 	{
 		apply(command, metaData);
+		updateInvitees(new HashSet<String>(command.getInviteeIds()), metaData);
 	}
 
 	public void handle(RsvpCommand command, MetaData metaData)
@@ -134,8 +159,8 @@ public class Event extends Project
 
 	public RsvpStatus getRsvpStatus(String accountId)
 	{
-		EventInvitee invitee = getInvitees().get(
-				EntityManagerReference.load(Account.class, accountId));
+		EventInvitee invitee = invitees.get(EntityManagerReference.load(
+				Account.class, accountId));
 		return invitee == null ? null : invitee.getStatus();
 	}
 
@@ -146,5 +171,30 @@ public class Event extends Project
 		{
 			invitees.remove(a);
 		}
+	}
+
+	private void updateInvitees(Set<String> inviteeIds, MetaData metaData)
+	{
+		Set<String> alreadyInvited = new HashSet<String>(getInviteeIds());
+		for (String inviteeId : inviteeIds)
+		{
+			if (!alreadyInvited.contains(inviteeId))
+			{
+				apply(new GuestInvitedEvent(getId(), inviteeId), metaData);
+			}
+		}
+	}
+
+	private List<String> getInviteeIds()
+	{
+		if (getId() == null)
+		{
+			return new ArrayList<String>();
+		}
+
+		QEvent e = QEvent.event;
+		QEventInvitee i = QEventInvitee.eventInvitee;
+		return QueryFactory.from(e).innerJoin(e.invitees, i)
+				.where(e.id.eq(getId())).list(i.guest.id);
 	}
 }

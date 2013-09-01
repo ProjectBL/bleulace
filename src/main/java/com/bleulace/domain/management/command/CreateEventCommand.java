@@ -1,6 +1,8 @@
 package com.bleulace.domain.management.command;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,6 +17,13 @@ public class CreateEventCommand extends CreateProjectCommand
 
 	@NotEmpty
 	private String location = "";
+
+	private List<String> inviteeIds = new ArrayList<String>();
+
+	public CreateEventCommand()
+	{
+		this(new Date(), new Date());
+	}
 
 	public CreateEventCommand(Date start, Date end)
 	{
@@ -62,5 +71,25 @@ public class CreateEventCommand extends CreateProjectCommand
 	public void setLocation(String location)
 	{
 		this.location = location;
+	}
+
+	public void setCaption(String caption)
+	{
+		setTitle(caption);
+	}
+
+	public void setDescription(String description)
+	{
+		setLocation(description);
+	}
+
+	public List<String> getInviteeIds()
+	{
+		return inviteeIds;
+	}
+
+	public void setInviteeIds(List<String> inviteeIds)
+	{
+		this.inviteeIds = inviteeIds;
 	}
 }

@@ -1,42 +1,28 @@
 package com.bleulace.infrastructure;
 
-import java.util.concurrent.Executor;
-
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
-@ActiveProfiles("test")
-@Transactional
-@TransactionConfiguration
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/META-INF/spring/applicationContext.xml")
-public class EventSchedulerTest
+import com.bleulace.ContextTest;
+
+public class EventSchedulerTest implements ContextTest
 {
-	@Autowired
-	private Executor executor;
-
 	@Autowired
 	private EventListenerForTest listener;
 
 	@Test
 	public void eventScheduledAndFired() throws Exception
 	{
-		executor.execute(new EventForTest(EVENT_DELAY));
+		new Thread(new EventForTest(EVENT_DELAY)).run();
 		Thread.sleep(GRACE_PERIOD.getMillis());
 		Assert.assertTrue(listener.isCaught());
 	}
 
 	private static final Duration EVENT_DELAY = Period.millis(100)
 			.toStandardDuration();
-	private static final Duration GRACE_PERIOD = Period.millis(200)
+	private static final Duration GRACE_PERIOD = Period.millis(500)
 			.toStandardDuration();
 }

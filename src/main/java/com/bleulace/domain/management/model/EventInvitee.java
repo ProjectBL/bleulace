@@ -8,12 +8,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.axonframework.domain.MetaData;
+import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.cqrs.EventSourcedEntityMixin;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.RsvpCommand;
 
+@RooEquals
 @RooJavaBean(settersByDefault = false)
 @Embeddable
 public class EventInvitee implements EventSourcedEntityMixin

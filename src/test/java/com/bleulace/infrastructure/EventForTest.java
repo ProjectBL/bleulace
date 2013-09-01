@@ -5,11 +5,14 @@ import java.io.Serializable;
 import org.axonframework.eventhandling.scheduling.quartz.QuartzEventScheduler;
 import org.joda.time.Duration;
 import org.joda.time.LocalDateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 
-import com.bleulace.utils.ctx.SpringApplicationContext;
-
+@Configurable
 class EventForTest implements Runnable, Serializable
 {
+	@Autowired
+	private transient QuartzEventScheduler quartzEventScheduler;
 	private final Duration duration;
 
 	public EventForTest(Duration duration)
@@ -20,7 +23,7 @@ class EventForTest implements Runnable, Serializable
 	@Override
 	public void run()
 	{
-		SpringApplicationContext.getBean(QuartzEventScheduler.class).schedule(
-				LocalDateTime.now().plus(duration).toDateTime(), this);
+		quartzEventScheduler.schedule(LocalDateTime.now().plus(duration)
+				.toDateTime(), this);
 	}
 }

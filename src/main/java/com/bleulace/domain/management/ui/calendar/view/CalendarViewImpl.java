@@ -36,7 +36,7 @@ class CalendarViewImpl extends CustomComponent implements CalendarView, View
 
 	private final CalendarHandlers handlers = new CalendarHandlers(listeners);
 
-	private final EventDTOProvider provider = new EventDTOProvider();
+	private final EventDTOProvider provider = null;
 
 	private final CalendarContainer container = new CalendarContainer();
 

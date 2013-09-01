@@ -14,6 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.util.ThreadContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,8 @@ import org.springframework.context.annotation.Scope;
 @Configuration
 public class SecurityConfig
 {
+	@Autowired(required = false)
+	private SessionManager sessionManager;
 
 	public static final String HASH_ALGO_NAME = "SHA-512";
 	public static final String REALM_NAME = "realm";
@@ -127,12 +130,13 @@ public class SecurityConfig
 	 */
 	@DependsOn("lifecycleBeanPostProcessor")
 	@Bean(name = "securityManager")
-	public SecurityManager securityManager(AuthorizingRealm realm,
-			SessionManager sessionManager)
+	public SecurityManager securityManager(AuthorizingRealm realm)
 	{
-		// DefaultWebSecurityManager mgr = new DefaultWebSecurityManager(realm);
 		DefaultSecurityManager mgr = new DefaultSecurityManager(realm);
-		mgr.setSessionManager(sessionManager);
+		if (sessionManager != null)
+		{
+			mgr.setSessionManager(sessionManager);
+		}
 		return mgr;
 	}
 

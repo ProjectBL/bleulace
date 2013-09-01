@@ -41,9 +41,8 @@ public class Project extends AbstractRootResource implements
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			apply(Mapper.map(this,
-					new ManagerAssignedEvent(accountId, command.getRole())),
-					metaData);
+			apply(Mapper.map(this, new ManagerAssignedEvent(getId(), accountId,
+					command.getRole())), metaData);
 		}
 	}
 

@@ -105,8 +105,9 @@ class ScheduleStatusBuilder
 	{
 		Range<Date> key = Range.between(event.getWindow().getStart(), event
 				.getWindow().getEnd());
-		RsvpStatus value = event.getInvitees().get(account).getStatus();
-		eventMap.put(key, value);
+		// TODO : fix me!
+		// RsvpStatus value = event.getInvitees().get(account).getStatus();
+		// eventMap.put(key, value);
 	}
 
 	private Date toDate(LocalDate date, LocalTime time)

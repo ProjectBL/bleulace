@@ -18,6 +18,7 @@ import com.vaadin.ui.Component;
 aspect WebUIAspect
 {
 	declare parents : @Presenter * implements Serializable;
+
 	declare parents : @Screen * implements ScreenView;
 
 	private interface ScreenView extends View, Component

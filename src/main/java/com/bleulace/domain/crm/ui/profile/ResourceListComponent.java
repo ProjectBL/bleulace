@@ -5,14 +5,15 @@ import org.axonframework.eventhandling.EventBus;
 import org.springframework.util.Assert;
 
 import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.EnablePush;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanContainer;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.Table.ColumnHeaderMode;
+import com.vaadin.ui.ListSelect;
 
-class ResourceTable extends CustomComponent implements ItemClickListener
+class ResourceListComponent extends CustomComponent implements
+		ValueChangeListener
 {
 	private transient final EventBus eventBus;
 
@@ -20,9 +21,9 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 
 	private final BeanContainer<String, ResourceTableEntry> container = makeContainer();
 
-	private final Table table = makeTable();
+	private final ListSelect listSelect = makeListSelect();
 
-	public ResourceTable(String resourceType, EventBus eventBus)
+	public ResourceListComponent(String resourceType, EventBus eventBus)
 	{
 		Assert.notNull(resourceType);
 		Assert.notNull(eventBus);
@@ -30,10 +31,10 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 		this.resourceType = resourceType;
 		this.eventBus = eventBus;
 
-		setCompositionRoot(table);
+		setCompositionRoot(listSelect);
 	}
 
-	public ResourceTable(String resourceType)
+	public ResourceListComponent(String resourceType)
 	{
 		this(resourceType, SpringApplicationContext.getBean(EventBus.class,
 				"uiBus"));
@@ -50,11 +51,12 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 	}
 
 	@Override
-	public void itemClick(ItemClickEvent event)
+	@EnablePush
+	public void valueChange(ValueChangeEvent event)
 	{
 		eventBus.publish(GenericEventMessage
 				.asEventMessage(new ResourceSelectedEvent((String) event
-						.getItemId(), resourceType)));
+						.getProperty().getValue(), resourceType)));
 	}
 
 	public static class ResourceSelectedEvent
@@ -87,15 +89,16 @@ class ResourceTable extends CustomComponent implements ItemClickListener
 		return container;
 	}
 
-	private Table makeTable()
+	private ListSelect makeListSelect()
 	{
-		Table table = new Table("", container);
-		table.setSizeFull();
-		table.setVisibleColumns("title");
-		table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
-		table.addItemClickListener(this);
-		table.setPageLength(5);
-		return table;
+		ListSelect select = new ListSelect(null, container);
+		select.setImmediate(true);
+		select.addValueChangeListener(this);
+		select.setItemCaptionPropertyId("title");
+		select.setNullSelectionAllowed(true);
+		select.setSizeFull();
+		select.setRows(4);
+		return select;
 	}
 
 	private class ResourceTableEntry

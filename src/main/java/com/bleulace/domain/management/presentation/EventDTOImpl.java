@@ -47,6 +47,19 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		return invitees.get(status);
 	}
 
+	public List<String> getInviteeIds()
+	{
+		List<String> ids = new ArrayList<String>();
+		for (List<UserDTO> dtoList : invitees.values())
+		{
+			for (UserDTO dto : dtoList)
+			{
+				ids.add(dto.getId());
+			}
+		}
+		return ids;
+	}
+
 	@Override
 	public void setChildren(List<Resource> resources)
 	{

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 
+import com.bleulace.utils.SystemProfiles;
 import com.mysql.jdbc.Driver;
 
 /**
@@ -25,7 +26,7 @@ import com.mysql.jdbc.Driver;
  * 
  */
 @PropertySource("classpath:/META-INF/spring/database.properties")
-@Profile("prod")
+@Profile(SystemProfiles.PROD)
 @Configuration
 public class ProdPersistenceConfig
 {

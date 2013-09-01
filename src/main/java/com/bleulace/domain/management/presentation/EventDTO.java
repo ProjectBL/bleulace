@@ -13,4 +13,6 @@ public interface EventDTO extends ProjectDTO, EditableCalendarEvent,
 	public RsvpStatus getRsvpStatus(String accountId);
 
 	public List<UserDTO> getInvitees(RsvpStatus status);
+
+	public List<String> getInviteeIds();
 }

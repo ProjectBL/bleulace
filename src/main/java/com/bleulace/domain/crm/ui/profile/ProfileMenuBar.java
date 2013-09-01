@@ -30,7 +30,6 @@ class ProfileMenuBar extends CustomComponent
 	@PostConstruct
 	protected void init()
 	{
-		setSizeFull();
 		popup = new PopupView("", statusUpdateField);
 		VerticalLayout vLayout = new VerticalLayout(menuBar, popup);
 		vLayout.setComponentAlignment(popup, Alignment.BOTTOM_LEFT);

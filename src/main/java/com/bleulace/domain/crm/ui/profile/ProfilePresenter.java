@@ -12,11 +12,13 @@ import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.crm.presentation.UserFinder;
+import com.bleulace.domain.crm.ui.profile.ResourceListComponent.ResourceSelectedEvent;
 import com.bleulace.domain.management.presentation.EventFinder;
 import com.bleulace.domain.management.presentation.ManageableResourceDTO;
 import com.bleulace.domain.management.presentation.ProjectFinder;
 import com.bleulace.web.stereotype.Presenter;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Notification;
 
 @Presenter(viewNames = "profileView")
 class ProfilePresenter
@@ -57,6 +59,13 @@ class ProfilePresenter
 		LocalDateTime now = LocalDateTime.now();
 		view.setEvents(CONVERTER.convert(eventFinder.findByAccountIdForDates(
 				ownerId, now.toDate(), now.plusYears(1).toDate())));
+	}
+
+	@EventHandler
+	public void on(ResourceSelectedEvent event)
+	{
+		Notification.show("Resource selected with id: '"
+				+ event.getResourceId() + "'");
 	}
 
 	private static class IdTitleMapConverter

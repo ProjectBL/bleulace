@@ -3,6 +3,7 @@ package com.bleulace.web;
 import java.util.Map.Entry;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -51,6 +52,7 @@ import com.vaadin.ui.UI;
 @Push
 @PreserveOnRefresh
 @Theme("bleulacetheme")
+// @Widgetset("com.bleulace.web.client.BleulaceWidgetSet")
 @Widgetset("com.vaadin.DefaultWidgetSet")
 @Configurable
 public class WebUI extends UI
@@ -82,6 +84,12 @@ public class WebUI extends UI
 
 		getNavigator().addViewChangeListener(
 				ctx.getBean(PresenterSubscribingListener.class));
+
+		/*********************************************************************/
+		SecurityUtils.getSubject().login(
+				new UsernamePasswordToken("arleighdickerson@frugalu.com",
+						"password"));
+		/*********************************************************************/
 
 		Subject subject = SecurityUtils.getSubject();
 		if (subject.getPrincipal() == null)

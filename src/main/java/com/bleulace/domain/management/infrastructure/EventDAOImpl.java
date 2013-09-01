@@ -53,6 +53,7 @@ class EventDAOImpl implements EventDAOCustom
 	@Override
 	public List<Event> findEvents(Date instant, String accountId)
 	{
+		QueryFactory.from(e).createQuery(e);
 		return findEvents(instant, instant, accountId);
 	}
 }

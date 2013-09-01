@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * 
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 @DependsOn("presenterSubscribingListener")
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Component
+@UIComponent
 public @interface Presenter
 {
 	String value() default "";

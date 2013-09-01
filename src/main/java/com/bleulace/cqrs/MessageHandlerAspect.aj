@@ -1,9 +1,11 @@
 package com.bleulace.cqrs;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import org.aspectj.lang.reflect.MethodSignature;
 import org.axonframework.commandhandling.annotation.CommandHandler;
+import org.axonframework.domain.EventMessage;
 import org.axonframework.eventhandling.annotation.EventHandler;
 
 import com.bleulace.cqrs.command.CommandGatewayAware;
@@ -17,7 +19,7 @@ import com.bleulace.cqrs.event.EventBusAware;
  * @author Arleigh Dickerson
  * 
  */
-aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
+aspect MessageHandlerAspect implements CommandGatewayAware
 {
 	declare parents : com.bleulace..event..*Event implements DomainEventPayload;
 	declare parents : com.bleulace..command..*Command implements CommandPayload;
@@ -27,7 +29,7 @@ aspect MessageHandlerAnnotatingAspect implements CommandGatewayAware
 
 	declare @method : public * com.bleulace..*.handle*(CommandPayload+,..) : @CommandHandler;
 	declare @constructor : public com.bleulace..new(CommandPayload+,..) : @CommandHandler;
-
+	
 	pointcut resourceEventHandler(EventSourcedEntityMixin resource,
 			DomainEventPayload event) : 
 		execution(@EventHandler void EventSourcedEntityMixin+.*(..,DomainEventPayload+,..))

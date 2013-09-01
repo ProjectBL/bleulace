@@ -5,7 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.management.presentation.EventDTO;
@@ -13,7 +14,8 @@ import com.bleulace.domain.management.presentation.EventFinder;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
-@Configurable
+@Component("eventProvider")
+@Scope("prototype")
 class EventDTOProvider implements CalendarEventProvider
 {
 	@Autowired
@@ -26,8 +28,9 @@ class EventDTOProvider implements CalendarEventProvider
 
 	private String ownerId;
 
-	EventDTOProvider()
+	EventDTOProvider(String ownerId, String viewerId)
 	{
+		setContext(ownerId, viewerId);
 	}
 
 	@Override
@@ -36,7 +39,8 @@ class EventDTOProvider implements CalendarEventProvider
 		Assert.notNull(viewerId);
 		Assert.notNull(ownerId);
 		EventDTOProcessor processor = factory.make(ownerId, viewerId);
-		List<EventDTO> dtos = finder.findByAccountIdForDates(ownerId, start, end);
+		List<EventDTO> dtos = finder.findByAccountIdForDates(ownerId, start,
+				end);
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		for (EventDTO dto : dtos)
 		{

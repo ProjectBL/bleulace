@@ -10,8 +10,10 @@ import org.apache.shiro.session.mgt.SessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.SimpleSessionFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.bleulace.utils.SystemProfiles;
 import com.vaadin.server.VaadinSession;
 
 /**
@@ -26,6 +28,7 @@ import com.vaadin.server.VaadinSession;
  * 
  */
 @Component("vaadinSessionManager")
+@Profile({ SystemProfiles.DEV, SystemProfiles.TEST })
 public class VaadinSessionManager implements SessionManager
 {
 

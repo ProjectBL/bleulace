@@ -11,4 +11,6 @@ interface ProfileView
 	public void setProjects(Map<String, String> idTitleMap);
 
 	public void setEvents(Map<String, String> idTitleMap);
+
+	public void refreshCalendar();
 }

@@ -8,6 +8,9 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 public final class Mapper
 {
+	private static final ApplicationContext ctx = SpringApplicationContext
+			.get();
+
 	private Mapper()
 	{
 	}
@@ -35,8 +38,7 @@ public final class Mapper
 	private static <T> T acquireInstance(Class<T> clazz)
 	{
 		DTOFactory<T> factory = null;
-		for (Object bean : SpringApplicationContext.get()
-				.getBeansWithAnnotation(Factory.class).values())
+		for (Object bean : ctx.getBeansWithAnnotation(Factory.class).values())
 		{
 			for (Class<?> targetClass : bean.getClass()
 					.getAnnotation(Factory.class).makes())
