@@ -18,25 +18,40 @@ public class UserDTO
 	private TimeZone timeZone;
 
 	@NotEmpty
-	private String username;
+	private String username = "";
 
 	@NotEmpty
-	private String firstName;
+	private String firstName = "";
 
 	@NotEmpty
-	private String lastName;
+	private String lastName = "";
 
 	@NotEmpty
-	private String school;
+	private String school = "";
 
 	@NotEmpty
-	private String work;
+	private String work = "";
 
 	@NotEmpty
-	private String location;
+	private String location = "";
 
-	public String getFullName()
+	public String getName()
 	{
 		return firstName + " " + lastName;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof UserDTO)
+		{
+			UserDTO that = (UserDTO) obj;
+			if (this.getId() == null)
+			{
+				return this == that;
+			}
+			return this.getId().equals(that.getId());
+		}
+		return false;
 	}
 }

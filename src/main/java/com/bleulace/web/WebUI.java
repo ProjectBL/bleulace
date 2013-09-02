@@ -86,9 +86,12 @@ public class WebUI extends UI
 				ctx.getBean(PresenterSubscribingListener.class));
 
 		/*********************************************************************/
-		SecurityUtils.getSubject().login(
-				new UsernamePasswordToken("arleighdickerson@frugalu.com",
-						"password"));
+		if (!SecurityUtils.getSubject().isAuthenticated())
+		{
+			SecurityUtils.getSubject().login(
+					new UsernamePasswordToken("arleighdickerson@frugalu.com",
+							"password"));
+		}
 		/*********************************************************************/
 
 		Subject subject = SecurityUtils.getSubject();

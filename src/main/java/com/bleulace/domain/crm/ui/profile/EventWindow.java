@@ -1,7 +1,6 @@
 package com.bleulace.domain.crm.ui.profile;
 
-import java.util.List;
-
+import org.apache.shiro.SecurityUtils;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -12,14 +11,11 @@ import com.bleulace.domain.management.command.EditEventCommand;
 import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.utils.dto.Mapper;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Calendar;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -45,6 +41,7 @@ class EventWindow extends Window
 
 	EventWindow(EventDTO dto)
 	{
+		System.out.println(dto.getInviteeIds().size());
 		setCaption(dto.getId() == null ? CREATE_CAPTION : EDIT_CAPTION);
 		group.setItemDataSource(Mapper.map(dto,
 				dto.getId() == null ? new CreateEventCommand()
@@ -62,6 +59,12 @@ class EventWindow extends Window
 		group.bind(endField, "end");
 		form.addComponent(startField);
 		form.addComponent(endField);
+
+		GuestListDisplay inviteeField = new GuestListDisplay(SecurityUtils
+				.getSubject().getId(), dto);
+		group.bind(inviteeField, "inviteeIds");
+		form.addComponent(inviteeField);
+		addActionHandler(inviteeField);
 
 		HorizontalLayout buttons = new HorizontalLayout();
 		buttons.addComponent(new Button("Apply", new ApplyListener()));
@@ -97,40 +100,5 @@ class EventWindow extends Window
 				}
 			}
 		}
-	}
-
-	private class InviteeSelect extends CustomField<List<String>>
-	{
-
-		@Override
-		protected Component initContent()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Class<? extends List<String>> getType()
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public List<String> getValue()
-		{
-			// TODO Auto-generated method stub
-			return super.getValue();
-		}
-
-		@Override
-		public void setValue(List<String> newFieldValue)
-				throws com.vaadin.data.Property.ReadOnlyException,
-				ConversionException
-		{
-			// TODO Auto-generated method stub
-			super.setValue(newFieldValue);
-		}
-
 	}
 }

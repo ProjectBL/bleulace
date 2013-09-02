@@ -80,6 +80,11 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		this.description = description;
 	}
 
+	public void setTitle(String title)
+	{
+		setCaption(title);
+	}
+
 	@Override
 	public List<UserDTO> getManagers(ManagementLevel level)
 	{
@@ -110,11 +115,6 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 						((ManagementAssignment) resource).getRole());
 			}
 		}
-	}
-
-	public void setTitle(String title)
-	{
-		setCaption(title);
 	}
 
 	private void addManager(UserDTO dto, ManagementLevel level)

@@ -68,29 +68,6 @@ public class Event extends Project
 				ManagementLevel.OWN), metaData);
 	}
 
-	private Event(CreateEventCommand command, MetaData metaData, String foo)
-	{
-		String creatorId = metaData.getSubjectId();
-		EventCreatedEvent event = new EventCreatedEvent();
-		event.setId(getId());
-		Mapper.map(command, event);
-		apply(event, metaData);
-		if (creatorId != null)
-		{
-			ManagerAssignedEvent assignment = new ManagerAssignedEvent(getId(),
-					creatorId, ManagementLevel.OWN);
-			apply(assignment, metaData);
-			apply(new RsvpCommand(getId(), true), metaData);
-		}
-		for (String accountId : command.getInviteeIds())
-		{
-			if (!invitees.containsKey(accountId))
-			{
-				apply(new GuestInvitedEvent(getId(), accountId), metaData);
-			}
-		}
-	}
-
 	public void on(EventCreatedEvent event)
 	{
 		setTitle(event.getTitle());
@@ -185,7 +162,7 @@ public class Event extends Project
 		}
 	}
 
-	private List<String> getInviteeIds()
+	public List<String> getInviteeIds()
 	{
 		if (getId() == null)
 		{

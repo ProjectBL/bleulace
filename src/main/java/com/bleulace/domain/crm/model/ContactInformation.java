@@ -50,4 +50,9 @@ public class ContactInformation implements Serializable
 	{
 		this("", "", "", "", "", "");
 	}
+
+	public String getName()
+	{
+		return firstName + " " + lastName;
+	}
 }

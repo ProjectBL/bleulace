@@ -33,7 +33,11 @@ aspect EventDTOAspect
 		call(public void EventDTO+.set*(*)) 
 		&& target(dto) 
 	{
-		dto.fireEventChange();
+		EventChangeEvent event = new EventChangeEvent(dto);
+		for (EventChangeListener listener : dto.listeners)
+		{
+			listener.eventChange(event);
+		}
 		proceed(dto);
 	}
 
@@ -104,14 +108,5 @@ aspect EventDTOAspect
 	public void EventDTO.removeEventChangeListener(EventChangeListener listener)
 	{
 		listeners.remove(listener);
-	}
-
-	private void EventDTO.fireEventChange()
-	{
-		EventChangeEvent event = new EventChangeEvent(this);
-		for (EventChangeListener listener : listeners)
-		{
-			listener.eventChange(event);
-		}
 	}
 }

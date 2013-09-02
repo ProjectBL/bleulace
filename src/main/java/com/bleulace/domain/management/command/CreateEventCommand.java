@@ -1,10 +1,11 @@
 package com.bleulace.domain.management.command;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Future;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -18,7 +19,7 @@ public class CreateEventCommand extends CreateProjectCommand
 	@NotEmpty
 	private String location = "";
 
-	private List<String> inviteeIds = new ArrayList<String>();
+	private Set<String> inviteeIds = new HashSet<String>();
 
 	public CreateEventCommand()
 	{
@@ -38,11 +39,13 @@ public class CreateEventCommand extends CreateProjectCommand
 		setLocation(location);
 	}
 
+	@Future
 	public Date getStart()
 	{
 		return window.getStart();
 	}
 
+	@Future
 	public Date getEnd()
 	{
 		return window.getEnd();
@@ -83,12 +86,12 @@ public class CreateEventCommand extends CreateProjectCommand
 		setLocation(description);
 	}
 
-	public List<String> getInviteeIds()
+	public Set<String> getInviteeIds()
 	{
 		return inviteeIds;
 	}
 
-	public void setInviteeIds(List<String> inviteeIds)
+	public void setInviteeIds(Set<String> inviteeIds)
 	{
 		this.inviteeIds = inviteeIds;
 	}
