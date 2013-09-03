@@ -37,7 +37,17 @@ class ParticipantFieldMediator implements ParticipantFieldSharedState,
 		for (UserDTO dto : finder.findAll())
 		{
 			RsvpStatus status = event.getRsvpStatus(dto.getId());
-			candidateContainer.addBean(new UserDTODecorator(dto, status, null));
+			ManagementLevel level = event.getManagers().get(dto.getId());
+			candidateContainer
+					.addBean(new UserDTODecorator(dto, status, level));
+			if (status != null)
+			{
+				guestInvited(dto.getId());
+				if (level != null)
+				{
+					managerAdded(dto.getId(), level);
+				}
+			}
 		}
 	}
 
@@ -149,5 +159,4 @@ class ParticipantFieldMediator implements ParticipantFieldSharedState,
 			}
 		}
 	}
-
 }

@@ -1,11 +1,9 @@
 package com.bleulace.domain.management.presentation;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.management.model.ManagementLevel;
 
 public interface ManageableResourceDTO
@@ -18,9 +16,7 @@ public interface ManageableResourceDTO
 	@NotEmpty
 	public String getDescription();
 
-	public Map<UserDTO, ManagementLevel> getManagers();
-
-	public Set<UserDTO> getManagers(ManagementLevel... levels);
+	public Map<String, ManagementLevel> getManagers();
 
 	public Float getProgress();
 

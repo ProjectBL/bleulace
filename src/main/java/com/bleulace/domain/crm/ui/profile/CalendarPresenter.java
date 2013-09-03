@@ -48,7 +48,7 @@ class CalendarPresenter
 		EventDTO dto = factory.make();
 		dto.setStart(event.getStart());
 		dto.setEnd(event.getEnd());
-		UI.getCurrent().addWindow(new EventWindow(dto));
+		showModal(dto);
 	}
 
 	@EventHandler
@@ -58,9 +58,7 @@ class CalendarPresenter
 
 		calendar.setStartDate(dto.getStart());
 		calendar.setEndDate(dto.getEnd());
-
-		Window w = new EventWindow((EventDTO) event.getCalendarEvent());
-		UI.getCurrent().addWindow(w);
+		showModal(dto);
 	}
 
 	@EventHandler
@@ -90,5 +88,12 @@ class CalendarPresenter
 	{
 		calendar.markAsDirty();
 		searchField.markAsDirty();
+	}
+
+	private void showModal(EventDTO dto)
+	{
+		Window w = new EventWindow(dto);
+		UI.getCurrent().addWindow(w);
+		w.focus();
 	}
 }

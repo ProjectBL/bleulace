@@ -50,7 +50,7 @@ public class ManagementDTOTest implements IntegrationTest, EventChangeListener,
 	{
 		ProjectDTO dto = validateMapping(Project.class, ProjectDTO.class);
 		Assert.assertTrue(dto.getBundles().size() > 0);
-		Assert.assertTrue(dto.getManagers(LEVEL).size() > 0);
+		Assert.assertTrue(dto.getManagers().size() > 0);
 	}
 
 	@Test

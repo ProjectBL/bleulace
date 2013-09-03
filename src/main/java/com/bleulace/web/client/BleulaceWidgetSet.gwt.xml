@@ -5,6 +5,9 @@
 
 <module>
 	<inherits name="com.vaadin.DefaultWidgetSet" />
+	<inherits name="org.vaadin.peter.contextmenu.ContextmenuWidgetset" />
 	<set-configuration-property name="devModeRedirectEnabled"
 		value="true" />
+
+    <inherits name="org.vaadin.alump.fancylayouts.gwt.FancyLayoutsWidgetset" />
 </module>

@@ -52,8 +52,7 @@ import com.vaadin.ui.UI;
 @Push
 @PreserveOnRefresh
 @Theme("bleulacetheme")
-// @Widgetset("com.bleulace.web.client.BleulaceWidgetSet")
-@Widgetset("com.vaadin.DefaultWidgetSet")
+@Widgetset("com.bleulace.web.client.BleulaceWidgetSet")
 @Configurable
 public class WebUI extends UI
 {

@@ -1,22 +1,25 @@
 package com.bleulace.domain.crm.ui.profile.field;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.vaadin.peter.contextmenu.ContextMenu;
+import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItem;
+import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItemClickEvent;
+import org.vaadin.peter.contextmenu.ContextMenu.ContextMenuItemClickListener;
 
-import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.web.stereotype.UIComponent;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
 
@@ -24,17 +27,12 @@ import com.vaadin.ui.Table;
 @Configuration
 class ParticipantFieldConfig
 {
-	private final ApplicationContext CTX = SpringApplicationContext.get();
-
 	private static final Object[] VISIBLE_COLS = new Object[] { "firstName",
 			"lastName", "username", "status", "level" };
 
-	@Autowired
-	private ParticipantFieldOperations ops;
-
 	@Bean(name = "participantTable")
 	public Table participantTable(
-			@Qualifier("participantContainer") BeanContainer<String, UserDTODecorator> participantContainer)
+			@Qualifier("participantContainer") final BeanContainer<String, UserDTODecorator> participantContainer)
 	{
 		final Table table = new Table();
 		table.setContainerDataSource(participantContainer);
@@ -43,24 +41,13 @@ class ParticipantFieldConfig
 		table.setImmediate(true);
 		table.setSelectable(true);
 		table.setNullSelectionAllowed(true);
-
-		table.addItemClickListener(new ItemClickEvent.ItemClickListener()
-		{
-			@Override
-			public void itemClick(ItemClickEvent event)
-			{
-				if (event.getButton() == MouseButton.RIGHT)
-				{
-					// show popup
-				}
-			}
-		});
 		return table;
 	}
 
 	@Bean(name = "candidateBox")
 	public ComboBox candidateComboBox(
-			@Qualifier("candidateContainer") BeanContainer<String, UserDTODecorator> candidateContainer)
+			@Qualifier("candidateContainer") BeanContainer<String, UserDTODecorator> candidateContainer,
+			final ParticipantFieldOperations ops)
 	{
 		final ComboBox comboBox = new ComboBox();
 		comboBox.setContainerDataSource(candidateContainer);
@@ -82,9 +69,68 @@ class ParticipantFieldConfig
 		return comboBox;
 	}
 
-	@Bean(name = "tableDeleteHandler")
+	@Bean(name = "managerContextMenu")
+	public ContextMenu tableContextMenu(final Table table,
+			final ParticipantFieldOperations ops)
+	{
+		ContextMenu menu = new ContextMenu();
+		menu.setAsTableContextMenu(table);
+		menu.setOpenAutomatically(true);
+
+		ContextMenuItem remove = menu.addItem("Remove Invitation");
+		remove.addItemClickListener(new ContextMenuItemClickListener()
+		{
+			@Override
+			public void contextMenuItemClicked(ContextMenuItemClickEvent event)
+			{
+				if (table.getValue() != null)
+				{
+					ops.guestRemoved((String) table.getValue());
+				}
+			}
+		});
+
+		List<String> options = new ArrayList<String>();
+		options.add("None");
+		for (ManagementLevel level : ManagementLevel.values())
+		{
+			options.add(level.toString());
+		}
+
+		final ContextMenuItem levelChange = menu.addItem("Change Access Level");
+		for (final String option : options)
+		{
+			ContextMenuItem level = levelChange.addItem(option);
+			level.addItemClickListener(new ContextMenuItemClickListener()
+			{
+				@Override
+				public void contextMenuItemClicked(
+						ContextMenuItemClickEvent event)
+				{
+					String id = (String) table.getValue();
+					if (id != null)
+					{
+						ManagementLevel l = null;
+						try
+						{
+							l = ManagementLevel.valueOf(option);
+						}
+						catch (Exception e)
+						{
+						}
+						ops.managerAdded(id, l);
+					}
+				}
+			});
+		}
+
+		return menu;
+	}
+
+	@Bean(name = "tableDeleteKeyHandler")
 	public Handler tableDeleteHandler(
-			@Qualifier("participantTable") final Table field)
+			@Qualifier("participantTable") final Table field,
+			final ParticipantFieldOperations ops)
 	{
 		return new Handler()
 		{
