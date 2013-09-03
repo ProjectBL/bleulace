@@ -3,22 +3,26 @@ package com.bleulace.domain.crm.ui.profile;
 import java.util.Date;
 
 import org.apache.commons.lang3.Range;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.bleulace.domain.management.ui.calendar.CalendarType;
+import com.bleulace.web.stereotype.UIComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 
-class CalendarOperations extends CustomComponent
+@UIComponent
+class CalendarRangeOps extends CustomComponent
 {
-	private final Calendar calendar;
+	@Autowired
+	@Qualifier("profileCalendar")
+	private Calendar calendar;
 
-	CalendarOperations(Calendar calendar)
+	CalendarRangeOps()
 	{
-		this.calendar = calendar;
-
 		HorizontalLayout buttons = new HorizontalLayout();
 
 		for (CalendarType type : CalendarType.values())

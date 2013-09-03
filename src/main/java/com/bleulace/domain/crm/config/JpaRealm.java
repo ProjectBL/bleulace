@@ -107,7 +107,6 @@ public class JpaRealm extends AuthorizingRealm
 		{
 			permissions.add(assignment.getRole().on(assignment.getId()));
 		}
-		System.out.println(permissions.size());
 		return permissions;
 	}
 }

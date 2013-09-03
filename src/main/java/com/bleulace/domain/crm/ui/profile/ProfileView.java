@@ -12,5 +12,7 @@ interface ProfileView
 
 	public void setEvents(Map<String, String> idTitleMap);
 
-	public void refreshCalendar();
+	public class CalendarDirtiedEvent
+	{
+	}
 }

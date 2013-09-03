@@ -27,7 +27,7 @@ import com.bleulace.domain.management.command.RescheduleEventCommand;
 import com.bleulace.domain.management.command.RsvpCommand;
 import com.bleulace.domain.management.event.EventCanceledEvent;
 import com.bleulace.domain.management.event.EventCreatedEvent;
-import com.bleulace.domain.management.event.GuestInvitedEvent;
+import com.bleulace.domain.management.event.GuestInvitationEvent;
 import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.jpa.DateWindow;
 import com.bleulace.jpa.EntityManagerReference;
@@ -79,20 +79,29 @@ public class Event extends Project
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			apply(new GuestInvitedEvent(getId(), accountId), metaData);
+			apply(new GuestInvitationEvent(getId(), accountId, true), metaData);
 		}
 	}
 
-	public void on(GuestInvitedEvent event, MetaData metaData)
+	public void on(GuestInvitationEvent event, MetaData metaData)
 	{
-		String hostId = metaData.getSubjectId();
-		Account host = hostId == null ? null : EntityManagerReference.load(
-				Account.class, hostId);
-
 		Account guest = EntityManagerReference.load(Account.class,
 				event.getAccountId());
 
-		invitees.put(guest, new EventInvitee(guest, host));
+		if (event.isInvited())
+		{
+
+			String hostId = metaData.getSubjectId();
+			Account host = hostId == null ? null : EntityManagerReference.load(
+					Account.class, hostId);
+
+			invitees.put(guest, new EventInvitee(guest, host));
+		}
+		else
+		{
+			invitees.remove(guest);
+			flagForDeletion(invitees.isEmpty());
+		}
 	}
 
 	public void handle(EditEventCommand command, MetaData metaData)
@@ -131,7 +140,7 @@ public class Event extends Project
 
 	public void on(EventCanceledEvent event)
 	{
-		flagForDeletion();
+		flagForDeletion(true);
 	}
 
 	public RsvpStatus getRsvpStatus(String accountId)
@@ -157,7 +166,17 @@ public class Event extends Project
 		{
 			if (!alreadyInvited.contains(inviteeId))
 			{
-				apply(new GuestInvitedEvent(getId(), inviteeId), metaData);
+				apply(new GuestInvitationEvent(getId(), inviteeId, true),
+						metaData);
+			}
+		}
+
+		for (String inviteeId : alreadyInvited)
+		{
+			if (!inviteeIds.contains(alreadyInvited))
+			{
+				apply(new GuestInvitationEvent(getId(), inviteeId, false),
+						metaData);
 			}
 		}
 	}

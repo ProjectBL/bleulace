@@ -40,8 +40,6 @@ aspect EventDTOAspect
 		}
 		proceed(dto);
 	}
-
-	// PUBLIC ACCESSORS AND MUTATORS
 	// ---------------------------------------------------
 
 	public Date EventDTO.getStart()

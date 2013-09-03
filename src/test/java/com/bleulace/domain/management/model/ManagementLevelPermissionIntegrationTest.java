@@ -64,6 +64,16 @@ public class ManagementLevelPermissionIntegrationTest implements
 				ManagementLevel.MIX.on(resourceId)));
 		Assert.assertTrue(SecurityUtils.getSubject().isPermitted(
 				ManagementLevel.LOOP.on(resourceId)));
+
+		removePermissions(SecurityUtils.getSubject().getId());
+		{
+			Assert.assertFalse(SecurityUtils.getSubject().isPermitted(
+					ManagementLevel.OWN.on(resourceId)));
+			Assert.assertFalse(SecurityUtils.getSubject().isPermitted(
+					ManagementLevel.MIX.on(resourceId)));
+			Assert.assertFalse(SecurityUtils.getSubject().isPermitted(
+					ManagementLevel.LOOP.on(resourceId)));
+		}
 	}
 
 	@Send
@@ -71,6 +81,12 @@ public class ManagementLevelPermissionIntegrationTest implements
 	{
 		return new AssignManagersCommand(resourceId, ManagementLevel.MIX,
 				userId);
+	}
+
+	@Send
+	private AssignManagersCommand removePermissions(String userId)
+	{
+		return new AssignManagersCommand(resourceId, null, userId);
 	}
 
 	private void login()

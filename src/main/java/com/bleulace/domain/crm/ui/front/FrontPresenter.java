@@ -37,8 +37,8 @@ class FrontPresenter
 			String id = SecurityUtils.getSubject().getId();
 			view.clearLoginParams();
 
-			view.showLoginSuccess(finder.findById(id));
 			UI.getCurrent().getNavigator().navigateTo("profileView/" + id);
+			view.showLoginSuccess(finder.findById(id));
 		}
 		catch (AuthenticationException e)
 		{

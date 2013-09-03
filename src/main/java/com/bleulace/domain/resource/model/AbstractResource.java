@@ -71,14 +71,26 @@ public abstract class AbstractResource implements CompositeResource,
 		return children;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends Resource> List<T> getChildren(Class<T> clazz)
 	{
-		System.out.println(clazz);
-		return (List<T>) (AbstractChildResource.class.isAssignableFrom(clazz) ? SpringApplicationContext
-				.getBean(ResourceDAO.class).findChildren(id,
-						(Class<? extends AbstractChildResource>) clazz)
-				: new ArrayList<T>());
+		if (this.isNew()
+				|| !AbstractChildResource.class.isAssignableFrom(clazz))
+		{
+			List<T> list = new ArrayList<T>();
+			for (Resource c : getChildren())
+			{
+				if (c.getClass().isAssignableFrom(clazz))
+				{
+					list.add((T) c);
+				}
+			}
+			return list;
+		}
+		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
+				.findChildren(id,
+						(Class<? extends AbstractChildResource>) clazz);
 	}
 
 	public abstract AbstractRootResource getRoot();

@@ -60,7 +60,7 @@ public class AccountGroup extends AbstractRootResource implements
 		event.getAction().execute(this, event.getAccountId());
 		if (members.isEmpty())
 		{
-			flagForDeletion();
+			flagForDeletion(true);
 		}
 	}
 

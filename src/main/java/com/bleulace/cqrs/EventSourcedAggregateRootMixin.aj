@@ -64,9 +64,9 @@ public interface EventSourcedAggregateRootMixin extends
 			return deleted;
 		}
 
-		void EventSourcedAggregateRootMixin.flagForDeletion()
+		void EventSourcedAggregateRootMixin.flagForDeletion(boolean flag)
 		{
-			deleted = true;
+			deleted = flag;
 		}
 
 		public void EventSourcedAggregateRootMixin.addEventRegistrationCallback(

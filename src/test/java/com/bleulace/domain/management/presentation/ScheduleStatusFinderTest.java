@@ -38,9 +38,8 @@ public class ScheduleStatusFinderTest implements IntegrationTest,
 	@Test
 	public void testFindStatus()
 	{
-		System.out.println(finder.findScheduleStatus(manager.getId(), start
-				.minusDays(1).toDate(), end.plusDays(1).toDate(), TimeZone
-				.getDefault()));
+		finder.findScheduleStatus(manager.getId(), start.minusDays(1).toDate(),
+				end.plusDays(1).toDate(), TimeZone.getDefault());
 	}
 
 	@Send

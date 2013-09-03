@@ -1,9 +1,12 @@
 package com.bleulace.domain.management.presentation;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -31,14 +34,10 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 	private Float progress;
 
 	@NotNull
-	private final Map<ManagementLevel, List<UserDTO>> managers = new HashMap<ManagementLevel, List<UserDTO>>();
+	private final Map<UserDTO, ManagementLevel> managers = new HashMap<UserDTO, ManagementLevel>();
 
 	ManageableResourceDTOImpl()
 	{
-		for (ManagementLevel level : ManagementLevel.values())
-		{
-			managers.put(level, new ArrayList<UserDTO>());
-		}
 	}
 
 	@Override
@@ -86,10 +85,9 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 	}
 
 	@Override
-	public List<UserDTO> getManagers(ManagementLevel level)
+	public Map<UserDTO, ManagementLevel> getManagers()
 	{
-		Assert.notNull(level);
-		return managers.get(level);
+		return managers;
 	}
 
 	@Override
@@ -121,6 +119,22 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 	{
 		Assert.notNull(dto);
 		Assert.notNull(level);
-		managers.get(level).add(dto);
+		managers.put(dto, level);
+	}
+
+	@Override
+	public Set<UserDTO> getManagers(ManagementLevel... levels)
+	{
+		Set<ManagementLevel> levelSet = new HashSet<ManagementLevel>(
+				Arrays.asList(levels));
+		Set<UserDTO> users = new HashSet<UserDTO>();
+		for (Entry<UserDTO, ManagementLevel> entry : managers.entrySet())
+		{
+			if (levelSet.contains(entry.getValue()))
+			{
+				users.add(entry.getKey());
+			}
+		}
+		return users;
 	}
 }

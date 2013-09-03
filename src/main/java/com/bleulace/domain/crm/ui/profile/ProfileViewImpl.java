@@ -27,7 +27,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
@@ -47,7 +46,8 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	private Component menuBar;
 
 	@Autowired
-	private EventSearchField searchField;
+	@Qualifier("calendarOps")
+	private Component calendarOps;
 
 	@Autowired
 	@Qualifier("profileCalendar")
@@ -69,8 +69,6 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	private HorizontalSplitPanel leftPanel;
 	private HorizontalSplitPanel rightPanel;
 
-	private static final int SIDE_COL_WIDTH_PX = 250;
-
 	@PostConstruct
 	protected void init()
 	{
@@ -79,11 +77,11 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 		rightLayout = makeRightLayout();
 
 		rightPanel = new HorizontalSplitPanel(midLayout, rightLayout);
-		rightPanel.setSplitPosition(SIDE_COL_WIDTH_PX * 2, Unit.PIXELS, true);
+		rightPanel.setSplitPosition(70f, Unit.PERCENTAGE, true);
 		rightPanel.setLocked(false);
 
 		leftPanel = new HorizontalSplitPanel(leftLayout, rightPanel);
-		leftPanel.setSplitPosition(SIDE_COL_WIDTH_PX, Unit.PIXELS);
+		leftPanel.setSplitPosition(20f, Unit.PERCENTAGE);
 		leftPanel.setLocked(false);
 
 		setCompositionRoot(leftPanel);
@@ -100,7 +98,6 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 
 		Range<Date> range = CalendarType.DAY.convert(new Date());
 
-		searchField.setAccountId(SecurityUtils.getSubject().getId());
 		calendar.setStartDate(range.getMinimum());
 		calendar.setEndDate(range.getMaximum());
 		calendar.setEventProvider((CalendarEventProvider) ctx.getBean(
@@ -118,7 +115,7 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 		Mapper.map(dto, infoTable);
 		projects.setCaption(name + "'s projects");
 		events.setCaption(name + "'s events");
-		searchField.setCaption("Search " + name + "'s events");
+		// searchField.setCaption("Search " + name + "'s events");
 	}
 
 	@Override
@@ -131,13 +128,6 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 	public void setEvents(Map<String, String> idTitleMap)
 	{
 		populateResourceTable(events, idTitleMap);
-	}
-
-	@Override
-	public void refreshCalendar()
-	{
-		System.out.println("foo");
-		calendar.markAsDirty();
 	}
 
 	private ComponentContainer makeLeftLayout()
@@ -162,19 +152,15 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 
 	private ComponentContainer makeRightLayout()
 	{
-		CalendarOperations tabSheet = new CalendarOperations(calendar);
-		tabSheet.setWidth(100f, Unit.PERCENTAGE);
+		VerticalLayout top = new VerticalLayout(calendarOps);
+		top.setSizeFull();
+		top.setComponentAlignment(calendarOps, Alignment.BOTTOM_CENTER);
 
-		VerticalLayout top = new VerticalLayout(searchField);
-		top.addComponent(new Label(
-				"Information from the selected event will be displayed here."));
-		top.addComponent(tabSheet);
-		top.setComponentAlignment(tabSheet, Alignment.BOTTOM_LEFT);
-		top.setHeight(100f, Unit.PERCENTAGE);
-
+		// Panel Rules Everything Around Me.
 		VerticalSplitPanel panel = new VerticalSplitPanel(top, calendar);
+		calendarOps.setWidth(100f, Unit.PERCENTAGE);
+		panel.setSplitPosition(10f, Unit.PERCENTAGE);
 
-		searchField.setWidth(100f, Unit.PERCENTAGE);
 		calendar.setWidth(100f, Unit.PERCENTAGE);
 
 		panel.setSizeFull();

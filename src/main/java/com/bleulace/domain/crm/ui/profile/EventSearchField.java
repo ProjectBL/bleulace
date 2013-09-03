@@ -1,23 +1,24 @@
 package com.bleulace.domain.crm.ui.profile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.axonframework.domain.GenericDomainEventMessage;
 import org.axonframework.eventhandling.EventBus;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.bleulace.domain.crm.ui.profile.ResourceListComponent.ResourceSelectedEvent;
-import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.web.stereotype.UIComponent;
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
-import com.vaadin.addon.jpacontainer.util.DefaultQueryModifierDelegate;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.util.BeanContainer;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 
 @UIComponent
 class EventSearchField extends CustomComponent implements ValueChangeListener
@@ -26,11 +27,20 @@ class EventSearchField extends CustomComponent implements ValueChangeListener
 	@Qualifier("uiBus")
 	private EventBus uiBus;
 
-	private final JPAContainer<?> container = makeContainer();
+	@Autowired
+	@Qualifier("profileCalendar")
+	private Calendar calendar;
+
+	private final BeanContainer<String, EventDTO> container = makeContainer();
 
 	private final ComboBox comboBox = makeComboBox();
 
-	EventSearchField()
+	private EventSearchField()
+	{
+	}
+
+	@PostConstruct
+	protected void init()
 	{
 		setCompositionRoot(comboBox);
 	}
@@ -38,44 +48,44 @@ class EventSearchField extends CustomComponent implements ValueChangeListener
 	@Override
 	public void valueChange(ValueChangeEvent event)
 	{
-		uiBus.publish(GenericDomainEventMessage
-				.asEventMessage(new ResourceSelectedEvent((String) event
-						.getProperty().getValue(), "event")));
-	}
-
-	void setAccountId(String accountId)
-	{
-		if (accountId != null)
+		String id = (String) event.getProperty().getValue();
+		if (id != null)
 		{
-			container.removeAllContainerFilters();
-			container.addContainerFilter("invitees.guest.id", accountId, false,
-					false);
+			uiBus.publish(GenericDomainEventMessage
+					.asEventMessage(new EventClick(calendar, container.getItem(
+							id).getBean())));
 		}
 	}
 
-	private JPAContainer<?> makeContainer()
+	@Override
+	public void markAsDirty()
 	{
-		JPAContainer<?> container = JPAContainerFactory.makeNonCachedReadOnly(
-				com.bleulace.domain.management.model.Event.class,
-				EntityManagerReference.get());
-		container.setQueryModifierDelegate(new DefaultQueryModifierDelegate()
+		if (container != null)
 		{
-			@Override
-			public void queryHasBeenBuilt(CriteriaBuilder criteriaBuilder,
-					CriteriaQuery<?> query)
-			{
-				query.distinct(true);
-			}
-		});
+			container.removeAllItems();
+			LocalDateTime now = LocalDateTime.now();
+			container.addAll((List) calendar.getEvents(now.toDate(), now
+					.plusYears(10).toDate()));
+		}
+		super.markAsDirty();
+	}
+
+	private BeanContainer<String, EventDTO> makeContainer()
+	{
+		BeanContainer<String, EventDTO> container = new BeanContainer<String, EventDTO>(
+				EventDTO.class);
+		container.setBeanIdProperty("id");
 		return container;
 	}
 
 	private ComboBox makeComboBox()
 	{
 		ComboBox comboBox = new ComboBox(null, container);
+		comboBox.setContainerDataSource(container);
 		comboBox.setBuffered(false);
 		comboBox.setImmediate(true);
 		comboBox.addValueChangeListener(this);
+		comboBox.setItemCaptionPropertyId("caption");
 		return comboBox;
 	}
 }

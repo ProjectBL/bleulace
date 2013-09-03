@@ -4,14 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
+import org.axonframework.domain.GenericEventMessage;
+import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.annotation.EventHandler;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.crm.presentation.UserFinder;
+import com.bleulace.domain.crm.ui.profile.ProfileView.CalendarDirtiedEvent;
 import com.bleulace.domain.crm.ui.profile.ResourceListComponent.ResourceSelectedEvent;
 import com.bleulace.domain.management.presentation.EventFinder;
 import com.bleulace.domain.management.presentation.ManageableResourceDTO;
@@ -23,10 +27,14 @@ import com.vaadin.ui.Notification;
 @Presenter(viewNames = "profileView")
 class ProfilePresenter
 {
+	private static final IdTitleMapConverter CONVERTER = new IdTitleMapConverter();
+
 	private String ownerId;
 	private String viewerId;
 
-	private static final IdTitleMapConverter CONVERTER = new IdTitleMapConverter();
+	@Autowired
+	@Qualifier("uiBus")
+	private EventBus uiBus;
 
 	@Autowired
 	private transient ProfileView view;
@@ -53,12 +61,10 @@ class ProfilePresenter
 		Assert.notNull(userDTO);
 
 		view.setInfo(userDTO);
+		writeProjectSidebar();
 
-		view.setProjects(CONVERTER.convert(projectFinder.findByManager(ownerId)));
-
-		LocalDateTime now = LocalDateTime.now();
-		view.setEvents(CONVERTER.convert(eventFinder.findByAccountIdForDates(
-				ownerId, now.toDate(), now.plusYears(1).toDate())));
+		uiBus.publish(GenericEventMessage
+				.asEventMessage(new CalendarDirtiedEvent()));
 	}
 
 	@EventHandler
@@ -66,6 +72,19 @@ class ProfilePresenter
 	{
 		Notification.show("Resource selected with id: '"
 				+ event.getResourceId() + "'");
+	}
+
+	@EventHandler
+	public void on(CalendarDirtiedEvent event)
+	{
+		LocalDateTime now = LocalDateTime.now();
+		view.setEvents(CONVERTER.convert(eventFinder.findByAccountIdForDates(
+				ownerId, now.toDate(), now.plusYears(1).toDate())));
+	}
+
+	private void writeProjectSidebar()
+	{
+		view.setProjects(CONVERTER.convert(projectFinder.findByManager(ownerId)));
 	}
 
 	private static class IdTitleMapConverter

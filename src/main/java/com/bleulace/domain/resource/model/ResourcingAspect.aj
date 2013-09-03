@@ -15,7 +15,7 @@ aspect ResourcingAspect
 		&& this(resource+);
 
 	pointcut eventArgs(DomainEventPayload event) : 
-		execution(* *.*(DomainEventPayload+,..))
+		execution(* *.on*(DomainEventPayload+,..))
 		&& args(event+);
 
 	void around(EventSourcedEntityMixin resource, DomainEventPayload payload) : 
