@@ -20,6 +20,7 @@ import com.vaadin.server.VaadinSession;
  * 
  * @author mpilone
  */
+// register on develepmont and production system profiles. -AD
 @Component
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
 class VaadinSecurityContext implements SecurityContext

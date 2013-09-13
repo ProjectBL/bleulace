@@ -17,7 +17,7 @@ import com.mysql.jdbc.Driver;
 
 /**
  * Persistence configuration for production profile. This class will acquire
- * Amazon RDS connection params from the container.
+ * Amazon RDS connection params from system properties.
  * 
  * Clearly, this will have to be altered if we do not use RDS as our database
  * server.
@@ -30,7 +30,6 @@ import com.mysql.jdbc.Driver;
 @Configuration
 public class ProdPersistenceConfig
 {
-
 	private String dbName = System.getProperty("RDS_DB_NAME");
 	private String username = System.getProperty("RDS_USERNAME");
 	private String password = System.getProperty("RDS_PASSWORD");

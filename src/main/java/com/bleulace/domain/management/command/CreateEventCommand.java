@@ -1,10 +1,6 @@
 package com.bleulace.domain.management.command;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Future;
@@ -12,7 +8,6 @@ import javax.validation.constraints.Future;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.jpa.DateWindow;
 
 @RooJavaBean
@@ -23,10 +18,6 @@ public class CreateEventCommand extends CreateProjectCommand
 
 	@NotEmpty
 	private String location = "";
-
-	private Set<String> inviteeIds = new HashSet<String>();
-
-	private Map<String, ManagementLevel> assignments = new HashMap<String, ManagementLevel>();
 
 	public CreateEventCommand()
 	{
@@ -81,15 +72,5 @@ public class CreateEventCommand extends CreateProjectCommand
 	public void setDescription(String description)
 	{
 		setLocation(description);
-	}
-
-	public Set<String> getInviteeIds()
-	{
-		return inviteeIds;
-	}
-
-	public void setInviteeIds(Set<String> inviteeIds)
-	{
-		this.inviteeIds = inviteeIds;
 	}
 }

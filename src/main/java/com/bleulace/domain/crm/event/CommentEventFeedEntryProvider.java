@@ -26,5 +26,4 @@ class CommentEventFeedEntryProvider extends
 		return new Serializable[] { EntityManagerReference.load(
 				AbstractResource.class, event.getId()) };
 	}
-
 }

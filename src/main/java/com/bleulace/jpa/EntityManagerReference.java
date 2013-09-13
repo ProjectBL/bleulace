@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Configurable;
  * 
  * This is quick and dirty.
  * 
+ * I should probably stop using this at some point, new() calls can get
+ * expensive...
+ * 
  * @author Arleigh Dickerson
  * 
  */

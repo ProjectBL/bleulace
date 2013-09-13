@@ -57,7 +57,7 @@ public interface ManageableResource extends CommentableResource
 
 		public void ManageableResource.on(ManagerAssignedEvent event)
 		{
-			if (!getAssignments().containsKey(event.getAssigneeId()))
+			if (!isManager(event.getAssigneeId()))
 			{
 				this.addChild(new ManagementAssignment((AbstractResource) this,
 						EntityManagerReference.load(Account.class,
@@ -69,7 +69,7 @@ public interface ManageableResource extends CommentableResource
 		{
 			return QueryFactory
 					.from(Q_ASSIGNMENT)
-					.where(Q_ASSIGNMENT.id.eq(this.getId()).and(
+					.where(Q_ASSIGNMENT.resource.id.eq(this.getId()).and(
 							Q_ASSIGNMENT.account.id.eq(accountId))).exists();
 		}
 	}

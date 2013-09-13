@@ -1,10 +1,9 @@
 package com.bleulace.domain.management.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -12,7 +11,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
+import javax.persistence.PreUpdate;
 
 import org.axonframework.domain.MetaData;
 import org.axonframework.eventsourcing.annotation.EventSourcedMember;
@@ -60,10 +61,9 @@ public class Event extends Project
 		Mapper.map(command, event);
 		apply(event, metaData);
 
-		command.getInviteeIds().add(metaData.getSubjectId());
-		updateInvitees(new HashSet<String>(command.getInviteeIds()), metaData);
+		apply(new GuestInvitationEvent(this, metaData.getSubjectId(), true),
+				metaData);
 		apply(new RsvpCommand(getId(), true), metaData);
-
 		apply(new ManagerAssignedEvent(getId(), metaData.getSubjectId(),
 				ManagementLevel.OWN), metaData);
 	}
@@ -79,7 +79,7 @@ public class Event extends Project
 	{
 		for (String accountId : command.getAccountIds())
 		{
-			apply(new GuestInvitationEvent(getId(), accountId, true), metaData);
+			apply(new GuestInvitationEvent(this, accountId, true), metaData);
 		}
 	}
 
@@ -88,26 +88,18 @@ public class Event extends Project
 		Account guest = EntityManagerReference.load(Account.class,
 				event.getAccountId());
 
-		if (event.isInvited())
+		if (event.isInvited() && !invitees.containsKey(guest))
 		{
-
 			String hostId = metaData.getSubjectId();
 			Account host = hostId == null ? null : EntityManagerReference.load(
 					Account.class, hostId);
-
 			invitees.put(guest, new EventInvitee(guest, host));
-		}
-		else
-		{
-			invitees.remove(guest);
-			flagForDeletion(invitees.isEmpty());
 		}
 	}
 
 	public void handle(EditEventCommand command, MetaData metaData)
 	{
 		apply(command, metaData);
-		updateInvitees(new HashSet<String>(command.getInviteeIds()), metaData);
 	}
 
 	public void handle(RsvpCommand command, MetaData metaData)
@@ -150,6 +142,16 @@ public class Event extends Project
 		return invitee == null ? null : invitee.getStatus();
 	}
 
+	@PrePersist
+	@PreUpdate
+	protected void preSave()
+	{
+		if (!isDeleted())
+		{
+			flagForDeletion(invitees.isEmpty());
+		}
+	}
+
 	@PreRemove
 	protected void preRemove()
 	{
@@ -159,38 +161,47 @@ public class Event extends Project
 		}
 	}
 
-	private void updateInvitees(Set<String> inviteeIds, MetaData metaData)
+	private void updateManagers(Map<String, ManagementLevel> map,
+			MetaData metaData)
 	{
-		Set<String> alreadyInvited = new HashSet<String>(getInviteeIds());
-		for (String inviteeId : inviteeIds)
+		for (Entry<String, ManagementLevel> entry : map.entrySet())
 		{
-			if (!alreadyInvited.contains(inviteeId))
-			{
-				apply(new GuestInvitationEvent(getId(), inviteeId, true),
-						metaData);
-			}
-		}
-
-		for (String inviteeId : alreadyInvited)
-		{
-			if (!inviteeIds.contains(alreadyInvited))
-			{
-				apply(new GuestInvitationEvent(getId(), inviteeId, false),
-						metaData);
-			}
+			apply(new ManagerAssignedEvent(getId(), entry.getKey(),
+					entry.getValue()), metaData);
 		}
 	}
 
-	public List<String> getInviteeIds()
+	private void updateInvitees(Set<String> inviteeIds, MetaData metaData)
+	{
+		for (String id : inviteeIds)
+		{
+			changeGuestList(id, true, metaData);
+		}
+		Set<String> toRemove = getInviteeIds();
+		toRemove.removeAll(inviteeIds);
+		for (String id : toRemove)
+		{
+			changeGuestList(id, false, metaData);
+		}
+	}
+
+	private void changeGuestList(String guestId, boolean attending,
+			MetaData metaData)
+	{
+		apply(new GuestInvitationEvent(this, guestId, attending), metaData);
+	}
+
+	public Set<String> getInviteeIds()
 	{
 		if (getId() == null)
 		{
-			return new ArrayList<String>();
+			return new HashSet<String>();
 		}
 
 		QEvent e = QEvent.event;
 		QEventInvitee i = QEventInvitee.eventInvitee;
-		return QueryFactory.from(e).innerJoin(e.invitees, i)
-				.where(e.id.eq(getId())).list(i.guest.id);
+		return new HashSet<String>(QueryFactory.from(e)
+				.innerJoin(e.invitees, i).where(e.id.eq(getId()))
+				.list(i.guest.id));
 	}
 }

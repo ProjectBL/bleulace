@@ -14,6 +14,8 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.cqrs.EventSourcedEntityMixin;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.command.RsvpCommand;
+import com.bleulace.domain.management.event.GuestInvitationEvent;
+import com.bleulace.jpa.EntityManagerReference;
 
 @RooEquals
 @RooJavaBean(settersByDefault = false)
@@ -41,6 +43,18 @@ public class EventInvitee implements EventSourcedEntityMixin
 		this.host = host;
 		this.guest = guest;
 		status = RsvpStatus.PENDING;
+	}
+
+	public void on(GuestInvitationEvent event)
+	{
+		if (event.getAccountId().equals(guest.getId()))
+		{
+			if (!event.isInvited())
+			{
+				event.getSource().getInvitees().remove(guest);
+				EntityManagerReference.get().remove(this);
+			}
+		}
 	}
 
 	public void on(RsvpCommand event, MetaData metaData)

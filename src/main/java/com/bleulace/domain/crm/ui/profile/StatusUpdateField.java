@@ -13,6 +13,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 @UIComponent
@@ -47,6 +48,8 @@ class StatusUpdateField extends CustomComponent implements ClickListener
 		{
 			uiBus.publish(GenericEventMessage
 					.asEventMessage(new StatusUpdatedEvent(tf.getValue())));
+			Notification
+					.show("Status updated to value '" + tf.getValue() + "'");
 		}
 	}
 

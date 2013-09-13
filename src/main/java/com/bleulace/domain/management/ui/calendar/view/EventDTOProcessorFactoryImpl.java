@@ -46,7 +46,8 @@ class EventDTOProcessorFactoryImpl implements EventDTOProcessorFactory
 		@Override
 		public void process(EventDTO dto)
 		{
-			dto.setStyleName(dto.getRsvpStatus(ownerId).getStyleName());
+			dto.setStyleName(dto.getParticipants().get(ownerId).getRsvpStatus()
+					.getStyleName());
 		}
 
 		public String getOwnerId()

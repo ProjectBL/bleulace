@@ -14,7 +14,7 @@ public class ManagerAssignedEvent
 	public ManagerAssignedEvent(String id, String assigneeId,
 			ManagementLevel role)
 	{
-		setId(id);
+		setId(null);
 		this.assigneeId = assigneeId;
 		this.role = role;
 	}

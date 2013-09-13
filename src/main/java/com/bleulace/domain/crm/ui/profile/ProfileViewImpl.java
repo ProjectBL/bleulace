@@ -77,7 +77,7 @@ class ProfileViewImpl extends CustomComponent implements ProfileView, View
 		rightLayout = makeRightLayout();
 
 		rightPanel = new HorizontalSplitPanel(midLayout, rightLayout);
-		rightPanel.setSplitPosition(70f, Unit.PERCENTAGE, true);
+		rightPanel.setSplitPosition(40f, Unit.PERCENTAGE, true);
 		rightPanel.setLocked(false);
 
 		leftPanel = new HorizontalSplitPanel(leftLayout, rightPanel);

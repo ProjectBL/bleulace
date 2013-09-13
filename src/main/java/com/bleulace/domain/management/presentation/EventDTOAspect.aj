@@ -29,7 +29,7 @@ aspect EventDTOAspect
 	private transient List<EventChangeListener> EventDTO.listeners = new ArrayList<EventChangeListener>();
 
 	// ---------------------------------------------------
-	void around(EventDTO dto) :
+	after(EventDTO dto) :
 		call(public void EventDTO+.set*(*)) 
 		&& target(dto) 
 	{
@@ -38,8 +38,8 @@ aspect EventDTOAspect
 		{
 			listener.eventChange(event);
 		}
-		proceed(dto);
 	}
+
 	// ---------------------------------------------------
 
 	public Date EventDTO.getStart()

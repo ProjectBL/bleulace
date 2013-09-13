@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.bleulace.domain.crm.ui.profile.ProfileView.CalendarDirtiedEvent;
-import com.bleulace.domain.crm.ui.profile.field.ParticipantFieldFactory;
+import com.bleulace.domain.management.command.CancelEventCommand;
 import com.bleulace.domain.management.command.CreateEventCommand;
 import com.bleulace.domain.management.command.EditEventCommand;
 import com.bleulace.domain.management.presentation.EventDTO;
 import com.bleulace.utils.dto.Mapper;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -39,25 +38,18 @@ class EventWindow extends Window
 	@Qualifier("uiBus")
 	private EventBus uiBus;
 
-	@Autowired
-	private ParticipantFieldFactory fieldFactory;
-
-	@Autowired
-	private Handler handler;
-
 	private final BeanFieldGroup<CreateEventCommand> group = new BeanFieldGroup<CreateEventCommand>(
 			CreateEventCommand.class);
 
 	private static final String CREATE_CAPTION = "Create Event";
 	private static final String EDIT_CAPTION = "Edit Event";
 
-	// too long
 	EventWindow(EventDTO dto)
 	{
-		fieldFactory.setEvent(dto);
 		setCaption(dto.getId() == null ? CREATE_CAPTION : EDIT_CAPTION);
 		setModal(true);
 		setResizable(false);
+
 		group.setItemDataSource(Mapper.map(dto,
 				dto.getId() == null ? new CreateEventCommand()
 						: new EditEventCommand(dto.getId())));
@@ -75,21 +67,28 @@ class EventWindow extends Window
 		form.addComponent(startField);
 		form.addComponent(endField);
 
-		group.bind(fieldFactory.getInviteeField(), "inviteeIds");
-		group.bind(fieldFactory.getManagerField(), "assignments");
-
-		form.addComponent(fieldFactory.getContent());
-		addActionHandler(handler);
+		// PARTICIPANT TABLE
+		// bind participant table here
 
 		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.setSpacing(true);
+		buttons.setSpacing(false);
 
 		buttons.addComponent(new Button("Delete", new DeleteListener()));
-		buttons.addComponent(new Button("Apply", new ApplyListener()));
+
+		Button apply = new Button("Apply", new ApplyListener());
+		apply.setClickShortcut(KeyCode.ENTER);
+		buttons.addComponent(apply);
 
 		Button cancel = new Button("Cancel", new CancelListener());
 		cancel.setClickShortcut(KeyCode.ESCAPE);
 		buttons.addComponent(cancel);
+
+		// VerticalLayout right = new VerticalLayout(
+		// fieldFactory.getParticipantList(), buttons);
+		// right.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
+
+		// HorizontalLayout content = new HorizontalLayout(form, right);
+		// HorizontalLayout content = new HorizontalLayout(form, right);
 
 		VerticalLayout content = new VerticalLayout(form, buttons);
 		content.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
@@ -141,16 +140,16 @@ class EventWindow extends Window
 		@Override
 		public void buttonClick(ClickEvent event)
 		{
-			CreateEventCommand c = group.getItemDataSource().getBean();
-			if (!c.getClass().equals(CreateEventCommand.class))
+			String id = group.getItemDataSource().getBean().getId();
+			if (id != null)
 			{
-				c.getInviteeIds().clear();
+				gateway.send(new CancelEventCommand(group.getItemDataSource()
+						.getBean().getId()));
 			}
-			gateway.send(c);
 			uiBus.publish(GenericEventMessage
 					.asEventMessage(new CalendarDirtiedEvent()));
-			Notification.show("Event deleted.", Type.TRAY_NOTIFICATION);
 			close();
+			Notification.show("Event deleted.", Type.TRAY_NOTIFICATION);
 		}
 	}
 }

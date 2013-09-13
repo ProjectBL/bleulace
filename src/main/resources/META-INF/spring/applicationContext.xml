@@ -28,7 +28,7 @@
 		<context:exclude-filter expression=".*_Roo_.*"
 			type="regex" />
 		<context:exclude-filter type="annotation"
-			expression="com.bleulace.web.stereotype.UIComponent"/>
+			expression="com.bleulace.web.stereotype.UIComponent" />
 	</context:component-scan>
 
 	<jdbc:initialize-database data-source="dataSource"
@@ -137,20 +137,9 @@
 		</property>
 	</bean>
 
+	<axon:event-bus id="eventBus" />
+
 	<beans profile="dev,prod">
-
-		<int:channel id="eventBusChannel">
-			<int:dispatcher task-executor="executor" />
-		</int:channel>
-
-		<bean id="eventBus"
-			class="org.axonframework.integration.eventbus.SpringIntegrationEventBus">
-			<property name="channel" ref="eventBusChannel" />
-		</bean>
-
-		<bean id="uiBus" class="org.axonframework.eventhandling.SimpleEventBus"
-			scope="session">
-		</bean>
 
 		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
 			parent="abstractCommandBus">
@@ -169,7 +158,6 @@
 	<beans profile="test">
 		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
 			parent="abstractCommandBus" />
-		<axon:event-bus id="eventBus" />
 	</beans>
 
 </beans>

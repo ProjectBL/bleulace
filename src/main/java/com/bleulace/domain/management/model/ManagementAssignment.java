@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.axonframework.eventhandling.annotation.EventHandler;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
@@ -48,8 +47,7 @@ public class ManagementAssignment extends AbstractChildResource
 	{
 	}
 
-	@EventHandler
-	public void managerAssigned(ManagerAssignedEvent event)
+	public void on(ManagerAssignedEvent event)
 	{
 		if (event.getAssigneeId().equals(account.getId()))
 		{
@@ -59,7 +57,7 @@ public class ManagementAssignment extends AbstractChildResource
 				EntityManagerReference.get().remove(this);
 				return;
 			}
-			role = event.getRole();
 		}
+		this.role = event.getRole();
 	}
 }

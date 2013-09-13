@@ -1,25 +1,22 @@
 package com.bleulace.domain.management.presentation;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.presentation.UserDTO;
 import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.dto.Mapper;
 
 @Configurable
 class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 {
-	private final Map<UserDTO, RsvpStatus> invitees = new HashMap<UserDTO, RsvpStatus>();
+	private final Map<String, EventParticipant> participants = new HashMap<String, EventParticipant>();
 
 	EventDTOImpl()
 	{
@@ -45,36 +42,9 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 	}
 
 	@Override
-	public Map<UserDTO, RsvpStatus> getInvitees()
+	public Map<String, EventParticipant> getParticipants()
 	{
-		return invitees;
-	}
-
-	@Override
-	public Map<String, UserDTO> getInviteeIds(RsvpStatus... statuses)
-	{
-		Map<String, UserDTO> map = new HashMap<String, UserDTO>();
-		List<RsvpStatus> statusList = Arrays.asList(statuses);
-		for (Entry<UserDTO, RsvpStatus> entry : invitees.entrySet())
-		{
-			if (statusList.contains(entry.getValue()))
-			{
-				map.put(entry.getKey().getId(), entry.getKey());
-			}
-		}
-		return map;
-	}
-
-	@Override
-	public Set<String> getInviteeIds()
-	{
-		return getInviteeIds(RsvpStatus.values()).keySet();
-	}
-
-	@Override
-	public RsvpStatus getRsvpStatus(String accountId)
-	{
-		return invitees.get(getInviteeIds(RsvpStatus.values()).get(accountId));
+		return participants;
 	}
 
 	@Override
@@ -92,10 +62,37 @@ class EventDTOImpl extends ProjectDTOImpl implements EventDTO
 		return false;
 	}
 
-	private void addInvitee(UserDTO dto, RsvpStatus status)
+	private void addInvitee(final UserDTO dto, final RsvpStatus status)
 	{
-		Assert.notNull(dto);
-		Assert.notNull(status);
-		invitees.put(dto, status);
+		participants.put(dto.getId(), new EventParticipant()
+		{
+			private ManagementLevel managementLevel = getManagers().get(
+					dto.getId());
+
+			@Override
+			public UserDTO getUser()
+			{
+				return dto;
+			}
+
+			@Override
+			public RsvpStatus getRsvpStatus()
+			{
+				return status;
+			}
+
+			@Override
+			public ManagementLevel getManagementLevel()
+			{
+				return managementLevel;
+			}
+
+			@Override
+			public void setManagementLevel(ManagementLevel managementLevel)
+			{
+				this.managementLevel = managementLevel;
+			}
+
+		});
 	}
 }

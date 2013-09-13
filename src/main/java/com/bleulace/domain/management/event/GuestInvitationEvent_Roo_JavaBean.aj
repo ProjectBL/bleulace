@@ -7,10 +7,6 @@ import com.bleulace.domain.management.event.GuestInvitationEvent;
 
 privileged aspect GuestInvitationEvent_Roo_JavaBean {
     
-    public String GuestInvitationEvent.getId() {
-        return this.id;
-    }
-    
     public String GuestInvitationEvent.getAccountId() {
         return this.accountId;
     }

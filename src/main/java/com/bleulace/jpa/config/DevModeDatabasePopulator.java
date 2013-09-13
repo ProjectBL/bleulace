@@ -39,6 +39,7 @@ public class DevModeDatabasePopulator implements
 		if (dao.count() < 1)
 		{
 			makeAccount("arleighdickerson@frugalu.com", "Arleigh", "Dickerson");
+			makeAccount("foo@bar.com", "Foo", "Bar");
 		}
 	}
 }

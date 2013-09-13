@@ -111,7 +111,7 @@ class ManageableResourceDTOImpl implements ManageableResourceDTO
 		}
 	}
 
-	private void addManager(UserDTO dto, ManagementLevel level)
+	protected void addManager(UserDTO dto, ManagementLevel level)
 	{
 		Assert.notNull(dto);
 		Assert.notNull(level);

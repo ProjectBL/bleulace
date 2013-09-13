@@ -18,6 +18,7 @@ import com.bleulace.domain.management.model.Bundle;
 import com.bleulace.domain.management.model.Event;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.Project;
+import com.bleulace.domain.management.presentation.EventDTO.EventParticipant;
 import com.bleulace.utils.Locator;
 import com.bleulace.utils.dto.Mapper;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
@@ -68,6 +69,11 @@ public class ManagementDTOTest implements IntegrationTest, EventChangeListener,
 		dto.addEventChangeListener(this);
 		dto.setCaption("foo");
 		Assert.assertTrue(eventCaught);
+
+		for (EventParticipant p : dto.getParticipants().values())
+		{
+			Assert.assertNotNull(p.getUser());
+		}
 	}
 
 	@Override

@@ -4,9 +4,7 @@
 package com.bleulace.domain.management.command;
 
 import com.bleulace.domain.management.command.CreateEventCommand;
-import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.jpa.DateWindow;
-import java.util.Map;
 
 privileged aspect CreateEventCommand_Roo_JavaBean {
     
@@ -20,14 +18,6 @@ privileged aspect CreateEventCommand_Roo_JavaBean {
     
     public void CreateEventCommand.setLocation(String location) {
         this.location = location;
-    }
-    
-    public Map<String, ManagementLevel> CreateEventCommand.getAssignments() {
-        return this.assignments;
-    }
-    
-    public void CreateEventCommand.setAssignments(Map<String, ManagementLevel> assignments) {
-        this.assignments = assignments;
     }
     
 }
