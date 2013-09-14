@@ -67,9 +67,6 @@ class EventWindow extends Window
 		form.addComponent(startField);
 		form.addComponent(endField);
 
-		// PARTICIPANT TABLE
-		// bind participant table here
-
 		HorizontalLayout buttons = new HorizontalLayout();
 		buttons.setSpacing(false);
 
