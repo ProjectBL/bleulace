@@ -16,7 +16,6 @@ public interface CompositeResource extends Resource
 
 	static aspect Impl
 	{
-
 		public void CompositeResource.acceptInspector(
 				ResourceInspector inspector)
 		{

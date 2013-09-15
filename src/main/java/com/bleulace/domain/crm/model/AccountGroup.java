@@ -9,20 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.PreRemove;
 
-import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.crm.command.CreateGroupCommand;
-import com.bleulace.domain.crm.command.GroupMembershipCommand;
-import com.bleulace.domain.crm.event.GroupCreatedEvent;
-import com.bleulace.domain.crm.event.GroupMembershipChangedEvent;
 import com.bleulace.domain.resource.model.AbstractRootResource;
-import com.bleulace.utils.dto.Mapper;
 
 @Entity
 @RooJavaBean
-public class AccountGroup extends AbstractRootResource implements
-		CommentableRoot, CommentableResource
+public class AccountGroup extends AbstractRootResource
 {
 	@Column(unique = true, nullable = false)
 	private String title;
@@ -32,36 +25,6 @@ public class AccountGroup extends AbstractRootResource implements
 
 	AccountGroup()
 	{
-	}
-
-	public AccountGroup(CreateGroupCommand command, MetaData metaData)
-	{
-		String creatorId = metaData.getSubjectId();
-		apply(Mapper.map(command, GroupCreatedEvent.class), metaData);
-		if (creatorId != null)
-		{
-			GroupMembershipChangedEvent event = new GroupMembershipChangedEvent(
-					creatorId, GroupMembershipAction.JOIN);
-			apply(event, metaData);
-		}
-	}
-
-	public void handle(GroupMembershipCommand command, MetaData metaData)
-	{
-		for (String accountId : command.getAccountIds())
-		{
-			apply(Mapper.map(command, new GroupMembershipChangedEvent(
-					accountId, command.getAction())), metaData);
-		}
-	}
-
-	public void on(GroupMembershipChangedEvent event)
-	{
-		event.getAction().execute(this, event.getAccountId());
-		if (members.isEmpty())
-		{
-			flagForDeletion(true);
-		}
 	}
 
 	@PreRemove

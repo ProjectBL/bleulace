@@ -7,20 +7,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.cqrs.EventSourcedEntityMixin;
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.command.RsvpCommand;
-import com.bleulace.domain.management.event.GuestInvitationEvent;
-import com.bleulace.jpa.EntityManagerReference;
 
 @RooEquals
 @RooJavaBean(settersByDefault = false)
 @Embeddable
-public class EventInvitee implements EventSourcedEntityMixin
+public class EventInvitee
 {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false, name = "GUEST_ID")
@@ -34,10 +29,6 @@ public class EventInvitee implements EventSourcedEntityMixin
 	@Enumerated(EnumType.STRING)
 	private RsvpStatus status;
 
-	private EventInvitee()
-	{
-	}
-
 	EventInvitee(Account guest, Account host)
 	{
 		this.host = host;
@@ -45,30 +36,7 @@ public class EventInvitee implements EventSourcedEntityMixin
 		status = RsvpStatus.PENDING;
 	}
 
-	public void on(GuestInvitationEvent event)
+	private EventInvitee()
 	{
-		if (event.getAccountId().equals(guest.getId()))
-		{
-			if (!event.isInvited())
-			{
-				event.getSource().getInvitees().remove(guest);
-				EntityManagerReference.get().remove(this);
-			}
-		}
-	}
-
-	public void on(RsvpCommand event, MetaData metaData)
-	{
-		if (guest.getId().equals(metaData.getSubjectId()))
-		{
-			status = event.isAccepted() ? RsvpStatus.ACCEPTED
-					: RsvpStatus.DECLINED;
-		}
-	}
-
-	@Override
-	public String getId()
-	{
-		return null;
 	}
 }

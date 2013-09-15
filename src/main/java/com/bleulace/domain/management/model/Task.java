@@ -7,11 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.axonframework.domain.MetaData;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.bleulace.domain.management.event.TaskMarkedEvent;
 import com.bleulace.domain.resource.model.AbstractChildResource;
 
 @Entity
@@ -23,8 +21,15 @@ public class Task extends AbstractChildResource implements ManageableResource
 	@Column(nullable = true)
 	private Date dateCompleted;
 
-	public void on(TaskMarkedEvent event, MetaData metaData)
+	@Override
+	public void setComplete(boolean complete)
 	{
-		this.dateCompleted = new Date();
+		this.dateCompleted = complete ? new Date() : null;
+	}
+
+	@Override
+	public boolean isComplete()
+	{
+		return dateCompleted != null;
 	}
 }

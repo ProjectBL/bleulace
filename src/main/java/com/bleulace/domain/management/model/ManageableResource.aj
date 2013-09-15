@@ -5,24 +5,16 @@ import java.util.Map;
 
 import javax.persistence.Column;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.crm.model.CommentableResource;
-import com.bleulace.domain.management.event.ManagerAssignedEvent;
-import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.jpa.EntityManagerReference;
-import com.bleulace.jpa.config.QueryFactory;
+import com.bleulace.domain.resource.model.CompositeResource;
 
-public interface ManageableResource extends CommentableResource
+public interface ManageableResource extends CompositeResource
 {
+	public boolean isComplete();
+
+	public void setComplete(boolean complete);
+
 	static aspect Impl
 	{
-		private static final transient QManagementAssignment Q_ASSIGNMENT = QManagementAssignment.managementAssignment;
-
-		public boolean ManageableResource.isComplete()
-		{
-			return getProgress().isComplete();
-		}
-
 		@Column(nullable = false)
 		private String ManageableResource.title = "";
 
@@ -55,22 +47,9 @@ public interface ManageableResource extends CommentableResource
 			return visitor.getProgress();
 		}
 
-		public void ManageableResource.on(ManagerAssignedEvent event)
-		{
-			if (!isManager(event.getAssigneeId()))
-			{
-				this.addChild(new ManagementAssignment((AbstractResource) this,
-						EntityManagerReference.load(Account.class,
-								event.getAssigneeId()), event.getRole()));
-			}
-		}
-
 		private boolean ManageableResource.isManager(String accountId)
 		{
-			return QueryFactory
-					.from(Q_ASSIGNMENT)
-					.where(Q_ASSIGNMENT.resource.id.eq(this.getId()).and(
-							Q_ASSIGNMENT.account.id.eq(accountId))).exists();
+			return this.getAssignments().get(accountId) != null;
 		}
 	}
 }

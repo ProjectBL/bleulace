@@ -10,7 +10,6 @@ import org.eclipse.persistence.platform.database.MySQLPlatform;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 
 import com.bleulace.utils.SystemProfiles;
 import com.mysql.jdbc.Driver;
@@ -25,9 +24,8 @@ import com.mysql.jdbc.Driver;
  * @author Arleigh Dickerson
  * 
  */
-@PropertySource("classpath:/META-INF/spring/database.properties")
-@Profile(SystemProfiles.PROD)
 @Configuration
+@Profile(SystemProfiles.PROD)
 public class ProdPersistenceConfig
 {
 	private String dbName = System.getProperty("RDS_DB_NAME");

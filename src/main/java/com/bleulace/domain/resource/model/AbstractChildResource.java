@@ -6,12 +6,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.bleulace.cqrs.EventSourcedEntityMixin;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class AbstractChildResource extends AbstractResource implements
-		CompositeResource, EventSourcedEntityMixin
+		CompositeResource
 {
 	@ManyToOne
 	@JoinColumn(updatable = false)

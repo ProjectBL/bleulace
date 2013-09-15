@@ -41,123 +41,20 @@
 			execution="DESTROY" />
 	</jdbc:initialize-database>
 
-	<bean id="quartzScheduler"
-		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
-				<!-- <prop key="org.quartz.jobStore.selectWithLockSQL">SELECT * FROM 
-					{0}LOCKS UPDLOCK WHERE LOCK_NAME = ? </prop> -->
-			</props>
-		</property>
-	</bean>
-
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
-
 	<jpa:repositories base-package="com.bleulace"
 		repository-impl-postfix="Impl">
 		<repository:include-filter type="assignable"
 			expression="com.bleulace.jpa.ReadOnlyDAO" />
 	</jpa:repositories>
 
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
 	<bean id="executor"
 		class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
 		<property name="maxPoolSize" value="4" />
 	</bean>
 
-	<!-- Axon -->
-	<axon:annotation-config command-bus="commandBus"
-		event-bus="eventBus" />
-
-	<bean id="axonTxManager" class="org.axonframework.unitofwork.SpringTransactionManager">
-		<constructor-arg ref="transactionManager" />
-	</bean>
-
-	<bean id="unitOfWorkFactory" class="org.axonframework.unitofwork.DefaultUnitOfWorkFactory">
-		<constructor-arg ref="axonTxManager" />
-	</bean>
-
-	<bean
-		class="org.axonframework.commandhandling.gateway.CommandGatewayFactoryBean"
-		id="commandGateway">
-		<property name="commandBus" ref="commandBus" />
-		<property name="commandDispatchInterceptors" ref="metaDataAspect" />
-	</bean>
-
-	<axon:jpa-event-store id="eventStore" data-source="dataSource" />
-
-	<axon:jpa-saga-repository id="sagaRepository"
-		entity-manager-provider="entityManagerProvider" resource-injector="nullResourceInjector" />
-
-	<axon:saga-manager id="sagaManager" event-bus="eventBus"
-		saga-repository="sagaRepository" resource-injector="nullResourceInjector"
-		suppress-exceptions="false">
-		<axon:async executor="executor" transaction-manager="transactionManager" />
-		<axon:types>
-		</axon:types>
-	</axon:saga-manager>
-
-	<bean id="entityManagerProvider"
-		class="org.axonframework.common.jpa.ContainerManagedEntityManagerProvider" />
-
-	<bean id="quartzEventScheduler"
-		class="org.axonframework.eventhandling.scheduling.quartz.QuartzEventSchedulerFactoryBean">
-		<property name="eventBus" ref="eventBus" />
-		<property name="scheduler" ref="quartzScheduler" />
-		<property name="transactionManager" ref="transactionManager" />
-	</bean>
-
-	<axon:aggregate-command-handler
-		command-bus="commandBus" aggregate-type="com.bleulace.domain.crm.model.Account"
-		repository="resourceRepository" />
-	<axon:aggregate-command-handler
-		command-bus="commandBus" aggregate-type="com.bleulace.domain.crm.model.AccountGroup"
-		repository="resourceRepository" />
-
-	<axon:aggregate-command-handler
-		command-bus="commandBus" aggregate-type="com.bleulace.domain.management.model.Project"
-		repository="resourceRepository" />
-	<axon:aggregate-command-handler
-		command-bus="commandBus" aggregate-type="com.bleulace.domain.management.model.Event"
-		repository="resourceRepository" />
-
-	<bean id="metaDataAspect" class="com.bleulace.cqrs.MetaDataAspect"
-		factory-method="aspectOf" />
-
-	<bean id="abstractCommandBus" abstract="true">
-		<property name="transactionManager" ref="axonTxManager" />
-		<property name="handlerInterceptors">
-			<bean class="org.axonframework.auditing.AuditingInterceptor">
-				<property name="auditDataProvider" ref="metaDataAspect" />
-				<property name="auditLogger" ref="auditLoggerImpl" />
-			</bean>
-		</property>
-	</bean>
-
-	<axon:event-bus id="eventBus" />
-
-	<beans profile="dev,prod">
-
-		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
-			parent="abstractCommandBus">
-			<property name="dispatchInterceptors">
-				<util:list>
-					<bean
-						class="org.axonframework.commandhandling.interceptors.BeanValidationInterceptor">
-						<constructor-arg ref="validator" />
-					</bean>
-					<bean class="com.bleulace.cqrs.command.AuthorizationInterceptor" />
-				</util:list>
-			</property>
-		</bean>
-	</beans>
-
-	<beans profile="test">
-		<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus"
-			parent="abstractCommandBus" />
-	</beans>
+	<bean class="com.bleulace.domain.crm.config.ShiroSubjectAspect" init-method="aspectOf" />
 
 </beans>

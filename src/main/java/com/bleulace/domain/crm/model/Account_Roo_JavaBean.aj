@@ -7,9 +7,7 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.FriendRequest;
 import com.bleulace.domain.crm.model.HashedPassword;
-import com.bleulace.domain.feed.model.FeedEntry;
 import com.bleulace.utils.chrono.TimeZoneEnum;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,14 +51,6 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setFriends(Set<Account> friends) {
         this.friends = friends;
-    }
-    
-    public List<FeedEntry> Account.getFeedEntries() {
-        return this.feedEntries;
-    }
-    
-    public void Account.setFeedEntries(List<FeedEntry> feedEntries) {
-        this.feedEntries = feedEntries;
     }
     
     public void Account.setTimeZone(TimeZoneEnum timeZone) {

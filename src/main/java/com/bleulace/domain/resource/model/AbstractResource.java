@@ -3,6 +3,7 @@ package com.bleulace.domain.resource.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,8 +13,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
-import org.axonframework.domain.IdentifierFactory;
-import org.axonframework.eventsourcing.annotation.EventSourcedMember;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.equals.RooEquals;
 
@@ -28,9 +27,8 @@ public abstract class AbstractResource implements CompositeResource,
 {
 	@Id
 	@Column(nullable = false, updatable = false)
-	private String id = IdentifierFactory.getInstance().generateIdentifier();
+	private String id = UUID.randomUUID().toString();
 
-	@EventSourcedMember
 	@CascadeOnDelete
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<AbstractChildResource> children = new ArrayList<AbstractChildResource>();

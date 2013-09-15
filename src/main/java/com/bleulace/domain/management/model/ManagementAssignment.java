@@ -12,10 +12,8 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.event.ManagerAssignedEvent;
 import com.bleulace.domain.resource.model.AbstractChildResource;
 import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.jpa.EntityManagerReference;
 
 @Entity
 @RooJavaBean(settersByDefault = false)
@@ -45,19 +43,5 @@ public class ManagementAssignment extends AbstractChildResource
 
 	private ManagementAssignment()
 	{
-	}
-
-	public void on(ManagerAssignedEvent event)
-	{
-		if (event.getAssigneeId().equals(account.getId()))
-		{
-			if (event.getRole() == null)
-			{
-				resource.removeChild(this);
-				EntityManagerReference.get().remove(this);
-				return;
-			}
-		}
-		this.role = event.getRole();
 	}
 }

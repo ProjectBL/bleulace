@@ -17,7 +17,6 @@
 		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 		<shiro.version>1.2.2</shiro.version>
 		<querydsl.version>3.2.0</querydsl.version>
-		<axon.version>2.0.3</axon.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -321,17 +320,6 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.25</version>
 		</dependency>
-		<!-- Axon Deps -->
-		<dependency>
-			<groupId>org.axonframework</groupId>
-			<artifactId>axon-core</artifactId>
-			<version>${axon.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.axonframework</groupId>
-			<artifactId>axon-integration</artifactId>
-			<version>${axon.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -341,6 +329,11 @@
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0.1</version>
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -471,10 +464,6 @@
 						<weaveDependency>
 							<groupId>org.apache.shiro</groupId>
 							<artifactId>shiro-core</artifactId>
-						</weaveDependency>
-						<weaveDependency>
-							<groupId>org.axonframework</groupId>
-							<artifactId>axon-core</artifactId>
 						</weaveDependency>
 						<weaveDependency>
 							<groupId>org.dellroad</groupId>

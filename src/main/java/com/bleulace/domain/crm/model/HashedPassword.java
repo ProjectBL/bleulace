@@ -52,10 +52,10 @@ public class HashedPassword implements Serializable
 
 	private void setNull()
 	{
-		setValues(null, null);
+		setData(null, null);
 	}
 
-	private void setValues(byte[] hash, byte[] salt)
+	private void setData(byte[] hash, byte[] salt)
 	{
 		this.hash = hash;
 		this.salt = salt;
@@ -65,7 +65,7 @@ public class HashedPassword implements Serializable
 	{
 		Hash hash = calculateHash(ByteSource.Util.bytes(value.toCharArray()),
 				randomNumberGenerator.nextBytes());
-		setValues(hash.getBytes(), hash.getSalt().getBytes());
+		setData(hash.getBytes(), hash.getSalt().getBytes());
 	}
 
 	private Hash calculateHash(ByteSource source, ByteSource salt)
