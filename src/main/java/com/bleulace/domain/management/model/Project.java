@@ -4,13 +4,13 @@ import javax.persistence.Entity;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
 @RooJavaBean
-public class Project extends AbstractRootResource implements ManageableResource
+public class Project extends AbstractResource implements ManageableResource
 {
-	Project()
+	public Project()
 	{
 	}
 

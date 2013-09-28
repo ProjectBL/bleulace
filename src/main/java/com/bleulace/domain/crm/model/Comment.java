@@ -11,11 +11,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.resource.model.AbstractChildResource;
+import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
 @RooJavaBean(settersByDefault = false)
-public class Comment extends AbstractChildResource
+public class Comment extends AbstractResource
 {
 	@Column(nullable = false, updatable = false)
 	private String content;
@@ -38,5 +38,11 @@ public class Comment extends AbstractChildResource
 	@SuppressWarnings("unused")
 	private Comment()
 	{
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return content;
 	}
 }

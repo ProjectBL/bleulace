@@ -6,6 +6,8 @@ import com.bleulace.jpa.EntityManagerReference;
 
 public interface Resource extends Persistable<String>
 {
+	public String getTitle();
+
 	public void acceptInspector(ResourceInspector inspector);
 
 	static aspect Impl

@@ -12,6 +12,8 @@ public interface CompositeResource extends Resource
 
 	List<? extends Resource> getChildren();
 
+	public Resource getParent();
+
 	public <T extends Resource> List<T> getChildren(Class<T> clazz);
 
 	static aspect Impl

@@ -23,6 +23,7 @@ public class ChildCollectingResourceInspector implements ResourceInspector
 		return children;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> List<T> getChildren(Class<T> clazz)
 	{
 		List<T> children = new LinkedList<T>();

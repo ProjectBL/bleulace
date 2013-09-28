@@ -21,14 +21,14 @@ import javax.persistence.Table;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
-import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.utils.chrono.TimeZoneEnum;
 
 @RooJavaBean
 @Entity
 @Table(name = "ACCOUNT")
 @RooJpaActiveRecord
-public class Account extends AbstractRootResource
+public class Account extends AbstractResource
 {
 	@Column(nullable = false, updatable = false, unique = true)
 	private String username = "";
@@ -52,6 +52,13 @@ public class Account extends AbstractRootResource
 
 	public Account()
 	{
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return contactInformation.getFirstName() + " "
+				+ contactInformation.getLastName();
 	}
 
 	public TimeZone getTimeZone()

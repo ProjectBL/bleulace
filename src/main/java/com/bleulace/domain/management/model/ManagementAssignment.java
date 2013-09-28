@@ -12,36 +12,35 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.resource.model.AbstractChildResource;
 import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
 @RooJavaBean(settersByDefault = false)
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "MANAGER_ID",
 		"RESOURCE_ID" }) })
-public class ManagementAssignment extends AbstractChildResource
+public class ManagementAssignment extends AbstractResource
 {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false, name = "MANAGER_ID")
 	private Account account;
 
-	@ManyToOne
-	@JoinColumn(nullable = false, updatable = false)
-	private AbstractResource resource;
-
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ManagementLevel role;
 
-	ManagementAssignment(AbstractResource resource, Account account,
-			ManagementLevel role)
+	public ManagementAssignment(Account account, ManagementLevel role)
 	{
-		this.resource = resource;
 		this.account = account;
 		this.role = role;
 	}
 
-	private ManagementAssignment()
+	public ManagementAssignment()
 	{
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return account.getTitle();
 	}
 }

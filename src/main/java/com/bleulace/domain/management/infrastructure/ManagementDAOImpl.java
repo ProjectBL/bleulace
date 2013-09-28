@@ -20,7 +20,7 @@ class ManagementAssignmentDAOImpl implements ManagementAssignmentDAOCustom
 		QManagementAssignment a = new QManagementAssignment("a");
 		return QueryFactory
 				.from(a)
-				.where(a.resource.id.eq(resourceId).and(
+				.where(a.parent.id.eq(resourceId).and(
 						a.account.id.eq(accountId))).uniqueResult(a);
 	}
 }

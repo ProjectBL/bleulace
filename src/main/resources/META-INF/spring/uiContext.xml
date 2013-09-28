@@ -34,4 +34,6 @@
 
 	<bean id="webUI" class="com.bleulace.web.WebUI" />
 
+	<bean id="uiBus" class="com.google.common.eventbus.EventBus" />
+
 </beans>

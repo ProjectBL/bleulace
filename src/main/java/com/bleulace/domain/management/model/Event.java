@@ -1,5 +1,6 @@
 package com.bleulace.domain.management.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,10 +16,11 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.DateWindow;
 import com.bleulace.jpa.EntityManagerReference;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 @Entity
 @RooJavaBean
-public class Event extends Project
+public class Event extends Project implements CalendarEvent
 {
 	@Embedded
 	private DateWindow window;
@@ -48,5 +50,43 @@ public class Event extends Project
 		{
 			invitees.remove(a);
 		}
+	}
+
+	@Override
+	public Date getStart()
+	{
+		return window.getStart();
+	}
+
+	@Override
+	public Date getEnd()
+	{
+		return window.getEnd();
+	}
+
+	@Override
+	public String getCaption()
+	{
+		return getTitle();
+	}
+
+	@Override
+	public String getDescription()
+	{
+		return getLocation();
+	}
+
+	@Override
+	public String getStyleName()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAllDay()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

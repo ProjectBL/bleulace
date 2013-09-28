@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.QManagementAssignment;
-import com.bleulace.domain.resource.model.AbstractChildResource;
 import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.domain.resource.model.QAbstractChildResource;
 import com.bleulace.domain.resource.model.QAbstractResource;
 import com.bleulace.jpa.config.QueryFactory;
 
@@ -14,11 +12,11 @@ import com.bleulace.jpa.config.QueryFactory;
 class ResourceDAOImpl implements ResourceDAOCustom
 {
 	@Override
-	public <T extends AbstractChildResource> List<T> findChildren(String id,
+	public <T extends AbstractResource> List<T> findChildren(String id,
 			Class<T> clazz)
 	{
 		QAbstractResource r = new QAbstractResource("r");
-		QAbstractChildResource c = new QAbstractChildResource("c");
+		QAbstractResource c = new QAbstractResource("c");
 		return (List<T>) QueryFactory.from(r).innerJoin(r.children, c)
 				.where(r.id.eq(id).and(c.instanceOf(clazz))).list(c);
 	}
@@ -31,7 +29,7 @@ class ResourceDAOImpl implements ResourceDAOCustom
 		return (List<T>) QueryFactory
 				.from(a)
 				.where(a.account.id.eq(managerId).and(
-						a.resource.instanceOf(clazz))).list(a.resource);
+						a.parent.instanceOf(clazz))).list(a.parent);
 	}
 
 	@Override
@@ -42,7 +40,7 @@ class ResourceDAOImpl implements ResourceDAOCustom
 		return (List<T>) QueryFactory
 				.from(a)
 				.where(a.account.id.eq(managerId)
-						.and(a.resource.instanceOf(clazz))
-						.and(a.role.eq(level))).list(a.resource);
+						.and(a.parent.instanceOf(clazz)).and(a.role.eq(level)))
+				.list(a.parent);
 	}
 }

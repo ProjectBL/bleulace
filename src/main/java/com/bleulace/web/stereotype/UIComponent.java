@@ -7,6 +7,12 @@ import java.lang.annotation.Target;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * Instances of annotated classes will be scoped per User Interface
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Component

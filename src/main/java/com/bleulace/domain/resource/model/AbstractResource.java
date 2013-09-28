@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
@@ -21,7 +23,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RooEquals
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
@@ -29,11 +31,15 @@ public abstract class AbstractResource implements CompositeResource,
 	@Column(nullable = false, updatable = false)
 	private String id = UUID.randomUUID().toString();
 
-	@CascadeOnDelete
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<AbstractChildResource> children = new ArrayList<AbstractChildResource>();
+	@ManyToOne
+	@JoinColumn
+	private AbstractResource parent;
 
-	AbstractResource()
+	@CascadeOnDelete
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
+	private List<AbstractResource> children = new ArrayList<AbstractResource>();
+
+	protected AbstractResource()
 	{
 	}
 
@@ -44,10 +50,21 @@ public abstract class AbstractResource implements CompositeResource,
 	}
 
 	@Override
+	public Resource getParent()
+	{
+		return parent;
+	}
+
+	void setParent(AbstractResource parent)
+	{
+		this.parent = parent;
+	}
+
+	@Override
 	public void addChild(Resource child)
 	{
-		AbstractChildResource r = (AbstractChildResource) child;
-		r.setRoot(getRoot());
+		AbstractResource r = (AbstractResource) child;
+		r.setParent(this);
 		children.add(r);
 	}
 
@@ -73,8 +90,7 @@ public abstract class AbstractResource implements CompositeResource,
 	@Override
 	public <T extends Resource> List<T> getChildren(Class<T> clazz)
 	{
-		if (this.isNew()
-				|| !AbstractChildResource.class.isAssignableFrom(clazz))
+		if (this.isNew() || !AbstractResource.class.isAssignableFrom(clazz))
 		{
 			List<T> list = new ArrayList<T>();
 			for (Resource c : getChildren())
@@ -87,9 +103,6 @@ public abstract class AbstractResource implements CompositeResource,
 			return list;
 		}
 		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
-				.findChildren(id,
-						(Class<? extends AbstractChildResource>) clazz);
+				.findChildren(id, (Class<? extends AbstractResource>) clazz);
 	}
-
-	public abstract AbstractRootResource getRoot();
 }

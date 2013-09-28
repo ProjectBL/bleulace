@@ -11,11 +11,11 @@ import javax.persistence.PreRemove;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.resource.model.AbstractRootResource;
+import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
 @RooJavaBean
-public class AccountGroup extends AbstractRootResource
+public class AccountGroup extends AbstractResource
 {
 	@Column(unique = true, nullable = false)
 	private String title;

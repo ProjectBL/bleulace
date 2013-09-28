@@ -6,16 +6,11 @@ package com.bleulace.domain.management.model;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.ManagementLevel;
-import com.bleulace.domain.resource.model.AbstractResource;
 
 privileged aspect ManagementAssignment_Roo_JavaBean {
     
     public Account ManagementAssignment.getAccount() {
         return this.account;
-    }
-    
-    public AbstractResource ManagementAssignment.getResource() {
-        return this.resource;
     }
     
     public ManagementLevel ManagementAssignment.getRole() {

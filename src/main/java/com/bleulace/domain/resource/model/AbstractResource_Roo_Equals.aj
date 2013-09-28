@@ -17,11 +17,11 @@ privileged aspect AbstractResource_Roo_Equals {
             return true;
         }
         AbstractResource rhs = (AbstractResource) obj;
-        return new EqualsBuilder().append(id, rhs.id).isEquals();
+        return new EqualsBuilder().append(id, rhs.id).append(parent, rhs.parent).isEquals();
     }
     
     public int AbstractResource.hashCode() {
-        return new HashCodeBuilder().append(id).toHashCode();
+        return new HashCodeBuilder().append(id).append(parent).toHashCode();
     }
     
 }
