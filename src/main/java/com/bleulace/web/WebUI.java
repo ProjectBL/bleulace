@@ -2,7 +2,6 @@ package com.bleulace.web;
 
 import org.springframework.beans.factory.annotation.Configurable;
 
-import com.bleulace.web.front.FrontScreen;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -47,6 +46,5 @@ public class WebUI extends UI
 	@Override
 	protected void init(VaadinRequest request)
 	{
-		setContent(new FrontScreen());
 	}
 }
