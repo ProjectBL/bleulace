@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.bleulace.utils.SystemProfiles;
-import com.bleulace.web.demo.calendar.UIComponentConfig.CalendarSelection;
+import com.bleulace.web.demo.calendar.CalendarComponentConfig.CalendarSelection;
 import com.bleulace.web.demo.timebox.EventBean;
 import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.ui.TabSheet;

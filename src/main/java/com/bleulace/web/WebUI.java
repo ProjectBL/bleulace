@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
+import com.bleulace.web.demo.front.FrontPresenter;
 import com.porotype.iconfont.FontAwesome;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
@@ -32,9 +33,14 @@ public class WebUI extends UI
 	@Autowired
 	private ApplicationContext ctx;
 
+	@Autowired
+	private FrontPresenter frontPresenter;
+
 	@Override
 	protected void init(VaadinRequest request)
 	{
+		FontAwesome.load();
+
 		Navigator nav = new Navigator(this, this);
 		for (Entry<String, View> entry : ctx.getBeansOfType(View.class)
 				.entrySet())
@@ -42,6 +48,7 @@ public class WebUI extends UI
 			nav.addView(entry.getKey(), entry.getValue());
 		}
 		setNavigator(nav);
-		FontAwesome.load();
+
+		frontPresenter.react();
 	}
 }

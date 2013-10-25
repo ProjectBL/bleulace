@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Scope;
 import com.bleulace.utils.SystemProfiles;
 import com.porotype.iconfont.FontAwesome.Icon;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Notification;
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
@@ -29,7 +31,7 @@ class SocialButtonsConfig
 		return buttons;
 	}
 
-	enum SocialButtons
+	public enum SocialButtons implements Button.ClickListener
 	{
 		//@formatter:off
 		SHARE(Icon.share), 
@@ -41,28 +43,22 @@ class SocialButtonsConfig
 
 		private final Icon icon;
 
-		private final Button.ClickListener listener;
-
-		SocialButtons(Icon icon, Button.ClickListener listener)
-		{
-			this.icon = icon;
-			this.listener = listener;
-		}
-
 		SocialButtons(Icon icon)
 		{
-			this(icon, null);
+			this.icon = icon;
 		}
 
 		private Button make()
 		{
-			Button button = new Button(icon.toString());
+			Button button = new Button(icon.toString(), this);
 			button.setHtmlContentAllowed(true);
-			if (listener != null)
-			{
-				button.addClickListener(listener);
-			}
 			return button;
+		}
+
+		@Override
+		public void buttonClick(ClickEvent event)
+		{
+			Notification.show(this.toString() + " clicked");
 		}
 	}
 }

@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
-import com.bleulace.utils.SystemProfiles;
 import com.bleulace.web.BleulaceTheme.AvatarGender;
 import com.bleulace.web.BleulaceTheme.AvatarSize;
+import com.bleulace.web.annotation.WebProfile;
 import com.bleulace.web.demo.avatar.AvatarFactory;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Accordion;
@@ -27,8 +26,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 @Configuration
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
-public class ViewConfig
+@WebProfile
+public class CalendarViewConfig
 {
 	@Autowired
 	private AvatarFactory avatarFactory;
@@ -59,7 +58,8 @@ public class ViewConfig
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public VerticalLayout centerLayout(ComboBox searchField,
 			@Qualifier("tabSheet") TabSheet tabSheet, Calendar calendar,
-			@Qualifier("socialButtons") Iterable<Button> socialButtons)
+			@Qualifier("socialButtons") Iterable<Button> socialButtons,
+			@Qualifier("logoutButton") final Button logoutButton)
 	{
 		// Initialize master and set width
 		VerticalLayout bean = new VerticalLayout();
@@ -82,6 +82,7 @@ public class ViewConfig
 		{
 			socialBar.addComponent(b);
 		}
+		socialBar.addComponent(logoutButton);
 		top.addComponent(socialBar); // add social buttons to top
 		bean.addComponent(top); // add top to master
 
