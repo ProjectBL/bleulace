@@ -27,8 +27,6 @@
 	<context:component-scan base-package="com.bleulace">
 		<context:exclude-filter expression=".*_Roo_.*"
 			type="regex" />
-		<context:exclude-filter type="annotation"
-			expression="com.bleulace.web.stereotype.UIComponent" />
 	</context:component-scan>
 
 	<jdbc:initialize-database data-source="dataSource"
@@ -55,6 +53,7 @@
 		<property name="maxPoolSize" value="4" />
 	</bean>
 
-	<bean class="com.bleulace.domain.crm.config.ShiroSubjectAspect" init-method="aspectOf" />
+	<bean class="com.bleulace.domain.crm.config.ShiroSubjectAspect"
+		init-method="aspectOf" />
 
 </beans>

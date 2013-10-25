@@ -27,14 +27,10 @@
 	</listener>
 	<servlet>
 		<servlet-name>webServlet</servlet-name>
-		<servlet-class>org.dellroad.stuff.vaadin7.SpringVaadinServlet</servlet-class>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
-			<param-name>UI</param-name>
-			<param-value>com.bleulace.web.WebUI</param-value>
-		</init-param>
-		<init-param>
-			<param-name>configLocation</param-name>
-			<param-value>classpath:/META-INF/spring/uiContext.xml</param-value>
+			<param-name>UIProvider</param-name>
+			<param-value>com.bleulace.web.BleulaceUIProvider</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
