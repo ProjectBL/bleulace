@@ -12,9 +12,11 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Component("calendarView")
+@Component(DemoCalendarView.VIEW_NAME)
 class DemoCalendarView extends CustomComponent implements View
 {
+	public static final String VIEW_NAME = "calendarView";
+
 	@Autowired
 	private Layout leftLayout;
 
@@ -27,8 +29,11 @@ class DemoCalendarView extends CustomComponent implements View
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		HorizontalLayout root = new HorizontalLayout(leftLayout, centerLayout,
-				rightLayout);
-		setCompositionRoot(root);
+		if (getCompositionRoot() == null)
+		{
+			HorizontalLayout root = new HorizontalLayout(leftLayout,
+					centerLayout);// , rightLayout);
+			setCompositionRoot(root);
+		}
 	}
 }

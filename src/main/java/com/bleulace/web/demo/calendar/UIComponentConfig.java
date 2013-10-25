@@ -1,16 +1,15 @@
 package com.bleulace.web.demo.calendar;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 import com.bleulace.utils.SystemProfiles;
 import com.porotype.iconfont.FontAwesome.Icon;
@@ -31,20 +30,21 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
-class UIComponentsConfig
+class UIComponentConfig
 {
 	/**********************************************
 	 * LEFT
 	 */
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public DateField dateField(final Calendar calendar)
+	@Scope("ui")
+	public DateField dateField(final Calendar calendar, final TabSheet tabSheet)
 	{
 		final DateField bean = new DateField();
 		bean.setResolution(Resolution.DAY);
@@ -57,7 +57,7 @@ class UIComponentsConfig
 			public void valueChange(ValueChangeEvent event)
 			{
 				Date value = bean.getValue();
-				System.out.println(value);
+				tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
 				DateTime start = LocalDate.fromDateFields(bean.getValue())
 						.toDateTimeAtStartOfDay();
 				calendar.setStartDate(start.toDate());
@@ -68,7 +68,7 @@ class UIComponentsConfig
 	}
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public Button homeButton()
 	{
 		Button bean = makeIconButton(Icon.home);
@@ -76,7 +76,7 @@ class UIComponentsConfig
 	}
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public Button lockButton()
 	{
 		Button bean = makeIconButton(Icon.lock);
@@ -84,7 +84,7 @@ class UIComponentsConfig
 	}
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public TextField statusUpdateField()
 	{
 		TextField bean = new TextField();
@@ -93,7 +93,7 @@ class UIComponentsConfig
 	}
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public Accordion accordion()
 	{
 		Accordion bean = new Accordion();
@@ -109,6 +109,12 @@ class UIComponentsConfig
 	private enum AccordionHeader
 	{
 		CREATE, PROFILE, EVENTS, PROJECTS, FRIENDS, GROUPS, BUNDLES, LACE, TIMEBOX;
+
+		@Override
+		public String toString()
+		{
+			return StringUtils.capitalize(this.name().toLowerCase());
+		}
 	}
 
 	/**********************************************
@@ -116,7 +122,7 @@ class UIComponentsConfig
 	 */
 
 	@Bean
-	@Scope("session")
+	@Scope(value = "ui", proxyMode = ScopedProxyMode.TARGET_CLASS)
 	public TabSheet tabSheet(final Calendar calendar)
 	{
 		final TabSheet bean = new TabSheet();
@@ -207,13 +213,15 @@ class UIComponentsConfig
 	}
 
 	@Bean
-	@Scope("session")
+	@Scope("ui")
 	public Calendar calendar(EventClickHandler eventClickHandler,
-			RangeSelectHandler rangeSelectHandler, Handler actionHandler)
+			RangeSelectHandler rangeSelectHandler,
+			DateClickHandler dateClickHandler, Handler actionHandler)
 	{
 		Calendar bean = new Calendar();
 		bean.setHandler(eventClickHandler);
 		bean.setHandler(rangeSelectHandler);
+		bean.setHandler(dateClickHandler);
 		bean.addActionHandler(actionHandler);
 		bean.setImmediate(true);
 		return bean;
@@ -224,60 +232,12 @@ class UIComponentsConfig
 	 */
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public ComboBox searchField()
 	{
 		ComboBox bean = new ComboBox();
 		bean.setInputPrompt("Search");
 		return bean;
-	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public List<Button> socialButtons()
-	{
-		List<Button> bean = new ArrayList<Button>();
-		for (SocialButton b : SocialButton.values())
-		{
-			bean.add(b.make());
-		}
-		return bean;
-	}
-
-	private enum SocialButton
-	{
-		//@formatter:off
-		SHARE(Icon.share), 
-		RSS(Icon.rss), 
-		MAIL(Icon.envelope), 
-		FACEBOOK(Icon.facebook), 
-		TWITTER(Icon.twitter);
-		//@formatter:on
-
-		private final Icon icon;
-
-		private final Button.ClickListener listener;
-
-		SocialButton(Icon icon, Button.ClickListener listener)
-		{
-			this.icon = icon;
-			this.listener = listener;
-		}
-
-		SocialButton(Icon icon)
-		{
-			this(icon, null);
-		}
-
-		Button make()
-		{
-			Button button = makeIconButton(icon);
-			if (listener != null)
-			{
-				button.addClickListener(listener);
-			}
-			return button;
-		}
 	}
 
 	private static Button makeIconButton(Icon icon)

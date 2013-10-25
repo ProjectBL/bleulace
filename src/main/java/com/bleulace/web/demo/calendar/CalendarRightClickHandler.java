@@ -55,7 +55,12 @@ class CalendarRightClickHandler implements Handler
 		}
 	}
 
-	private enum RightClickGesture
+	interface EventBeanCommand
+	{
+		void execute(EventBean bean);
+	}
+
+	enum RightClickGesture
 	{
 		//@formatter:off
 		ACCEPT("accept", new RsvpCommand(RsvpStatus.ACCEPTED)), 
@@ -75,11 +80,6 @@ class CalendarRightClickHandler implements Handler
 		{
 			return action.getCaption().equals(this.action.getCaption());
 		}
-	}
-
-	private interface EventBeanCommand
-	{
-		void execute(EventBean bean);
 	}
 
 	private static class RsvpCommand implements EventBeanCommand

@@ -55,5 +55,4 @@
 
 	<bean class="com.bleulace.domain.crm.config.ShiroSubjectAspect"
 		init-method="aspectOf" />
-
 </beans>

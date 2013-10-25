@@ -1,8 +1,7 @@
 package com.bleulace.web.demo.calendar;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +14,7 @@ import com.bleulace.web.BleulaceTheme.AvatarSize;
 import com.bleulace.web.demo.avatar.AvatarFactory;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
@@ -28,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
-public class UIViewConfig
+public class ViewConfig
 {
 	@Autowired
 	private AvatarFactory avatarFactory;
@@ -57,28 +57,46 @@ public class UIViewConfig
 
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public VerticalLayout centerLayout(TabSheet tabSheet, Calendar calendar)
+	public VerticalLayout centerLayout(ComboBox searchField,
+			@Qualifier("tabSheet") TabSheet tabSheet, Calendar calendar,
+			@Qualifier("socialButtons") Iterable<Button> socialButtons)
 	{
-		VerticalLayout bean = new VerticalLayout(tabSheet, calendar);
-		calendar.setWidth(new Float(UI.getCurrent().getPage()
+		// Initialize master and set width
+		VerticalLayout bean = new VerticalLayout();
+		bean.setWidth(new Float(UI.getCurrent().getPage()
 				.getBrowserWindowWidth() / 2), Unit.PIXELS);
+
+		HorizontalLayout top = new HorizontalLayout(); // Initialize top bar
+		top.setDefaultComponentAlignment(Alignment.MIDDLE_RIGHT);
+		top.setSpacing(false);
+		top.setWidth("100%");
+
+		top.addComponent(tabSheet); // add calendar tabs to top
+		top.setExpandRatio(tabSheet, 1);
+
+		top.addComponent(searchField); // add search field to top
+
+		// grouping social buttons together
+		HorizontalLayout socialBar = new HorizontalLayout();
+		for (Button b : socialButtons)
+		{
+			socialBar.addComponent(b);
+		}
+		top.addComponent(socialBar); // add social buttons to top
+		bean.addComponent(top); // add top to master
+
+		// add calendar to master
+		bean.addComponent(calendar);
+		calendar.setSizeFull();
+
 		return bean;
 	}
 
 	@Bean
 	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public VerticalLayout rightLayout(List<Button> socialButtons,
-			ComboBox searchField)
+	public VerticalLayout rightLayout()
 	{
 		VerticalLayout bean = new VerticalLayout();
-
-		HorizontalLayout top = new HorizontalLayout(searchField);
-		for (Button button : socialButtons)
-		{
-			top.addComponent(button);
-		}
-		bean.addComponent(top);
-
 		return bean;
 	}
 }
