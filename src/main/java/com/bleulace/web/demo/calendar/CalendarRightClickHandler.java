@@ -1,10 +1,9 @@
 package com.bleulace.web.demo.calendar;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.management.model.RsvpStatus;
-import com.bleulace.utils.SystemProfiles;
+import com.bleulace.web.annotation.WebProfile;
 import com.bleulace.web.demo.timebox.EventBean;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -12,7 +11,7 @@ import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 
 @Component
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+@WebProfile
 class CalendarRightClickHandler implements Handler
 {
 	private final Action[] actions;

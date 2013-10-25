@@ -36,14 +36,14 @@ import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHand
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
-class UIComponentConfig
+class CalendarComponentConfig
 {
 	/**********************************************
 	 * LEFT
 	 */
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public DateField dateField(final Calendar calendar, final TabSheet tabSheet)
 	{
 		final DateField bean = new DateField();
@@ -56,7 +56,6 @@ class UIComponentConfig
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				Date value = bean.getValue();
 				tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
 				DateTime start = LocalDate.fromDateFields(bean.getValue())
 						.toDateTimeAtStartOfDay();

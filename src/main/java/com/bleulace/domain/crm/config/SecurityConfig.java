@@ -139,10 +139,4 @@ public class SecurityConfig
 		}
 		return mgr;
 	}
-
-	@Bean
-	public ShiroSubjectAspect shiroAccountAspect()
-	{
-		return ShiroSubjectAspect.aspectOf();
-	}
 }

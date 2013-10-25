@@ -33,7 +33,7 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 	@Transactional
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
-		if (shouldPopulate())
+		try
 		{
 			Account me = new Account();
 			me.setUsername("arleighdickerson@frugalu.com");
@@ -71,11 +71,9 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 			em.persist(project);
 			em.flush();
 		}
-	}
-
-	private boolean shouldPopulate()
-	{
-		// return dao.count() == 0;
-		return false;
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

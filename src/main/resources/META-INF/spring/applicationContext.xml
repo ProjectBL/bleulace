@@ -52,7 +52,4 @@
 		class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
 		<property name="maxPoolSize" value="4" />
 	</bean>
-
-	<bean class="com.bleulace.domain.crm.config.ShiroSubjectAspect"
-		init-method="aspectOf" />
 </beans>
