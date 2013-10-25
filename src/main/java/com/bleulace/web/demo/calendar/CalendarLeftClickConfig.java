@@ -1,5 +1,6 @@
 package com.bleulace.web.demo.calendar;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -24,6 +25,9 @@ import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
 class CalendarLeftClickConfig
 {
+	@Autowired
+	private TabSheet tabSheet;
+
 	@Bean
 	public RangeSelectHandler rangeSelectHandler()
 	{
@@ -60,7 +64,7 @@ class CalendarLeftClickConfig
 	}
 
 	@Bean
-	public DateClickHandler dateClickHandler(final TabSheet tabSheet)
+	public DateClickHandler dateClickHandler()
 	{
 		return new DateClickHandler()
 		{

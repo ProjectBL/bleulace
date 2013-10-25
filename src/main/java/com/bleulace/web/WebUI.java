@@ -24,7 +24,7 @@ import com.vaadin.ui.UI;
  */
 //@formatter:on
 @Push
-@Configurable
+@Configurable(preConstruction = true)
 @PreserveOnRefresh
 @Widgetset("com.vaadin.DefaultWidgetSet")
 public class WebUI extends UI

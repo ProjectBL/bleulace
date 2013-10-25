@@ -68,7 +68,7 @@ class UIComponentConfig
 	}
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public Button homeButton()
 	{
 		Button bean = makeIconButton(Icon.home);
@@ -76,7 +76,7 @@ class UIComponentConfig
 	}
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public Button lockButton()
 	{
 		Button bean = makeIconButton(Icon.lock);
@@ -84,7 +84,7 @@ class UIComponentConfig
 	}
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public TextField statusUpdateField()
 	{
 		TextField bean = new TextField();
@@ -93,7 +93,7 @@ class UIComponentConfig
 	}
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public Accordion accordion()
 	{
 		Accordion bean = new Accordion();
@@ -232,7 +232,7 @@ class UIComponentConfig
 	 */
 
 	@Bean
-	@Scope("ui")
+	@Scope("prototype")
 	public ComboBox searchField()
 	{
 		ComboBox bean = new ComboBox();
