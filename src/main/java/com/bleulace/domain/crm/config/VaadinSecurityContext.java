@@ -20,7 +20,7 @@ import com.vaadin.server.VaadinSession;
  * 
  * @author mpilone
  */
-// register on develepmont and production system profiles. -AD
+// register component on DEVELOPMENT and PRODUCTION system profiles. -Arls
 @Component
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
 class VaadinSecurityContext implements SecurityContext
@@ -75,7 +75,6 @@ class VaadinSecurityContext implements SecurityContext
 		Subject subject = (Subject) session.getAttribute(SUBJECT_ATTRIBUTE);
 		if (subject == null)
 		{
-
 			// Create a new subject using the configured security manager.
 			subject = (new Subject.Builder(securityManager)).buildSubject();
 			session.setAttribute(SUBJECT_ATTRIBUTE, subject);

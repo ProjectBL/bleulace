@@ -27,6 +27,7 @@ import com.vaadin.server.VaadinSession;
  * @author mpilone
  * 
  */
+// register component on DEVELOPMENT and PRODUCTION system profiles. -Arls
 @Component("vaadinSessionManager")
 @Profile({ SystemProfiles.DEV, SystemProfiles.TEST })
 public class VaadinSessionManager implements SessionManager

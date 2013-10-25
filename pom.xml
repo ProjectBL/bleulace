@@ -7,8 +7,9 @@
 	<packaging>war</packaging>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
 	<properties>
-		<aspectj.version>1.7.3</aspectj.version>
-		<java.version>1.7</java.version>
+		<!-- <aspectj.version>1.7.3</aspectj.version> <java.version>1.7</java.version> -->
+		<aspectj.version>1.6.12</aspectj.version>
+		<java.version>1.6</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<roo.version>1.2.3.RELEASE</roo.version>
 		<slf4j.version>1.7.2</slf4j.version>
@@ -343,11 +344,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>2.1</version>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.1</version>
@@ -459,10 +455,6 @@
 						<weaveDependency>
 							<groupId>org.apache.shiro</groupId>
 							<artifactId>shiro-core</artifactId>
-						</weaveDependency>
-						<weaveDependency>
-							<groupId>org.dellroad</groupId>
-							<artifactId>dellroad-stuff-vaadin</artifactId>
 						</weaveDependency>
 					</weaveDependencies>
 					<source>${java.version}</source>

@@ -27,10 +27,6 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
  * A realm which performs authentication and authorization for {@link Account}
  * instances.
  * 
- * @see JpaPermission
- * @see PermissionDAO
- * @see JpaPermissionDAO
- * 
  * @author Arleigh Dickerson
  * 
  */
@@ -88,15 +84,6 @@ public class JpaRealm extends AuthorizingRealm
 		return info;
 	}
 
-	/**
-	 * 
-	 * @return an accountDAO
-	 */
-	private AccountDAO getDAO()
-	{
-		return SpringApplicationContext.get().getBean(AccountDAO.class);
-	}
-
 	private List<Permission> getManagementPermissions(Account account)
 	{
 		List<Permission> permissions = new LinkedList<Permission>();
@@ -108,5 +95,14 @@ public class JpaRealm extends AuthorizingRealm
 			permissions.add(assignment.getRole().on(assignment.getId()));
 		}
 		return permissions;
+	}
+
+	/**
+	 * 
+	 * @return an accountDAO
+	 */
+	private AccountDAO getDAO()
+	{
+		return SpringApplicationContext.get().getBean(AccountDAO.class);
 	}
 }

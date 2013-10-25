@@ -20,7 +20,7 @@ import com.bleulace.domain.resource.model.TestResource;
 import com.bleulace.utils.SystemProfiles;
 
 @Component
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+@Profile({ SystemProfiles.DEV })
 class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 {
 	@PersistenceContext
@@ -75,6 +75,7 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 
 	private boolean shouldPopulate()
 	{
-		return dao.count() == 0;
+		// return dao.count() == 0;
+		return false;
 	}
 }
