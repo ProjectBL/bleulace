@@ -92,12 +92,4 @@ public class CalendarViewConfig
 
 		return bean;
 	}
-
-	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public VerticalLayout rightLayout()
-	{
-		VerticalLayout bean = new VerticalLayout();
-		return bean;
-	}
 }

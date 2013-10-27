@@ -3,6 +3,7 @@ package com.bleulace.web;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -45,6 +46,25 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 			me.setContactInformation(myInfo);
 
 			em.persist(me);
+
+			for (int i = 0; i < 5; i++)
+			{
+				Account a = new Account();
+				a.setUsername(RandomStringUtils.random(20, true, true)
+						+ "@frugalu.com");
+				a.setPassword("password");
+
+				ContactInformation aInfo = new ContactInformation(
+						RandomStringUtils.random(5, true, true),
+						RandomStringUtils.random(5, true, true),
+						a.getUsername(), "Marshall University", "Something",
+						"Somewhere");
+				a.setContactInformation(aInfo);
+
+				em.persist(a);
+				me.getFriends().add(a);
+				me = em.merge(me);
+			}
 
 			Project project = new Project();
 			project.setTitle("World Domination");

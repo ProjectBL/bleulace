@@ -39,11 +39,7 @@
 			execution="DESTROY" />
 	</jdbc:initialize-database>
 
-	<jpa:repositories base-package="com.bleulace"
-		repository-impl-postfix="Impl">
-		<repository:include-filter type="assignable"
-			expression="com.bleulace.jpa.ReadOnlyDAO" />
-	</jpa:repositories>
+	<jpa:repositories base-package="com.bleulace" />
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

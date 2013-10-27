@@ -3,13 +3,11 @@ package com.bleulace.web.demo.calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 
 import com.bleulace.utils.SystemProfiles;
 import com.porotype.iconfont.FontAwesome.Icon;
@@ -32,19 +30,24 @@ import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
+import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
 class CalendarComponentConfig
 {
+	@Autowired
+	private CalendarPresenter presenter;
+
 	/**********************************************
 	 * LEFT
 	 */
 
 	@Bean
-	@Scope("prototype")
-	public DateField dateField(final Calendar calendar, final TabSheet tabSheet)
+	@Scope("ui")
+	public DateField dateField()
 	{
 		final DateField bean = new DateField();
 		bean.setResolution(Resolution.DAY);
@@ -56,11 +59,7 @@ class CalendarComponentConfig
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
-				DateTime start = LocalDate.fromDateFields(bean.getValue())
-						.toDateTimeAtStartOfDay();
-				calendar.setStartDate(start.toDate());
-				calendar.setEndDate(start.plusDays(1).minusMillis(1).toDate());
+				presenter.cursorChanged();
 			}
 		});
 		return bean;
@@ -86,8 +85,16 @@ class CalendarComponentConfig
 	@Scope("prototype")
 	public TextField statusUpdateField()
 	{
-		TextField bean = new TextField();
+		final TextField bean = new TextField();
 		bean.setInputPrompt("What's happening?");
+		bean.addValueChangeListener(new ValueChangeListener()
+		{
+			@Override
+			public void valueChange(ValueChangeEvent event)
+			{
+				presenter.statusUpdated(bean.getValue());
+			}
+		});
 		return bean;
 	}
 
@@ -121,8 +128,8 @@ class CalendarComponentConfig
 	 */
 
 	@Bean
-	@Scope(value = "ui", proxyMode = ScopedProxyMode.TARGET_CLASS)
-	public TabSheet tabSheet(final Calendar calendar)
+	@Scope(value = "ui")
+	public TabSheet tabSheet()
 	{
 		final TabSheet bean = new TabSheet();
 		for (final CalendarSelection selection : CalendarSelection.values())
@@ -138,7 +145,7 @@ class CalendarComponentConfig
 				{
 					if (bean.getTabPosition(bean.getTab(bean.getSelectedTab())) == tabPosition)
 					{
-						selection.command.execute(calendar);
+						presenter.tabSelected(selection);
 					}
 				}
 			});
@@ -146,81 +153,20 @@ class CalendarComponentConfig
 		return bean;
 	}
 
-	interface CalendarCommand
-	{
-		void execute(Calendar calendar);
-	}
-
-	enum CalendarSelection
-	{
-		//@formatter:off
-		DAY("Day",new DayCommand()), 
-		WEEK("Week",new WeekCommand()), 
-		MONTH("Month",new MonthCommand());
-		//@formatter:on
-
-		final String selectionName;
-		final CalendarCommand command;
-
-		CalendarSelection(String selectionName, CalendarCommand command)
-		{
-			this.selectionName = selectionName;
-			this.command = command;
-		}
-
-		@Override
-		public String toString()
-		{
-			return selectionName;
-		}
-	}
-
-	static class DayCommand implements CalendarCommand
-	{
-		@Override
-		public void execute(Calendar calendar)
-		{
-			DateTime start = LocalDate.now().toDateTimeAtStartOfDay();
-			calendar.setStartDate(start.toDate());
-			calendar.setEndDate(start.plusDays(1).minusMillis(1).toDate());
-		}
-	}
-
-	static class WeekCommand implements CalendarCommand
-	{
-		@Override
-		public void execute(Calendar calendar)
-		{
-			DateTime start = LocalDate.now().toDateTimeAtStartOfDay();
-			start = start.withDayOfWeek(start.toGregorianCalendar()
-					.getFirstDayOfWeek());
-			calendar.setStartDate(start.toDate());
-			calendar.setEndDate(start.plusWeeks(1).minusMillis(1).toDate());
-		}
-	}
-
-	static class MonthCommand implements CalendarCommand
-	{
-		@Override
-		public void execute(Calendar calendar)
-		{
-			DateTime start = LocalDate.now().toDateTimeAtStartOfDay();
-			start = start.withDayOfMonth(1);
-			calendar.setStartDate(start.toDate());
-			calendar.setEndDate(start.plusMonths(1).minusMillis(1).toDate());
-		}
-	}
-
 	@Bean
 	@Scope("ui")
 	public Calendar calendar(EventClickHandler eventClickHandler,
 			RangeSelectHandler rangeSelectHandler,
-			DateClickHandler dateClickHandler, Handler actionHandler)
+			DateClickHandler dateClickHandler,
+			EventMoveHandler eventMoveHandler,
+			EventResizeHandler eventResizeHandler, Handler actionHandler)
 	{
 		Calendar bean = new Calendar();
 		bean.setHandler(eventClickHandler);
 		bean.setHandler(rangeSelectHandler);
 		bean.setHandler(dateClickHandler);
+		bean.setHandler(eventMoveHandler);
+		bean.setHandler(eventResizeHandler);
 		bean.addActionHandler(actionHandler);
 		bean.setImmediate(true);
 		return bean;

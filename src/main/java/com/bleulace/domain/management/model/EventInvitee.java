@@ -29,13 +29,14 @@ public class EventInvitee
 	@Enumerated(EnumType.STRING)
 	private RsvpStatus status;
 
-	EventInvitee(Account guest, Account host)
+	public EventInvitee(Account guest, Account host)
 	{
 		this.host = host;
 		this.guest = guest;
 		status = RsvpStatus.PENDING;
 	}
 
+	@SuppressWarnings("unused")
 	private EventInvitee()
 	{
 	}

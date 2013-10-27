@@ -6,33 +6,43 @@ import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.PreRemove;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.jpa.DateWindow;
 import com.bleulace.jpa.EntityManagerReference;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
-@Entity
 @RooJavaBean
-public class Event extends Project implements CalendarEvent
+@Entity
+public class PersistentEvent extends Project implements EditableCalendarEvent
 {
-	@Embedded
-	private DateWindow window;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date start;
+
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	private Date end;
 
 	@MapKeyColumn(name = "GUEST_ID")
 	@ElementCollection
 	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
 
+	@NotEmpty
 	@Column(nullable = false)
 	private String location = "";
 
-	Event()
+	public PersistentEvent()
 	{
 	}
 
@@ -53,27 +63,27 @@ public class Event extends Project implements CalendarEvent
 	}
 
 	@Override
-	public Date getStart()
-	{
-		return window.getStart();
-	}
-
-	@Override
-	public Date getEnd()
-	{
-		return window.getEnd();
-	}
-
-	@Override
 	public String getCaption()
 	{
 		return getTitle();
 	}
 
 	@Override
+	public void setCaption(String caption)
+	{
+		setTitle(caption);
+	}
+
+	@Override
 	public String getDescription()
 	{
-		return getLocation();
+		return location;
+	}
+
+	@Override
+	public void setDescription(String description)
+	{
+		setLocation(description);
 	}
 
 	@Override
@@ -84,9 +94,20 @@ public class Event extends Project implements CalendarEvent
 	}
 
 	@Override
-	public boolean isAllDay()
+	public void setStyleName(String styleName)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean isAllDay()
+	{
 		return false;
+	}
+
+	@Override
+	public void setAllDay(boolean isAllDay)
+	{
+		// TODO Auto-generated method stub
 	}
 }

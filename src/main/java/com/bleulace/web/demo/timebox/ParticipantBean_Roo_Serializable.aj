@@ -3,13 +3,13 @@
 
 package com.bleulace.web.demo.timebox;
 
-import com.bleulace.web.demo.timebox.PersonBean;
+import com.bleulace.web.demo.timebox.ParticipantBean;
 import java.io.Serializable;
 
-privileged aspect PersonBean_Roo_Serializable {
+privileged aspect ParticipantBean_Roo_Serializable {
     
-    declare parents: PersonBean implements Serializable;
+    declare parents: ParticipantBean implements Serializable;
     
-    private static final long PersonBean.serialVersionUID = 1L;
+    private static final long ParticipantBean.serialVersionUID = 1L;
     
 }

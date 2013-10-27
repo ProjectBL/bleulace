@@ -1,8 +1,9 @@
 package com.bleulace.domain.management.infrastructure;
 
-import com.bleulace.domain.management.model.Event;
-import com.bleulace.jpa.ReadOnlyDAO;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EventDAO extends ReadOnlyDAO<Event>, EventDAOCustom
+import com.bleulace.domain.management.model.PersistentEvent;
+
+public interface EventDAO extends JpaRepository<PersistentEvent,String>, EventDAOCustom
 {
 }

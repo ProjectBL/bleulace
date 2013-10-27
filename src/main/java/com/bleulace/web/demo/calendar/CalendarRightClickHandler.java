@@ -1,10 +1,10 @@
 package com.bleulace.web.demo.calendar;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bleulace.domain.management.model.RsvpStatus;
+import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.web.annotation.WebProfile;
-import com.bleulace.web.demo.timebox.EventBean;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
@@ -14,6 +14,9 @@ import com.vaadin.ui.components.calendar.CalendarDateRange;
 @WebProfile
 class CalendarRightClickHandler implements Handler
 {
+	@Autowired
+	private CalendarPresenter presenter;
+
 	private final Action[] actions;
 
 	CalendarRightClickHandler()
@@ -41,59 +44,43 @@ class CalendarRightClickHandler implements Handler
 	@Override
 	public void handleAction(Action action, Object sender, Object target)
 	{
-		if (target instanceof EventBean)
+		if (target instanceof PersistentEvent)
 		{
-			EventBean bean = (EventBean) target;
+			PersistentEvent bean = (PersistentEvent) target;
 			for (RightClickGesture gesture : RightClickGesture.values())
 			{
 				if (gesture.matches(action))
 				{
-					gesture.command.execute(bean);
+					switch (gesture)
+					{
+					case ACCEPT:
+						presenter.eventAccepted(bean);
+						break;
+					case DECLINE:
+						presenter.eventDeclined(bean);
+						break;
+					default:
+						break;
+					}
 				}
 			}
 		}
 	}
 
-	interface EventBeanCommand
-	{
-		void execute(EventBean bean);
-	}
-
 	enum RightClickGesture
 	{
-		//@formatter:off
-		ACCEPT("accept", new RsvpCommand(RsvpStatus.ACCEPTED)), 
-		DECLINE("decline", new RsvpCommand(RsvpStatus.DECLINED));
-		//@formatter:on
+		ACCEPT("accept"), DECLINE("decline");
 
 		final Action action;
-		final EventBeanCommand command;
 
-		RightClickGesture(String caption, EventBeanCommand command)
+		RightClickGesture(String caption)
 		{
 			this.action = new Action(caption);
-			this.command = command;
 		}
 
 		boolean matches(Action action)
 		{
 			return action.getCaption().equals(this.action.getCaption());
-		}
-	}
-
-	private static class RsvpCommand implements EventBeanCommand
-	{
-		final RsvpStatus status;
-
-		RsvpCommand(RsvpStatus status)
-		{
-			this.status = status;
-		}
-
-		@Override
-		public void execute(EventBean bean)
-		{
-			bean.setStatus(status);
 		}
 	}
 }

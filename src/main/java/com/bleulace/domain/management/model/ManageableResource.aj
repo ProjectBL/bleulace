@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.persistence.Column;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.bleulace.domain.resource.model.CompositeResource;
 
 public interface ManageableResource extends CompositeResource
@@ -15,6 +17,7 @@ public interface ManageableResource extends CompositeResource
 
 	static aspect Impl
 	{
+		@NotEmpty
 		@Column(nullable = false)
 		private String ManageableResource.title = "";
 

@@ -7,20 +7,21 @@ import java.util.Set;
 
 import org.springframework.util.Assert;
 
-import com.bleulace.domain.management.model.Event;
-import com.bleulace.domain.management.model.QEvent;
+import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.QEventInvitee;
+import com.bleulace.domain.management.model.QPersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.jpa.config.QueryFactory;
 import com.mysema.query.jpa.impl.JPAQuery;
 
 class EventDAOImpl implements EventDAOCustom
 {
-	private final QEvent e = new QEvent("e");
+	private final QPersistentEvent e = new QPersistentEvent("e");
 	private final QEventInvitee i = new QEventInvitee("i");
 
 	@Override
-	public List<Event> findEvents(Date start, Date end, String accountId)
+	public List<PersistentEvent> findEvents(Date start, Date end,
+			String accountId)
 	{
 		Assert.notNull(accountId);
 		return dateQuery(start, end)
@@ -43,15 +44,13 @@ class EventDAOImpl implements EventDAOCustom
 	{
 		Assert.notNull(start);
 		Assert.notNull(end);
-		return QueryFactory
-				.from(e)
-				.where(e.window.start.before(end)
-						.and(e.window.end.after(start)))
-				.orderBy(e.window.start.asc());
+		return QueryFactory.from(e)
+				.where(e.start.before(end).and(e.end.after(start)))
+				.orderBy(e.start.asc());
 	}
 
 	@Override
-	public List<Event> findEvents(Date instant, String accountId)
+	public List<PersistentEvent> findEvents(Date instant, String accountId)
 	{
 		QueryFactory.from(e).createQuery(e);
 		return findEvents(instant, instant, accountId);

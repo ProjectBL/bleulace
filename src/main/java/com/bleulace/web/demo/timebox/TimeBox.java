@@ -1,131 +1,190 @@
 package com.bleulace.web.demo.timebox;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import com.bleulace.domain.management.model.PersistentEvent;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.BeanContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.datefield.Resolution;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 
+@Component
+@Scope("ui")
 public class TimeBox extends Window
 {
-	private final BeanFieldGroup<EventBean> fieldGroup = new BeanFieldGroup<EventBean>(
-			EventBean.class);
+	@Autowired
+	private TimeBoxPresenter presenter;
 
-	public TimeBox(final EventBean model, final BasicEventProvider provider)
+	@Autowired
+	@Qualifier("timeBoxFieldGroup")
+	private BeanFieldGroup<PersistentEvent> fieldGroup;
+
+	@Autowired
+	private BeanContainer<String, ParticipantBean> participants;
+
+	@Autowired
+	private BeanContainer<String, ParticipantBean> candidates;
+
+	private final Button deleteButton = makeDeleteButton();
+
+	public void show(PersistentEvent event)
+	{
+		presenter.setCurrentEvent(event);
+		deleteButton.setVisible(!event.isNew());
+		UI.getCurrent().addWindow(this);
+		focus();
+	}
+
+	private TimeBox()
 	{
 		setModal(true);
 		setCaption("Timebox");
-
-		fieldGroup.setItemDataSource(model);
-
-		FormLayout form = new FormLayout();
-
-		form.addComponent(fieldGroup.buildAndBind("What", "caption"));
-		form.addComponent(fieldGroup.buildAndBind("Where", "description"));
-
-		DateField start = new DateField();
-		start.setCaption("Start");
-		start.setResolution(Resolution.MINUTE);
-		start.setImmediate(true);
-		start.setBuffered(false);
-		fieldGroup.bind(start, "start");
-		form.addComponent(start);
-
-		DateField end = new DateField();
-		end.setCaption("End");
-		end.setResolution(Resolution.MINUTE);
-		end.setImmediate(true);
-		end.setBuffered(false);
-		fieldGroup.bind(end, "end");
-		form.addComponent(end);
-
-		TwinColSelect select = new TwinColSelect("Who");
-		select.setBuffered(false);
-		select.setContainerDataSource(makePersonContainer());
-		fieldGroup.bind(select, "attendees");
-		form.addComponent(select);
-
-		Button cancel = new Button("Cancel");
-		cancel.setClickShortcut(KeyCode.ESCAPE);
-		cancel.addClickListener(new Button.ClickListener()
-		{
-			@Override
-			public void buttonClick(ClickEvent event)
-			{
-				Notification.show("Operation aborted.", Type.TRAY_NOTIFICATION);
-				close();
-			}
-		});
-
-		Button apply = new Button("Apply");
-		apply.setClickShortcut(KeyCode.ENTER);
-		apply.addClickListener(new Button.ClickListener()
-		{
-			@Override
-			public void buttonClick(ClickEvent event)
-			{
-				try
-				{
-					fieldGroup.commit();
-					if (!provider.containsEvent(model))
-					{
-						provider.addEvent(model);
-					}
-					Notification.show("Timebox saved.", Type.TRAY_NOTIFICATION);
-					close();
-				}
-				catch (CommitException e)
-				{
-					Notification.show("Invalid timebox state");
-				}
-			}
-		});
-
-		HorizontalLayout buttons = new HorizontalLayout(cancel, apply);
-		buttons.setSpacing(false);
-
-		if (provider.containsEvent(model))
-		{
-			buttons.addComponent(new Button("Delete",
-					new Button.ClickListener()
-					{
-						@Override
-						public void buttonClick(ClickEvent event)
-						{
-							provider.removeEvent(model);
-							close();
-						}
-					}));
-		}
-
-		VerticalLayout layout = new VerticalLayout(form, buttons);
-		layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
-
-		setContent(layout);
 	}
 
-	private BeanItemContainer<PersonBean> makePersonContainer()
+	@PostConstruct
+	protected void init()
 	{
-		BeanItemContainer<PersonBean> container = new BeanItemContainer<PersonBean>(
-				PersonBean.class);
-		container.addBean(new PersonBean("Jane", "Doe"));
-		container.addBean(new PersonBean("John", "Doe"));
-		container.addBean(new PersonBean("Jane", "Doe"));
-		container.addBean(new PersonBean("John", "Doe"));
-		container.addBean(new PersonBean("Jane", "Doe"));
-		container.addBean(new PersonBean("John", "Doe"));
-		return container;
+		TextField captionField = fieldGroup.buildAndBind("What", "title",
+				TextField.class);
+		TextField locationField = fieldGroup.buildAndBind("Where", "location",
+				TextField.class);
+
+		DateField startField = makeDateField("Start", "start", fieldGroup);
+		DateField endField = makeDateField("End", "end", fieldGroup);
+
+		final ComboBox comboBox = makeComboBox();
+		Table table = makeTable();
+
+		FormLayout form = new FormLayout(captionField, locationField,
+				startField, endField, comboBox, table);
+
+		Button applyButton = makeApplyButton();
+		Button cancelButton = makeCancelButton();
+
+		HorizontalLayout buttons = new HorizontalLayout(applyButton,
+				cancelButton, deleteButton);
+
+		VerticalLayout content = new VerticalLayout(form, buttons);
+		setContent(content);
+
+		addCloseListener(new Window.CloseListener()
+		{
+			@Override
+			public void windowClose(CloseEvent e)
+			{
+				comboBox.setValue(null);
+				presenter.timeBoxClosed();
+			}
+		});
+	}
+
+	public void showSuccessMessage(String text)
+	{
+		Notification.show(text, Type.TRAY_NOTIFICATION);
+	}
+
+	public void showWarningMessage(String text)
+	{
+		Notification.show(text);
+	}
+
+	private DateField makeDateField(String caption, String propertyId,
+			BeanFieldGroup<PersistentEvent> fieldGroup)
+	{
+		DateField field = fieldGroup.buildAndBind(caption, propertyId,
+				DateField.class);
+		field.setResolution(Resolution.MINUTE);
+		return field;
+	}
+
+	private ComboBox makeComboBox()
+	{
+		final ComboBox field = new ComboBox();
+		field.setBuffered(false);
+		field.setImmediate(true);
+		field.setItemCaptionPropertyId("name");
+		field.setContainerDataSource(candidates);
+		field.addValueChangeListener(new ValueChangeListener()
+		{
+			@Override
+			public void valueChange(ValueChangeEvent event)
+			{
+				presenter.participantAdded(candidates.getItem(field.getValue())
+						.getBean());
+			}
+		});
+		return field;
+	}
+
+	private Table makeTable()
+	{
+		Table table = new Table();
+		table.setContainerDataSource(participants);
+		return table;
+	}
+
+	private Button makeApplyButton()
+	{
+		Button button = new Button("Apply");
+		button.setClickShortcut(KeyCode.ENTER);
+		button.addClickListener(new Button.ClickListener()
+		{
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				presenter.applyClicked();
+			}
+		});
+		return button;
+	}
+
+	private Button makeCancelButton()
+	{
+		Button button = new Button("Cancel");
+		button.setClickShortcut(KeyCode.ESCAPE);
+		button.addClickListener(new Button.ClickListener()
+		{
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				presenter.cancelClicked();
+			}
+		});
+		return button;
+	}
+
+	private Button makeDeleteButton()
+	{
+		Button button = new Button("Delete");
+		button.setClickShortcut(KeyCode.DELETE);
+		button.addClickListener(new Button.ClickListener()
+		{
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				presenter.deleteClicked();
+			}
+		});
+		return button;
 	}
 }
