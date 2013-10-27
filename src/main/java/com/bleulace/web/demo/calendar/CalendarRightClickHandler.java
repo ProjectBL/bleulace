@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.management.model.PersistentEvent;
@@ -10,6 +11,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 
+@Scope("ui")
 @Component
 @WebProfile
 class CalendarRightClickHandler implements Handler

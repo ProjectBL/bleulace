@@ -12,6 +12,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanContainer;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Button;
@@ -129,8 +130,12 @@ public class TimeBox extends Window
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				presenter.participantAdded(candidates.getItem(field.getValue())
-						.getBean());
+				BeanItem<ParticipantBean> item = candidates.getItem(field
+						.getValue());
+				if (item != null)
+				{
+					presenter.participantAdded(item.getBean());
+				}
 			}
 		});
 		return field;

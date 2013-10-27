@@ -7,8 +7,11 @@ import java.util.List;
 import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.infrastructure.EventDAO;
+import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.web.annotation.Presenter;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.DateField;
@@ -54,16 +57,9 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	@Autowired
 	private CalendarView view;
 
-	private String accountId;
-
 	private final DateClickHandler basicDateClickHandler = new BasicDateClickHandler();
 	private final BasicEventMoveHandler basicEventMoveHandler = new BasicEventMoveHandler();
 	private final BasicEventResizeHandler basicEventResizeHandler = new BasicEventResizeHandler();
-
-	void setAccountId(String accountId)
-	{
-		this.accountId = accountId;
-	}
 
 	void cursorChanged()
 	{
@@ -84,10 +80,12 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 
 	void eventAccepted(PersistentEvent event)
 	{
+		updateRsvp(event, RsvpStatus.ACCEPTED);
 	}
 
 	void eventDeclined(PersistentEvent event)
 	{
+		updateRsvp(event, RsvpStatus.DECLINED);
 	}
 
 	void searchExecuted(String searchTerm)
@@ -106,6 +104,11 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		PersistentEvent calendarEvent = new PersistentEvent();
 		calendarEvent.setStart(event.getStart());
 		calendarEvent.setEnd(event.getEnd());
+
+		Account current = Account.getCurrent();
+		calendarEvent.getInvitees().put(current,
+				new EventInvitee(current, current, RsvpStatus.ACCEPTED));
+
 		view.showTimeBox(calendarEvent);
 	}
 
@@ -136,7 +139,7 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	{
 		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
-				accountId))
+				Account.getCurrent().getId()))
 		{
 			event.addEventChangeListener(this);
 			events.add(event);
@@ -184,5 +187,13 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		{
 			listener.eventSetChange(event);
 		}
+	}
+
+	private void updateRsvp(PersistentEvent event, RsvpStatus status)
+	{
+		event.setRsvpStatus(Account.getCurrent().getId(), status);
+		eventDAO.save(event);
+		event.setStyleName(null);
+		calendar.markAsDirty();
 	}
 }

@@ -53,6 +53,18 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 		return invitee == null ? null : invitee.getStatus();
 	}
 
+	public void setRsvpStatus(String accountId, RsvpStatus status)
+	{
+		Account guest = EntityManagerReference.load(Account.class, accountId);
+		EventInvitee invitee = invitees.get(guest);
+		if (invitee == null)
+		{
+			invitee = new EventInvitee(guest, Account.getCurrent());
+			invitees.put(guest, invitee);
+		}
+		invitee.setStatus(status);
+	}
+
 	@PreRemove
 	protected void preRemove()
 	{
@@ -89,7 +101,12 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public String getStyleName()
 	{
-		// TODO Auto-generated method stub
+		Account current = Account.getCurrent();
+		if (current != null)
+		{
+			EventInvitee invitee = getInvitees().get(current);
+			return null == invitee ? null : invitee.getStatus().getStyleName();
+		}
 		return null;
 	}
 

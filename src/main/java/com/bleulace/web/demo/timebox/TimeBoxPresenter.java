@@ -66,7 +66,6 @@ class TimeBoxPresenter implements CommitHandler
 
 		for (Account friend : friends)
 		{
-			System.out.println("ADDING FRIEND");
 			candidates.addBean(new ParticipantBean(friend));
 		}
 
