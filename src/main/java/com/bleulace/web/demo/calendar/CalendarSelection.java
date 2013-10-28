@@ -1,12 +1,15 @@
 package com.bleulace.web.demo.calendar;
 
-import java.util.Date;
-
-import org.apache.commons.lang3.Range;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Weeks;
+import org.springframework.util.Assert;
 
-enum CalendarSelection
+import com.vaadin.ui.Calendar;
+
+enum CalendarSelection implements CalendarCommand
 {
 	//@formatter:off
 		DAY("Day",new DayCommand()), 
@@ -29,49 +32,85 @@ enum CalendarSelection
 		return selectionName;
 	}
 
-	interface CalendarCommand
+	@Override
+	public void execute(Calendar calendar)
 	{
-		Range<Date> execute(Date cursor);
+		Assert.notNull(calendar);
+		command.execute(calendar);
 	}
 
-	static class DayCommand implements CalendarCommand
+	@Override
+	public boolean matches(Calendar calendar)
+	{
+		Assert.notNull(calendar);
+		return command.matches(calendar);
+	}
+
+	private static class DayCommand implements CalendarCommand
 	{
 		@Override
-		public Range<Date> execute(Date cursor)
+		public void execute(Calendar calendar)
 		{
-			DateTime start = LocalDate.fromDateFields(cursor)
+			DateTime start = LocalDate.fromDateFields(calendar.getStartDate())
 					.toDateTimeAtStartOfDay();
-			return Range.between(start.toDate(),
-					start.plusDays(1).minusMillis(1).toDate());
+			calendar.setStartDate(start.toDate());
+			calendar.setEndDate(start.plusDays(1).minusMillis(1).toDate());
+		}
+
+		@Override
+		public boolean matches(Calendar calendar)
+		{
+			LocalDateTime start = LocalDateTime.fromDateFields(calendar
+					.getStartDate());
+			LocalDateTime end = LocalDateTime.fromDateFields(calendar
+					.getEndDate());
+			return Days.daysBetween(start, end).isLessThan(Days.ONE);
 		}
 	}
 
-	static class WeekCommand implements CalendarCommand
+	private static class WeekCommand implements CalendarCommand
 	{
 		@Override
-		public Range<Date> execute(Date cursor)
+		public void execute(Calendar calendar)
 		{
-			DateTime start = LocalDate.fromDateFields(cursor)
+			DateTime start = LocalDate.fromDateFields(calendar.getStartDate())
 					.toDateTimeAtStartOfDay();
 			start = start.withDayOfWeek(start.toGregorianCalendar()
 					.getFirstDayOfWeek());
-			return Range.between(start.toDate(), start.plusWeeks(1)
-					.minusMillis(1).toDate());
+			calendar.setStartDate(start.toDate());
+			calendar.setEndDate(start.plusWeeks(1).minusMillis(1).toDate());
+		}
+
+		@Override
+		public boolean matches(Calendar calendar)
+		{
+			LocalDateTime start = LocalDateTime.fromDateFields(calendar
+					.getStartDate());
+			LocalDateTime end = LocalDateTime.fromDateFields(calendar
+					.getEndDate());
+			return !DAY.matches(calendar)
+					&& Weeks.weeksBetween(start, end).isLessThan(Weeks.ZERO);
 		}
 	}
 
-	static class MonthCommand implements CalendarCommand
+	private static class MonthCommand implements CalendarCommand
 	{
 		@Override
-		public Range<Date> execute(Date cursor)
+		public void execute(Calendar calendar)
 		{
-			DateTime start = LocalDate.fromDateFields(cursor)
+			DateTime start = LocalDate.fromDateFields(calendar.getStartDate())
 					.toDateTimeAtStartOfDay();
 			start = start.withDayOfWeek(start.toGregorianCalendar()
 					.getFirstDayOfWeek());
 			start = start.withDayOfMonth(1);
-			return Range.between(start.toDate(), start.plusMonths(1)
-					.minusMillis(1).toDate());
+			calendar.setStartDate(start.toDate());
+			calendar.setEndDate(start.plusMonths(1).minusMillis(1).toDate());
+		}
+
+		@Override
+		public boolean matches(Calendar calendar)
+		{
+			return !DAY.matches(calendar) && !WEEK.matches(calendar);
 		}
 	}
 }

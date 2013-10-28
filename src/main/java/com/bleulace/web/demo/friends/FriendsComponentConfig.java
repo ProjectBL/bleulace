@@ -11,6 +11,7 @@ import com.bleulace.web.annotation.WebProfile;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.VerticalLayout;
 
 @WebProfile
 @Configuration
@@ -35,9 +36,19 @@ class FriendsComponentConfig
 		final ComboBox bean = new ComboBox();
 		bean.setContainerDataSource(container);
 		bean.setItemCaptionPropertyId("title");
-		bean.setInputPrompt("Search friends");
+		bean.setInputPrompt("Search");
 		bean.setImmediate(true);
 		bean.setBuffered(false);
+		return bean;
+	}
+
+	@Bean
+	@Scope("ui")
+	public VerticalLayout friendSearchLayout(
+			@Qualifier("friendSearchField") ComboBox friendSearchField)
+	{
+		VerticalLayout bean = new VerticalLayout(friendSearchField);
+		bean.setMargin(false);
 		return bean;
 	}
 

@@ -9,7 +9,7 @@ import java.util.Date;
 
 privileged aspect Comment_Roo_JavaBean {
     
-    public String Comment.getContent() {
+    public String Comment.getScreen() {
         return this.content;
     }
     

@@ -113,7 +113,7 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public String toString()
 	{
-		return getCaption();
+		return getTitle();
 	}
 
 	@Override

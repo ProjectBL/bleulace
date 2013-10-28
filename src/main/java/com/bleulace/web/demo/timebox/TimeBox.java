@@ -128,17 +128,16 @@ public class TimeBox extends Window
 
 	private ComboBox makeComboBox()
 	{
-		final ComboBox field = new ComboBox();
-		field.setBuffered(false);
-		field.setImmediate(true);
-		field.setItemCaptionPropertyId("name");
-		field.setContainerDataSource(candidates);
-		field.addValueChangeListener(new ValueChangeListener()
+		final ComboBox bean = new ComboBox("Invite", candidates);
+		bean.setBuffered(false);
+		bean.setImmediate(true);
+		bean.setItemCaptionPropertyId("name");
+		bean.addValueChangeListener(new ValueChangeListener()
 		{
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				BeanItem<ParticipantBean> item = candidates.getItem(field
+				BeanItem<ParticipantBean> item = candidates.getItem(bean
 						.getValue());
 				if (item != null)
 				{
@@ -146,14 +145,13 @@ public class TimeBox extends Window
 				}
 			}
 		});
-		return field;
+		return bean;
 	}
 
 	private Table makeTable()
 	{
-		Table table = new Table();
+		Table table = new Table("Participants", participants);
 		table.setPageLength(6);
-		table.setContainerDataSource(participants);
 		table.setVisibleColumns(new Object[] { "firstName", "lastName",
 				"email", "status" });
 		table.setColumnHeader("firstName", "First Name");

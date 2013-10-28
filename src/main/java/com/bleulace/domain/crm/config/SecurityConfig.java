@@ -139,4 +139,10 @@ public class SecurityConfig
 		}
 		return mgr;
 	}
+
+	@Bean
+	public SecurityUtilAspect securityUtilAspect()
+	{
+		return SecurityUtilAspect.aspectOf();
+	}
 }

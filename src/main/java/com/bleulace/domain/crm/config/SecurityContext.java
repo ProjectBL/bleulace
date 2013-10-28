@@ -2,7 +2,7 @@ package com.bleulace.domain.crm.config;
 
 import org.apache.shiro.subject.Subject;
 
-public interface SecurityContext
+interface SecurityContext
 {
 	public Subject getSubject();
 }

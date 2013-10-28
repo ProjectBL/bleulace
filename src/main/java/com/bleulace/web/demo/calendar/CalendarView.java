@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.web.annotation.VaadinView;
 import com.bleulace.web.demo.friends.FriendsPresenter;
 import com.bleulace.web.demo.timebox.TimeBox;
@@ -47,10 +48,10 @@ class CalendarView extends CustomComponent implements View
 	@RequiresUser
 	public void enter(ViewChangeEvent event)
 	{
-		Assert.notNull(accountDAO.findOne(event.getParameters()));
-		presenter.setOwner(event.getParameters());
-		friendsPresenter.setOwnerId(event.getParameters());
-
+		Account account = accountDAO.findOne(event.getParameters());
+		Assert.notNull(account);
+		presenter.setOwner(account.getId());
+		friendsPresenter.setOwnerId(account.getId());
 	}
 
 	void showMainContent(Component content)

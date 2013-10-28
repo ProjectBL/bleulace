@@ -10,10 +10,9 @@ import org.apache.shiro.session.mgt.SessionKey;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.SimpleSession;
 import org.apache.shiro.session.mgt.SimpleSessionFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.bleulace.utils.SystemProfiles;
+import com.bleulace.web.annotation.WebProfile;
 import com.vaadin.server.VaadinSession;
 
 /**
@@ -27,9 +26,8 @@ import com.vaadin.server.VaadinSession;
  * @author mpilone
  * 
  */
-// register component on DEVELOPMENT and PRODUCTION system profiles. -Arls
 @Component
-@Profile({ SystemProfiles.DEV, SystemProfiles.TEST })
+@WebProfile
 public class VaadinSessionManager implements SessionManager
 {
 

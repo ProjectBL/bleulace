@@ -5,17 +5,16 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
-import com.bleulace.utils.SystemProfiles;
+import com.bleulace.web.annotation.WebProfile;
 import com.porotype.iconfont.FontAwesome.Icon;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Notification;
 
 @Configuration
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+@WebProfile
 class SocialButtonsConfig
 {
 	@Bean(name = "socialButtons")

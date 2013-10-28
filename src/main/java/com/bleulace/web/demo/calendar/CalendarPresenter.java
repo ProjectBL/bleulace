@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
@@ -16,12 +15,7 @@ import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.web.annotation.Presenter;
 import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.data.util.filter.Compare;
 import com.vaadin.ui.Calendar;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
@@ -34,15 +28,13 @@ import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
-import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import com.vaadin.ui.components.calendar.handler.BasicEventResizeHandler;
 
 @Presenter
 class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
-		EventResizeHandler, EventMoveHandler, DateClickHandler,
-		CalendarEditableEventProvider, EventSetChangeNotifier,
-		CalendarEvent.EventChangeListener
+		EventResizeHandler, EventMoveHandler, CalendarEditableEventProvider,
+		EventSetChangeNotifier, CalendarEvent.EventChangeListener
 {
 	private Account owner;
 
@@ -62,12 +54,6 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	private JPAContainer<Account> friendContainer;
 
 	@Autowired
-	private TabSheet tabSheet;
-
-	@Autowired
-	private DateField dateField;
-
-	@Autowired
 	private Calendar calendar;
 
 	@Autowired
@@ -75,7 +61,6 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 
 	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
 
-	private static final DateClickHandler BASIC_DATE_CLICK_HANDLER = new BasicDateClickHandler();
 	private static final BasicEventMoveHandler BASIC_EVENT_MOVE_HANDLER = new BasicEventMoveHandler();
 	private static final BasicEventResizeHandler BASIC_EVENT_RESIZE_HANDLER = new BasicEventResizeHandler();
 
@@ -106,14 +91,6 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 				new EventInvitee(current, current, RsvpStatus.ACCEPTED));
 
 		timeBox.show(calendarEvent);
-	}
-
-	@Override
-	public void dateClick(DateClickEvent event)
-	{
-		tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
-		dateField.setValue(event.getDate());
-		BASIC_DATE_CLICK_HANDLER.dateClick(event);
 	}
 
 	@Override
@@ -192,21 +169,8 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 				owner.getId(), false, false);
 	}
 
-	void cursorChanged()
-	{
-		tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
-		tabSelected(CalendarSelection.DAY);
-	}
-
 	void statusUpdated(String status)
 	{
-	}
-
-	void tabSelected(CalendarSelection selection)
-	{
-		Range<Date> range = selection.command.execute(dateField.getValue());
-		calendar.setStartDate(range.getMinimum());
-		calendar.setEndDate(range.getMaximum());
 	}
 
 	void eventAccepted(PersistentEvent event)
