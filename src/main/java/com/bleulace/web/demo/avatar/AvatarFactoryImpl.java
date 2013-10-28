@@ -23,6 +23,7 @@ class AvatarFactoryImpl implements AvatarFactory
 	//@formatter:off
 	private final Map<AvatarSize, Integer> sizes = ImmutableMap.of(
 			AvatarSize.MINI, 50, 
+			AvatarSize.MEDIUM, 100, 
 			AvatarSize.FULL,200
 	);
 	//@formatter:on

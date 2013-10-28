@@ -1,5 +1,6 @@
 package com.bleulace.domain.crm.infrastructure;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
@@ -37,10 +38,24 @@ class AccountDAOImpl implements AccountDAOCustom
 				.list(r.requestor);
 	}
 
-	private JPAQuery makeQuery(String id)
+	@Override
+	public List<Account> findRandomFriends(String accountId, int count)
 	{
-		Assert.notNull(id);
-		return QueryFactory.from(a).where(a.id.eq(id));
+		Assert.isTrue(count > -1);
+		List<Account> list = QueryFactory.from(a).innerJoin(a.friends, f)
+				.where(f.id.eq(accountId)).distinct().limit(count).list(a);
+		Collections.shuffle(list);
+		return list;
+	}
+
+	@Override
+	public List<Account> findPeopleYouMightKnow(String accountId, int count)
+	{
+		List<Account> list = QueryFactory.from(a).innerJoin(a.friends, f)
+				.where(f.id.ne(accountId).and(a.id.ne(accountId))).distinct()
+				.limit(count).list(a);
+		Collections.shuffle(list);
+		return list;
 	}
 
 	@Override
@@ -52,5 +67,11 @@ class AccountDAOImpl implements AccountDAOCustom
 						i.lastName.containsIgnoreCase(searchTerm).or(
 								a.username.containsIgnoreCase(searchTerm))))
 				.list(a);
+	}
+
+	private JPAQuery makeQuery(String id)
+	{
+		Assert.notNull(id);
+		return QueryFactory.from(a).where(a.id.eq(id));
 	}
 }

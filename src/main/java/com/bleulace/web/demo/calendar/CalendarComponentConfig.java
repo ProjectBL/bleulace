@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -146,8 +147,12 @@ class CalendarComponentConfig
 
 	private enum AccordionHeader
 	{
-		CALENDAR("Calendar", "centerLayout"), PROJECTS("Projects"), FRIENDS(
-				"Friends"), GROUPS("Groups");
+		//@formatter:off
+		CALENDAR("Calendar", "centerLayout"), 
+		PROJECTS("Projects"), 
+		FRIENDS("Friends","friendsScreen"), 
+		GROUPS("Groups");
+		//@formatter:on
 
 		private final String name;
 		private final String beanName;
@@ -251,7 +256,8 @@ class CalendarComponentConfig
 
 	@Bean
 	@Scope("ui")
-	public ComboBox searchField(final JPAContainer<PersistentEvent> container,
+	public ComboBox searchField(
+			@Qualifier("searchFieldContainer") final JPAContainer<PersistentEvent> container,
 			final TabSheet tabSheet, final Calendar calendar)
 	{
 		final ComboBox bean = new ComboBox();

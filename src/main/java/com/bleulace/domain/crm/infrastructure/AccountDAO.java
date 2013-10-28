@@ -1,9 +1,10 @@
 package com.bleulace.domain.crm.infrastructure;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.jpa.ReadOnlyDAO;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountDAO extends AccountDAOCustom, ReadOnlyDAO<Account>
+import com.bleulace.domain.crm.model.Account;
+
+public interface AccountDAO extends AccountDAOCustom, JpaRepository<Account,String>
 {
 	public Account findByUsername(String username);
 }

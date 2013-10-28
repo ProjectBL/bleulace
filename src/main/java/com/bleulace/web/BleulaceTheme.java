@@ -13,6 +13,6 @@ public interface BleulaceTheme
 
 	public enum AvatarSize
 	{
-		FULL, MINI;
+		FULL, MEDIUM, MINI;
 	}
 }

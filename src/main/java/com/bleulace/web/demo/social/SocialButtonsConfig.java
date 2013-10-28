@@ -3,7 +3,6 @@ package com.bleulace.web.demo.social;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -20,7 +19,7 @@ import com.vaadin.ui.Notification;
 class SocialButtonsConfig
 {
 	@Bean(name = "socialButtons")
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("prototype")
 	public Iterable<Button> socialButtons()
 	{
 		List<Button> buttons = new ArrayList<Button>();

@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.web.annotation.VaadinView;
+import com.bleulace.web.demo.friends.FriendsPresenter;
 import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -24,6 +25,9 @@ class CalendarView extends CustomComponent implements View
 
 	@Autowired
 	private CalendarPresenter presenter;
+
+	@Autowired
+	private FriendsPresenter friendsPresenter;
 
 	@Autowired
 	private TimeBox timeBox;
@@ -45,6 +49,7 @@ class CalendarView extends CustomComponent implements View
 	{
 		Assert.notNull(accountDAO.findOne(event.getParameters()));
 		presenter.setOwner(event.getParameters());
+		friendsPresenter.setOwnerId(event.getParameters());
 
 	}
 

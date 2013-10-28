@@ -11,6 +11,10 @@ import com.vaadin.ui.UI;
 
 public class BleulaceUIProvider extends UIProvider
 {
+	public BleulaceUIProvider()
+	{
+	}
+
 	@Override
 	public Class<? extends UI> getUIClass(UIClassSelectionEvent event)
 	{

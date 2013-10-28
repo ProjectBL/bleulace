@@ -59,6 +59,9 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	private JPAContainer<PersistentEvent> searchFieldContainer;
 
 	@Autowired
+	private JPAContainer<Account> friendContainer;
+
+	@Autowired
 	private TabSheet tabSheet;
 
 	@Autowired
@@ -179,9 +182,14 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		{
 			throw new IllegalStateException();
 		}
+
+		friendContainer.removeAllContainerFilters();
+		friendContainer.addContainerFilter("friends.id", owner.getId(), true,
+				false);
+
 		searchFieldContainer.removeAllContainerFilters();
-		searchFieldContainer.addContainerFilter(new Compare.Equal(
-				"invitees.guest.id", owner.getId()));
+		searchFieldContainer.addContainerFilter("invitees.guest.id",
+				owner.getId(), false, false);
 	}
 
 	void cursorChanged()

@@ -55,12 +55,12 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 				a.setPassword("password");
 
 				ContactInformation aInfo = new ContactInformation(
-						RandomStringUtils.random(5, true, true),
-						RandomStringUtils.random(5, true, true),
+						RandomStringUtils.random(5, true, false),
+						RandomStringUtils.random(5, true, false),
 						a.getUsername(), "Marshall University", "Something",
 						"Somewhere");
 				a.setContactInformation(aInfo);
-
+				a.getFriends().add(me);
 				em.persist(a);
 				me.getFriends().add(a);
 				me = em.merge(me);

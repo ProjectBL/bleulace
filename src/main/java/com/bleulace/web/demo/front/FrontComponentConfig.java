@@ -14,8 +14,8 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
-@Configuration
 @WebProfile
+@Configuration
 class FrontComponentConfig
 {
 	@Autowired
