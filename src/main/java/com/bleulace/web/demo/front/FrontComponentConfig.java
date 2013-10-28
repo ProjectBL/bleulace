@@ -3,10 +3,9 @@ package com.bleulace.web.demo.front;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
-import com.bleulace.utils.SystemProfiles;
+import com.bleulace.web.annotation.WebProfile;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Button;
@@ -16,7 +15,7 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 
 @Configuration
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+@WebProfile
 class FrontComponentConfig
 {
 	@Autowired

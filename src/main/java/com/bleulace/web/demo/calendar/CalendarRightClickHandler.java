@@ -76,7 +76,7 @@ class CalendarRightClickHandler implements Handler
 
 	enum RightClickGesture
 	{
-		ACCEPT("accept"), DECLINE("decline");
+		ACCEPT("Accept"), DECLINE("Decline");
 
 		final Action action;
 

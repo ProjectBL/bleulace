@@ -14,6 +14,7 @@ import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.web.annotation.Presenter;
+import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.ui.Calendar;
@@ -44,6 +45,9 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		CalendarEvent.EventChangeListener
 {
 	private Account owner;
+
+	@Autowired
+	private TimeBox timeBox;
 
 	@Autowired
 	private AccountDAO accountDAO;
@@ -80,7 +84,7 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	@Override
 	public void eventClick(EventClick event)
 	{
-		view.showTimeBox((PersistentEvent) event.getCalendarEvent());
+		timeBox.show((PersistentEvent) event.getCalendarEvent());
 	}
 
 	@Override
@@ -98,7 +102,7 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		calendarEvent.getInvitees().put(current,
 				new EventInvitee(current, current, RsvpStatus.ACCEPTED));
 
-		view.showTimeBox(calendarEvent);
+		timeBox.show(calendarEvent);
 	}
 
 	@Override

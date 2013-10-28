@@ -2,21 +2,19 @@ package com.bleulace.web.demo.calendar;
 
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
-import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.web.annotation.VaadinView;
 import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.VerticalLayout;
 
-@Scope("ui")
-@Component(CalendarView.VIEW_NAME)
+@VaadinView
 class CalendarView extends CustomComponent implements View
 {
 	public static final String VIEW_NAME = "calendarView";
@@ -28,13 +26,18 @@ class CalendarView extends CustomComponent implements View
 	private CalendarPresenter presenter;
 
 	@Autowired
-	private Layout leftLayout;
-
-	@Autowired
-	private Layout centerLayout;
-
-	@Autowired
 	private TimeBox timeBox;
+
+	private final HorizontalSplitPanel panel;
+
+	@Autowired
+	CalendarView(VerticalLayout leftLayout, VerticalLayout centerLayout)
+	{
+		panel = new HorizontalSplitPanel(leftLayout, centerLayout);
+		panel.setSplitPosition(200, Unit.PIXELS);
+		panel.setLocked(true);
+		setCompositionRoot(panel);
+	}
 
 	@Override
 	@RequiresUser
@@ -42,13 +45,11 @@ class CalendarView extends CustomComponent implements View
 	{
 		Assert.notNull(accountDAO.findOne(event.getParameters()));
 		presenter.setOwner(event.getParameters());
-		HorizontalLayout root = new HorizontalLayout(leftLayout, centerLayout);
-		setCompositionRoot(root);
+
 	}
 
-	void showTimeBox(PersistentEvent event)
+	void showMainContent(Component content)
 	{
-		Assert.notNull(event);
-		timeBox.show(event);
+		panel.setSecondComponent(content);
 	}
 }

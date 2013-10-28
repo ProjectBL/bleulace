@@ -7,17 +7,17 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.jpa.TransactionalEntityProvider;
-import com.bleulace.utils.SystemProfiles;
+import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.annotation.WebProfile;
 import com.porotype.iconfont.FontAwesome.Icon;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.util.DefaultQueryModifierDelegate;
@@ -33,6 +33,7 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
@@ -47,9 +48,12 @@ import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHand
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 
 @Configuration
-@Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
+@WebProfile
 class CalendarComponentConfig
 {
+	@Autowired
+	private ApplicationContext ctx;
+
 	@Autowired
 	private CalendarPresenter presenter;
 
@@ -117,27 +121,58 @@ class CalendarComponentConfig
 	}
 
 	@Bean
-	@Scope("prototype")
+	@Scope("ui")
 	public Accordion accordion()
 	{
-		Accordion bean = new Accordion();
-		for (AccordionHeader header : AccordionHeader.values())
+		final Accordion bean = new Accordion();
+		for (final AccordionHeader header : AccordionHeader.values())
 		{
-			Label l = new Label("");
-			bean.addTab(l, header.toString());
-			l.setWidth(100f, Unit.PERCENTAGE);
+			Label label = new Label("");
+			bean.addTab(label, header.toString());
+			label.setWidth(100f, Unit.PERCENTAGE);
 		}
+		bean.addSelectedTabChangeListener(new SelectedTabChangeListener()
+		{
+			@Override
+			public void selectedTabChange(SelectedTabChangeEvent event)
+			{
+				int i = bean.getTabPosition(bean.getTab(bean.getSelectedTab()));
+				ctx.getBean(CalendarView.class).showMainContent(
+						AccordionHeader.values()[i].getContent());
+			}
+		});
 		return bean;
 	}
 
 	private enum AccordionHeader
 	{
-		CREATE, PROFILE, EVENTS, PROJECTS, FRIENDS, GROUPS, BUNDLES, LACE, TIMEBOX;
+		CALENDAR("Calendar", "centerLayout"), PROJECTS("Projects"), FRIENDS(
+				"Friends"), GROUPS("Groups");
+
+		private final String name;
+		private final String beanName;
+
+		AccordionHeader(String name)
+		{
+			this(name, null);
+		}
+
+		AccordionHeader(String name, String beanName)
+		{
+			this.name = name;
+			this.beanName = beanName;
+		}
 
 		@Override
 		public String toString()
 		{
-			return StringUtils.capitalize(this.name().toLowerCase());
+			return name;
+		}
+
+		Component getContent()
+		{
+			return beanName == null ? new Label("") : SpringApplicationContext
+					.getBean(Component.class, beanName);
 		}
 	}
 
