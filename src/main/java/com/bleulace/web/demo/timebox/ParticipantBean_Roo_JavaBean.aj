@@ -32,6 +32,14 @@ privileged aspect ParticipantBean_Roo_JavaBean {
         this.lastName = lastName;
     }
     
+    public String ParticipantBean.getEmail() {
+        return this.email;
+    }
+    
+    public void ParticipantBean.setEmail(String email) {
+        this.email = email;
+    }
+    
     public RsvpStatus ParticipantBean.getStatus() {
         return this.status;
     }

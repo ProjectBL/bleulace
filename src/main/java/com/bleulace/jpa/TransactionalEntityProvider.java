@@ -10,17 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.vaadin.addon.jpacontainer.provider.MutableLocalEntityProvider;
 
 @Configurable(preConstruction = true)
-class TransactionalEntityProvider<T> extends MutableLocalEntityProvider<T>
+public class TransactionalEntityProvider<T> extends
+		MutableLocalEntityProvider<T>
 {
-	@PersistenceContext
-	private EntityManager em;
-
 	public TransactionalEntityProvider(Class<T> entityClass)
 	{
 		super(entityClass);
-		setEntityManager(em);
 		setTransactionsHandledByProvider(false);
 		setEntitiesDetached(false);
+	}
+
+	@Override
+	@PersistenceContext
+	public void setEntityManager(EntityManager entityManager)
+	{
+		super.setEntityManager(entityManager);
 	}
 
 	@Override

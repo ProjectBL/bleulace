@@ -55,4 +55,16 @@ class EventDAOImpl implements EventDAOCustom
 		QueryFactory.from(e).createQuery(e);
 		return findEvents(instant, instant, accountId);
 	}
+
+	@Override
+	public List<PersistentEvent> findEvents(String accountId)
+	{
+		Assert.notNull(accountId);
+		return QueryFactory
+				.from(e)
+				.distinct()
+				.innerJoin(e.invitees, i)
+				.where(i.guest.id.eq(accountId).and(
+						i.status.ne(RsvpStatus.DECLINED))).list(e);
+	}
 }

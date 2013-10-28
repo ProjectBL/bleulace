@@ -92,7 +92,7 @@ public class Account extends AbstractResource
 
 	public static Account getCurrent()
 	{
-		return EntityManagerReference.load(Account.class, SecurityUtils
-				.getSubject().getPrincipal());
+		String id = (String) SecurityUtils.getSubject().getPrincipal();
+		return EntityManagerReference.load(Account.class, id);
 	}
 }

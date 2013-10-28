@@ -7,12 +7,15 @@ import java.util.List;
 import org.apache.commons.lang3.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.web.annotation.Presenter;
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.util.filter.Compare;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.TabSheet;
@@ -40,10 +43,16 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		CalendarEditableEventProvider, EventSetChangeNotifier,
 		CalendarEvent.EventChangeListener
 {
-	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
+	private Account owner;
+
+	@Autowired
+	private AccountDAO accountDAO;
 
 	@Autowired
 	private EventDAO eventDAO;
+
+	@Autowired
+	private JPAContainer<PersistentEvent> searchFieldContainer;
 
 	@Autowired
 	private TabSheet tabSheet;
@@ -57,39 +66,15 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	@Autowired
 	private CalendarView view;
 
-	private final DateClickHandler basicDateClickHandler = new BasicDateClickHandler();
-	private final BasicEventMoveHandler basicEventMoveHandler = new BasicEventMoveHandler();
-	private final BasicEventResizeHandler basicEventResizeHandler = new BasicEventResizeHandler();
+	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
 
-	void cursorChanged()
-	{
-		tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
-		tabSelected(CalendarSelection.DAY);
-	}
+	private static final DateClickHandler BASIC_DATE_CLICK_HANDLER = new BasicDateClickHandler();
+	private static final BasicEventMoveHandler BASIC_EVENT_MOVE_HANDLER = new BasicEventMoveHandler();
+	private static final BasicEventResizeHandler BASIC_EVENT_RESIZE_HANDLER = new BasicEventResizeHandler();
 
-	void statusUpdated(String status)
+	public String getOwnerId()
 	{
-	}
-
-	void tabSelected(CalendarSelection selection)
-	{
-		Range<Date> range = selection.command.execute(dateField.getValue());
-		calendar.setStartDate(range.getMinimum());
-		calendar.setEndDate(range.getMaximum());
-	}
-
-	void eventAccepted(PersistentEvent event)
-	{
-		updateRsvp(event, RsvpStatus.ACCEPTED);
-	}
-
-	void eventDeclined(PersistentEvent event)
-	{
-		updateRsvp(event, RsvpStatus.DECLINED);
-	}
-
-	void searchExecuted(String searchTerm)
-	{
+		return owner.getId();
 	}
 
 	@Override
@@ -106,6 +91,10 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		calendarEvent.setEnd(event.getEnd());
 
 		Account current = Account.getCurrent();
+
+		calendarEvent.getInvitees()
+				.put(owner, new EventInvitee(owner, current));
+
 		calendarEvent.getInvitees().put(current,
 				new EventInvitee(current, current, RsvpStatus.ACCEPTED));
 
@@ -117,20 +106,20 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 	{
 		tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
 		dateField.setValue(event.getDate());
-		basicDateClickHandler.dateClick(event);
+		BASIC_DATE_CLICK_HANDLER.dateClick(event);
 	}
 
 	@Override
 	public void eventMove(MoveEvent event)
 	{
-		basicEventMoveHandler.eventMove(event);
+		BASIC_EVENT_MOVE_HANDLER.eventMove(event);
 		eventDAO.save((PersistentEvent) event.getCalendarEvent());
 	}
 
 	@Override
 	public void eventResize(EventResize event)
 	{
-		basicEventResizeHandler.eventResize(event);
+		BASIC_EVENT_RESIZE_HANDLER.eventResize(event);
 		eventDAO.save((PersistentEvent) event.getCalendarEvent());
 	}
 
@@ -179,10 +168,48 @@ class CalendarPresenter implements RangeSelectHandler, EventClickHandler,
 		fireEventSetChange();
 	}
 
+	void setOwner(String ownerId)
+	{
+		owner = accountDAO.findOne(ownerId);
+		if (owner == null)
+		{
+			throw new IllegalStateException();
+		}
+		searchFieldContainer.removeAllContainerFilters();
+		searchFieldContainer.addContainerFilter(new Compare.Equal(
+				"invitees.guest.id", owner.getId()));
+	}
+
+	void cursorChanged()
+	{
+		tabSheet.setSelectedTab(CalendarSelection.DAY.ordinal());
+		tabSelected(CalendarSelection.DAY);
+	}
+
+	void statusUpdated(String status)
+	{
+	}
+
+	void tabSelected(CalendarSelection selection)
+	{
+		Range<Date> range = selection.command.execute(dateField.getValue());
+		calendar.setStartDate(range.getMinimum());
+		calendar.setEndDate(range.getMaximum());
+	}
+
+	void eventAccepted(PersistentEvent event)
+	{
+		updateRsvp(event, RsvpStatus.ACCEPTED);
+	}
+
+	void eventDeclined(PersistentEvent event)
+	{
+		updateRsvp(event, RsvpStatus.DECLINED);
+	}
+
 	protected void fireEventSetChange()
 	{
 		EventSetChangeEvent event = new EventSetChangeEvent(this);
-
 		for (EventSetChangeListener listener : listeners)
 		{
 			listener.eventSetChange(event);

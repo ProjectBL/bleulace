@@ -23,6 +23,9 @@ class ParticipantBean
 	@NotEmpty
 	private String lastName;
 
+	@NotEmpty
+	private String email;
+
 	private RsvpStatus status;
 
 	ParticipantBean(Account account, RsvpStatus status)
@@ -30,6 +33,7 @@ class ParticipantBean
 		this.id = account.getId();
 		this.firstName = account.getContactInformation().getFirstName();
 		this.lastName = account.getContactInformation().getLastName();
+		this.email = account.getContactInformation().getEmail();
 		this.status = status;
 	}
 

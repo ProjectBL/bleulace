@@ -111,9 +111,14 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	}
 
 	@Override
+	public String toString()
+	{
+		return getCaption();
+	}
+
+	@Override
 	public void setStyleName(String styleName)
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -125,6 +130,5 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public void setAllDay(boolean isAllDay)
 	{
-		// TODO Auto-generated method stub
 	}
 }

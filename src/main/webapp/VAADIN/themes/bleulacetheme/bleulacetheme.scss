@@ -14,4 +14,16 @@
   .v-calendar .v-calendar-event-private{
   	background : darkred;
   }
+  .v-table-cell-content-accepted{
+    background: green;
+    color: white;
+  }
+  .v-table-cell-content-declined{
+    background: red;
+    color: white;
+  }
+  .v-table-cell-content-pending{
+    background: blue;
+    color: white;
+  }
 }

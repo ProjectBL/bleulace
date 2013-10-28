@@ -2,7 +2,6 @@ package com.bleulace.web.demo.calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -33,7 +32,7 @@ public class CalendarViewConfig
 	private AvatarFactory avatarFactory;
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public VerticalLayout leftLayout(DateField dateField, Calendar calendar,
 			Button homeButton, Button lockButton, TextField statusUpdateField,
 			Accordion accordion)
@@ -55,7 +54,7 @@ public class CalendarViewConfig
 	}
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	@Scope("ui")
 	public VerticalLayout centerLayout(ComboBox searchField,
 			@Qualifier("tabSheet") TabSheet tabSheet, Calendar calendar,
 			@Qualifier("socialButtons") Iterable<Button> socialButtons,

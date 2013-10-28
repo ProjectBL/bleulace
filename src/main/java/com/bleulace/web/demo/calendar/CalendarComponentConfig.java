@@ -2,6 +2,11 @@ package com.bleulace.web.demo.calendar;
 
 import java.util.Date;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,14 +14,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 
+import com.bleulace.domain.management.infrastructure.EventDAO;
+import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.jpa.TransactionalEntityProvider;
 import com.bleulace.utils.SystemProfiles;
 import com.porotype.iconfont.FontAwesome.Icon;
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.addon.jpacontainer.util.DefaultQueryModifierDelegate;
+import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Calendar;
@@ -40,6 +52,12 @@ class CalendarComponentConfig
 {
 	@Autowired
 	private CalendarPresenter presenter;
+
+	@Autowired
+	private EventDAO eventDAO;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	/**********************************************
 	 * LEFT
@@ -175,13 +193,46 @@ class CalendarComponentConfig
 	/**********************************************
 	 * RIGHT
 	 */
+	@Bean
+	@Scope("ui")
+	public JPAContainer<PersistentEvent> searchFieldContainer()
+	{
+		JPAContainer<PersistentEvent> container = new JPAContainer<PersistentEvent>(
+				PersistentEvent.class);
+		container
+				.setEntityProvider(new TransactionalEntityProvider<PersistentEvent>(
+						PersistentEvent.class));
+		container.setQueryModifierDelegate(new DefaultQueryModifierDelegate()
+		{
+			@Override
+			public void queryWillBeBuilt(CriteriaBuilder criteriaBuilder,
+					CriteriaQuery<?> query)
+			{
+				query.distinct(true);
+			}
+		});
+		return container;
+	}
 
 	@Bean
-	@Scope("prototype")
-	public ComboBox searchField()
+	@Scope("ui")
+	public ComboBox searchField(final JPAContainer<PersistentEvent> container,
+			final TabSheet tabSheet, final Calendar calendar)
 	{
-		ComboBox bean = new ComboBox();
+		final ComboBox bean = new ComboBox();
 		bean.setInputPrompt("Search");
+		bean.setContainerDataSource(container);
+		bean.setItemCaptionMode(ItemCaptionMode.ITEM);
+		bean.addValueChangeListener(new Property.ValueChangeListener()
+		{
+			@Override
+			public void valueChange(ValueChangeEvent event)
+			{
+				System.out.println(event);
+			}
+		});
+		bean.setImmediate(true);
+
 		return bean;
 	}
 

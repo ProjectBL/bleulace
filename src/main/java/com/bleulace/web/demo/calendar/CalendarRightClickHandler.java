@@ -1,5 +1,6 @@
 package com.bleulace.web.demo.calendar;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -34,11 +35,15 @@ class CalendarRightClickHandler implements Handler
 	@Override
 	public Action[] getActions(Object target, Object sender)
 	{
-		Calendar calendar = (Calendar) sender;
-		CalendarDateRange range = (CalendarDateRange) target;
-		if (calendar.getEvents(range.getStart(), range.getEnd()).size() > 0)
+		if (presenter.getOwnerId().equals(
+				SecurityUtils.getSubject().getPrincipal()))
 		{
-			return actions;
+			Calendar calendar = (Calendar) sender;
+			CalendarDateRange range = (CalendarDateRange) target;
+			if (calendar.getEvents(range.getStart(), range.getEnd()).size() > 0)
+			{
+				return actions;
+			}
 		}
 		return null;
 	}

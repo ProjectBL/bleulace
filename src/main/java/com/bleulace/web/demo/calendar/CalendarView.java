@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.web.demo.timebox.TimeBox;
 import com.vaadin.navigator.View;
@@ -14,12 +15,17 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
 
-//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Scope("ui")
 @Component(CalendarView.VIEW_NAME)
 class CalendarView extends CustomComponent implements View
 {
 	public static final String VIEW_NAME = "calendarView";
+
+	@Autowired
+	private AccountDAO accountDAO;
+
+	@Autowired
+	private CalendarPresenter presenter;
 
 	@Autowired
 	private Layout leftLayout;
@@ -34,6 +40,8 @@ class CalendarView extends CustomComponent implements View
 	@RequiresUser
 	public void enter(ViewChangeEvent event)
 	{
+		Assert.notNull(accountDAO.findOne(event.getParameters()));
+		presenter.setOwner(event.getParameters());
 		HorizontalLayout root = new HorizontalLayout(leftLayout, centerLayout);
 		setCompositionRoot(root);
 	}
