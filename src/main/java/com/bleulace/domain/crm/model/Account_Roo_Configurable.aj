@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.Account;
 import org.springframework.beans.factory.annotation.Configurable;
 
 privileged aspect Account_Roo_Configurable {

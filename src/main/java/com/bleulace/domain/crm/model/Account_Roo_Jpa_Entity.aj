@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.Account;
 import javax.persistence.Column;
 import javax.persistence.Version;
 

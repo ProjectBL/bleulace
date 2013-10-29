@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
@@ -81,7 +80,8 @@ class DemoEventRightClickHandler implements Handler
 		@Override
 		public void execute(PersistentEvent event)
 		{
-			event.setRsvpStatus(Account.getCurrent().getId(), status);
+			event.setRsvpStatus(SpringApplicationContext.getUser().getId(),
+					status);
 			SpringApplicationContext.getBean(EventDAO.class).save(event);
 			SpringApplicationContext.getBean(Calendar.class).markAsDirty();
 		}

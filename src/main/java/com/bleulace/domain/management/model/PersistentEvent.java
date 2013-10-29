@@ -14,9 +14,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.roo.addon.javabean.RooJavaBean;
+import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 @RooJavaBean
@@ -54,11 +56,12 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 
 	public void setRsvpStatus(String accountId, RsvpStatus status)
 	{
+		Assert.notNull(accountId);
 		Account guest = EntityManagerReference.load(Account.class, accountId);
 		EventInvitee invitee = invitees.get(guest);
 		if (invitee == null)
 		{
-			invitee = new EventInvitee(guest, Account.getCurrent());
+			invitee = new EventInvitee(guest, getExecutingAccount());
 			invitees.put(guest, invitee);
 		}
 		invitee.setStatus(status);
@@ -91,7 +94,7 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public String getStyleName()
 	{
-		Account current = Account.getCurrent();
+		Account current = getExecutingAccount();
 		if (current != null)
 		{
 			EventInvitee invitee = getInvitees().get(current);
@@ -120,5 +123,12 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public void setAllDay(boolean isAllDay)
 	{
+	}
+
+	private Account getExecutingAccount()
+	{
+		String id = SpringApplicationContext.getUser().getId();
+		return id == null ? null : EntityManagerReference.load(Account.class,
+				id);
 	}
 }

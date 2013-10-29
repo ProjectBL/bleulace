@@ -105,4 +105,33 @@ public abstract class AbstractResource implements CompositeResource,
 		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
 				.findChildren(id, (Class<? extends AbstractResource>) clazz);
 	}
+
+	@Override
+	public String toString()
+	{
+		return getTitle();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (null == obj)
+		{
+			return false;
+		}
+
+		if (this == obj)
+		{
+			return true;
+		}
+
+		if (!getClass().equals(obj.getClass()))
+		{
+			return false;
+		}
+
+		AbstractResource that = (AbstractResource) obj;
+
+		return null == this.getId() ? false : this.getId().equals(that.getId());
+	}
 }

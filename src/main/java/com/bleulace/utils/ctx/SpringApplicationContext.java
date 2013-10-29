@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 
+import com.bleulace.web.SystemUser;
+
 /**
  * This is a thread-safe way to get a reference to the application context
  * wherever one pleases.
@@ -28,6 +30,11 @@ public class SpringApplicationContext
 	public static ApplicationContext get()
 	{
 		return new SpringApplicationContext().ctx;
+	}
+
+	public static SystemUser getUser()
+	{
+		return get().getBean(SystemUser.class);
 	}
 
 	public static Object getBean(String name)

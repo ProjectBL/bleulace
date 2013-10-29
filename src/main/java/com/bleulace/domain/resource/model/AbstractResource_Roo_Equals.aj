@@ -3,21 +3,10 @@
 
 package com.bleulace.domain.resource.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import com.bleulace.domain.resource.model.AbstractResource;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 privileged aspect AbstractResource_Roo_Equals {
-    
-    public boolean AbstractResource.equals(Object obj) {
-        if (!(obj instanceof AbstractResource)) {
-            return false;
-        }
-        if (this == obj) {
-            return true;
-        }
-        AbstractResource rhs = (AbstractResource) obj;
-        return new EqualsBuilder().append(id, rhs.id).append(parent, rhs.parent).isEquals();
-    }
     
     public int AbstractResource.hashCode() {
         return new HashCodeBuilder().append(id).append(parent).toHashCode();

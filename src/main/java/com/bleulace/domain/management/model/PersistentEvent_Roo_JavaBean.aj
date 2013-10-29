@@ -3,10 +3,11 @@
 
 package com.bleulace.domain.management.model;
 
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.PersistentEvent;
 import java.util.Date;
 import java.util.Map;
-
-import com.bleulace.domain.crm.model.Account;
 
 privileged aspect PersistentEvent_Roo_JavaBean {
     

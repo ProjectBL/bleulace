@@ -6,16 +6,14 @@ import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.bleulace.web.annotation.VaadinView;
+import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 
 @VaadinView
-class FrontView extends CustomComponent
+class FrontView extends CustomComponent implements View
 {
-	@Autowired
-	private FrontPresenter presenter;
-
 	@Autowired
 	private Component loginForm;
 

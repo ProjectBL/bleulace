@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
+import com.bleulace.utils.SystemProfiles;
 import com.bleulace.web.annotation.WebProfile;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -23,11 +25,17 @@ class FrontComponentConfig
 
 	@Bean
 	@Scope("ui")
-	public BeanFieldGroup<LoginModel> loginFieldGroup()
+	public BeanFieldGroup<LoginModel> loginFieldGroup(Environment environment)
 	{
 		BeanFieldGroup<LoginModel> group = new BeanFieldGroup<LoginModel>(
 				LoginModel.class);
-		group.setItemDataSource(new LoginModel());
+		LoginModel model = new LoginModel();
+		if (environment.acceptsProfiles(SystemProfiles.DEV))
+		{
+			model.setUsername("arleighdickerson@frugalu.com");
+			model.setPassword("password");
+		}
+		group.setItemDataSource(model);
 		group.setBuffered(false);
 		return group;
 	}
