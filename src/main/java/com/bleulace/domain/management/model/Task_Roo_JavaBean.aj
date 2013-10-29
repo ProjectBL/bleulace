@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.model;
 
+import com.bleulace.domain.management.model.Task;
 import java.util.Date;
 
 privileged aspect Task_Roo_JavaBean {

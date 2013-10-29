@@ -18,12 +18,10 @@ import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
 
-import org.apache.shiro.SecurityUtils;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.utils.chrono.TimeZoneEnum;
 
 @RooJavaBean
@@ -88,15 +86,5 @@ public class Account extends AbstractResource
 		{
 			friends.remove(friend);
 		}
-	}
-
-	public static Account getCurrent()
-	{
-		String id = (String) SecurityUtils.getSubject().getPrincipal();
-		if (id != null)
-		{
-			return EntityManagerReference.load(Account.class, id);
-		}
-		return null;
 	}
 }

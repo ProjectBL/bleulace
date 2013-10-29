@@ -9,12 +9,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
+@RooEquals(excludeFields = { "id", "title" })
 @RooJavaBean(settersByDefault = false)
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "MANAGER_ID",
 		"RESOURCE_ID" }) })
@@ -42,5 +44,11 @@ public class ManagementAssignment extends AbstractResource
 	public String getTitle()
 	{
 		return account.getTitle();
+	}
+
+	@Override
+	protected void prePersist()
+	{
+		// do nothing
 	}
 }

@@ -15,4 +15,6 @@ interface ResourceDAOCustom
 
 	public <T extends AbstractResource> List<T> findByManager(String managerId,
 			ManagementLevel level, Class<T> clazz);
+
+	public List<String> findIdsByManager(String managerId);
 }

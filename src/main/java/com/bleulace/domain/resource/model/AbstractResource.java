@@ -14,10 +14,12 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.roo.addon.equals.RooEquals;
 
+import com.bleulace.domain.resource.infrastructure.ManagementService;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
@@ -104,5 +106,41 @@ public abstract class AbstractResource implements CompositeResource,
 		}
 		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
 				.findChildren(id, (Class<? extends AbstractResource>) clazz);
+	}
+
+	@Override
+	public String toString()
+	{
+		return getTitle();
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (null == obj)
+		{
+			return false;
+		}
+
+		if (this == obj)
+		{
+			return true;
+		}
+
+		if (!getClass().equals(obj.getClass()))
+		{
+			return false;
+		}
+
+		AbstractResource that = (AbstractResource) obj;
+
+		return null == this.getId() ? false : this.getId().equals(that.getId());
+	}
+
+	@PrePersist
+	protected void prePersist()
+	{
+		SpringApplicationContext.getBean(ManagementService.class).assignOwner(
+				this);
 	}
 }

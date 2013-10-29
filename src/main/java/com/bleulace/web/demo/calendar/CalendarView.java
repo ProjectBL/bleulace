@@ -6,14 +6,15 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.bleulace.domain.crm.model.Account;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.web.annotation.VaadinView;
+import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
 
 @VaadinView
-class CalendarView extends CustomComponent
+class CalendarView extends CustomComponent implements View
 {
 	@Autowired
 	private Calendar calendar;
@@ -28,7 +29,10 @@ class CalendarView extends CustomComponent
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		SecurityUtils.getSubject().getSession()
-				.setAttribute("targetId", Account.getCurrent().getId());
+		SecurityUtils
+				.getSubject()
+				.getSession()
+				.setAttribute("targetId",
+						SpringApplicationContext.getUser().getId());
 	}
 }

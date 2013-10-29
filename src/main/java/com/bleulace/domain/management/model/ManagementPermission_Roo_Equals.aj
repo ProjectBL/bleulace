@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.management.model;
 
+import com.bleulace.domain.management.model.ManagementPermission;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

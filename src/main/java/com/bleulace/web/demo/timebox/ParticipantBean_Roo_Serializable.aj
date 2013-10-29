@@ -3,6 +3,7 @@
 
 package com.bleulace.web.demo.timebox;
 
+import com.bleulace.web.demo.timebox.ParticipantBean;
 import java.io.Serializable;
 
 privileged aspect ParticipantBean_Roo_Serializable {

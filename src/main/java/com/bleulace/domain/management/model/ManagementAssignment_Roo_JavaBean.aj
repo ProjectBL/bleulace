@@ -4,6 +4,8 @@
 package com.bleulace.domain.management.model;
 
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.ManagementLevel;
 
 privileged aspect ManagementAssignment_Roo_JavaBean {
     

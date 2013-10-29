@@ -20,8 +20,13 @@ import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.model.TestResource;
 import com.bleulace.utils.SystemProfiles;
 
+/**
+ * 
+ * @author Arleigh Dickerson
+ * 
+ */
 @Component
-@Profile({ SystemProfiles.DEV })
+@Profile(SystemProfiles.DEV)
 class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 {
 	@PersistenceContext

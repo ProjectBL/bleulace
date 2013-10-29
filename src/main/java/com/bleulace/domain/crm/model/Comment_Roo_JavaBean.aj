@@ -3,11 +3,13 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.crm.model.Comment;
 import java.util.Date;
 
 privileged aspect Comment_Roo_JavaBean {
     
-    public String Comment.getScreen() {
+    public String Comment.getContent() {
         return this.content;
     }
     
