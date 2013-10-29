@@ -45,10 +45,4 @@ public class ManagementAssignment extends AbstractResource
 	{
 		return account.getTitle();
 	}
-
-	@Override
-	protected void prePersist()
-	{
-		// do nothing
-	}
 }

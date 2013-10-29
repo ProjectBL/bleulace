@@ -324,6 +324,13 @@
 			<version>2.1.0</version>
 		</dependency>
 
+		<!-- FP -->
+		<dependency>
+			<groupId>org.functionaljava</groupId>
+			<artifactId>functionaljava</artifactId>
+			<version>3.0</version>
+		</dependency>
+
 	</dependencies>
 	<reporting>
 		<plugins>

@@ -1,5 +1,6 @@
 package com.bleulace.domain.resource.infrastructure;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.bleulace.domain.management.model.ManagementLevel;
@@ -45,9 +46,9 @@ class ResourceDAOImpl implements ResourceDAOCustom
 	}
 
 	@Override
-	public List<String> findIdsByManager(String managerId)
+	public List<String> findIds(Collection<String> managerIds)
 	{
-		return QueryFactory.from(a).where(a.account.id.eq(managerId))
-				.list(a.parent.id);
+		return QueryFactory.from(a).where(a.account.id.in(managerIds))
+				.distinct().list(a.parent.id);
 	}
 }

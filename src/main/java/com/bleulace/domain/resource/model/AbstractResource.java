@@ -14,7 +14,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,14 +140,5 @@ public abstract class AbstractResource implements CompositeResource,
 		AbstractResource that = (AbstractResource) obj;
 
 		return null == this.getId() ? false : this.getId().equals(that.getId());
-	}
-
-	@PrePersist
-	protected void prePersist()
-	{
-		if (managementService != null)
-		{
-			managementService.assignOwner(this);
-		}
 	}
 }

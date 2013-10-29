@@ -1,5 +1,6 @@
 package com.bleulace.web.demo.calendar;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +26,8 @@ class CalendarConfig
 			RangeSelectHandler rangeSelectHandler,
 			DateClickHandler dateClickHandler,
 			EventMoveHandler eventMoveHandler,
-			EventResizeHandler eventResizeHandler, Handler actionHandler)
+			EventResizeHandler eventResizeHandler,
+			@Qualifier("demoEventRightClickHandler") Handler actionHandler)
 	{
 		Calendar bean = new Calendar(eventProvider);
 		bean.setHandler(eventClickHandler);
