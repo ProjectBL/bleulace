@@ -3,7 +3,6 @@
 
 package com.bleulace.web.demo.front;
 
-import com.bleulace.web.demo.front.LoginModel;
 
 privileged aspect LoginModel_Roo_JavaBean {
     

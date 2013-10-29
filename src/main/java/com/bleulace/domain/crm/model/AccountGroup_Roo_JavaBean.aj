@@ -3,8 +3,6 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.crm.model.AccountGroup;
 import java.util.Set;
 
 privileged aspect AccountGroup_Roo_JavaBean {

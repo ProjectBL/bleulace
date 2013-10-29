@@ -23,8 +23,7 @@ public class FrontPresenter
 		UI.getCurrent()
 				.getNavigator()
 				.navigateTo(
-						(s.isAuthenticated() || s.isRemembered()) ? "calendarView/"
-								+ s.getPrincipal()
+						(s.isAuthenticated() || s.isRemembered()) ? "calendarView"
 								: "frontView");
 	}
 

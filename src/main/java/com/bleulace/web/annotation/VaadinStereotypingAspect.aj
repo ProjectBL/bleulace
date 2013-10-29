@@ -7,17 +7,23 @@ aspect VaadinStereotypingAspect
 {
 	declare parents : @VaadinView * implements View;
 
-	pointcut pushEnabled() : execution(@EnablePush void *(..));
+	pointcut pushEnabled() : execution(@EnablePush * *(..));
 
-	void around() : pushEnabled()
+	Object around() : pushEnabled()
 	{
-		UI.getCurrent().access(new Runnable()
+		PushCallback callback = new PushCallback()
 		{
-			@Override
 			public void run()
 			{
-				proceed();
+				retVal = proceed();
 			}
-		});
+		};
+		UI.getCurrent().access(callback);
+		return callback.retVal;
+	}
+
+	private abstract class PushCallback implements Runnable
+	{
+		Object retVal;
 	}
 }

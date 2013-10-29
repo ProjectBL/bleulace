@@ -4,7 +4,6 @@
 package com.bleulace.web.demo.timebox;
 
 import com.bleulace.domain.management.model.RsvpStatus;
-import com.bleulace.web.demo.timebox.ParticipantBean;
 
 privileged aspect ParticipantBean_Roo_JavaBean {
     

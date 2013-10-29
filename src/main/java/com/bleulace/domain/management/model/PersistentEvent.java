@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.PreRemove;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -63,15 +62,6 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 			invitees.put(guest, invitee);
 		}
 		invitee.setStatus(status);
-	}
-
-	@PreRemove
-	protected void preRemove()
-	{
-		for (Account a : invitees.keySet())
-		{
-			invitees.remove(a);
-		}
 	}
 
 	@Override

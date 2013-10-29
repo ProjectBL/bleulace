@@ -3,9 +3,9 @@
 
 package com.bleulace.web.demo.feed.spec;
 
-import com.bleulace.web.BleulaceTheme.AvatarGender;
-import com.bleulace.web.demo.feed.spec.BasicMetaData;
 import java.util.Date;
+
+import com.bleulace.web.BleulaceTheme.AvatarGender;
 
 privileged aspect BasicMetaData_Roo_JavaBean {
     

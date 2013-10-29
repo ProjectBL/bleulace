@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.resource.model;
 
-import com.bleulace.domain.resource.model.TestResource;
 import java.util.List;
 
 privileged aspect TestResource_Roo_JavaBean {

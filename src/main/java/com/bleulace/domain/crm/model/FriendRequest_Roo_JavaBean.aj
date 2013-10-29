@@ -3,8 +3,6 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.crm.model.FriendRequest;
 import java.util.Date;
 
 privileged aspect FriendRequest_Roo_JavaBean {

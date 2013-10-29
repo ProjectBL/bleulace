@@ -3,8 +3,6 @@
 
 package com.bleulace.web.demo.feed.spec;
 
-import com.bleulace.web.demo.feed.spec.BasicMetaData;
-import com.bleulace.web.demo.feed.spec.BasicUsage;
 
 privileged aspect BasicUsage_Roo_JavaBean {
     

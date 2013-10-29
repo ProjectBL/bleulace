@@ -3,13 +3,10 @@
 
 package com.bleulace.domain.crm.model;
 
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.crm.model.ContactInformation;
-import com.bleulace.domain.crm.model.FriendRequest;
-import com.bleulace.domain.crm.model.HashedPassword;
-import com.bleulace.utils.chrono.TimeZoneEnum;
 import java.util.Map;
 import java.util.Set;
+
+import com.bleulace.utils.chrono.TimeZoneEnum;
 
 privileged aspect Account_Roo_JavaBean {
     

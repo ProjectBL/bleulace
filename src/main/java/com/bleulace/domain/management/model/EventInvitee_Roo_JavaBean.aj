@@ -4,8 +4,6 @@
 package com.bleulace.domain.management.model;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.model.EventInvitee;
-import com.bleulace.domain.management.model.RsvpStatus;
 
 privileged aspect EventInvitee_Roo_JavaBean {
     

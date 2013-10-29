@@ -3,7 +3,6 @@
 
 package com.bleulace.domain.management.model;
 
-import com.bleulace.domain.management.model.ProgressCalculatingInspector;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
