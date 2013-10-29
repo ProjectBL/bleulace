@@ -36,10 +36,15 @@ public class WebUI extends UI
 	@Autowired
 	private FrontPresenter frontPresenter;
 
+	@Autowired
+	private DatabasePopulator populator;
+
 	@Override
 	protected void init(VaadinRequest request)
 	{
 		FontAwesome.load();
+
+		populator.populate();
 
 		Navigator nav = new Navigator(this, this);
 		for (Entry<String, View> entry : ctx.getBeansOfType(View.class)

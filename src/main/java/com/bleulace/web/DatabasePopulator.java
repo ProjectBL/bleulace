@@ -5,9 +5,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,7 @@ import com.bleulace.utils.SystemProfiles;
  */
 @Component
 @Profile(SystemProfiles.DEV)
-class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
+class DatabasePopulator
 {
 	@PersistenceContext
 	private EntityManager em;
@@ -35,9 +33,8 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 	@Autowired
 	private AccountDAO dao;
 
-	@Override
 	@Transactional
-	public void onApplicationEvent(ContextRefreshedEvent event)
+	void populate()
 	{
 		try
 		{

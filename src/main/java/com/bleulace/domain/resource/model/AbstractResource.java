@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.roo.addon.equals.RooEquals;
 
 import com.bleulace.domain.resource.infrastructure.ManagementService;
@@ -26,6 +28,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 @RooEquals
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@Configurable(preConstruction = true)
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
@@ -40,6 +43,9 @@ public abstract class AbstractResource implements CompositeResource,
 	@CascadeOnDelete
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
 	private List<AbstractResource> children = new ArrayList<AbstractResource>();
+
+	@Autowired(required = false)
+	private transient ManagementService managementService;
 
 	protected AbstractResource()
 	{
@@ -140,7 +146,9 @@ public abstract class AbstractResource implements CompositeResource,
 	@PrePersist
 	protected void prePersist()
 	{
-		SpringApplicationContext.getBean(ManagementService.class).assignOwner(
-				this);
+		if (managementService != null)
+		{
+			managementService.assignOwner(this);
+		}
 	}
 }
