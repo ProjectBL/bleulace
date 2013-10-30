@@ -1,12 +1,9 @@
 package com.bleulace.web.demo.resource;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.convert.converter.Converter;
 
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.domain.resource.model.AbstractResource;
@@ -20,19 +17,6 @@ class ResourceConfig
 {
 	@Autowired
 	private ResourceDAO dao;
-
-	@Bean
-	public Converter<Collection<String>, Collection<String>> managedResourceFinder()
-	{
-		return new Converter<Collection<String>, Collection<String>>()
-		{
-			@Override
-			public Collection<String> convert(Collection<String> source)
-			{
-				return dao.findIds(source);
-			}
-		};
-	}
 
 	@Bean
 	@Scope("ui")

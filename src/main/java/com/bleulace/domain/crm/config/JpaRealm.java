@@ -75,25 +75,23 @@ public class JpaRealm extends AuthorizingRealm
 		String accountId = (String) principalCollection.getPrimaryPrincipal();
 		if (accountId != null)
 		{
-			Account account = getDAO().findOne(accountId);
-			if (account != null)
-			{
-				info.addObjectPermissions(getManagementPermissions(account));
-			}
+			info.addObjectPermissions(getManagementPermissions(accountId));
 		}
 		return info;
 	}
 
-	private List<Permission> getManagementPermissions(Account account)
+	private List<Permission> getManagementPermissions(String accountId)
 	{
-		List<Permission> permissions = new LinkedList<Permission>();
-		QManagementAssignment a = QManagementAssignment.managementAssignment;
+		QManagementAssignment a = new QManagementAssignment("a");
 
+		List<Permission> permissions = new LinkedList<Permission>();
 		for (ManagementAssignment assignment : QueryFactory.from(a)
-				.where(a.account.eq(account)).list(a))
+				.where(a.account.id.eq(accountId)).list(a))
 		{
-			permissions.add(assignment.getRole().on(assignment.getId()));
+			permissions.add(assignment.getRole().on(
+					assignment.getResource().getId()));
 		}
+
 		return permissions;
 	}
 

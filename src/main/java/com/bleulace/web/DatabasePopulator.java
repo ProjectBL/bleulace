@@ -36,66 +36,64 @@ class DatabasePopulator
 	@Transactional
 	void populate()
 	{
-		try
+		if (dao.findByUsername("arleighdickerson@frugalu.com") != null)
 		{
-			Account me = new Account();
-			me.setUsername("arleighdickerson@frugalu.com");
-			me.setPassword("password");
+			return;
+		}
+		Account me = new Account();
+		me.setUsername("arleighdickerson@frugalu.com");
+		me.setPassword("password");
 
-			ContactInformation myInfo = new ContactInformation("Arleigh",
-					"Dickerson", "arleighdickerson@frugalu.com",
+		ContactInformation myInfo = new ContactInformation("Arleigh",
+				"Dickerson", "arleighdickerson@frugalu.com",
+				"Marshall University", "Something", "Somewhere");
+		me.setContactInformation(myInfo);
+
+		em.persist(me);
+
+		for (int i = 0; i < 5; i++)
+		{
+			Account a = new Account();
+			a.setUsername(RandomStringUtils.random(20, true, true)
+					+ "@frugalu.com");
+			a.setPassword("password");
+
+			ContactInformation aInfo = new ContactInformation(
+					RandomStringUtils.random(5, true, false),
+					RandomStringUtils.random(5, true, false), a.getUsername(),
 					"Marshall University", "Something", "Somewhere");
-			me.setContactInformation(myInfo);
-
-			em.persist(me);
-
-			for (int i = 0; i < 5; i++)
-			{
-				Account a = new Account();
-				a.setUsername(RandomStringUtils.random(20, true, true)
-						+ "@frugalu.com");
-				a.setPassword("password");
-
-				ContactInformation aInfo = new ContactInformation(
-						RandomStringUtils.random(5, true, false),
-						RandomStringUtils.random(5, true, false),
-						a.getUsername(), "Marshall University", "Something",
-						"Somewhere");
-				a.setContactInformation(aInfo);
-				a.getFriends().add(me);
-				em.persist(a);
-				me.getFriends().add(a);
-				me = em.merge(me);
-			}
-
-			Project project = new Project();
-			project.setTitle("World Domination");
-			project.addChild(new ManagementAssignment(me, ManagementLevel.OWN));
-			em.persist(project);
-
-			Project bundle = new Project();
-			bundle.setTitle("Antarctic Domination");
-			bundle.addChild(new ManagementAssignment(me, ManagementLevel.OWN));
-			project.addChild(bundle);
-			em.persist(bundle);
-
-			TestResource resource = new TestResource();
-			em.persist(resource);
-
-			for (int i = 0; i < 4; i++)
-			{
-				TestResource other = new TestResource();
-				resource.addChild(other);
-				resource = other;
-				em.persist(resource);
-			}
-
-			em.persist(project);
-			em.flush();
+			a.setContactInformation(aInfo);
+			a.getFriends().add(me);
+			em.persist(a);
+			me.getFriends().add(a);
+			me = em.merge(me);
 		}
-		catch (Exception e)
+
+		Project project = new Project();
+		project.setTitle("World Domination");
+		project.getAssignments().add(
+				new ManagementAssignment(me, project, ManagementLevel.OWN));
+		em.persist(project);
+
+		Project bundle = new Project();
+		bundle.setTitle("Antarctic Domination");
+		bundle.getAssignments().add(
+				new ManagementAssignment(me, bundle, ManagementLevel.OWN));
+		project.addChild(bundle);
+		em.persist(bundle);
+
+		TestResource resource = new TestResource();
+		em.persist(resource);
+
+		for (int i = 0; i < 4; i++)
 		{
-			e.printStackTrace();
+			TestResource other = new TestResource();
+			resource.addChild(other);
+			resource = other;
+			em.persist(resource);
 		}
+
+		em.persist(project);
+		em.flush();
 	}
 }

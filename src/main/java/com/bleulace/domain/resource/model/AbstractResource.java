@@ -16,11 +16,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.roo.addon.equals.RooEquals;
 
-import com.bleulace.domain.resource.infrastructure.ManagementService;
+import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
@@ -43,8 +42,9 @@ public abstract class AbstractResource implements CompositeResource,
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
 	private List<AbstractResource> children = new ArrayList<AbstractResource>();
 
-	@Autowired(required = false)
-	private transient ManagementService managementService;
+	@CascadeOnDelete
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "resource")
+	private List<ManagementAssignment> assignments = new ArrayList<ManagementAssignment>();
 
 	protected AbstractResource()
 	{
@@ -111,6 +111,11 @@ public abstract class AbstractResource implements CompositeResource,
 		}
 		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
 				.findChildren(id, (Class<? extends AbstractResource>) clazz);
+	}
+
+	public List<ManagementAssignment> getAssignments()
+	{
+		return assignments;
 	}
 
 	@Override
