@@ -9,15 +9,17 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.QAccount;
 import com.bleulace.domain.crm.model.QContactInformation;
 import com.bleulace.domain.crm.model.QFriendRequest;
+import com.bleulace.domain.management.model.QManagementAssignment;
 import com.bleulace.jpa.config.QueryFactory;
 import com.mysema.query.jpa.impl.JPAQuery;
 
 class AccountDAOImpl implements AccountDAOCustom
 {
 	private final QAccount a = new QAccount("a");
+	private final QManagementAssignment ass = new QManagementAssignment("ass");
 	private final QContactInformation i = a.contactInformation;
 	private final QAccount f = new QAccount("f");
-	private final QFriendRequest r = new QFriendRequest("r");
+	private final QFriendRequest req = new QFriendRequest("rec");
 
 	@Override
 	public List<String> findFriendIds(String id)
@@ -34,8 +36,8 @@ class AccountDAOImpl implements AccountDAOCustom
 	@Override
 	public List<Account> findFriendRequests(String id)
 	{
-		return makeQuery(id).innerJoin(a.friendRequests, r).distinct()
-				.list(r.requestor);
+		return makeQuery(id).innerJoin(a.friendRequests, req).distinct()
+				.list(req.requestor);
 	}
 
 	@Override
@@ -73,5 +75,12 @@ class AccountDAOImpl implements AccountDAOCustom
 	{
 		Assert.notNull(id);
 		return QueryFactory.from(a).where(a.id.eq(id));
+	}
+
+	@Override
+	public List<Account> findByManagedResource(String resourceId)
+	{
+		return QueryFactory.from(ass).where(ass.resource.id.eq(resourceId))
+				.list(ass.account);
 	}
 }

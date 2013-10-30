@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.web.demo.manager.ManagerBox;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -40,6 +41,9 @@ import com.vaadin.ui.Window;
 public class TimeBox extends Window
 {
 	@Autowired
+	private ManagerBox managerBox;
+
+	@Autowired
 	private TimeBoxPresenter presenter;
 
 	@Autowired
@@ -47,10 +51,12 @@ public class TimeBox extends Window
 	private BeanFieldGroup<PersistentEvent> fieldGroup;
 
 	@Autowired
-	private BeanContainer<String, ParticipantBean> participants;
+	@Qualifier("eventParticipants")
+	private BeanContainer<String, ParticipantBean> eventParticipants;
 
 	@Autowired
-	private BeanContainer<String, ParticipantBean> candidates;
+	@Qualifier("eventCandidates")
+	private BeanContainer<String, ParticipantBean> eventCandidates;
 
 	private final Button deleteButton = makeDeleteButton();
 
@@ -88,8 +94,16 @@ public class TimeBox extends Window
 		Button applyButton = makeApplyButton();
 		Button cancelButton = makeCancelButton();
 
-		HorizontalLayout buttons = new HorizontalLayout(cancelButton,
-				applyButton, deleteButton);
+		HorizontalLayout buttons = new HorizontalLayout(//
+				new Button("Managers", new Button.ClickListener()
+				{
+					@Override
+					public void buttonClick(ClickEvent event)
+					{
+						managerBox.show(presenter.getCurrentEvent());
+					}
+				}),//
+				cancelButton, applyButton, deleteButton);
 		buttons.setSpacing(false);
 
 		VerticalLayout content = new VerticalLayout(form, buttons);
@@ -128,7 +142,7 @@ public class TimeBox extends Window
 
 	private ComboBox makeComboBox()
 	{
-		final ComboBox bean = new ComboBox("Invite", candidates);
+		final ComboBox bean = new ComboBox("Invite", eventCandidates);
 		bean.setBuffered(false);
 		bean.setImmediate(true);
 		bean.setItemCaptionPropertyId("name");
@@ -137,7 +151,7 @@ public class TimeBox extends Window
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				BeanItem<ParticipantBean> item = candidates.getItem(bean
+				BeanItem<ParticipantBean> item = eventCandidates.getItem(bean
 						.getValue());
 				if (item != null)
 				{
@@ -150,7 +164,7 @@ public class TimeBox extends Window
 
 	private Table makeTable()
 	{
-		Table table = new Table("Participants", participants);
+		Table table = new Table("Participants", eventParticipants);
 		table.setPageLength(6);
 		table.setVisibleColumns(new Object[] { "firstName", "lastName",
 				"email", "status" });
@@ -167,8 +181,8 @@ public class TimeBox extends Window
 			{
 				Assert.notNull(target);
 				String id = (String) target;
-				presenter
-						.participantRemoved(participants.getItem(id).getBean());
+				presenter.participantRemoved(eventParticipants.getItem(id)
+						.getBean());
 			}
 
 			@Override
@@ -185,7 +199,7 @@ public class TimeBox extends Window
 			public String getStyle(Table source, Object itemId,
 					Object propertyId)
 			{
-				return participants.getItem(itemId).getBean().getStatus()
+				return eventParticipants.getItem(itemId).getBean().getStatus()
 						.toString().toLowerCase();
 			}
 		});

@@ -41,7 +41,7 @@ public class ManagementAssignment
 		this.role = role;
 	}
 
-	void setRole(ManagementLevel role)
+	public void setRole(ManagementLevel role)
 	{
 		this.role = role;
 	}

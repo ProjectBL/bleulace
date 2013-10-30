@@ -76,6 +76,7 @@ public class JpaRealm extends AuthorizingRealm
 		if (accountId != null)
 		{
 			info.addObjectPermissions(getManagementPermissions(accountId));
+			info.addStringPermission("calendar:write:" + accountId);
 		}
 		return info;
 	}

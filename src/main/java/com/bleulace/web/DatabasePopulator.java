@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
-import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.model.TestResource;
@@ -66,19 +65,18 @@ class DatabasePopulator
 			a.getFriends().add(me);
 			em.persist(a);
 			me.getFriends().add(a);
+			a = em.merge(a);
 			me = em.merge(me);
 		}
 
 		Project project = new Project();
 		project.setTitle("World Domination");
-		project.getAssignments().add(
-				new ManagementAssignment(me, project, ManagementLevel.OWN));
+		project.setManagementLevel(me.getId(), ManagementLevel.OWN);
 		em.persist(project);
 
 		Project bundle = new Project();
 		bundle.setTitle("Antarctic Domination");
-		bundle.getAssignments().add(
-				new ManagementAssignment(me, bundle, ManagementLevel.OWN));
+		bundle.setManagementLevel(me.getId(), ManagementLevel.OWN);
 		project.addChild(bundle);
 		em.persist(bundle);
 

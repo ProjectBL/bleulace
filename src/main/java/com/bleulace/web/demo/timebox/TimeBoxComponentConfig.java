@@ -18,14 +18,14 @@ class TimeBoxComponentConfig
 
 	@Bean
 	@Scope("ui")
-	public BeanContainer<String, ParticipantBean> candidates()
+	public BeanContainer<String, ParticipantBean> eventCandidates()
 	{
 		return makeContainer();
 	}
 
 	@Bean
 	@Scope("ui")
-	public BeanContainer<String, ParticipantBean> participants()
+	public BeanContainer<String, ParticipantBean> eventParticipants()
 	{
 		return makeContainer();
 	}

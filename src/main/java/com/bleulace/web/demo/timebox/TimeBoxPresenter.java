@@ -32,9 +32,11 @@ class TimeBoxPresenter implements CommitHandler
 	private BeanFieldGroup<PersistentEvent> fieldGroup;
 
 	@Autowired
+	@Qualifier("eventParticipants")
 	private BeanContainer<String, ParticipantBean> participants;
 
 	@Autowired
+	@Qualifier("eventCandidates")
 	private BeanContainer<String, ParticipantBean> candidates;
 
 	@Autowired
@@ -51,6 +53,11 @@ class TimeBoxPresenter implements CommitHandler
 
 	@Autowired
 	private transient ApplicationContext ctx;
+
+	PersistentEvent getCurrentEvent()
+	{
+		return fieldGroup.getItemDataSource().getBean();
+	}
 
 	void setCurrentEvent(PersistentEvent event)
 	{

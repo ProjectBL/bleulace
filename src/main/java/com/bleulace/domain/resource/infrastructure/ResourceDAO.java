@@ -1,9 +1,10 @@
 package com.bleulace.domain.resource.infrastructure;
 
-import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.jpa.ReadOnlyDAO;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ResourceDAO extends ReadOnlyDAO<AbstractResource>,
+import com.bleulace.domain.resource.model.AbstractResource;
+
+public interface ResourceDAO extends JpaRepository<AbstractResource, String>,
 		ResourceDAOCustom
 {
 }

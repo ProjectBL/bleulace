@@ -19,8 +19,13 @@ import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.roo.addon.equals.RooEquals;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.ManagementLevel;
+import com.bleulace.domain.management.model.QManagementAssignment;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
+import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RooEquals
@@ -116,6 +121,28 @@ public abstract class AbstractResource implements CompositeResource,
 	public List<ManagementAssignment> getAssignments()
 	{
 		return assignments;
+	}
+
+	public void setManagementLevel(String accountId, ManagementLevel level)
+	{
+		QManagementAssignment a = new QManagementAssignment("a");
+		ManagementAssignment assignment = QueryFactory.from(a)
+				.where(a.account.id.eq(accountId).and(a.resource.id.eq(id)))
+				.singleResult(a);
+		if (assignment == null)
+		{
+			assignment = new ManagementAssignment(EntityManagerReference.load(
+					Account.class, accountId), this, level);
+			assignments.add(assignment);
+		}
+		else
+		{
+			assignment.setRole(level);
+		}
+		if (level == null)
+		{
+			assignments.remove(assignment);
+		}
 	}
 
 	@Override
