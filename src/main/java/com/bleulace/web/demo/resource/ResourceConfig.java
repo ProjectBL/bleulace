@@ -1,5 +1,7 @@
 package com.bleulace.web.demo.resource;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,8 @@ import org.springframework.context.annotation.Scope;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.jpa.TransactionalEntityProvider;
+import com.bleulace.utils.CallByName;
+import com.bleulace.web.SystemUser;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
@@ -20,6 +24,9 @@ class ResourceConfig
 	@Autowired
 	private ResourceDAO dao;
 
+	@Autowired
+	private SystemUser user;
+
 	@Bean
 	@Scope("ui")
 	public JPAContainer<AbstractResource> resourceContainer()
@@ -30,6 +37,16 @@ class ResourceConfig
 				.setEntityProvider(new TransactionalEntityProvider<AbstractResource>(
 						AbstractResource.class));
 		container.setParentProperty("parent");
+		ResourceQueryModifier modifier = new ResourceQueryModifier();
+		modifier.setManagerIds(new CallByName<Collection<String>>()
+		{
+			@Override
+			public Collection<String> evaluate()
+			{
+				return user.getVieweeIds();
+			}
+		});
+		container.setQueryModifierDelegate(modifier);
 		return container;
 	}
 

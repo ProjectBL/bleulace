@@ -11,10 +11,9 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.CallByName;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.Presenter;
-import com.bleulace.web.demo.calendar.handler.CachingEventProvider;
 import com.bleulace.web.demo.timebox.ParticipantBean;
+import com.google.common.eventbus.EventBus;
 import com.vaadin.data.util.BeanContainer;
-import com.vaadin.ui.Calendar;
 
 @Presenter
 class VieweePresenter implements CallByName<List<String>>
@@ -29,18 +28,18 @@ class VieweePresenter implements CallByName<List<String>>
 	private BeanContainer<String, ParticipantBean> vieweeContainer;
 
 	@Autowired
-	private Calendar calendar;
+	private EventBus eventBus;
 
 	void accountFocus(Account account)
 	{
 		vieweeContainer.addBean(new ParticipantBean(account, null));
-		cleanCalendar();
+		eventBus.post(new ViewTargetChangedEvent());
 	}
 
 	void accountBlur(String accountId)
 	{
 		vieweeContainer.removeItem(accountId);
-		cleanCalendar();
+		eventBus.post(new ViewTargetChangedEvent());
 	}
 
 	@Override
@@ -53,14 +52,5 @@ class VieweePresenter implements CallByName<List<String>>
 			strs.add(0, userId);
 		}
 		return Collections.unmodifiableList(strs);
-	}
-
-	private void cleanCalendar()
-	{
-		if (calendar.getEventProvider() instanceof CachingEventProvider)
-		{
-			((CachingEventProvider) calendar.getEventProvider()).clearCache();
-		}
-		calendar.markAsDirty();
 	}
 }
