@@ -8,8 +8,8 @@ import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.FriendRequest;
 import com.bleulace.domain.crm.model.HashedPassword;
 import com.bleulace.utils.chrono.TimeZoneEnum;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 privileged aspect Account_Roo_JavaBean {
     
@@ -45,11 +45,11 @@ privileged aspect Account_Roo_JavaBean {
         this.friendRequests = friendRequests;
     }
     
-    public Set<Account> Account.getFriends() {
+    public List<Account> Account.getFriends() {
         return this.friends;
     }
     
-    public void Account.setFriends(Set<Account> friends) {
+    public void Account.setFriends(List<Account> friends) {
         this.friends = friends;
     }
     

@@ -1,16 +1,20 @@
 package com.bleulace.web.demo;
 
+import java.util.List;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
+import com.bleulace.utils.CallByName;
 import com.bleulace.web.SystemUser;
 
 @Component
 class DemoSystemUser implements SystemUser
 {
-	private static final String TARGET_ID_KEY = "targetId";
+	@Autowired
+	private CallByName<List<String>> vieweeIds;
 
 	@Override
 	public String getId()
@@ -20,18 +24,8 @@ class DemoSystemUser implements SystemUser
 
 	@Override
 	@RequiresUser
-	public String getTargetId()
+	public List<String> getVieweeIds()
 	{
-		return (String) SecurityUtils.getSubject().getSession()
-				.getAttribute(TARGET_ID_KEY);
-	}
-
-	@Override
-	@RequiresUser
-	public void setTargetId(String targetId)
-	{
-		Assert.notNull(targetId);
-		SecurityUtils.getSubject().getSession()
-				.setAttribute(TARGET_ID_KEY, targetId);
+		return vieweeIds.evaluate();
 	}
 }

@@ -2,7 +2,6 @@ package com.bleulace.web.demo.manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -100,7 +99,7 @@ class ManagerBoxPresenter
 	private void refreshCandidates()
 	{
 		candidates.removeAllItems();
-		Set<Account> friends = accountDAO.findOne(
+		List<Account> friends = accountDAO.findOne(
 				SpringApplicationContext.getUser().getId()).getFriends();
 		for (Account friend : friends)
 		{

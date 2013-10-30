@@ -40,8 +40,7 @@ class ManagerBean
 		this(account, ManagementLevel.LOOP);
 	}
 
-	@Override
-	public String toString()
+	public String getName()
 	{
 		return firstName + " " + lastName;
 	}

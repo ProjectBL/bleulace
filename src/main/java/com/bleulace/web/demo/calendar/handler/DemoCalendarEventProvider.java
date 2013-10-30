@@ -1,10 +1,8 @@
 package com.bleulace.web.demo.calendar.handler;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,80 +10,72 @@ import org.springframework.stereotype.Component;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEditableEventProvider;
+import com.bleulace.web.SystemUser;
+import com.vaadin.ui.components.calendar.CalendarDateRange;
+import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEventProvider.EventSetChangeNotifier;
 
 @Component
-class DemoCalendarEventProvider implements CalendarEditableEventProvider,
-		EventSetChangeNotifier, CalendarEvent.EventChangeListener
+class DemoCalendarEventProvider extends BasicEventProvider implements
+		CachingEventProvider
 {
 	@Autowired
 	private AccountDAO accountDAO;
+
 	@Autowired
 	private EventDAO eventDAO;
 
-	private List<EventSetChangeListener> listeners = new ArrayList<EventSetChangeListener>();
+	@Autowired
+	private SystemUser user;
 
 	@Override
 	@RequiresUser
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
-		List<CalendarEvent> events = new ArrayList<CalendarEvent>();
-		String targetId = (String) SecurityUtils.getSubject().getSession()
-				.getAttribute("targetId");
-		if (targetId == null || !accountDAO.exists(targetId))
-		{
-			return events;
-		}
-
 		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
-				targetId))
+				user.getVieweeIds()))
 		{
-			event.addEventChangeListener(this);
-			events.add(event);
+			if (!eventList.contains(event))
+			{
+				eventList.add(event);
+			}
 		}
-		return events;
+		return super.getEvents(startDate, endDate);
 	}
 
 	@Override
-	public void addEvent(CalendarEvent calendarEvent)
+	public void addEvent(CalendarEvent event)
 	{
-		fireEventSetChange();
-	}
-
-	@Override
-	public void removeEvent(CalendarEvent calendarEvent)
-	{
-		PersistentEvent event = (PersistentEvent) calendarEvent;
-		eventDAO.delete(event);
-	}
-
-	@Override
-	public void eventChange(EventChangeEvent eventChangeEvent)
-	{
-		fireEventSetChange();
-	}
-
-	@Override
-	public void addEventSetChangeListener(EventSetChangeListener listener)
-	{
-		listeners.add(listener);
-	}
-
-	@Override
-	public void removeEventSetChangeListener(EventSetChangeListener listener)
-	{
-		listeners.remove(listener);
-	}
-
-	protected void fireEventSetChange()
-	{
-		EventSetChangeEvent event = new EventSetChangeEvent(this);
-		for (EventSetChangeListener listener : listeners)
+		if (event instanceof PersistentEvent)
 		{
-			listener.eventSetChange(event);
+			PersistentEvent persistentEvent = (PersistentEvent) event;
+			persistentEvent.addEventChangeListener(this);
+			event = eventDAO.save(persistentEvent);
 		}
+		super.addEvent(event);
+	}
+
+	@Override
+	public void removeEvent(CalendarEvent event)
+	{
+		if (event instanceof PersistentEvent)
+		{
+			PersistentEvent persistentEvent = (PersistentEvent) event;
+			persistentEvent.removeEventChangeListener(this);
+			eventDAO.delete(persistentEvent);
+		}
+		super.removeEvent(event);
+	}
+
+	@Override
+	public boolean containsRange(CalendarDateRange range)
+	{
+		return super.getEvents(range.getStart(), range.getEnd()).size() > 0;
+	}
+
+	@Override
+	public void clearCache()
+	{
+		eventList.clear();
 	}
 }

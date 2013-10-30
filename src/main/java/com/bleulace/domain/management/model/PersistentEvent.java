@@ -1,5 +1,6 @@
 package com.bleulace.domain.management.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,18 +14,26 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.demo.calendar.appearance.StyleNameCallback;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 @RooJavaBean
+@Configurable
 @Entity
 public class PersistentEvent extends Project implements EditableCalendarEvent
 {
+	@NotEmpty
+	@Column(nullable = false)
+	private String location = "";
+
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = false)
@@ -38,10 +47,6 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@MapKeyColumn(name = "GUEST_ID")
 	@ElementCollection
 	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
-
-	@NotEmpty
-	@Column(nullable = false)
-	private String location = "";
 
 	public PersistentEvent()
 	{
@@ -92,21 +97,16 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	}
 
 	@Override
-	public String getStyleName()
-	{
-		Account current = getExecutingAccount();
-		if (current != null)
-		{
-			EventInvitee invitee = getInvitees().get(current);
-			return null == invitee ? null : invitee.getStatus().getStyleName();
-		}
-		return null;
-	}
-
-	@Override
 	public String toString()
 	{
 		return getTitle();
+	}
+
+	@Override
+	public String getStyleName()
+	{
+		return SpringApplicationContext.getBean(StyleNameCallback.class,
+				"styleNameCallbackFactory").evaluate(this);
 	}
 
 	@Override
@@ -123,6 +123,15 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public void setAllDay(boolean isAllDay)
 	{
+	}
+
+	public boolean associatedWith(Collection<String> accountIds)
+	{
+		QPersistentEvent e = QPersistentEvent.persistentEvent;
+		QEventInvitee i = QEventInvitee.eventInvitee;
+		return QueryFactory.from(e).innerJoin(e.invitees, i)
+				.where(e.id.eq(getId()).and(i.guest.id.in(accountIds)))
+				.exists();
 	}
 
 	private Account getExecutingAccount()

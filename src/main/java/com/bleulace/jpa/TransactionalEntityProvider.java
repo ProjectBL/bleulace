@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vaadin.addon.jpacontainer.provider.MutableLocalEntityProvider;
+import com.vaadin.addon.jpacontainer.provider.BatchableLocalEntityProvider;
 
 @Configurable(preConstruction = true)
 public class TransactionalEntityProvider<T> extends
-		MutableLocalEntityProvider<T>
+		BatchableLocalEntityProvider<T>
 {
 	public TransactionalEntityProvider(Class<T> entityClass)
 	{

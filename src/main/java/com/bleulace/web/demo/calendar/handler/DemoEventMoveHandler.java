@@ -19,5 +19,6 @@ class DemoEventMoveHandler extends BasicEventMoveHandler
 	{
 		super.eventMove(event);
 		eventDAO.save((PersistentEvent) event.getCalendarEvent());
+		event.getComponent().markAsDirty();
 	}
 }

@@ -51,4 +51,9 @@ public class SpringApplicationContext
 	{
 		return get().getBean(name, requiredType);
 	}
+
+	public static Object getBean(String name, Object... args)
+	{
+		return get().getBean(name, args);
+	}
 }

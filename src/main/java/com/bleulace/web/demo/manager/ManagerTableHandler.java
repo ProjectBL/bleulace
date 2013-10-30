@@ -16,10 +16,10 @@ class ManagerTableHandler implements Handler
 
 	//@formatter:off
 	private final Action[] actions = new Action[] { 
-			new ManagerAction(ManagementLevel.LOOP, "LOOP"),
-			new ManagerAction(ManagementLevel.MIX, "MIX"),
-			new ManagerAction(ManagementLevel.OWN, "OWN"),
-			new ManagerAction(null, "Remove")
+			new ManagerAction(ManagementLevel.LOOP, "Loop"),
+			new ManagerAction(ManagementLevel.MIX, "Mix"),
+			new ManagerAction(ManagementLevel.OWN, "Own"),
+			new ManagerAction(null, "Remove"),
 	};
 	//@formatter:on
 

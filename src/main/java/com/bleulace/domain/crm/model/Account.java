@@ -1,9 +1,9 @@
 package com.bleulace.domain.crm.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 import javax.persistence.CascadeType;
@@ -44,7 +44,7 @@ public class Account extends AbstractResource
 	private Map<Account, FriendRequest> friendRequests = new HashMap<Account, FriendRequest>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	private Set<Account> friends = new HashSet<Account>();
+	private List<Account> friends = new ArrayList<Account>();
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)

@@ -1,5 +1,6 @@
 package com.bleulace.domain.management.infrastructure;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +46,7 @@ class EventDAOImpl implements EventDAOCustom
 		Assert.notNull(start);
 		Assert.notNull(end);
 		return QueryFactory.from(e)
-				.where(e.start.before(end).and(e.end.after(start)))
+				.where(e.start.before(end).and(e.end.after(start))).distinct()
 				.orderBy(e.start.asc());
 	}
 
@@ -60,11 +61,35 @@ class EventDAOImpl implements EventDAOCustom
 	public List<PersistentEvent> findEvents(String accountId)
 	{
 		Assert.notNull(accountId);
-		return QueryFactory
-				.from(e)
-				.distinct()
+		return QueryFactory.from(e).distinct().innerJoin(e.invitees, i)
+				.where(i.guest.id.eq(accountId)// .and(i.status.ne(RsvpStatus.DECLINED))
+				).list(e);
+	}
+
+	@Override
+	public List<PersistentEvent> findEvents(Date start, Date end,
+			Collection<String> accountIds)
+	{
+		Assert.notNull(accountIds);
+		return dateQuery(start, end).join(e.invitees, i).fetch()
+				.where(i.guest.id.in(accountIds)).distinct()
+				.orderBy(e.start.asc()).list(e);
+	}
+
+	@Override
+	public boolean exists(Date start, Date end, Collection<String> accountIds)
+	{
+		return dateQuery(start, end).innerJoin(e.invitees, i)
+				.where(i.guest.id.in(accountIds)).exists();
+	}
+
+	@Override
+	public List<PersistentEvent> findEvents(Date start, Date end,
+			Collection<String> accountIds, Collection<String> cachedEventIds)
+	{
+		return dateQuery(start, end)
 				.innerJoin(e.invitees, i)
-				.where(i.guest.id.eq(accountId).and(
-						i.status.ne(RsvpStatus.DECLINED))).list(e);
+				.where(i.guest.id.in(accountIds)
+						.and(e.id.notIn(cachedEventIds))).list(e);
 	}
 }

@@ -9,6 +9,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
 import com.vaadin.data.util.BeanContainer;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
@@ -23,8 +25,7 @@ class ManagerBoxConfig
 			@Qualifier("managementParticipants") BeanContainer<String, ManagerBean> container,
 			ManagerTableHandler handler)
 	{
-		Table bean = new Table();
-		bean.setContainerDataSource(container);
+		Table bean = new Table("", container);
 		bean.addActionHandler(handler);
 		bean.setPageLength(6);
 		bean.setVisibleColumns(new Object[] { "firstName", "lastName", "email",
@@ -33,6 +34,7 @@ class ManagerBoxConfig
 		bean.setColumnHeader("lastName", "Last Name");
 		bean.setColumnHeader("email", "Email");
 		bean.setColumnHeader("level", "Level");
+		bean.setSelectable(true);
 		return bean;
 	}
 
@@ -42,8 +44,9 @@ class ManagerBoxConfig
 			@Qualifier("managementCandidates") BeanContainer<String, ManagerBean> managementCandidates,
 			final ManagerBoxPresenter presenter)
 	{
-		final ComboBox bean = new ComboBox();
-		bean.setContainerDataSource(managementCandidates);
+		final ComboBox bean = new ComboBox("Managers", managementCandidates);
+		bean.setItemCaptionMode(ItemCaptionMode.PROPERTY);
+		bean.setItemCaptionPropertyId("name");
 		bean.setImmediate(true);
 		bean.setBuffered(false);
 		bean.addValueChangeListener(new ValueChangeListener()
@@ -69,6 +72,7 @@ class ManagerBoxConfig
 				presenter.submitClicked();
 			}
 		});
+		bean.setClickShortcut(KeyCode.ENTER);
 		return bean;
 	}
 

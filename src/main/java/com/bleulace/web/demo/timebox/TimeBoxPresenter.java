@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.timebox;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.web.annotation.Presenter;
+import com.bleulace.web.demo.manager.ManagerBox;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -52,6 +54,9 @@ class TimeBoxPresenter implements CommitHandler
 	private Calendar calendar;
 
 	@Autowired
+	private ManagerBox managerBox;
+
+	@Autowired
 	private transient ApplicationContext ctx;
 
 	PersistentEvent getCurrentEvent()
@@ -67,7 +72,7 @@ class TimeBoxPresenter implements CommitHandler
 		participants.removeAllItems();
 		candidates.removeAllItems();
 
-		Set<Account> friends = accountDAO.findOne(
+		List<Account> friends = accountDAO.findOne(
 				(String) SecurityUtils.getSubject().getPrincipal())
 				.getFriends();
 
@@ -104,18 +109,10 @@ class TimeBoxPresenter implements CommitHandler
 		{
 			fieldGroup.commit();
 			PersistentEvent event = fieldGroup.getItemDataSource().getBean();
-			String message = "Event ";
-			if (event.isNew())
-			{
-				calendar.addEvent(eventDAO.save(event));
-				message += "created successfully.";
-			}
-			else
-			{
-				eventDAO.save(event);
-				message += "updated successfully.";
-			}
-			timeBox.showSuccessMessage(message);
+			calendar.addEvent(getCurrentEvent());
+			timeBox.showSuccessMessage("Event "
+					+ (event.isNew() ? "created successfully."
+							: "updated successfully."));
 			timeBox.close();
 		}
 		catch (CommitException e)
@@ -132,13 +129,9 @@ class TimeBoxPresenter implements CommitHandler
 
 	void deleteClicked()
 	{
-		calendar.removeEvent(fieldGroup.getItemDataSource().getBean());
+		calendar.removeEvent(getCurrentEvent());
 		timeBox.showSuccessMessage("Event deleted.");
 		timeBox.close();
-	}
-
-	void timeBoxClosed()
-	{
 	}
 
 	@Override
@@ -178,5 +171,10 @@ class TimeBoxPresenter implements CommitHandler
 				event.getInvitees().put(guest, invitee);
 			}
 		}
+	}
+
+	void timeBoxClosed()
+	{
+		managerBox.close();
 	}
 }

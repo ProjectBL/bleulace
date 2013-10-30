@@ -12,7 +12,7 @@ import com.bleulace.jpa.EntityManagerReference;
 
 @RooJavaBean
 @RooSerializable
-class ParticipantBean
+public class ParticipantBean
 {
 	@NotNull
 	private String id;
@@ -28,7 +28,7 @@ class ParticipantBean
 
 	private RsvpStatus status;
 
-	ParticipantBean(Account account, RsvpStatus status)
+	public ParticipantBean(Account account, RsvpStatus status)
 	{
 		this.id = account.getId();
 		this.firstName = account.getContactInformation().getFirstName();

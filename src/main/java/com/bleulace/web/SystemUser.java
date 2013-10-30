@@ -1,10 +1,10 @@
 package com.bleulace.web;
 
+import java.util.List;
+
 public interface SystemUser
 {
 	public String getId();
 
-	public String getTargetId();
-
-	public void setTargetId(String targetId);
+	public List<String> getVieweeIds();
 }

@@ -11,6 +11,14 @@ import java.util.Map;
 
 privileged aspect PersistentEvent_Roo_JavaBean {
     
+    public String PersistentEvent.getLocation() {
+        return this.location;
+    }
+    
+    public void PersistentEvent.setLocation(String location) {
+        this.location = location;
+    }
+    
     public Date PersistentEvent.getStart() {
         return this.start;
     }
@@ -33,14 +41,6 @@ privileged aspect PersistentEvent_Roo_JavaBean {
     
     public void PersistentEvent.setInvitees(Map<Account, EventInvitee> invitees) {
         this.invitees = invitees;
-    }
-    
-    public String PersistentEvent.getLocation() {
-        return this.location;
-    }
-    
-    public void PersistentEvent.setLocation(String location) {
-        this.location = location;
     }
     
 }

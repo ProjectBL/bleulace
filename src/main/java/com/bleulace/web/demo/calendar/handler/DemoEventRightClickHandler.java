@@ -1,26 +1,32 @@
 package com.bleulace.web.demo.calendar.handler;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.WebProfile;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 
-@Scope("ui")
 @Component
 @WebProfile
 class DemoEventRightClickHandler implements Handler
 {
+	@Autowired
+	private EventDAO eventDAO;
+
+	@Autowired
+	private SystemUser user;
+
+	@Autowired
+	private CachingEventProvider provider;
+
 	private final Action[] actions;
 
 	DemoEventRightClickHandler()
@@ -36,22 +42,8 @@ class DemoEventRightClickHandler implements Handler
 	@Override
 	public Action[] getActions(Object target, Object sender)
 	{
-		Subject s = SecurityUtils.getSubject();
-
-		String targetId = (String) s.getSession().getAttribute("targetId");
-		String currentId = (String) s.getPrincipal();
-		Assert.notNull(currentId);
-
-		if (currentId.equals(targetId))
-		{
-			Calendar calendar = (Calendar) sender;
-			CalendarDateRange range = (CalendarDateRange) target;
-			if (calendar.getEvents(range.getStart(), range.getEnd()).size() > 0)
-			{
-				return actions;
-			}
-		}
-		return null;
+		CalendarDateRange range = (CalendarDateRange) target;
+		return provider.containsRange(range) ? actions : null;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.timebox;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -18,16 +19,18 @@ class TimeBoxComponentConfig
 
 	@Bean
 	@Scope("ui")
-	public BeanContainer<String, ParticipantBean> eventCandidates()
+	public BeanContainer<String, ParticipantBean> eventCandidates(
+			@Qualifier("participantBeanContainer") BeanContainer<String, ParticipantBean> container)
 	{
-		return makeContainer();
+		return container;
 	}
 
 	@Bean
 	@Scope("ui")
-	public BeanContainer<String, ParticipantBean> eventParticipants()
+	public BeanContainer<String, ParticipantBean> eventParticipants(
+			@Qualifier("participantBeanContainer") BeanContainer<String, ParticipantBean> container)
 	{
-		return makeContainer();
+		return container;
 	}
 
 	@Bean
@@ -40,7 +43,9 @@ class TimeBoxComponentConfig
 		return bean;
 	}
 
-	private BeanContainer<String, ParticipantBean> makeContainer()
+	@Bean
+	@Scope("prototype")
+	public BeanContainer<String, ParticipantBean> participantBeanContainer()
 	{
 		BeanContainer<String, ParticipantBean> container = new BeanContainer<String, ParticipantBean>(
 				ParticipantBean.class);

@@ -72,6 +72,14 @@ public class TimeBox extends Window
 	{
 		setModal(true);
 		setCaption("Timebox");
+		addCloseListener(new Window.CloseListener()
+		{
+			@Override
+			public void windowClose(CloseEvent e)
+			{
+				presenter.timeBoxClosed();
+			}
+		});
 	}
 
 	@PostConstruct
@@ -116,7 +124,6 @@ public class TimeBox extends Window
 			public void windowClose(CloseEvent e)
 			{
 				comboBox.setValue(null);
-				presenter.timeBoxClosed();
 			}
 		});
 	}
