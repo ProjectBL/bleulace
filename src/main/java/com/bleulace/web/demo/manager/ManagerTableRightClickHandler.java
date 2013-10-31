@@ -9,7 +9,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 
 @Component
-class ManagerTableHandler implements Handler
+class ManagerTableRightClickHandler implements Handler
 {
 	@Autowired
 	private ManagerBoxPresenter presenter;
@@ -19,7 +19,6 @@ class ManagerTableHandler implements Handler
 			new ManagerAction(ManagementLevel.LOOP, "Loop"),
 			new ManagerAction(ManagementLevel.MIX, "Mix"),
 			new ManagerAction(ManagementLevel.OWN, "Own"),
-			new ManagerAction(null, "Remove"),
 	};
 	//@formatter:on
 

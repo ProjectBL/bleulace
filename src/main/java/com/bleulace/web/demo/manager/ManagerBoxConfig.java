@@ -10,6 +10,7 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -23,10 +24,11 @@ class ManagerBoxConfig
 	@Scope("ui")
 	public Table managerTable(
 			@Qualifier("managementParticipants") BeanContainer<String, ManagerBean> container,
-			ManagerTableHandler handler)
+			ManagerTableRightClickHandler rightClickHandler,
+			final ManagerBoxPresenter presenter)
 	{
-		Table bean = new Table("", container);
-		bean.addActionHandler(handler);
+		final Table bean = new Table("Managers", container);
+		bean.addActionHandler(rightClickHandler);
 		bean.setPageLength(6);
 		bean.setVisibleColumns(new Object[] { "firstName", "lastName", "email",
 				"level" });
@@ -34,7 +36,23 @@ class ManagerBoxConfig
 		bean.setColumnHeader("lastName", "Last Name");
 		bean.setColumnHeader("email", "Email");
 		bean.setColumnHeader("level", "Level");
+		bean.setImmediate(true);
 		bean.setSelectable(true);
+
+		bean.addShortcutListener(new ShortcutListener("Delete", KeyCode.DELETE,
+				null)
+		{
+			@Override
+			public void handleAction(Object sender, Object target)
+			{
+				String id = (String) bean.getValue();
+				if (id != null)
+				{
+					presenter.managerUpdated(id, null);
+				}
+			}
+		});
+
 		return bean;
 	}
 

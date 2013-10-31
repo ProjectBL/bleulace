@@ -31,6 +31,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 
 @Configuration
 class ViewTargetConfig
@@ -73,7 +74,7 @@ class ViewTargetConfig
 			@Qualifier("friendsContainer") final JPAContainer<Account> container,
 			final ViewTargetPresenter presenter)
 	{
-		final ComboBox bean = new ComboBox("Friends", container);
+		final ComboBox bean = new ComboBox("Assets", container);
 		bean.setItemCaptionMode(ItemCaptionMode.ITEM);
 		bean.setBuffered(false);
 		bean.setImmediate(true);
@@ -109,6 +110,7 @@ class ViewTargetConfig
 	{
 		Table bean = new Table("Viewing", container);
 		bean.setVisibleColumns(new Object[] { "name" });
+		bean.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		bean.addActionHandler(new Handler()
 		{
 			private final Action[] actions = new Action[] { new Action("REMOVE") };
