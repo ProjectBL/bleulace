@@ -15,8 +15,10 @@ import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
+import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.web.annotation.Presenter;
 import com.bleulace.web.demo.manager.ManagerBox;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -25,6 +27,8 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 @Presenter
 class TimeBoxPresenter implements CommitHandler
@@ -43,6 +47,9 @@ class TimeBoxPresenter implements CommitHandler
 
 	@Autowired
 	private AccountDAO accountDAO;
+
+	@Autowired
+	private ResourceDAO resourceDAO;
 
 	@Autowired
 	private EventDAO eventDAO;
@@ -100,6 +107,13 @@ class TimeBoxPresenter implements CommitHandler
 
 	void participantRemoved(ParticipantBean bean)
 	{
+		if (resourceDAO.findManagerIds(getCurrentEvent().getId(),
+				ManagementLevel.OWN).contains(bean.getId()))
+		{
+			Notification.show("Can not remove resource owner.",
+					Type.WARNING_MESSAGE);
+			return;
+		}
 		participants.removeItem(bean.getId());
 	}
 

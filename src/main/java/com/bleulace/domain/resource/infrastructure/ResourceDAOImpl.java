@@ -2,6 +2,7 @@ package com.bleulace.domain.resource.infrastructure;
 
 import java.util.List;
 
+import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.QManagementAssignment;
 import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.domain.resource.model.QAbstractResource;
@@ -30,5 +31,13 @@ class ResourceDAOImpl implements ResourceDAOCustom
 				.from(a)
 				.where(a.account.id.eq(managerId).and(
 						a.resource.instanceOf(clazz))).list(a.resource);
+	}
+
+	@Override
+	public List<String> findManagerIds(String id, ManagementLevel... levels)
+	{
+		return QueryFactory.from(a)
+				.where(a.resource.id.eq(id).and(a.role.in(levels)))
+				.list(a.account.id);
 	}
 }

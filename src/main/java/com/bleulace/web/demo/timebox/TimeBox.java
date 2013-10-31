@@ -2,12 +2,10 @@ package com.bleulace.web.demo.timebox;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.web.demo.manager.ManagerBox;
@@ -16,9 +14,8 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.event.Action;
-import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -171,7 +168,7 @@ public class TimeBox extends Window
 
 	private Table makeTable()
 	{
-		Table table = new Table("Participants", eventParticipants);
+		final Table table = new Table("Participants", eventParticipants);
 		table.setPageLength(6);
 		table.setVisibleColumns(new Object[] { "firstName", "lastName",
 				"email", "status" });
@@ -179,27 +176,22 @@ public class TimeBox extends Window
 		table.setColumnHeader("lastName", "Last Name");
 		table.setColumnHeader("email", "Email");
 		table.setColumnHeader("status", "RSVP");
-		table.addActionHandler(new Handler()
+		table.setImmediate(true);
+		table.setSelectable(true);
+		table.addShortcutListener(new ShortcutListener("Delete",
+				KeyCode.DELETE, null)
 		{
-			private final Action[] actions = new Action[] { new Action("Remove") };
-
 			@Override
-			public void handleAction(Action action, Object sender, Object target)
+			public void handleAction(Object sender, Object target)
 			{
-				Assert.notNull(target);
-				String id = (String) target;
-				presenter.participantRemoved(eventParticipants.getItem(id)
-						.getBean());
-			}
-
-			@Override
-			public Action[] getActions(Object target, Object sender)
-			{
-				return (target == null || target.equals(SecurityUtils
-						.getSubject().getPrincipal())) ? null : actions;
+				String id = (String) table.getValue();
+				if (id != null)
+				{
+					presenter.participantRemoved(eventParticipants.getItem(id)
+							.getBean());
+				}
 			}
 		});
-
 		table.setCellStyleGenerator(new CellStyleGenerator()
 		{
 			@Override
@@ -207,7 +199,7 @@ public class TimeBox extends Window
 					Object propertyId)
 			{
 				return eventParticipants.getItem(itemId).getBean().getStatus()
-						.toString().toLowerCase();
+						.getStyleName();
 			}
 		});
 		return table;
