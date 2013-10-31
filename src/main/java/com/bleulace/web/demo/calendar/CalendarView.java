@@ -35,6 +35,7 @@ class CalendarView extends CustomComponent implements View
 	public void enter(ViewChangeEvent event)
 	{
 		UI.getCurrent().addWindow(
-				SpringApplicationContext.getBean(Window.class, "vieweeWindow"));
+				SpringApplicationContext.getBean(Window.class,
+						"viewTargetWindow"));
 	}
 }

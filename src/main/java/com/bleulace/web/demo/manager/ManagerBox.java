@@ -34,13 +34,17 @@ public class ManagerBox extends Window
 	private ComboBox comboBox;
 
 	@Autowired
+	@Qualifier("managerCancelButton")
+	private Button cancel;
+
+	@Autowired
 	@Qualifier("managerSubmitButton")
 	private Button submit;
 
 	ManagerBox()
 	{
 		setModal(true);
-		setCaption("Managerbox");
+		setCaption("Managers");
 	}
 
 	public void show(AbstractResource resource)
@@ -54,7 +58,10 @@ public class ManagerBox extends Window
 	protected void init()
 	{
 		FormLayout form = new FormLayout(comboBox, table);
-		HorizontalLayout buttons = new HorizontalLayout(submit);
+
+		HorizontalLayout buttons = new HorizontalLayout(cancel, submit);
+		buttons.setSpacing(false);
+
 		VerticalLayout content = new VerticalLayout(form, buttons);
 		content.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
 		setContent(content);

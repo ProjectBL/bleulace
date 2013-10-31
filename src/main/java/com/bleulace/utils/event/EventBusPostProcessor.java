@@ -4,12 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
-import org.springframework.stereotype.Component;
 
-import com.bleulace.web.annotation.WebProfile;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -19,13 +16,15 @@ import com.google.common.eventbus.Subscribe;
  * 
  * @author Arleigh Dickerson
  */
-@WebProfile
-@Component
-class EventBusPostProcessor implements BeanPostProcessor,
+public class EventBusPostProcessor implements BeanPostProcessor,
 		DestructionAwareBeanPostProcessor
 {
-	@Autowired
-	private EventBus eventBus;
+	private final EventBus eventBus;
+
+	public EventBusPostProcessor(EventBus eventBus)
+	{
+		this.eventBus = eventBus;
+	}
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName)
@@ -62,7 +61,7 @@ class EventBusPostProcessor implements BeanPostProcessor,
 		}
 	}
 
-	private boolean hasAnnotatedMethods(Object bean)
+	protected boolean hasAnnotatedMethods(Object bean)
 	{
 		Method[] methods = bean.getClass().getMethods();
 		for (Method method : methods)
@@ -81,18 +80,23 @@ class EventBusPostProcessor implements BeanPostProcessor,
 
 	private void register(Object bean)
 	{
-		eventBus.register(bean);
+		getEventBus().register(bean);
 	}
 
 	private void unregister(Object bean)
 	{
 		try
 		{
-			eventBus.unregister(bean);
+			getEventBus().unregister(bean);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private EventBus getEventBus()
+	{
+		return eventBus;
 	}
 }

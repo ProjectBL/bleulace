@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.domain.resource.model.AbstractResource;
+import com.bleulace.jpa.JPAContainerFactoryBean;
 import com.bleulace.jpa.TransactionalEntityProvider;
 import com.bleulace.utils.CallByName;
 import com.bleulace.web.SystemUser;
@@ -29,9 +30,9 @@ class ResourceConfig
 
 	@Bean
 	@Scope("ui")
-	public JPAContainer<AbstractResource> resourceContainer()
+	public JPAContainerFactoryBean<AbstractResource> resourceContainer()
 	{
-		JPAContainer<AbstractResource> container = new JPAContainer<AbstractResource>(
+		JPAContainerFactoryBean<AbstractResource> container = new JPAContainerFactoryBean<AbstractResource>(
 				AbstractResource.class);
 		container
 				.setEntityProvider(new TransactionalEntityProvider<AbstractResource>(

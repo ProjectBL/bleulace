@@ -86,6 +86,11 @@ class ManagerBoxPresenter
 		managerBox.close();
 	}
 
+	void cancelClicked()
+	{
+		managerBox.close();
+	}
+
 	private void refreshManagers()
 	{
 		managers.removeAllItems();

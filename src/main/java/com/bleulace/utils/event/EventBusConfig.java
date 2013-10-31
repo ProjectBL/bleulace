@@ -16,4 +16,10 @@ class EventBusConfig
 		EventBus eventBus = new EventBus();
 		return eventBus;
 	}
+
+	@Bean
+	public EventBusPostProcessor eventBusPostProcessor(EventBus eventBus)
+	{
+		return new EventBusPostProcessor(eventBus);
+	}
 }

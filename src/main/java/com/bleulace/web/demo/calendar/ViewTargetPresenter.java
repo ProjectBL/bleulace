@@ -16,7 +16,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.data.util.BeanContainer;
 
 @Presenter
-class VieweePresenter implements CallByName<List<String>>
+class ViewTargetPresenter implements CallByName<List<String>>
 {
 	@Autowired
 	private SystemUser user;
@@ -33,13 +33,13 @@ class VieweePresenter implements CallByName<List<String>>
 	void accountFocus(Account account)
 	{
 		vieweeContainer.addBean(new ParticipantBean(account, null));
-		eventBus.post(new ViewTargetChangedEvent());
+		fireViewTargetChange();
 	}
 
 	void accountBlur(String accountId)
 	{
 		vieweeContainer.removeItem(accountId);
-		eventBus.post(new ViewTargetChangedEvent());
+		fireViewTargetChange();
 	}
 
 	@Override
@@ -52,5 +52,10 @@ class VieweePresenter implements CallByName<List<String>>
 			strs.add(0, userId);
 		}
 		return Collections.unmodifiableList(strs);
+	}
+
+	protected void fireViewTargetChange()
+	{
+		eventBus.post(new ViewTargetChangedEvent(user.getId()));
 	}
 }

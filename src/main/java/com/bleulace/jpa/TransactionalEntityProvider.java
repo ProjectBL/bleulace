@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.vaadin.addon.jpacontainer.provider.BatchableLocalEntityProvider;
@@ -28,7 +27,7 @@ public class TransactionalEntityProvider<T> extends
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRED)
+	@Transactional
 	protected void runInTransaction(Runnable operation)
 	{
 		super.runInTransaction(operation);

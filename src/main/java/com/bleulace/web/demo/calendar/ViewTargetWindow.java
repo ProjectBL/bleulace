@@ -17,7 +17,7 @@ import com.vaadin.ui.Window;
 
 @Component
 @Scope("ui")
-class VieweeWindow extends Window
+class ViewTargetWindow extends Window
 {
 	@Autowired
 	@Qualifier("vieweeTable")

@@ -44,7 +44,7 @@ class ManagerBoxConfig
 			@Qualifier("managementCandidates") BeanContainer<String, ManagerBean> managementCandidates,
 			final ManagerBoxPresenter presenter)
 	{
-		final ComboBox bean = new ComboBox("Managers", managementCandidates);
+		final ComboBox bean = new ComboBox("Assets", managementCandidates);
 		bean.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 		bean.setItemCaptionPropertyId("name");
 		bean.setImmediate(true);
@@ -73,6 +73,22 @@ class ManagerBoxConfig
 			}
 		});
 		bean.setClickShortcut(KeyCode.ENTER);
+		return bean;
+	}
+
+	@Bean
+	@Scope("ui")
+	public Button managerCancelButton(final ManagerBoxPresenter presenter)
+	{
+		Button bean = new Button("Cancel", new Button.ClickListener()
+		{
+			@Override
+			public void buttonClick(ClickEvent event)
+			{
+				presenter.cancelClicked();
+			}
+		});
+		bean.setClickShortcut(KeyCode.ESCAPE);
 		return bean;
 	}
 

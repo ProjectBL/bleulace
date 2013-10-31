@@ -26,7 +26,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
 
 @Configuration
-class VieweeConfig
+class ViewTargetConfig
 {
 	@Autowired
 	private SystemUser user;
@@ -52,7 +52,7 @@ class VieweeConfig
 	@Scope("ui")
 	public ComboBox vieweeComboBox(
 			@Qualifier("friendsContainer") final JPAContainer<Account> container,
-			final VieweePresenter presenter)
+			final ViewTargetPresenter presenter)
 	{
 		final ComboBox bean = new ComboBox("Friends", container);
 		bean.setItemCaptionMode(ItemCaptionMode.ITEM);
@@ -85,7 +85,7 @@ class VieweeConfig
 	@Bean
 	@Scope("ui")
 	public Table vieweeTable(
-			final VieweePresenter presenter,
+			final ViewTargetPresenter presenter,
 			@Qualifier("vieweeContainer") BeanContainer<String, ParticipantBean> container)
 	{
 		Table bean = new Table("Viewing", container);

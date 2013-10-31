@@ -26,7 +26,7 @@ class CalendarConfig
 {
 	@Bean
 	@Scope("ui")
-	public Calendar calendar(CalendarEventProvider eventProvider,
+	public CalendarFactoryBean calendar(CalendarEventProvider eventProvider,
 			EventClickHandler eventClickHandler,
 			RangeSelectHandler rangeSelectHandler,
 			DateClickHandler dateClickHandler,
@@ -34,7 +34,8 @@ class CalendarConfig
 			EventResizeHandler eventResizeHandler,
 			@Qualifier("demoEventRightClickHandler") Handler actionHandler)
 	{
-		Calendar bean = new Calendar(eventProvider);
+		CalendarFactoryBean bean = new CalendarFactoryBean();
+		bean.setEventProvider(eventProvider);
 		bean.setHandler(eventClickHandler);
 		bean.setHandler(rangeSelectHandler);
 		bean.setHandler(dateClickHandler);

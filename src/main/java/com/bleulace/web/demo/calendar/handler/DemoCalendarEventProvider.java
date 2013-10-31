@@ -12,9 +12,6 @@ import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.web.SystemUser;
-import com.bleulace.web.demo.calendar.ViewTargetChangedEvent;
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
@@ -84,15 +81,5 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	public void clearCache()
 	{
 		eventList.clear();
-	}
-
-	@Subscribe
-	public void subscribe(ViewTargetChangedEvent event)
-	{
-		if (user.getId().equals(event.getUserId()))
-		{
-			clearCache();
-			ctx.getBean(Calendar.class).markAsDirty();
-		}
 	}
 }
