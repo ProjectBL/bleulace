@@ -44,7 +44,7 @@ class ResourceConfig
 			@Override
 			public Collection<String> evaluate()
 			{
-				return user.getVieweeIds();
+				return user.getTargetIds();
 			}
 		});
 		container.setQueryModifierDelegate(modifier);

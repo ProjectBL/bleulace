@@ -1,12 +1,15 @@
-package com.bleulace.utils.event;
+package com.bleulace.web.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Publish
+@Target(ElementType.METHOD)
+public @interface RequiresAuthorization
 {
+	String[] types();
+
+	String[] actions();
 }

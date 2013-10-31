@@ -37,7 +37,7 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
 		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
-				user.getVieweeIds()))
+				user.getTargetIds()))
 		{
 			if (!eventList.contains(event))
 			{

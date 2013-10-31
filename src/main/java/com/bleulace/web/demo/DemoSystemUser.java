@@ -14,7 +14,7 @@ import com.bleulace.web.SystemUser;
 class DemoSystemUser implements SystemUser
 {
 	@Autowired
-	private CallByName<List<String>> vieweeIds;
+	private CallByName<List<String>> targetIds;
 
 	@Override
 	public String getId()
@@ -24,8 +24,8 @@ class DemoSystemUser implements SystemUser
 
 	@Override
 	@RequiresUser
-	public List<String> getVieweeIds()
+	public List<String> getTargetIds()
 	{
-		return vieweeIds.evaluate();
+		return targetIds.evaluate();
 	}
 }

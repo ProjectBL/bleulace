@@ -1,7 +1,13 @@
 package com.bleulace.web.demo.calendar;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +22,7 @@ import com.bleulace.web.SystemUser;
 import com.bleulace.web.demo.timebox.ParticipantBean;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.addon.jpacontainer.util.DefaultQueryModifierDelegate;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanContainer;
@@ -45,6 +52,18 @@ class ViewTargetConfig
 				Account.class);
 		container.setEntityProvider(new TransactionalEntityProvider<Account>(
 				Account.class));
+		container.setQueryModifierDelegate(new DefaultQueryModifierDelegate()
+		{
+			@Override
+			public void filtersWillBeAdded(CriteriaBuilder criteriaBuilder,
+					CriteriaQuery<?> query, List<Predicate> predicates)
+			{
+				Root<?> root = query.getRoots().iterator().next();
+				List<String> ids = accountDAO.findFriendIds(user.getId());
+				ids.add(user.getId());
+				predicates.add(root.get("id").in(ids));
+			}
+		});
 		return container;
 	}
 

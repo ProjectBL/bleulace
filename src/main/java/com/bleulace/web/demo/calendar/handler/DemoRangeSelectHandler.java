@@ -11,7 +11,9 @@ import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.web.SystemUser;
+import com.bleulace.web.annotation.RequiresAuthorization;
 import com.bleulace.web.demo.timebox.TimeBox;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 
@@ -28,14 +30,21 @@ class DemoRangeSelectHandler implements RangeSelectHandler
 	private SystemUser user;
 
 	@Override
+	@RequiresAuthorization(types = "calendar", actions = "create")
 	public void rangeSelect(RangeSelectEvent event)
 	{
+		if (user.getTargetIds().isEmpty())
+		{
+			Notification.show("No targets active.");
+			return;
+		}
+
 		PersistentEvent calendarEvent = new PersistentEvent();
 
 		calendarEvent.setStart(event.getStart());
 		calendarEvent.setEnd(event.getEnd());
 
-		List<String> vieweeIds = user.getVieweeIds();
+		List<String> vieweeIds = user.getTargetIds();
 		for (String vieweeId : vieweeIds)
 		{
 			calendarEvent.setRsvpStatus(vieweeId, RsvpStatus.PENDING);

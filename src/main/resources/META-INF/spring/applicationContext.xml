@@ -44,8 +44,5 @@
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
-	<bean id="executor"
-		class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean">
-		<property name="maxPoolSize" value="4" />
-	</bean>
+	<task:executor id="executor" pool-size="5-25" queue-capacity="100" />
 </beans>

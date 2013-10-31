@@ -1,5 +1,7 @@
 package com.bleulace.domain.crm.config;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,12 +78,27 @@ public class JpaRealm extends AuthorizingRealm
 		if (accountId != null)
 		{
 			info.addObjectPermissions(getManagementPermissions(accountId));
-			info.addStringPermission("calendar:write:" + accountId);
+			info.addStringPermissions(getCalendarPermissions(accountId));
 		}
 		return info;
 	}
 
-	private List<Permission> getManagementPermissions(String accountId)
+	private Collection<String> getCalendarPermissions(String accountId)
+	{
+		List<String> ids = new ArrayList<String>();
+		ids.add(accountId);
+		ids.addAll(getDAO().findFriendIds(accountId));
+
+		List<String> permissions = new ArrayList<String>();
+		permissions.add("calendar:update,delete:" + accountId);
+		for (String id : ids)
+		{
+			permissions.add("calendar:create,read:" + id);
+		}
+		return permissions;
+	}
+
+	private Collection<Permission> getManagementPermissions(String accountId)
 	{
 		QManagementAssignment a = new QManagementAssignment("a");
 

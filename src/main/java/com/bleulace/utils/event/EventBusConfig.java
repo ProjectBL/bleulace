@@ -1,5 +1,7 @@
 package com.bleulace.utils.event;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,10 +13,10 @@ import com.google.common.eventbus.EventBus;
 class EventBusConfig
 {
 	@Bean
-	public EventBus eventBus()
+	public EventBus eventBus(Executor executor)
 	{
-		EventBus eventBus = new EventBus();
-		return eventBus;
+		return new EventBus(// AsyncEventBus("GLOBAL", executor
+		);
 	}
 
 	@Bean

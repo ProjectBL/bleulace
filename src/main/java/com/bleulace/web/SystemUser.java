@@ -6,5 +6,5 @@ public interface SystemUser
 {
 	public String getId();
 
-	public List<String> getVieweeIds();
+	public List<String> getTargetIds();
 }

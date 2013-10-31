@@ -46,8 +46,12 @@ class ManagementPermission implements Permission
 			ManagementPermission that = (ManagementPermission) p;
 			return implies(new ResourcePermission(that.id));
 		}
-		ResourcePermission that = (ResourcePermission) p;
-		return new ResourcePermission(id).implies(that);
+		else if (p instanceof ResourcePermission)
+		{
+			ResourcePermission that = (ResourcePermission) p;
+			return new ResourcePermission(id).implies(that);
+		}
+		return false;
 	}
 
 	@Override

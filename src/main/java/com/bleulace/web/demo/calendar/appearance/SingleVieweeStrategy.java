@@ -22,7 +22,7 @@ class SingleVieweeStrategy implements StyleNameCallback
 	@Override
 	public String evaluate(PersistentEvent source)
 	{
-		for (String id : user.getVieweeIds())
+		for (String id : user.getTargetIds())
 		{
 			Account account = accountDAO.findOne(id);
 			if (account == null)
