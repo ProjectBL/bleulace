@@ -1,19 +1,17 @@
 package com.bleulace.web.demo.timebox;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.PersistentEvent;
@@ -23,24 +21,17 @@ import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitHandler;
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 
+@Configurable(preConstruction = true)
 class TimeBoxPresenter implements CommitHandler
 {
-	@Qualifier("timeBoxFieldGroup")
 	@Autowired
-	private BeanFieldGroup<PersistentEvent> fieldGroup;
-
-	@Autowired
-	@Qualifier("eventParticipants")
-	private BeanContainer<String, ParticipantBean> participants;
-
-	@Autowired
-	@Qualifier("eventCandidates")
-	private BeanContainer<String, ParticipantBean> candidates;
+	private ApplicationContext ctx;
 
 	@Autowired
 	private AccountDAO accountDAO;
@@ -48,109 +39,16 @@ class TimeBoxPresenter implements CommitHandler
 	@Autowired
 	private ResourceDAO resourceDAO;
 
-	@Autowired
-	private EventDAO eventDAO;
-
-	private TimeBox timeBox;
+	private TimeBox view;
 
 	private final Calendar calendar;
 
-	@Autowired
-	private ManagerBox managerBox;
+	private final BeanFieldGroup<PersistentEvent> fieldGroup = makeFieldGroup();
 
-	@Autowired
-	private transient ApplicationContext ctx;
-
-	TimeBoxPresenter(Calendar calendar)
+	TimeBoxPresenter(PersistentEvent event, Calendar calendar)
 	{
 		this.calendar = calendar;
-	}
-
-	void setTimeBox(TimeBox timeBox)
-	{
-		this.timeBox = timeBox;
-	}
-
-	PersistentEvent getCurrentEvent()
-	{
-		return fieldGroup.getItemDataSource().getBean();
-	}
-
-	void setCurrentEvent(PersistentEvent event)
-	{
-		Assert.notNull(event);
 		fieldGroup.setItemDataSource(event);
-
-		participants.removeAllItems();
-		candidates.removeAllItems();
-
-		List<Account> friends = accountDAO.findOne(
-				(String) SecurityUtils.getSubject().getPrincipal())
-				.getFriends();
-
-		for (Account friend : friends)
-		{
-			candidates.addBean(new ParticipantBean(friend));
-		}
-
-		for (Entry<Account, EventInvitee> entry : event.getInvitees()
-				.entrySet())
-		{
-			participants.addBean(new ParticipantBean(entry.getKey(), entry
-					.getValue().getStatus()));
-		}
-	}
-
-	void participantAdded(ParticipantBean bean)
-	{
-		if (bean.getStatus() == null)
-		{
-			bean.setStatus(RsvpStatus.PENDING);
-		}
-		participants.addBean(bean);
-	}
-
-	void participantRemoved(ParticipantBean bean)
-	{
-		if (resourceDAO.findManagerIds(getCurrentEvent().getId(),
-				ManagementLevel.OWN).contains(bean.getId()))
-		{
-			Notification.show("Can not remove resource owner.",
-					Type.WARNING_MESSAGE);
-			return;
-		}
-		participants.removeItem(bean.getId());
-	}
-
-	void applyClicked()
-	{
-		try
-		{
-			fieldGroup.commit();
-			PersistentEvent event = fieldGroup.getItemDataSource().getBean();
-			calendar.addEvent(getCurrentEvent());
-			timeBox.showSuccessMessage("Event "
-					+ (event.isNew() ? "created successfully."
-							: "updated successfully."));
-			timeBox.close();
-		}
-		catch (CommitException e)
-		{
-			timeBox.showWarningMessage("Invalid timebox state.");
-		}
-	}
-
-	void cancelClicked()
-	{
-		timeBox.showSuccessMessage("Operation canceled.");
-		timeBox.close();
-	}
-
-	void deleteClicked()
-	{
-		calendar.removeEvent(getCurrentEvent());
-		timeBox.showSuccessMessage("Event deleted.");
-		timeBox.close();
 	}
 
 	@Override
@@ -168,14 +66,14 @@ class TimeBoxPresenter implements CommitHandler
 
 		for (Account account : event.getInvitees().keySet())
 		{
-			if (!participants.getItemIds().contains(account.getId()))
+			if (!view.getParticipants().getItemIds().contains(account.getId()))
 			{
 				event.getInvitees().remove(account);
 			}
 			eventParticipantIds.add(account.getId());
 		}
 
-		for (String id : participants.getItemIds())
+		for (String id : view.getParticipants().getItemIds())
 		{
 			if (!eventParticipantIds.contains(id))
 			{
@@ -192,8 +90,95 @@ class TimeBoxPresenter implements CommitHandler
 		}
 	}
 
+	PersistentEvent getCurrentEvent()
+	{
+		return fieldGroup.getItemDataSource().getBean();
+	}
+
+	BeanFieldGroup<PersistentEvent> getFieldGroup()
+	{
+		return fieldGroup;
+	}
+
+	void setView(TimeBox view)
+	{
+		this.view = view;
+		for (Entry<Account, EventInvitee> entry : getCurrentEvent()
+				.getInvitees().entrySet())
+		{
+			view.getParticipants().addBean(
+					new ParticipantBean(entry.getKey(), entry.getValue()
+							.getStatus()));
+		}
+	}
+
+	void participantAdded(ParticipantBean bean)
+	{
+		if (bean.getStatus() == null)
+		{
+			bean.setStatus(RsvpStatus.PENDING);
+		}
+		view.getParticipants().addBean(bean);
+	}
+
+	void participantRemoved(ParticipantBean bean)
+	{
+		if (resourceDAO.findManagerIds(getCurrentEvent().getId(),
+				ManagementLevel.OWN).contains(bean.getId()))
+		{
+			Notification.show("Can not remove resource owner.",
+					Type.WARNING_MESSAGE);
+			return;
+		}
+		view.getParticipants().removeItem(bean.getId());
+	}
+
+	void managersClicked()
+	{
+		Window w = (Window) ctx.getBean("managerBox", getCurrentEvent());
+		UI.getCurrent().addWindow(w);
+	}
+
+	void cancelClicked()
+	{
+		view.showSuccessMessage("Operation canceled.");
+		view.close();
+	}
+
+	void deleteClicked()
+	{
+		calendar.removeEvent(getCurrentEvent());
+		view.showSuccessMessage("Event deleted.");
+		view.close();
+	}
+
+	void applyClicked()
+	{
+		try
+		{
+			fieldGroup.commit();
+			PersistentEvent event = fieldGroup.getItemDataSource().getBean();
+			calendar.addEvent(getCurrentEvent());
+			view.showSuccessMessage("Event "
+					+ (event.isNew() ? "created successfully."
+							: "updated successfully."));
+			view.close();
+		}
+		catch (CommitException e)
+		{
+			view.showWarningMessage("Invalid timebox state.");
+		}
+	}
+
 	void timeBoxClosed()
 	{
-		managerBox.close();
+	}
+
+	private BeanFieldGroup<PersistentEvent> makeFieldGroup()
+	{
+		BeanFieldGroup<PersistentEvent> bean = new BeanFieldGroup<PersistentEvent>(
+				PersistentEvent.class);
+		bean.addCommitHandler(this);
+		return bean;
 	}
 }

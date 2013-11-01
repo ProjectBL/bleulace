@@ -1,18 +1,19 @@
 package com.bleulace.web.demo.timebox;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 
-@Component
 class ManagerTableRightClickHandler implements Handler
 {
-	@Autowired
-	private ManagerBoxPresenter presenter;
+	private final ManagerBoxPresenter presenter;
+
+	ManagerTableRightClickHandler(ManagerBoxPresenter presenter)
+	{
+		this.presenter = presenter;
+	}
 
 	//@formatter:off
 	private final Action[] actions = new Action[] { 

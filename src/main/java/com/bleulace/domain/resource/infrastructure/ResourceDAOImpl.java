@@ -40,4 +40,14 @@ class ResourceDAOImpl implements ResourceDAOCustom
 				.where(a.resource.id.eq(id).and(a.role.in(levels)))
 				.list(a.account.id);
 	}
+
+	@Override
+	public ManagementLevel findManagementLevel(String resourceId,
+			String accountId)
+	{
+		return QueryFactory
+				.from(a)
+				.where(a.resource.id.eq(resourceId).and(
+						a.account.id.eq(accountId))).uniqueResult(a.role);
+	}
 }

@@ -14,4 +14,7 @@ interface ResourceDAOCustom
 			Class<T> clazz);
 
 	public List<String> findManagerIds(String id, ManagementLevel... levels);
+
+	public ManagementLevel findManagementLevel(String resourceId,
+			String accountId);
 }

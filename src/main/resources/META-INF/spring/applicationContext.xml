@@ -39,8 +39,7 @@
 			execution="DESTROY" />
 	</jdbc:initialize-database>
 
-	<jpa:repositories base-package="com.bleulace"
-		factory-class="com.bleulace.jpa.ResourceDAOFactoryBean" />
+	<jpa:repositories base-package="com.bleulace"/>
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

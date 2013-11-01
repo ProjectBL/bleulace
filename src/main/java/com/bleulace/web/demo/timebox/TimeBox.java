@@ -2,13 +2,16 @@ package com.bleulace.web.demo.timebox;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.PersistentEvent;
+import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanContainer;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -32,25 +35,19 @@ import com.vaadin.ui.Window;
 class TimeBox extends Window
 {
 	@Autowired
-	private ManagerBox managerBox;
+	private ApplicationContext ctx;
 
-	private final BeanFieldGroup<PersistentEvent> fieldGroup = makeFieldGroup();
+	@Autowired
+	@Qualifier("friendContainer")
+	private JPAContainer<Account> candidates;
 
-	private final BeanContainer<String, ParticipantBean> eventParticipants = makeContainer();
-
-	private final BeanContainer<String, ParticipantBean> eventCandidates = makeContainer();
+	private final BeanContainer<String, ParticipantBean> participants = makeContainer();
 
 	private final Button deleteButton = makeDeleteButton();
 
 	private final TimeBoxPresenter presenter;
 
-	public void setEvent(PersistentEvent event)
-	{
-		presenter.setCurrentEvent(event);
-		deleteButton.setVisible(!event.isNew());
-	}
-
-	TimeBox(final PersistentEvent event, final TimeBoxPresenter presenter)
+	TimeBox(final TimeBoxPresenter presenter)
 	{
 		this.presenter = presenter;
 		addCloseListener(new Window.CloseListener()
@@ -62,13 +59,15 @@ class TimeBox extends Window
 			}
 		});
 
-		TextField captionField = fieldGroup.buildAndBind("What", "title",
+		final BeanFieldGroup<PersistentEvent> fg = presenter.getFieldGroup();
+
+		TextField captionField = fg.buildAndBind("What", "title",
 				TextField.class);
-		TextField locationField = fieldGroup.buildAndBind("Where", "location",
+		TextField locationField = fg.buildAndBind("Where", "location",
 				TextField.class);
 
-		DateField startField = makeDateField("Start", "start", fieldGroup);
-		DateField endField = makeDateField("End", "end", fieldGroup);
+		DateField startField = makeDateField("Start", "start", fg);
+		DateField endField = makeDateField("End", "end", fg);
 
 		final ComboBox comboBox = makeComboBox();
 		Table table = makeTable();
@@ -85,7 +84,7 @@ class TimeBox extends Window
 					@Override
 					public void buttonClick(ClickEvent event)
 					{
-						managerBox.setResource(presenter.getCurrentEvent());
+						presenter.managersClicked();
 					}
 				}),//
 				cancelButton, applyButton, deleteButton);
@@ -103,6 +102,8 @@ class TimeBox extends Window
 				comboBox.setValue(null);
 			}
 		});
+
+		deleteButton.setVisible(!presenter.getCurrentEvent().isNew());
 	}
 
 	public void showSuccessMessage(String text)
@@ -118,28 +119,28 @@ class TimeBox extends Window
 	private DateField makeDateField(String caption, String propertyId,
 			BeanFieldGroup<PersistentEvent> fieldGroup)
 	{
-		DateField field = fieldGroup.buildAndBind(caption, propertyId,
-				DateField.class);
+		DateField field = presenter.getFieldGroup().buildAndBind(caption,
+				propertyId, DateField.class);
 		field.setResolution(Resolution.MINUTE);
 		return field;
 	}
 
 	private ComboBox makeComboBox()
 	{
-		final ComboBox bean = new ComboBox("Invite", eventCandidates);
+		final ComboBox bean = new ComboBox("Invite", candidates);
 		bean.setBuffered(false);
 		bean.setImmediate(true);
-		bean.setItemCaptionPropertyId("name");
+		bean.setItemCaptionPropertyId("title");
 		bean.addValueChangeListener(new ValueChangeListener()
 		{
 			@Override
 			public void valueChange(ValueChangeEvent event)
 			{
-				BeanItem<ParticipantBean> item = eventCandidates.getItem(bean
-						.getValue());
-				if (item != null)
+				String id = (String) event.getProperty().getValue();
+				if (id != null)
 				{
-					presenter.participantAdded(item.getBean());
+					presenter.participantAdded(new ParticipantBean(candidates
+							.getItem(id).getEntity()));
 				}
 			}
 		});
@@ -148,7 +149,7 @@ class TimeBox extends Window
 
 	private Table makeTable()
 	{
-		final Table table = new Table("Participants", eventParticipants);
+		final Table table = new Table("Participants", participants);
 		table.setPageLength(6);
 		table.setVisibleColumns(new Object[] { "firstName", "lastName",
 				"email", "status" });
@@ -167,7 +168,7 @@ class TimeBox extends Window
 				String id = (String) table.getValue();
 				if (id != null)
 				{
-					presenter.participantRemoved(eventParticipants.getItem(id)
+					presenter.participantRemoved(participants.getItem(id)
 							.getBean());
 				}
 			}
@@ -178,7 +179,7 @@ class TimeBox extends Window
 			public String getStyle(Table source, Object itemId,
 					Object propertyId)
 			{
-				return eventParticipants.getItem(itemId).getBean().getStatus()
+				return participants.getItem(itemId).getBean().getStatus()
 						.getStyleName();
 			}
 		});
@@ -221,14 +222,14 @@ class TimeBox extends Window
 		});
 	}
 
-	BeanContainer<String, ParticipantBean> getEventParticipants()
+	BeanContainer<String, ParticipantBean> getParticipants()
 	{
-		return eventParticipants;
+		return participants;
 	}
 
-	BeanContainer<String, ParticipantBean> getEventCandidates()
+	JPAContainer<Account> getCandidates()
 	{
-		return eventCandidates;
+		return candidates;
 	}
 
 	private BeanContainer<String, ParticipantBean> makeContainer()
@@ -237,14 +238,6 @@ class TimeBox extends Window
 				ParticipantBean.class);
 		container.setBeanIdProperty("id");
 		return container;
-	}
-
-	private BeanFieldGroup<PersistentEvent> makeFieldGroup()
-	{
-		BeanFieldGroup<PersistentEvent> bean = new BeanFieldGroup<PersistentEvent>(
-				PersistentEvent.class);
-		bean.addCommitHandler(presenter);
-		return bean;
 	}
 
 	private Button makeButton(String caption, int keyCode,

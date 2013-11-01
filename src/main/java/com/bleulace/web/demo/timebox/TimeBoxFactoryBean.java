@@ -21,6 +21,7 @@ class TimeBoxFactoryBean implements FactoryBean<Window>
 		this.event = event;
 	}
 
+	@SuppressWarnings("unused")
 	private TimeBoxFactoryBean()
 	{
 		this(new Calendar(), new PersistentEvent());
@@ -29,9 +30,9 @@ class TimeBoxFactoryBean implements FactoryBean<Window>
 	@Override
 	public Window getObject() throws Exception
 	{
-		TimeBoxPresenter presenter = new TimeBoxPresenter(calendar);
-		TimeBox timeBox = new TimeBox(event, presenter);
-		presenter.setTimeBox(timeBox);
+		TimeBoxPresenter presenter = new TimeBoxPresenter(event, calendar);
+		TimeBox timeBox = new TimeBox(presenter);
+		presenter.setView(timeBox);
 		return timeBox;
 	}
 

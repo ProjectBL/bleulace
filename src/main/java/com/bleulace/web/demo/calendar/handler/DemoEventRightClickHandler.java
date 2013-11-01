@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.calendar.handler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.management.infrastructure.EventDAO;
@@ -14,6 +15,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 
+@Scope("prototype")
 @Component
 @WebProfile
 class DemoEventRightClickHandler implements Handler
@@ -26,14 +28,24 @@ class DemoEventRightClickHandler implements Handler
 
 	private final Action[] actions;
 
-	DemoEventRightClickHandler()
+	private final Calendar calendar;
+
+	DemoEventRightClickHandler(Calendar calendar)
 	{
+		this.calendar = calendar;
+
 		int length = RightClickGesture.values().length;
 		actions = new Action[length];
 		for (int i = 0; i < length; i++)
 		{
 			actions[i] = RightClickGesture.values()[i].action;
 		}
+	}
+
+	@SuppressWarnings("unused")
+	private DemoEventRightClickHandler()
+	{
+		this(new Calendar());
 	}
 
 	@Override
@@ -51,6 +63,8 @@ class DemoEventRightClickHandler implements Handler
 		if (target instanceof PersistentEvent)
 		{
 			RightClickGesture.evaluate(action, (PersistentEvent) target);
+			eventDAO.save((PersistentEvent) target);
+			calendar.markAsDirty();
 		}
 	}
 

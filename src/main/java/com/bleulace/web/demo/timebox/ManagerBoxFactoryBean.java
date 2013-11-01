@@ -6,35 +6,39 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.bleulace.domain.crm.model.Account;
+import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.resource.model.AbstractResource;
+import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.ui.Window;
 
-@Component
+@Component("managerBox")
 @Scope("prototype")
 class ManagerBoxFactoryBean implements FactoryBean<Window>
 {
-	@Qualifier("managerBoxWindow")
 	@Autowired
-	private ManagerBox bean;
+	@Qualifier("friendContainer")
+	private JPAContainer<Account> candidates;
 
-	private final AbstractResource resource;
+	private final ManagerBoxPresenter presenter;
 
 	ManagerBoxFactoryBean(AbstractResource resource)
 	{
-		this.resource = resource;
+		presenter = new ManagerBoxPresenter(resource);
 	}
 
 	@SuppressWarnings("unused")
 	private ManagerBoxFactoryBean()
 	{
-		this(null);
+		this(new PersistentEvent());
 	}
 
 	@Override
 	public Window getObject() throws Exception
 	{
-		bean.setResource(resource);
-		return bean;
+		ManagerBox view = new ManagerBox(presenter);
+		presenter.setView(view);
+		return view;
 	}
 
 	@Override
@@ -46,6 +50,6 @@ class ManagerBoxFactoryBean implements FactoryBean<Window>
 	@Override
 	public boolean isSingleton()
 	{
-		return true;
+		return false;
 	}
 }

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
@@ -12,40 +13,29 @@ import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.domain.resource.model.AbstractResource;
-import com.bleulace.utils.ctx.SpringApplicationContext;
-import com.bleulace.web.annotation.Presenter;
 import com.vaadin.data.util.BeanContainer;
 
-@Presenter
+@Configurable(preConstruction = true)
 class ManagerBoxPresenter
 {
-	@Autowired
-	@Qualifier("managementParticipants")
-	private BeanContainer<String, ManagerBean> managers;
-
-	@Autowired
-	@Qualifier("managementCandidates")
-	private BeanContainer<String, ManagerBean> candidates;
-
 	@Autowired
 	private AccountDAO accountDAO;
 
 	@Autowired
 	private ResourceDAO resourceDAO;
 
-	@Autowired
-	private ManagerBox managerBox;
+	private ManagerBox view;
 
-	private AbstractResource resource;
+	private final AbstractResource resource;
 
-	void setCurrentResource(AbstractResource resource)
+	ManagerBoxPresenter(AbstractResource resource)
 	{
-		if (resource == null)
-		{
-			return;
-		}
 		this.resource = resource;
+	}
 
+	void setView(ManagerBox managerBox)
+	{
+		this.view = managerBox;
 		refreshCandidates();
 		refreshManagers();
 	}
@@ -55,62 +45,61 @@ class ManagerBoxPresenter
 	{
 		if (level == null)
 		{
-			managers.removeItem(id);
+			view.getManagers().removeItem(id);
 		}
 		else
 		{
-			managers.getItem(id).getItemProperty("level").setValue(level);
+			view.getManagers().getItem(id).getItemProperty("level")
+					.setValue(level);
 		}
 	}
 
-	void managerAdded(String id)
+	void managerAdded(Account account)
 	{
-		ManagerBean bean = candidates.getItem(id).getBean();
-		managers.addBean(bean);
+		Assert.notNull(account);
+		ManagerBean bean = new ManagerBean(account);
+		BeanContainer<String, ManagerBean> container = view.getManagers();
+		container.addBean(bean);
 	}
 
 	void submitClicked()
 	{
 		List<String> managerIds = new ArrayList<String>();
-		for (String id : managers.getItemIds())
+		for (String id : view.getManagers().getItemIds())
 		{
-			ManagementLevel level = managers.getItem(id).getBean().getLevel();
+			ManagementLevel level = view.getManagers().getItem(id).getBean()
+					.getLevel();
 			resource.setManagementLevel(id, level);
 			managerIds.add(id);
 		}
-		for (String id : candidates.getItemIds())
+		for (Object id : view.getCandidates().getItemIds())
 		{
 			if (!managerIds.contains(id))
 			{
-				resource.setManagementLevel(id, null);
+				resource.setManagementLevel((String) id, null);
 			}
 		}
-		managerBox.close();
+		view.close();
 	}
 
 	void cancelClicked()
 	{
-		managerBox.close();
+		view.close();
 	}
 
 	private void refreshManagers()
 	{
-		managers.removeAllItems();
+		view.getManagers().removeAllItems();
 		for (ManagementAssignment assignment : resource.getAssignments())
 		{
-			managers.addBean(new ManagerBean(assignment.getAccount(),
-					assignment.getRole()));
+			view.getManagers().addBean(
+					new ManagerBean(assignment.getAccount(), assignment
+							.getRole()));
 		}
 	}
 
 	private void refreshCandidates()
 	{
-		candidates.removeAllItems();
-		List<Account> friends = accountDAO.findOne(
-				SpringApplicationContext.getUser().getId()).getFriends();
-		for (Account friend : friends)
-		{
-			candidates.addBean(new ManagerBean(friend));
-		}
+		view.getCandidates().removeAllItems();
 	}
 }

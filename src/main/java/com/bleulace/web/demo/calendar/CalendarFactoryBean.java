@@ -2,7 +2,6 @@ package com.bleulace.web.demo.calendar;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -26,10 +25,6 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 
 	@Autowired
 	private EventMoveHandler eventMoveHandler;
-
-	@Autowired
-	@Qualifier("demoEventRightClickHandler")
-	private Handler rightClickHandler;
 
 	@Autowired
 	private RangeSelectHandler rangeSelectHandler;
@@ -60,7 +55,8 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 		calendar.setHandler(eventMoveHandler);
 		calendar.setHandler(rangeSelectHandler);
 		calendar.setHandler(eventClickHandler);
-		calendar.addActionHandler(rightClickHandler);
+		calendar.addActionHandler((Handler) ctx.getBean(
+				"demoEventRightClickHandler", calendar));
 		calendar.setImmediate(true);
 		return calendar;
 	}

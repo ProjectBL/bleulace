@@ -134,6 +134,12 @@ public abstract class AbstractResource implements CompositeResource,
 				.findManagerIds(getId(), levels);
 	}
 
+	public ManagementLevel getManagementLevel(String accountId)
+	{
+		return SpringApplicationContext.getBean(ResourceDAO.class)
+				.findManagementLevel(getId(), accountId);
+	}
+
 	public void setManagementLevel(String accountId, ManagementLevel level)
 	{
 		QManagementAssignment a = new QManagementAssignment("a");

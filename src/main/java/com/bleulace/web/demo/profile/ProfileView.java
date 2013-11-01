@@ -14,10 +14,10 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Component;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
 @VaadinView
@@ -45,10 +45,6 @@ class ProfileView extends CustomComponent implements View
 
 	public ProfileView()
 	{
-		VerticalLayout left = new VerticalLayout();
-		left.addComponents(makeTable("Projects", projects),
-				makeTable("Events", events));
-		setCompositionRoot(left);
 	}
 
 	@Override
@@ -56,8 +52,11 @@ class ProfileView extends CustomComponent implements View
 	{
 		user.setTarget(event.getParameters());
 		presenter.init(event.getParameters());
-		setCompositionRoot((Component) ctx.getBean("calendar",
-				event.getParameters()));
+		Calendar cal = (Calendar) ctx
+				.getBean("calendar", event.getParameters());
+		TabSheet tabs = (TabSheet) ctx.getBean("calendarTabsheet", cal);
+
+		setCompositionRoot(new VerticalLayout(tabs, cal));
 	}
 
 	void setInfo(ContactInformation info)
@@ -76,12 +75,6 @@ class ProfileView extends CustomComponent implements View
 	public JPAContainer<?> getEvents()
 	{
 		return events;
-	}
-
-	private Table makeTable(String caption, JPAContainer<?> container)
-	{
-		Table table = new Table(caption, container);
-		return table;
 	}
 
 	private <T> JPAContainer<T> makeContainer(Class<T> clazz)
