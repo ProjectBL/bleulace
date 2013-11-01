@@ -1,4 +1,4 @@
-package com.bleulace.web.demo.manager;
+package com.bleulace.web.demo.timebox;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;

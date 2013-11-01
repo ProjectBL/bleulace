@@ -73,7 +73,6 @@ aspect VaadinStereotypingAspect
 
 	private String[] getTargetIds()
 	{
-		List<String> ids = SpringApplicationContext.getUser().getTargetIds();
-		return ids.toArray(new String[ids.size()]);
+		return new String[] { SpringApplicationContext.getUser().getTarget() };
 	}
 }

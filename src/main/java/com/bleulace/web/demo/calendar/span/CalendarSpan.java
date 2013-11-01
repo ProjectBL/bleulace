@@ -1,7 +1,5 @@
 package com.bleulace.web.demo.calendar.span;
 
-import org.springframework.util.Assert;
-
 import com.vaadin.ui.Calendar;
 
 public enum CalendarSpan implements CalendarSpanCallback
@@ -30,9 +28,6 @@ public enum CalendarSpan implements CalendarSpanCallback
 	@Override
 	public void resize(Calendar calendar)
 	{
-		Assert.notNull(calendar);
-		Assert.notNull(calendar.getStartDate());
-		Assert.notNull(calendar.getEndDate());
 		command.resize(calendar);
 		calendar.markAsDirty();
 	}

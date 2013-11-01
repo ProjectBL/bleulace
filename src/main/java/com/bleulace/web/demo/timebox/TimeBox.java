@@ -1,14 +1,9 @@
 package com.bleulace.web.demo.timebox;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import com.bleulace.domain.management.model.PersistentEvent;
-import com.bleulace.web.demo.manager.ManagerBox;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -20,6 +15,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.FormLayout;
@@ -29,46 +25,34 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-@Component
-@Scope("ui")
-public class TimeBox extends Window
+@Configurable(preConstruction = true)
+class TimeBox extends Window
 {
 	@Autowired
 	private ManagerBox managerBox;
 
-	@Autowired
-	private TimeBoxPresenter presenter;
+	private final BeanFieldGroup<PersistentEvent> fieldGroup = makeFieldGroup();
 
-	@Autowired
-	@Qualifier("timeBoxFieldGroup")
-	private BeanFieldGroup<PersistentEvent> fieldGroup;
+	private final BeanContainer<String, ParticipantBean> eventParticipants = makeContainer();
 
-	@Autowired
-	@Qualifier("eventParticipants")
-	private BeanContainer<String, ParticipantBean> eventParticipants;
-
-	@Autowired
-	@Qualifier("eventCandidates")
-	private BeanContainer<String, ParticipantBean> eventCandidates;
+	private final BeanContainer<String, ParticipantBean> eventCandidates = makeContainer();
 
 	private final Button deleteButton = makeDeleteButton();
 
-	public void show(PersistentEvent event)
+	private final TimeBoxPresenter presenter;
+
+	public void setEvent(PersistentEvent event)
 	{
 		presenter.setCurrentEvent(event);
 		deleteButton.setVisible(!event.isNew());
-		UI.getCurrent().addWindow(this);
-		focus();
 	}
 
-	private TimeBox()
+	TimeBox(final PersistentEvent event, final TimeBoxPresenter presenter)
 	{
-		setModal(true);
-		setCaption("Timebox");
+		this.presenter = presenter;
 		addCloseListener(new Window.CloseListener()
 		{
 			@Override
@@ -77,11 +61,7 @@ public class TimeBox extends Window
 				presenter.timeBoxClosed();
 			}
 		});
-	}
 
-	@PostConstruct
-	protected void init()
-	{
 		TextField captionField = fieldGroup.buildAndBind("What", "title",
 				TextField.class);
 		TextField locationField = fieldGroup.buildAndBind("Where", "location",
@@ -105,7 +85,7 @@ public class TimeBox extends Window
 					@Override
 					public void buttonClick(ClickEvent event)
 					{
-						managerBox.show(presenter.getCurrentEvent());
+						managerBox.setResource(presenter.getCurrentEvent());
 					}
 				}),//
 				cancelButton, applyButton, deleteButton);
@@ -207,9 +187,7 @@ public class TimeBox extends Window
 
 	private Button makeApplyButton()
 	{
-		Button button = new Button("Apply");
-		button.setClickShortcut(KeyCode.ENTER);
-		button.addClickListener(new Button.ClickListener()
+		return makeButton("Apply", KeyCode.ENTER, new Button.ClickListener()
 		{
 			@Override
 			public void buttonClick(ClickEvent event)
@@ -217,14 +195,11 @@ public class TimeBox extends Window
 				presenter.applyClicked();
 			}
 		});
-		return button;
 	}
 
 	private Button makeCancelButton()
 	{
-		Button button = new Button("Cancel");
-		button.setClickShortcut(KeyCode.ESCAPE);
-		button.addClickListener(new Button.ClickListener()
+		return makeButton("Cancel", KeyCode.ESCAPE, new Button.ClickListener()
 		{
 			@Override
 			public void buttonClick(ClickEvent event)
@@ -232,14 +207,11 @@ public class TimeBox extends Window
 				presenter.cancelClicked();
 			}
 		});
-		return button;
 	}
 
 	private Button makeDeleteButton()
 	{
-		Button button = new Button("Delete");
-		button.setClickShortcut(KeyCode.DELETE);
-		button.addClickListener(new Button.ClickListener()
+		return makeButton("Delete", KeyCode.DELETE, new Button.ClickListener()
 		{
 			@Override
 			public void buttonClick(ClickEvent event)
@@ -247,6 +219,39 @@ public class TimeBox extends Window
 				presenter.deleteClicked();
 			}
 		});
+	}
+
+	BeanContainer<String, ParticipantBean> getEventParticipants()
+	{
+		return eventParticipants;
+	}
+
+	BeanContainer<String, ParticipantBean> getEventCandidates()
+	{
+		return eventCandidates;
+	}
+
+	private BeanContainer<String, ParticipantBean> makeContainer()
+	{
+		BeanContainer<String, ParticipantBean> container = new BeanContainer<String, ParticipantBean>(
+				ParticipantBean.class);
+		container.setBeanIdProperty("id");
+		return container;
+	}
+
+	private BeanFieldGroup<PersistentEvent> makeFieldGroup()
+	{
+		BeanFieldGroup<PersistentEvent> bean = new BeanFieldGroup<PersistentEvent>(
+				PersistentEvent.class);
+		bean.addCommitHandler(presenter);
+		return bean;
+	}
+
+	private Button makeButton(String caption, int keyCode,
+			ClickListener listener)
+	{
+		Button button = new Button(caption, listener);
+		button.setClickShortcut(keyCode);
 		return button;
 	}
 }

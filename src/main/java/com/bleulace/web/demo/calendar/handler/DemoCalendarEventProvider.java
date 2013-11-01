@@ -3,31 +3,50 @@ package com.bleulace.web.demo.calendar.handler;
 import java.util.Date;
 import java.util.List;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.shiro.authz.annotation.RequiresUser;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.infrastructure.EventDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
-import com.bleulace.web.SystemUser;
+import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.demo.calendar.appearance.StyleNameCallback;
 import com.vaadin.ui.components.calendar.CalendarDateRange;
 import com.vaadin.ui.components.calendar.event.BasicEventProvider;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
+@Scope("prototype")
 @Component
 class DemoCalendarEventProvider extends BasicEventProvider implements
-		CachingEventProvider
+		CachingEventProvider, MethodInterceptor
 {
+	private final String id;
+
+	private final StyleNameCallback styleNameCallback;
+
+	DemoCalendarEventProvider(String id)
+	{
+		this(id, (StyleNameCallback) SpringApplicationContext.getBean(
+				"defaultStyleNameCallback", id));
+	}
+
+	DemoCalendarEventProvider(String id, StyleNameCallback styleNameCallback)
+	{
+		this.id = id;
+		this.styleNameCallback = styleNameCallback;
+	}
+
 	@Autowired
 	private AccountDAO accountDAO;
 
 	@Autowired
 	private EventDAO eventDAO;
-
-	@Autowired
-	private SystemUser user;
 
 	@Autowired
 	private ApplicationContext ctx;
@@ -36,12 +55,14 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	@RequiresUser
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
-		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
-				user.getTargetIds()))
+		for (PersistentEvent event : eventDAO
+				.findEvents(startDate, endDate, id))
 		{
 			if (!eventList.contains(event))
 			{
-				eventList.add(event);
+				ProxyFactory pf = new ProxyFactory(event);
+				pf.addAdvice(this);
+				eventList.add((CalendarEvent) pf.getProxy());
 			}
 		}
 		return super.getEvents(startDate, endDate);
@@ -81,5 +102,16 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	public void clearCache()
 	{
 		eventList.clear();
+	}
+
+	@Override
+	public Object invoke(MethodInvocation invocation) throws Throwable
+	{
+		if (invocation.getMethod().getName().equals("getStyleName"))
+		{
+			return styleNameCallback.evaluate((PersistentEvent) invocation
+					.getThis());
+		}
+		return invocation.proceed();
 	}
 }

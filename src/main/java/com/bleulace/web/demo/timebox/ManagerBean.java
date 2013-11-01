@@ -1,4 +1,4 @@
-package com.bleulace.web.demo.manager;
+package com.bleulace.web.demo.timebox;
 
 import javax.validation.constraints.NotNull;
 

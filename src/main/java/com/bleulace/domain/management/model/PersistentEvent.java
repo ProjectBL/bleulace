@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -47,6 +48,9 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@MapKeyColumn(name = "GUEST_ID")
 	@ElementCollection
 	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
+
+	@Transient
+	private StyleNameCallback callback;
 
 	public PersistentEvent()
 	{
@@ -105,8 +109,7 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public String getStyleName()
 	{
-		return SpringApplicationContext.getBean(StyleNameCallback.class,
-				"styleNameCallbackFactory").evaluate(this);
+		return callback == null ? null : callback.evaluate(this);
 	}
 
 	@Override

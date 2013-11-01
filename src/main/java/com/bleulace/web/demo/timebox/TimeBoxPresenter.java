@@ -19,8 +19,6 @@ import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
-import com.bleulace.web.annotation.Presenter;
-import com.bleulace.web.demo.manager.ManagerBox;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitEvent;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
@@ -30,7 +28,6 @@ import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 
-@Presenter
 class TimeBoxPresenter implements CommitHandler
 {
 	@Qualifier("timeBoxFieldGroup")
@@ -54,17 +51,25 @@ class TimeBoxPresenter implements CommitHandler
 	@Autowired
 	private EventDAO eventDAO;
 
-	@Autowired
 	private TimeBox timeBox;
 
-	@Autowired
-	private Calendar calendar;
+	private final Calendar calendar;
 
 	@Autowired
 	private ManagerBox managerBox;
 
 	@Autowired
 	private transient ApplicationContext ctx;
+
+	TimeBoxPresenter(Calendar calendar)
+	{
+		this.calendar = calendar;
+	}
+
+	void setTimeBox(TimeBox timeBox)
+	{
+		this.timeBox = timeBox;
+	}
 
 	PersistentEvent getCurrentEvent()
 	{

@@ -24,9 +24,6 @@ class DemoEventRightClickHandler implements Handler
 	@Autowired
 	private SystemUser user;
 
-	@Autowired
-	private CachingEventProvider provider;
-
 	private final Action[] actions;
 
 	DemoEventRightClickHandler()
@@ -43,7 +40,9 @@ class DemoEventRightClickHandler implements Handler
 	public Action[] getActions(Object target, Object sender)
 	{
 		CalendarDateRange range = (CalendarDateRange) target;
-		return provider.containsRange(range) ? actions : null;
+		Calendar cal = (Calendar) sender;
+		CachingEventProvider ep = (CachingEventProvider) cal.getEventProvider();
+		return ep.containsRange(range) ? actions : null;
 	}
 
 	@Override
@@ -74,8 +73,6 @@ class DemoEventRightClickHandler implements Handler
 		{
 			event.setRsvpStatus(SpringApplicationContext.getUser().getId(),
 					status);
-			SpringApplicationContext.getBean(EventDAO.class).save(event);
-			SpringApplicationContext.getBean(Calendar.class).markAsDirty();
 		}
 	}
 

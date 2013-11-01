@@ -92,4 +92,12 @@ class EventDAOImpl implements EventDAOCustom
 				.where(i.guest.id.in(accountIds)
 						.and(e.id.notIn(cachedEventIds))).list(e);
 	}
+
+	@Override
+	public List<String> findEventIds(String accountId)
+	{
+		Assert.notNull(accountId);
+		return QueryFactory.from(e).distinct().innerJoin(e.invitees, i)
+				.where(i.guest.id.eq(accountId)).list(e.id);
+	}
 }

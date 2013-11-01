@@ -23,6 +23,8 @@ interface EventDAOCustom
 
 	public List<PersistentEvent> findEvents(String accountId);
 
+	public List<String> findEventIds(String accountId);
+
 	public boolean exists(Date start, Date end, Collection<String> accountIds);
 
 	public Set<RsvpStatus> findRsvps(Date start, Date end, String accountId);

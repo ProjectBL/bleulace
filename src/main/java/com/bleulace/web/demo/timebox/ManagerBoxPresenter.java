@@ -1,11 +1,10 @@
-package com.bleulace.web.demo.manager;
+package com.bleulace.web.demo.timebox;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.Assert;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
@@ -41,7 +40,10 @@ class ManagerBoxPresenter
 
 	void setCurrentResource(AbstractResource resource)
 	{
-		Assert.notNull(resource);
+		if (resource == null)
+		{
+			return;
+		}
 		this.resource = resource;
 
 		refreshCandidates();
