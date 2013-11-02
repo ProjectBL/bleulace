@@ -40,6 +40,8 @@
 	</jdbc:initialize-database>
 
 	<jpa:repositories base-package="com.bleulace" />
+	<jpa:auditing auditor-aware-ref="auditProvider"
+		date-time-provider-ref="auditProvider" />
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

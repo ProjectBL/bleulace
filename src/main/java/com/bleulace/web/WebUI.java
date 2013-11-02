@@ -8,6 +8,7 @@ import com.bleulace.web.demo.front.FrontPresenter;
 import com.porotype.iconfont.FontAwesome;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Push;
+import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
@@ -22,6 +23,7 @@ import com.vaadin.ui.UI;
  */
 //@formatter:on
 @Push
+@Theme("bleulacetheme")
 @Configurable(preConstruction = true)
 @PreserveOnRefresh
 @Widgetset("com.vaadin.DefaultWidgetSet")

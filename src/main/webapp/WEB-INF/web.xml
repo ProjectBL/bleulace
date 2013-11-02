@@ -29,8 +29,8 @@
 		<servlet-name>webServlet</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
-			<param-name>UIProvider</param-name>
-			<param-value>com.bleulace.web.BleulaceUIProvider</param-value>
+			<param-name>UI</param-name>
+			<param-value>com.bleulace.web.WebUI</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

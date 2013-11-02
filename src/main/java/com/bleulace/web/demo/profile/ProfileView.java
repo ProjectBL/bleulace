@@ -80,13 +80,10 @@ class ProfileView extends CustomComponent implements View
 		user.setTarget(id);
 		presenter.init(id);
 
-		final String firstName = presenter.getAccount().getContactInformation()
-				.getFirstName();
-
 		panel.setFirstComponent(makeLeft());
 		panel.setSecondComponent(makeCenter());
 
-		panel.setSplitPosition(15f, Unit.PERCENTAGE);
+		panel.setSplitPosition(20f, Unit.PERCENTAGE);
 	}
 
 	private Layout makeCenter()
@@ -108,12 +105,12 @@ class ProfileView extends CustomComponent implements View
 
 		Image avatar = (Image) ctx.getBean("avatar", account);
 		avatar.setWidth(100f, Unit.PERCENTAGE);
-		avatar.setHeight(100f, Unit.PERCENTAGE);
 
 		Label name = new Label(account.getContactInformation().getName());
 		name.addStyleName(Reindeer.LABEL_H1);
 
 		VerticalLayout layout = new VerticalLayout(avatar, name, resourceTable);
+		resourceTable.setWidth(100f, Unit.PERCENTAGE);
 		return layout;
 	}
 }

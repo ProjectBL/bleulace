@@ -7,9 +7,10 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 import com.bleulace.domain.resource.model.AbstractResource;
 
 @Entity
-@RooJavaBean
 public class Project extends AbstractResource implements ManageableResource
 {
+	private boolean complete = false;
+
 	public Project()
 	{
 	}
@@ -17,15 +18,14 @@ public class Project extends AbstractResource implements ManageableResource
 	@Override
 	public boolean isComplete()
 	{
-		return getProgress().isComplete();
+		return complete;// getProgress().isComplete();
 	}
 
 	@Override
 	public void setComplete(boolean complete)
 	{
-		for (ManageableResource r : getChildren(ManageableResource.class))
-		{
-			r.setComplete(complete);
-		}
+		this.complete = complete;
+		// for (ManageableResource r :
+		// getChildren(ManageableResource.class)){r.setComplete(complete);}
 	}
 }

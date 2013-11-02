@@ -6,6 +6,7 @@ package com.bleulace.domain.resource.model;
 import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.resource.model.AbstractResource;
 import java.util.List;
+import org.joda.time.DateTime;
 
 privileged aspect AbstractResource_Roo_JavaBean {
     
@@ -27,6 +28,22 @@ privileged aspect AbstractResource_Roo_JavaBean {
     
     public void AbstractResource.setAssignments(List<ManagementAssignment> assignments) {
         this.assignments = assignments;
+    }
+    
+    public DateTime AbstractResource.getCreatedDate() {
+        return this.createdDate;
+    }
+    
+    public void AbstractResource.setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    public DateTime AbstractResource.getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+    
+    public void AbstractResource.setLastModifiedDate(DateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
     
 }

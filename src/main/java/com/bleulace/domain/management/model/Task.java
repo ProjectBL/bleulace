@@ -10,12 +10,10 @@ import javax.persistence.TemporalType;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
 
-import com.bleulace.domain.resource.model.AbstractResource;
-
 @Entity
 @RooToString
 @RooJavaBean
-public class Task extends AbstractResource implements ManageableResource
+public class Task extends Project implements ManageableResource
 {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true)

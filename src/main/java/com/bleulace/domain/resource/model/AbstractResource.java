@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -16,8 +17,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
-import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
@@ -33,6 +37,7 @@ import com.bleulace.utils.ctx.SpringApplicationContext;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Configurable(preConstruction = true)
+@EntityListeners({ AuditingEntityListener.class })
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
@@ -40,7 +45,6 @@ public abstract class AbstractResource implements CompositeResource,
 	@Column(nullable = false, updatable = false)
 	private String id = UUID.randomUUID().toString();
 
-	@NotEmpty
 	@Column(nullable = false)
 	private String title = "";
 
@@ -55,6 +59,12 @@ public abstract class AbstractResource implements CompositeResource,
 	@CascadeOnDelete
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "resource")
 	private List<ManagementAssignment> assignments = new ArrayList<ManagementAssignment>();
+
+	@CreatedDate
+	private DateTime createdDate;
+
+	@LastModifiedDate
+	private DateTime lastModifiedDate;
 
 	protected AbstractResource()
 	{

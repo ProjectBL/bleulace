@@ -1,26 +1,24 @@
 package com.bleulace.web.demo.profile;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.Locale;
 
+import org.joda.time.DateTime;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
-import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
-import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.jpa.TransactionalEntityProvider;
 import com.bleulace.utils.IdCallback;
 import com.bleulace.utils.IdsCallback;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -49,11 +47,32 @@ class ProfileConfig
 
 	@Bean
 	@Scope("ui")
-	@DependsOn("profileContainerMap")
-	public TreeTable resourceTable()
+	public TreeTable resourceTable(
+			Converter<String, DateTime> jodaDateTimeConverter)
 	{
-		TreeTable bean = makeTable(AbstractResource.class);
-		return bean;
+		JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
+				"jpaContainer", Project.class,
+				TransactionalEntityProvider.class, new IdsCallback()
+				{
+					@Override
+					public Collection<String> evaluate()
+					{
+						String id = ctx.getBean(ProfilePresenter.class)
+								.getAccount().getId();
+						return resourceDAO.findIdsForManager(id);
+					}
+				});
+		container.setParentProperty("parent");
+
+		TreeTable table = new TreeTable();
+		table.setContainerDataSource(container);
+		table.setVisibleColumns(new Object[] { "title", "createdDate",
+				"lastModifiedDate", "complete" });
+		table.setConverter("createdDate", jodaDateTimeConverter);
+		table.setConverter("lastModifiedDate", jodaDateTimeConverter);
+		table.setReadOnly(true);
+		// table.setStyleName(Reindeer.TABLE_STRONG);
+		return table;
 	}
 
 	@Bean
@@ -80,48 +99,40 @@ class ProfileConfig
 		return bean;
 	}
 
-	private TreeTable makeTable(Class<?> clazz)
+	@Bean
+	public Converter<String, DateTime> jodaDateTimeConverter()
 	{
-		TreeTable table = new TreeTable();
-		table.setContainerDataSource(getContainer(clazz));
-		table.setVisibleColumns(new Object[] { "title", "start", "end" });
-		return table;
-	}
-
-	@Scope("ui")
-	@Bean(name = "profileContainerMap")
-	public Map<Class<?>, JPAContainer<?>> profileContainerMap()
-	{
-		Builder<Class<?>, JPAContainer<?>> builder = ImmutableMap.builder();
-		for (Class<?> clazz : new Class[] { AbstractResource.class,
-				Project.class, PersistentEvent.class })
+		return new Converter<String, DateTime>()
 		{
-			builder.put(clazz, makeContainer(clazz));
-		}
-		return builder.build();
-	}
 
-	private JPAContainer<?> makeContainer(Class<?> clazz)
-	{
-		JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
-				"jpaContainer", clazz, TransactionalEntityProvider.class,
-				new IdsCallback()
-				{
-					@Override
-					public Collection<String> evaluate()
-					{
-						String id = ctx.getBean(ProfilePresenter.class)
-								.getAccount().getId();
-						return resourceDAO.findIdsForManager(id);
-					}
-				});
-		container.setParentProperty("parent");
-		return container;
-	}
+			@Override
+			public DateTime convertToModel(String value,
+					Class<? extends DateTime> targetType, Locale locale)
+					throws com.vaadin.data.util.converter.Converter.ConversionException
+			{
+				// TODO Auto-generated method stub
+				return null;
+			}
 
-	private JPAContainer<?> getContainer(Class<?> clazz)
-	{
-		return ((Map<Class<?>, JPAContainer<?>>) ctx
-				.getBean("profileContainerMap")).get(clazz);
+			@Override
+			public String convertToPresentation(DateTime value,
+					Class<? extends String> targetType, Locale locale)
+					throws com.vaadin.data.util.converter.Converter.ConversionException
+			{
+				return new PrettyTime().format(value.toDate());
+			}
+
+			@Override
+			public Class<DateTime> getModelType()
+			{
+				return DateTime.class;
+			}
+
+			@Override
+			public Class<String> getPresentationType()
+			{
+				return String.class;
+			}
+		};
 	}
 }
