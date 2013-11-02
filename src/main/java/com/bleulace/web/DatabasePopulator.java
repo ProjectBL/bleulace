@@ -5,10 +5,13 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
@@ -24,7 +27,7 @@ import com.bleulace.utils.SystemProfiles;
  */
 @Component
 @Profile(SystemProfiles.DEV)
-class DatabasePopulator
+class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 {
 	@PersistenceContext
 	private EntityManager em;
@@ -33,13 +36,14 @@ class DatabasePopulator
 	private AccountDAO dao;
 
 	@Transactional
-	void populate()
+	private void populate()
 	{
 		if (dao.findByUsername("arleighdickerson@frugalu.com") != null)
 		{
 			return;
 		}
 		Account me = new Account();
+		me.setGender(Gender.MALE);
 		me.setUsername("arleighdickerson@frugalu.com");
 		me.setPassword("password");
 
@@ -53,6 +57,7 @@ class DatabasePopulator
 		for (int i = 0; i < 5; i++)
 		{
 			Account a = new Account();
+			a.setGender(Gender.MALE);
 			a.setUsername(RandomStringUtils.random(20, true, true)
 					+ "@frugalu.com");
 			a.setPassword("password");
@@ -93,5 +98,14 @@ class DatabasePopulator
 
 		em.persist(project);
 		em.flush();
+	}
+
+	@Override
+	public void onApplicationEvent(ContextRefreshedEvent event)
+	{
+		if (dao.findByUsername("arleighdickerson@frugalu.com") == null)
+		{
+			populate();
+		}
 	}
 }

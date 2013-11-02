@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.timebox;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import com.bleulace.domain.management.model.PersistentEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Window;
 
+@Lazy
 @Component("timeBox")
 @Scope("prototype")
 class TimeBoxFactoryBean implements FactoryBean<Window>

@@ -13,10 +13,6 @@ privileged aspect Account_Roo_Jpa_Entity {
     @Column(name = "version")
     private Integer Account.version;
     
-    public void Account.setId(String id) {
-        this.id = id;
-    }
-    
     public Integer Account.getVersion() {
         return this.version;
     }

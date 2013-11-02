@@ -2,6 +2,7 @@ package com.bleulace.web.demo;
 
 import org.springframework.stereotype.Component;
 
+import com.bleulace.domain.crm.Gender;
 import com.bleulace.web.BleulaceTheme;
 
 @Component
@@ -14,7 +15,7 @@ class DemoTheme implements BleulaceTheme
 	private static final String AVATAR_LOCATION_FEMALE = "img/ProfilePlaceholderFemale.jpg";
 
 	@Override
-	public String getAvatarLocation(AvatarGender gender)
+	public String getAvatarLocation(Gender gender)
 	{
 		switch (gender)
 		{

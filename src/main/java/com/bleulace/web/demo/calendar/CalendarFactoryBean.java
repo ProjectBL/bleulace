@@ -3,9 +3,12 @@ package com.bleulace.web.demo.calendar;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.bleulace.utils.DefaultIdCallback;
+import com.bleulace.utils.IdCallback;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
@@ -14,11 +17,12 @@ import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHand
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
+@Lazy
 @Scope("prototype")
 @Component("calendar")
 class CalendarFactoryBean implements FactoryBean<Calendar>
 {
-	private final String id;
+	private final IdCallback callback;
 
 	@Autowired
 	private EventResizeHandler eventResizeHandler;
@@ -37,12 +41,18 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 
 	CalendarFactoryBean(String id)
 	{
-		this.id = id;
+		this(new DefaultIdCallback(id));
 	}
 
+	CalendarFactoryBean(IdCallback callback)
+	{
+		this.callback = callback;
+	}
+
+	@SuppressWarnings("unused")
 	private CalendarFactoryBean()
 	{
-		this(null);
+		this((IdCallback) null);
 	}
 
 	@Override
@@ -50,7 +60,7 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 	{
 		Calendar calendar = new Calendar();
 		calendar.setEventProvider((CalendarEventProvider) ctx.getBean(
-				"demoCalendarEventProvider", id));
+				"demoCalendarEventProvider", callback));
 		calendar.setHandler(eventResizeHandler);
 		calendar.setHandler(eventMoveHandler);
 		calendar.setHandler(rangeSelectHandler);

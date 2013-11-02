@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.calendar;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,9 @@ import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 
-@Component("calendarTabsheet")
+@Lazy
 @Scope("prototype")
+@Component("calendarTabsheet")
 class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 {
 	private final Calendar calendar;

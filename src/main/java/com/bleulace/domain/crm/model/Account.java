@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,6 +14,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.PreRemove;
@@ -21,6 +24,7 @@ import javax.persistence.Table;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
+import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.utils.chrono.TimeZoneEnum;
 
@@ -30,6 +34,14 @@ import com.bleulace.utils.chrono.TimeZoneEnum;
 @RooJpaActiveRecord
 public class Account extends AbstractResource
 {
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte[] avatar;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Gender gender;
+
 	@Column(nullable = false, updatable = false, unique = true)
 	private String username = "";
 

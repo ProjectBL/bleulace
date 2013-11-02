@@ -17,4 +17,6 @@ interface ResourceDAOCustom
 
 	public ManagementLevel findManagementLevel(String resourceId,
 			String accountId);
+
+	public List<String> findIdsForManager(String managerId);
 }

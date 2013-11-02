@@ -25,20 +25,19 @@ class EventDAOImpl implements EventDAOCustom
 			String accountId)
 	{
 		Assert.notNull(accountId);
-		return dateQuery(start, end)
-				.distinct()
-				.innerJoin(e.invitees, i)
-				.where(i.guest.id.eq(accountId).and(
-						i.status.ne(RsvpStatus.DECLINED))).list(e);
+		return dateQuery(start, end).distinct().innerJoin(e.invitees, i)
+				.where(i.guest.id.eq(accountId)
+				// .and(i.status.ne(RsvpStatus.DECLINED))
+				).list(e);
 	}
 
 	@Override
 	public Set<RsvpStatus> findRsvps(Date start, Date end, String accountId)
 	{
 		return new HashSet<RsvpStatus>(dateQuery(start, end)
-				.innerJoin(e.invitees, i)
-				.where(i.guest.id.eq(accountId).and(
-						i.status.ne(RsvpStatus.DECLINED))).list(i.status));
+				.innerJoin(e.invitees, i).where(i.guest.id.eq(accountId)
+				// .and( i.status.ne(RsvpStatus.DECLINED))
+				).list(i.status));
 	}
 
 	private JPAQuery dateQuery(Date start, Date end)

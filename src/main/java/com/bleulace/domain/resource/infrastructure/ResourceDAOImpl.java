@@ -50,4 +50,11 @@ class ResourceDAOImpl implements ResourceDAOCustom
 				.where(a.resource.id.eq(resourceId).and(
 						a.account.id.eq(accountId))).uniqueResult(a.role);
 	}
+
+	@Override
+	public List<String> findIdsForManager(String managerId)
+	{
+		return QueryFactory.from(r).innerJoin(r.assignments, a)
+				.where(a.account.id.eq(managerId)).list(r.id);
+	}
 }

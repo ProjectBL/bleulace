@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,7 +22,6 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
-import com.bleulace.web.demo.calendar.appearance.StyleNameCallback;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 @RooJavaBean
@@ -48,9 +46,6 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@MapKeyColumn(name = "GUEST_ID")
 	@ElementCollection
 	private Map<Account, EventInvitee> invitees = new HashMap<Account, EventInvitee>();
-
-	@Transient
-	private StyleNameCallback callback;
 
 	public PersistentEvent()
 	{
@@ -109,7 +104,7 @@ public class PersistentEvent extends Project implements EditableCalendarEvent
 	@Override
 	public String getStyleName()
 	{
-		return callback == null ? null : callback.evaluate(this);
+		return null;
 	}
 
 	@Override

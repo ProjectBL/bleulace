@@ -1,85 +1,119 @@
 package com.bleulace.web.demo.profile;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
-import com.bleulace.domain.crm.model.ContactInformation;
-import com.bleulace.domain.management.model.PersistentEvent;
-import com.bleulace.domain.management.model.Project;
-import com.bleulace.jpa.EntityManagerReference;
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.VaadinView;
-import com.bleulace.web.demo.avatar.AvatarFactory;
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.Reindeer;
 
 @VaadinView
 class ProfileView extends CustomComponent implements View
 {
 	@Autowired
+	private SystemUser user;
+
+	@Autowired
 	private ProfilePresenter presenter;
 
 	@Autowired
-	private AvatarFactory factory;
+	@Qualifier("profileMenuBar")
+	private MenuBar menuBar;
+
+	@Autowired
+	private TreeTable resourceTable;
+
+	@Autowired
+	@Qualifier("profileCalendar")
+	private Calendar calendar;
+
+	@Autowired
+	@Qualifier("profileTabSheet")
+	private TabSheet tabSheet;
 
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Autowired
-	private SystemUser user;
-
-	private final Label location = new KeyValueLabel("Location");
-	private final Label role = new KeyValueLabel("Role");
-	private final Label work = new KeyValueLabel("Work");
-	private final Label school = new KeyValueLabel("School");
-
-	private final JPAContainer<Project> projects = makeContainer(Project.class);
-	private final JPAContainer<PersistentEvent> events = makeContainer(PersistentEvent.class);
+	// panel rules everything around me
+	private final HorizontalSplitPanel panel = new HorizontalSplitPanel();
 
 	public ProfileView()
 	{
 	}
 
+	@PostConstruct
+	protected void init()
+	{
+		VerticalLayout layout = new VerticalLayout(menuBar, panel);
+		setCompositionRoot(layout);
+		layout.setSizeFull();
+		menuBar.setWidth(100f, Unit.PERCENTAGE);
+		panel.setSizeFull();
+		layout.setExpandRatio(panel, 1.0f);
+	}
+
 	@Override
+	@RequiresUser
 	public void enter(ViewChangeEvent event)
 	{
-		user.setTarget(event.getParameters());
-		presenter.init(event.getParameters());
-		Calendar cal = (Calendar) ctx
-				.getBean("calendar", event.getParameters());
+		setSizeFull();
+
+		final String id = event.getParameters();
+
+		user.setTarget(id);
+		presenter.init(id);
+
+		final String firstName = presenter.getAccount().getContactInformation()
+				.getFirstName();
+
+		panel.setFirstComponent(makeLeft());
+		panel.setSecondComponent(makeCenter());
+
+		panel.setSplitPosition(15f, Unit.PERCENTAGE);
+	}
+
+	private Layout makeCenter()
+	{
+		Calendar cal = (Calendar) ctx.getBean("calendar", presenter
+				.getAccount().getId());
 		TabSheet tabs = (TabSheet) ctx.getBean("calendarTabsheet", cal);
-
-		setCompositionRoot(new VerticalLayout(tabs, cal));
+		VerticalLayout center = new VerticalLayout(tabs, cal);
+		center.setSpacing(false);
+		center.setHeight(100f, Unit.PERCENTAGE);
+		cal.setSizeFull();
+		center.setExpandRatio(cal, 1.0f);
+		return center;
 	}
 
-	void setInfo(ContactInformation info)
+	private Layout makeLeft()
 	{
-		location.setCaption(info.getLocation());
-		role.setCaption(info.getWork());
-		work.setCaption(info.getWork());
-		school.setCaption(info.getSchool());
-	}
+		Account account = presenter.getAccount();
 
-	public JPAContainer<?> getProjects()
-	{
-		return projects;
-	}
+		Image avatar = (Image) ctx.getBean("avatar", account);
+		avatar.setWidth(100f, Unit.PERCENTAGE);
+		avatar.setHeight(100f, Unit.PERCENTAGE);
 
-	public JPAContainer<?> getEvents()
-	{
-		return events;
-	}
+		Label name = new Label(account.getContactInformation().getName());
+		name.addStyleName(Reindeer.LABEL_H1);
 
-	private <T> JPAContainer<T> makeContainer(Class<T> clazz)
-	{
-		return JPAContainerFactory.makeNonCachedReadOnly(clazz,
-				EntityManagerReference.get());
+		VerticalLayout layout = new VerticalLayout(avatar, name, resourceTable);
+		return layout;
 	}
 }

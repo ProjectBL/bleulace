@@ -1,20 +1,12 @@
 package com.bleulace.web;
 
+import com.bleulace.domain.crm.Gender;
+
 public interface BleulaceTheme
 {
-	public String getAvatarLocation(AvatarGender gender);
+	public String getAvatarLocation(Gender gender);
 
 	public String getThemeName();
-
-	public enum AvatarGender
-	{
-		MALE, FEMALE;
-	}
-
-	public enum AvatarSize
-	{
-		FULL, MEDIUM, MINI;
-	}
 
 	public enum CalendarColor
 	{

@@ -16,8 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.roo.addon.equals.RooEquals;
+import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.ManagementAssignment;
@@ -28,7 +29,7 @@ import com.bleulace.jpa.EntityManagerReference;
 import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-@RooEquals
+@RooJavaBean
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Configurable(preConstruction = true)
@@ -38,6 +39,10 @@ public abstract class AbstractResource implements CompositeResource,
 	@Id
 	@Column(nullable = false, updatable = false)
 	private String id = UUID.randomUUID().toString();
+
+	@NotEmpty
+	@Column(nullable = false)
+	private String title = "";
 
 	@ManyToOne
 	@JoinColumn

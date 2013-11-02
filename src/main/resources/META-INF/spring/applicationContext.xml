@@ -39,11 +39,12 @@
 			execution="DESTROY" />
 	</jdbc:initialize-database>
 
-	<jpa:repositories base-package="com.bleulace"/>
+	<jpa:repositories base-package="com.bleulace" />
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
 	<task:executor id="executor" pool-size="5-25"
 		queue-capacity="100" />
+
 </beans>

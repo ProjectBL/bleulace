@@ -1,50 +1,127 @@
 package com.bleulace.web.demo.profile;
 
 import java.util.Collection;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Scope;
 
-import com.bleulace.domain.crm.infrastructure.AccountDAO;
-import com.bleulace.domain.crm.model.Account;
-import com.bleulace.jpa.IdCollectionQueryModifier;
-import com.bleulace.utils.CallByName;
-import com.bleulace.web.SystemUser;
+import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.domain.management.model.Project;
+import com.bleulace.domain.resource.infrastructure.ResourceDAO;
+import com.bleulace.domain.resource.model.AbstractResource;
+import com.bleulace.jpa.TransactionalEntityProvider;
+import com.bleulace.utils.IdCallback;
+import com.bleulace.utils.IdsCallback;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.ui.Calendar;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TreeTable;
 
 @Configuration
 class ProfileConfig
 {
 	@Autowired
-	private SystemUser user;
-
-	@PersistenceContext
-	private EntityManager em;
+	private ApplicationContext ctx;
 
 	@Autowired
-	private AccountDAO accountDAO;
+	private ResourceDAO resourceDAO;
 
 	@Bean
-	@Scope("prototype")
-	public JPAContainer<Account> friendContainer()
+	@Scope("ui")
+	public MenuBar profileMenuBar()
 	{
-		JPAContainer<Account> container = JPAContainerFactory
-				.makeNonCachedReadOnly(Account.class, em);
-		container.setQueryModifierDelegate(new IdCollectionQueryModifier(
-				new CallByName<Collection<String>>()
+		MenuBar bean = new MenuBar();
+		MenuItem file = bean.addItem("File", null);
+		MenuItem edit = bean.addItem("Edit", null);
+		MenuItem view = bean.addItem("View", null);
+		return bean;
+	}
+
+	@Bean
+	@Scope("ui")
+	@DependsOn("profileContainerMap")
+	public TreeTable resourceTable()
+	{
+		TreeTable bean = makeTable(AbstractResource.class);
+		return bean;
+	}
+
+	@Bean
+	@Scope("ui")
+	public TabSheet profileTabSheet(
+			@Qualifier("profileCalendar") Calendar calendar)
+	{
+		TabSheet bean = (TabSheet) ctx.getBean("calendarTabsheet", calendar);
+		return bean;
+	}
+
+	@Bean
+	@Scope("ui")
+	public Calendar profileCalendar()
+	{
+		Calendar bean = (Calendar) ctx.getBean("calendar", new IdCallback()
+		{
+			@Override
+			public String evaluate()
+			{
+				return ctx.getBean(ProfilePresenter.class).getAccount().getId();
+			}
+		});
+		return bean;
+	}
+
+	private TreeTable makeTable(Class<?> clazz)
+	{
+		TreeTable table = new TreeTable();
+		table.setContainerDataSource(getContainer(clazz));
+		table.setVisibleColumns(new Object[] { "title", "start", "end" });
+		return table;
+	}
+
+	@Scope("ui")
+	@Bean(name = "profileContainerMap")
+	public Map<Class<?>, JPAContainer<?>> profileContainerMap()
+	{
+		Builder<Class<?>, JPAContainer<?>> builder = ImmutableMap.builder();
+		for (Class<?> clazz : new Class[] { AbstractResource.class,
+				Project.class, PersistentEvent.class })
+		{
+			builder.put(clazz, makeContainer(clazz));
+		}
+		return builder.build();
+	}
+
+	private JPAContainer<?> makeContainer(Class<?> clazz)
+	{
+		JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
+				"jpaContainer", clazz, TransactionalEntityProvider.class,
+				new IdsCallback()
 				{
 					@Override
 					public Collection<String> evaluate()
 					{
-						return accountDAO.findFriendIds(user.getId());
+						String id = ctx.getBean(ProfilePresenter.class)
+								.getAccount().getId();
+						return resourceDAO.findIdsForManager(id);
 					}
-				}));
+				});
+		container.setParentProperty("parent");
 		return container;
+	}
+
+	private JPAContainer<?> getContainer(Class<?> clazz)
+	{
+		return ((Map<Class<?>, JPAContainer<?>>) ctx
+				.getBean("profileContainerMap")).get(clazz);
 	}
 }

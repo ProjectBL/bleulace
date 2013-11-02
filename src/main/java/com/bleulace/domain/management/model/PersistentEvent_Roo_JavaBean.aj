@@ -6,7 +6,6 @@ package com.bleulace.domain.management.model;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
-import com.bleulace.web.demo.calendar.appearance.StyleNameCallback;
 import java.util.Date;
 import java.util.Map;
 
@@ -42,14 +41,6 @@ privileged aspect PersistentEvent_Roo_JavaBean {
     
     public void PersistentEvent.setInvitees(Map<Account, EventInvitee> invitees) {
         this.invitees = invitees;
-    }
-    
-    public StyleNameCallback PersistentEvent.getCallback() {
-        return this.callback;
-    }
-    
-    public void PersistentEvent.setCallback(StyleNameCallback callback) {
-        this.callback = callback;
     }
     
 }

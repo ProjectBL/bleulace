@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.crm.model;
 
+import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
 import com.bleulace.domain.crm.model.FriendRequest;
@@ -12,6 +13,22 @@ import java.util.List;
 import java.util.Map;
 
 privileged aspect Account_Roo_JavaBean {
+    
+    public byte[] Account.getAvatar() {
+        return this.avatar;
+    }
+    
+    public void Account.setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
+    
+    public Gender Account.getGender() {
+        return this.gender;
+    }
+    
+    public void Account.setGender(Gender gender) {
+        this.gender = gender;
+    }
     
     public String Account.getUsername() {
         return this.username;

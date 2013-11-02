@@ -1,29 +1,20 @@
 package com.bleulace.jpa;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vaadin.addon.jpacontainer.provider.BatchableLocalEntityProvider;
+import com.vaadin.addon.jpacontainer.provider.MutableLocalEntityProvider;
 
-@Configurable(preConstruction = true)
 public class TransactionalEntityProvider<T> extends
-		BatchableLocalEntityProvider<T>
+		MutableLocalEntityProvider<T>
 {
-	public TransactionalEntityProvider(Class<T> entityClass)
+	public TransactionalEntityProvider(Class<T> entityClass, EntityManager em)
 	{
 		super(entityClass);
 		setTransactionsHandledByProvider(false);
 		setEntitiesDetached(false);
-	}
-
-	@Override
-	@PersistenceContext
-	public void setEntityManager(EntityManager entityManager)
-	{
-		super.setEntityManager(entityManager);
+		setEntityManager(em);
 	}
 
 	@Override
