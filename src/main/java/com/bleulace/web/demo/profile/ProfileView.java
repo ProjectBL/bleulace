@@ -10,9 +10,12 @@ import org.springframework.context.ApplicationContext;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.VaadinView;
+import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Image;
@@ -20,6 +23,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TreeTable;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
@@ -88,14 +92,11 @@ class ProfileView extends CustomComponent implements View
 
 	private Layout makeCenter()
 	{
-		Calendar cal = (Calendar) ctx.getBean("calendar", presenter
-				.getAccount().getId());
-		TabSheet tabs = (TabSheet) ctx.getBean("calendarTabsheet", cal);
-		VerticalLayout center = new VerticalLayout(tabs, cal);
+		VerticalLayout center = new VerticalLayout(tabSheet, calendar);
 		center.setSpacing(false);
 		center.setHeight(100f, Unit.PERCENTAGE);
-		cal.setSizeFull();
-		center.setExpandRatio(cal, 1.0f);
+		calendar.setSizeFull();
+		center.setExpandRatio(calendar, 1.0f);
 		return center;
 	}
 
@@ -112,5 +113,29 @@ class ProfileView extends CustomComponent implements View
 		VerticalLayout layout = new VerticalLayout(avatar, name, resourceTable);
 		resourceTable.setWidth(100f, Unit.PERCENTAGE);
 		return layout;
+	}
+
+	void openTab(EntityItem<?> item)
+	{
+		Component screen = (Component) ctx.getBean("resourceScreen", item);
+		Tab tab = tabSheet.getTab(screen);
+		if (tab == null)
+		{
+			tab = tabSheet.addTab(screen, screen.toString(), null,
+					tabSheet.getComponentCount());
+			tab.setClosable(true);
+		}
+	}
+
+	void selectTab(EntityItem<?> item)
+	{
+		for (Component component : tabSheet)
+		{
+			if (item.equals(((AbstractComponent) component).getData()))
+			{
+				tabSheet.setSelectedTab(component);
+				return;
+			}
+		}
 	}
 }

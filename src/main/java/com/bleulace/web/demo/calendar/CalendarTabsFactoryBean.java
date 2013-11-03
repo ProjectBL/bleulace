@@ -6,18 +6,20 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.web.demo.calendar.span.CalendarSpan;
-import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 
 @Lazy
 @Scope("prototype")
-@Component("calendarTabsheet")
+@Component("calendarTabSheet")
 class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 {
 	private final Calendar calendar;
@@ -40,7 +42,9 @@ class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 
 		for (final CalendarSpan span : CalendarSpan.values())
 		{
-			bean.addTab(new AbsoluteLayout(), span.toString());
+			Layout l = new VerticalLayout();
+			bean.addTab(l, span.toString());
+			l.setSizeFull();
 		}
 
 		bean.addSelectedTabChangeListener(new SelectedTabChangeListener()
@@ -48,6 +52,31 @@ class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 			@Override
 			public void selectedTabChange(SelectedTabChangeEvent event)
 			{
+				int pos = bean.getTabPosition(bean.getTab(bean.getSelectedTab()));
+				int length = CalendarSpan.values().length;
+				if (pos > length - 1)
+				{
+					return;
+				}
+				for (int i = 0; i < CalendarSpan.values().length; i++)
+				{
+					Layout l = (Layout) bean.getTab(i).getComponent();
+					for (com.vaadin.ui.Component c : l)
+					{
+						if (c.equals(calendar))
+						{
+							l.removeComponent(calendar);
+							((ComponentContainer) event.getTabSheet()
+									.getSelectedTab()).addComponent(calendar);
+						}
+						if (bean.getTabPosition(bean.getTab(bean
+								.getSelectedTab())) == i)
+						{
+							CalendarSpan.values()[i].resize(calendar);
+						}
+					}
+				}
+				((Layout) bean.getSelectedTab()).addComponent(calendar);
 				int i = bean.getTabPosition(bean.getTab(bean.getSelectedTab()));
 				CalendarSpan.values()[i].resize(calendar);
 			}

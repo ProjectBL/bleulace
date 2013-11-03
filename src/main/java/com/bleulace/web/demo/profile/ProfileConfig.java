@@ -14,12 +14,18 @@ import org.springframework.context.annotation.Scope;
 
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
+import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.jpa.TransactionalEntityProvider;
 import com.bleulace.utils.IdCallback;
 import com.bleulace.utils.IdsCallback;
+import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.TabSheet;
@@ -50,7 +56,7 @@ class ProfileConfig
 	public TreeTable resourceTable(
 			Converter<String, DateTime> jodaDateTimeConverter)
 	{
-		JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
+		final JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
 				"jpaContainer", Project.class,
 				TransactionalEntityProvider.class, new IdsCallback()
 				{
@@ -64,15 +70,30 @@ class ProfileConfig
 				});
 		container.setParentProperty("parent");
 
-		TreeTable table = new TreeTable();
-		table.setContainerDataSource(container);
-		table.setVisibleColumns(new Object[] { "title", "createdDate",
+		final TreeTable bean = new TreeTable();
+		bean.setContainerDataSource(container);
+		bean.setVisibleColumns(new Object[] { "title", "createdDate",
 				"lastModifiedDate", "complete" });
-		table.setConverter("createdDate", jodaDateTimeConverter);
-		table.setConverter("lastModifiedDate", jodaDateTimeConverter);
-		table.setReadOnly(true);
-		// table.setStyleName(Reindeer.TABLE_STRONG);
-		return table;
+		bean.setConverter("createdDate", jodaDateTimeConverter);
+		bean.setConverter("lastModifiedDate", jodaDateTimeConverter);
+		bean.setReadOnly(false);
+		bean.addItemClickListener(new ItemClickListener()
+		{
+			@SuppressWarnings("unchecked")
+			@Override
+			public void itemClick(ItemClickEvent event)
+			{
+				if (event.isDoubleClick())
+				{
+					EntityItem<AbstractResource> item = (EntityItem<AbstractResource>) event
+							.getItem();
+					ctx.getBean(ProfilePresenter.class).resourceSelected(item);
+
+				}
+			}
+		});
+		bean.setSelectable(true);
+		return bean;
 	}
 
 	@Bean
@@ -80,7 +101,26 @@ class ProfileConfig
 	public TabSheet profileTabSheet(
 			@Qualifier("profileCalendar") Calendar calendar)
 	{
-		TabSheet bean = (TabSheet) ctx.getBean("calendarTabsheet", calendar);
+		TabSheet bean = (TabSheet) ctx.getBean("calendarTabSheet", calendar);
+		bean.setCloseHandler(new TabSheet.CloseHandler()
+		{
+			@Override
+			public void onTabClose(final TabSheet tabSheet,
+					final Component tabContent)
+			{
+				ctx.getBean(ProfilePresenter.class).tabClosing(
+						(EntityItem<?>) ((AbstractComponent) tabContent)
+								.getData(), new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								tabSheet.removeComponent(tabContent);
+							}
+						});
+			}
+		});
+		bean.setImmediate(true);
 		return bean;
 	}
 
