@@ -1,9 +1,7 @@
 package com.bleulace.web.demo.calendar.handler;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +44,6 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	@Autowired
 	private SystemUser user;
 
-	private final Set<String> eventIds = new HashSet<String>();
-
 	private IdCallback callback;
 
 	DemoCalendarEventProvider(String id)
@@ -71,13 +67,12 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
 				callback.evaluate()))
 		{
-			if (!eventIds.contains(event.getId()))
+			CalendarEventAdapter adapted = (CalendarEventAdapter) ctx.getBean(
+					"calendarAdapter", event);
+			if (!eventList.contains(adapted))
 			{
-				CalendarEventAdapter adapted = (CalendarEventAdapter) ctx
-						.getBean("calendarAdapter", event);
 				adapted.addEventChangeListener(this);
 				eventList.add(adapted);
-				eventIds.add(event.getId());
 			}
 		}
 		return super.getEvents(startDate, endDate);
@@ -87,15 +82,16 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	public void addEvent(CalendarEvent event)
 	{
 		CalendarEventAdapter adapter = (CalendarEventAdapter) event;
+		PersistentEvent source = adapter.getSource();
+		adapter.setSource(eventDAO.save(source));
+		adapter.addEventChangeListener(this);
 		adapter.getAssignments().add(
 				new ManagementAssignment(accountDAO.findOne(user.getId()),
 						ManagementLevel.OWN));
-		eventList.add(event);
-		eventIds.add(((CalendarEventAdapter) event).getSource().getId());
-		adapter.addEventChangeListener(this);
 		adapter.getInvitees().add(
 				new EventInvitee(accountDAO.findOne(user.getId()),
 						RsvpStatus.ACCEPTED));
+		eventList.add(event);
 	}
 
 	@Override
@@ -116,7 +112,6 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	@Override
 	public void clearCache()
 	{
-		eventIds.clear();
 		eventList.clear();
 	}
 

@@ -18,7 +18,7 @@ import com.bleulace.domain.crm.model.Account;
 public class EventInvitee
 {
 	@ManyToOne
-	@JoinColumn(nullable = false, updatable = false, name = "GUEST_ID")
+	@JoinColumn(nullable = false, updatable = false)
 	private Account account;
 
 	@Column(nullable = false)

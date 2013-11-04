@@ -1,10 +1,10 @@
 package com.bleulace.domain.management.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -14,14 +14,14 @@ import com.bleulace.domain.crm.model.Account;
 
 @Embeddable
 @RooEquals
-public class ManagementAssignment
+public class ManagementAssignment implements Serializable
 {
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
 	private Account account;
 
 	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
+	@Enumerated
 	private ManagementLevel level;
 
 	public ManagementAssignment(Account account, ManagementLevel level)
@@ -45,8 +45,12 @@ public class ManagementAssignment
 		this.level = level;
 	}
 
-	@SuppressWarnings("unused")
-	private ManagementAssignment()
+	private void setAccount(Account account)
+	{
+		this.account = account;
+	}
+
+	ManagementAssignment()
 	{
 	}
 }

@@ -57,9 +57,9 @@ class DemoEventRightClickHandler implements Handler
 	{
 		if (target instanceof CalendarEventAdapter)
 		{
-			RightClickGesture.evaluate(action, (CalendarEventAdapter) target);
-			// eventDAO.save((PersistentEvent) target);
-			// calendar.markAsDirty();
+			CalendarEventAdapter adapter = (CalendarEventAdapter) target;
+			RightClickGesture.evaluate(action, adapter);
+			adapter.fireEventChange();
 		}
 	}
 
@@ -85,7 +85,7 @@ class DemoEventRightClickHandler implements Handler
 				if (i.getAccount().getId()
 						.equals(SpringApplicationContext.getUser().getId()))
 				{
-					i.setValue(status);
+					i.setStatus(status);
 					return;
 				}
 			}

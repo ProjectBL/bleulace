@@ -32,6 +32,8 @@ public interface CalendarEventAdapter extends EditableCalendarEvent,
 
 	List<ManagementAssignment> getAssignments();
 
+	void fireEventChange();
+
 	public interface StyleNameCallback
 	{
 		String getStyleName(CalendarEventAdapter event);

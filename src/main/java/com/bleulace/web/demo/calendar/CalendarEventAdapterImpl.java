@@ -142,16 +142,16 @@ class CalendarEventAdapterImpl extends BasicEvent implements
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj instanceof CalendarEventAdapterImpl)
+		if (obj instanceof CalendarEventAdapter)
 		{
 			return source.getId().equals(
-					((CalendarEventAdapterImpl) obj).getSource().getId());
+					((CalendarEventAdapter) obj).getSource().getId());
 		}
 		return false;
 	}
 
 	@Override
-	protected void fireEventChange()
+	public void fireEventChange()
 	{
 		super.fireEventChange();
 	}

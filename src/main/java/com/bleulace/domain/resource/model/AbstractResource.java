@@ -22,12 +22,12 @@ import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.management.model.ManagementAssignment;
-import com.bleulace.domain.resource.infrastructure.ResourceDAO;
-import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @Entity
+@RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners({ AuditingEntityListener.class })
 public abstract class AbstractResource implements CompositeResource,
@@ -48,6 +48,7 @@ public abstract class AbstractResource implements CompositeResource,
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
 	private List<AbstractResource> children = new ArrayList<AbstractResource>();
 
+	// TODO
 	@ElementCollection
 	private List<ManagementAssignment> assignments = new ArrayList<ManagementAssignment>();
 
@@ -59,34 +60,6 @@ public abstract class AbstractResource implements CompositeResource,
 
 	protected AbstractResource()
 	{
-	}
-
-	@Override
-	public String getId()
-	{
-		return id;
-	}
-
-	@Override
-	public Resource getParent()
-	{
-		return parent;
-	}
-
-	@Override
-	public String getTitle()
-	{
-		return title;
-	}
-
-	public void setTitle(String title)
-	{
-		this.title = title;
-	}
-
-	void setParent(AbstractResource parent)
-	{
-		this.parent = parent;
 	}
 
 	@Override
@@ -113,16 +86,6 @@ public abstract class AbstractResource implements CompositeResource,
 	public List<? extends Resource> getChildren()
 	{
 		return children;
-	}
-
-	public List<ManagementAssignment> getAssignments()
-	{
-		return assignments;
-	}
-
-	public void setAssignments(List<ManagementAssignment> assignments)
-	{
-		this.assignments = assignments;
 	}
 
 	@Override
