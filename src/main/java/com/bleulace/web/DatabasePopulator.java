@@ -5,7 +5,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
+import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.ManagementLevel;
 import com.bleulace.domain.management.model.Project;
 import com.bleulace.domain.resource.model.TestResource;
@@ -27,7 +27,7 @@ import com.bleulace.utils.SystemProfiles;
  */
 @Component
 @Profile(SystemProfiles.DEV)
-class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
+public class DatabasePopulator
 {
 	@PersistenceContext
 	private EntityManager em;
@@ -36,12 +36,8 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 	private AccountDAO dao;
 
 	@Transactional
-	private void populate()
+	public void populate()
 	{
-		if (dao.findByUsername("arleighdickerson@frugalu.com") != null)
-		{
-			return;
-		}
 		Account me = new Account();
 		me.setGender(Gender.MALE);
 		me.setUsername("arleighdickerson@frugalu.com");
@@ -76,12 +72,14 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 
 		Project project = new Project();
 		project.setTitle("World Domination");
-		project.setManagementLevel(me.getId(), ManagementLevel.OWN);
+		project.getAssignments().add(
+				new ManagementAssignment(me, ManagementLevel.OWN));
 		em.persist(project);
 
 		Project bundle = new Project();
 		bundle.setTitle("Antarctic Domination");
-		bundle.setManagementLevel(me.getId(), ManagementLevel.OWN);
+		bundle.getAssignments().add(
+				new ManagementAssignment(me, ManagementLevel.OWN));
 		project.addChild(bundle);
 		em.persist(bundle);
 
@@ -100,7 +98,7 @@ class DatabasePopulator implements ApplicationListener<ContextRefreshedEvent>
 		em.flush();
 	}
 
-	@Override
+	// @Override
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
 		if (dao.findByUsername("arleighdickerson@frugalu.com") == null)

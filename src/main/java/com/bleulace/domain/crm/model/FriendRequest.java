@@ -8,9 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.roo.addon.equals.RooEquals;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 @Embeddable
+@RooEquals
 @RooJavaBean(settersByDefault = false)
 public class FriendRequest
 {

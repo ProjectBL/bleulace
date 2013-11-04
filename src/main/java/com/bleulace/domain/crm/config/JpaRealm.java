@@ -20,10 +20,12 @@ import org.apache.shiro.util.ByteSource;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.HashedPassword;
-import com.bleulace.domain.management.model.ManagementAssignment;
 import com.bleulace.domain.management.model.QManagementAssignment;
+import com.bleulace.domain.resource.model.QAbstractResource;
 import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.mysema.query.Tuple;
+import com.mysema.query.types.QTuple;
 
 /**
  * A realm which performs authentication and authorization for {@link Account}
@@ -101,15 +103,14 @@ public class JpaRealm extends AuthorizingRealm
 	private Collection<Permission> getManagementPermissions(String accountId)
 	{
 		QManagementAssignment a = new QManagementAssignment("a");
-
+		QAbstractResource r = new QAbstractResource("r");
 		List<Permission> permissions = new LinkedList<Permission>();
-		for (ManagementAssignment assignment : QueryFactory.from(a)
-				.where(a.account.id.eq(accountId)).list(a))
+		for (Tuple tuple : QueryFactory.from(r).innerJoin(r.assignments, a)
+				.where(a.account.id.eq(accountId)).distinct()
+				.list(new QTuple(r.id, a.level)))
 		{
-			permissions.add(assignment.getRole().on(
-					assignment.getResource().getId()));
+			permissions.add(tuple.get(a.level).on(tuple.get(r.id)));
 		}
-
 		return permissions;
 	}
 

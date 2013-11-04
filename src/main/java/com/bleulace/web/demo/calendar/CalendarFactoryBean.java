@@ -37,6 +37,9 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 	private EventClickHandler eventClickHandler;
 
 	@Autowired
+	private Handler demoRightClickActionHandler;
+
+	@Autowired
 	private ApplicationContext ctx;
 
 	CalendarFactoryBean(String id)
@@ -60,13 +63,10 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 	{
 		Calendar calendar = new Calendar();
 		calendar.setEventProvider((CalendarEventProvider) ctx.getBean(
-				"demoCalendarEventProvider", callback));
-		calendar.setHandler(eventResizeHandler);
-		calendar.setHandler(eventMoveHandler);
+				"calendarEventProvider", callback));
 		calendar.setHandler(rangeSelectHandler);
 		calendar.setHandler(eventClickHandler);
-		calendar.addActionHandler((Handler) ctx.getBean(
-				"demoEventRightClickHandler", calendar));
+		calendar.addActionHandler(demoRightClickActionHandler);
 		calendar.setImmediate(true);
 		return calendar;
 	}

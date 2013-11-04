@@ -76,11 +76,4 @@ class AccountDAOImpl implements AccountDAOCustom
 		Assert.notNull(id);
 		return QueryFactory.from(a).where(a.id.eq(id));
 	}
-
-	@Override
-	public List<Account> findByManagedResource(String resourceId)
-	{
-		return QueryFactory.from(ass).where(ass.resource.id.eq(resourceId))
-				.list(ass.account);
-	}
 }

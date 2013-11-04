@@ -19,7 +19,7 @@ import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 
 @Lazy
 @Scope("prototype")
-@Component("calendarTabSheet")
+@Component("calendarTabs")
 class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 {
 	private final Calendar calendar;
@@ -29,7 +29,6 @@ class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 		this.calendar = calendar;
 	}
 
-	@SuppressWarnings("unused")
 	private CalendarTabsFactoryBean()
 	{
 		this(new Calendar());
@@ -39,6 +38,8 @@ class CalendarTabsFactoryBean implements FactoryBean<TabSheet>
 	public TabSheet getObject() throws Exception
 	{
 		final TabSheet bean = new TabSheet();
+
+		calendar.setSizeFull();
 
 		for (final CalendarSpan span : CalendarSpan.values())
 		{

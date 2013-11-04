@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.management.model.PersistentEvent;
+import com.bleulace.utils.ctx.SpringApplicationContext;
+import com.bleulace.web.demo.calendar.CalendarEventAdapter;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.Window;
 
@@ -14,10 +16,10 @@ import com.vaadin.ui.Window;
 @Scope("prototype")
 class TimeBoxFactoryBean implements FactoryBean<Window>
 {
-	private final PersistentEvent event;
+	private final CalendarEventAdapter event;
 	private final Calendar calendar;
 
-	TimeBoxFactoryBean(Calendar calendar, PersistentEvent event)
+	TimeBoxFactoryBean(Calendar calendar, CalendarEventAdapter event)
 	{
 		this.calendar = calendar;
 		this.event = event;
@@ -26,7 +28,8 @@ class TimeBoxFactoryBean implements FactoryBean<Window>
 	@SuppressWarnings("unused")
 	private TimeBoxFactoryBean()
 	{
-		this(new Calendar(), new PersistentEvent());
+		this(new Calendar(), (CalendarEventAdapter) SpringApplicationContext
+				.getBean("calendarAdapter", new PersistentEvent()));
 	}
 
 	@Override

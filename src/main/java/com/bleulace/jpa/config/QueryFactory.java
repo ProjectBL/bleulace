@@ -9,6 +9,7 @@ import com.mysema.query.jpa.EclipseLinkTemplates;
 import com.mysema.query.jpa.JPQLTemplates;
 import com.mysema.query.jpa.impl.JPADeleteClause;
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.mysema.query.jpa.impl.JPAUpdateClause;
 import com.mysema.query.types.EntityPath;
 
 /**
@@ -42,6 +43,11 @@ public class QueryFactory
 	public static JPADeleteClause delete(EntityPath<?> entity)
 	{
 		return new JPADeleteClause(entityManager(), entity, TEMPLATES);
+	}
+
+	public static JPAUpdateClause update(EntityPath<?> entity)
+	{
+		return new JPAUpdateClause(entityManager(), entity, TEMPLATES);
 	}
 
 	private static EntityManager entityManager()

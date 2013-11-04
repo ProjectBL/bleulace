@@ -8,13 +8,15 @@ import org.springframework.context.ApplicationContext;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
+import com.bleulace.utils.IdCallback;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.Presenter;
 import com.google.common.collect.ForwardingMap;
 import com.vaadin.addon.jpacontainer.EntityItem;
 
 @Presenter
-class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
+public class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
+		implements IdCallback
 {
 	private final Map<String, EntityItem<?>> delegate = new HashMap<String, EntityItem<?>>();
 
@@ -54,6 +56,7 @@ class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
 	void init(String accountId)
 	{
 		clear();
+		user.setTarget(accountId);
 		account = accountDAO.findOne(accountId);
 		if (account == null)
 		{
@@ -82,5 +85,11 @@ class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
 	protected Map<String, EntityItem<?>> delegate()
 	{
 		return delegate;
+	}
+
+	@Override
+	public String evaluate()
+	{
+		return account.getId();
 	}
 }

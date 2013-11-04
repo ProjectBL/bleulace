@@ -55,8 +55,7 @@ class BasePersistenceConfig
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
 		factoryBean.setPersistenceUnitName("persistenceUnit");
-		factoryBean.setPackagesToScan(new String[] { "com.bleulace",
-				"org.axonframework" });
+		factoryBean.setPackagesToScan(new String[] { "com.bleulace" });
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setJpaPropertyMap(allProps);
 		factoryBean.setPersistenceProvider(new PersistenceProvider());

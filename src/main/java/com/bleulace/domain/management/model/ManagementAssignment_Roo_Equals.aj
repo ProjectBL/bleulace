@@ -17,11 +17,11 @@ privileged aspect ManagementAssignment_Roo_Equals {
             return true;
         }
         ManagementAssignment rhs = (ManagementAssignment) obj;
-        return new EqualsBuilder().append(account, rhs.account).append(resource, rhs.resource).append(role, rhs.role).isEquals();
+        return new EqualsBuilder().append(account, rhs.account).append(level, rhs.level).isEquals();
     }
     
     public int ManagementAssignment.hashCode() {
-        return new HashCodeBuilder().append(account).append(resource).append(role).toHashCode();
+        return new HashCodeBuilder().append(account).append(level).toHashCode();
     }
     
 }

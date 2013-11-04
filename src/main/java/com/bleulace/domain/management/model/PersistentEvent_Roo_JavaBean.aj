@@ -3,11 +3,10 @@
 
 package com.bleulace.domain.management.model;
 
-import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.EventInvitee;
 import com.bleulace.domain.management.model.PersistentEvent;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 privileged aspect PersistentEvent_Roo_JavaBean {
     
@@ -35,11 +34,11 @@ privileged aspect PersistentEvent_Roo_JavaBean {
         this.end = end;
     }
     
-    public Map<Account, EventInvitee> PersistentEvent.getInvitees() {
+    public List<EventInvitee> PersistentEvent.getInvitees() {
         return this.invitees;
     }
     
-    public void PersistentEvent.setInvitees(Map<Account, EventInvitee> invitees) {
+    public void PersistentEvent.setInvitees(List<EventInvitee> invitees) {
         this.invitees = invitees;
     }
     

@@ -14,8 +14,6 @@ public interface CompositeResource extends Resource
 
 	public Resource getParent();
 
-	public <T extends Resource> List<T> getChildren(Class<T> clazz);
-
 	static aspect Impl
 	{
 		public void CompositeResource.acceptInspector(

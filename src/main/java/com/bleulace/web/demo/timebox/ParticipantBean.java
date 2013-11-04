@@ -39,7 +39,7 @@ public class ParticipantBean
 
 	ParticipantBean(Account account)
 	{
-		this(account, null);
+		this(account, RsvpStatus.PENDING);
 	}
 
 	Account getAccount()
@@ -50,5 +50,10 @@ public class ParticipantBean
 	public String getName()
 	{
 		return firstName + " " + lastName;
+	}
+
+	public String getStyleName()
+	{
+		return status == null ? null : status.getStyleName();
 	}
 }

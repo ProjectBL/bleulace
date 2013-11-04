@@ -19,26 +19,16 @@ public class EventInvitee
 {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false, name = "GUEST_ID")
-	private Account guest;
-
-	@ManyToOne
-	@JoinColumn(updatable = false, name = "HOST_ID")
-	private Account host;
+	private Account account;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private RsvpStatus status;
 
-	public EventInvitee(Account guest, Account host, RsvpStatus status)
+	public EventInvitee(Account account, RsvpStatus status)
 	{
-		this.host = host;
-		this.guest = guest;
+		this.account = account;
 		this.status = status;
-	}
-
-	public EventInvitee(Account guest, Account host)
-	{
-		this(guest, host, RsvpStatus.PENDING);
 	}
 
 	public void setStatus(RsvpStatus status)

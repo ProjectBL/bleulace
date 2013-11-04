@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
@@ -18,31 +19,22 @@ import javax.persistence.OneToMany;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.roo.addon.javabean.RooJavaBean;
 
-import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.ManagementAssignment;
-import com.bleulace.domain.management.model.ManagementLevel;
-import com.bleulace.domain.management.model.QManagementAssignment;
 import com.bleulace.domain.resource.infrastructure.ResourceDAO;
-import com.bleulace.jpa.EntityManagerReference;
-import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 
-@RooJavaBean
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Configurable(preConstruction = true)
 @EntityListeners({ AuditingEntityListener.class })
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
 	@Id
-	@Column(nullable = false, updatable = false)
+	@Column(name = "ID", nullable = false, updatable = false)
 	private String id = UUID.randomUUID().toString();
 
 	@Column(nullable = false)
@@ -56,8 +48,7 @@ public abstract class AbstractResource implements CompositeResource,
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
 	private List<AbstractResource> children = new ArrayList<AbstractResource>();
 
-	@CascadeOnDelete
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "resource")
+	@ElementCollection
 	private List<ManagementAssignment> assignments = new ArrayList<ManagementAssignment>();
 
 	@CreatedDate
@@ -80,6 +71,17 @@ public abstract class AbstractResource implements CompositeResource,
 	public Resource getParent()
 	{
 		return parent;
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
 	}
 
 	void setParent(AbstractResource parent)
@@ -113,68 +115,14 @@ public abstract class AbstractResource implements CompositeResource,
 		return children;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends Resource> List<T> getChildren(Class<T> clazz)
-	{
-		if (this.isNew() || !AbstractResource.class.isAssignableFrom(clazz))
-		{
-			List<T> list = new ArrayList<T>();
-			for (Resource c : getChildren())
-			{
-				if (c.getClass().isAssignableFrom(clazz))
-				{
-					list.add((T) c);
-				}
-			}
-			return list;
-		}
-		return (List<T>) SpringApplicationContext.getBean(ResourceDAO.class)
-				.findChildren(id, (Class<? extends AbstractResource>) clazz);
-	}
-
 	public List<ManagementAssignment> getAssignments()
 	{
 		return assignments;
 	}
 
-	public List<String> getManagerIds()
+	public void setAssignments(List<ManagementAssignment> assignments)
 	{
-		return getManagerIds(ManagementLevel.values());
-	}
-
-	public List<String> getManagerIds(ManagementLevel... levels)
-	{
-		return SpringApplicationContext.getBean(ResourceDAO.class)
-				.findManagerIds(getId(), levels);
-	}
-
-	public ManagementLevel getManagementLevel(String accountId)
-	{
-		return SpringApplicationContext.getBean(ResourceDAO.class)
-				.findManagementLevel(getId(), accountId);
-	}
-
-	public void setManagementLevel(String accountId, ManagementLevel level)
-	{
-		QManagementAssignment a = new QManagementAssignment("a");
-		ManagementAssignment assignment = QueryFactory.from(a)
-				.where(a.account.id.eq(accountId).and(a.resource.id.eq(id)))
-				.singleResult(a);
-		if (assignment == null)
-		{
-			assignment = new ManagementAssignment(EntityManagerReference.load(
-					Account.class, accountId), this, level);
-			assignments.add(assignment);
-		}
-		else
-		{
-			assignment.setRole(level);
-		}
-		if (level == null)
-		{
-			assignments.remove(assignment);
-		}
+		this.assignments = assignments;
 	}
 
 	@Override

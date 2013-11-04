@@ -9,12 +9,8 @@ import com.bleulace.domain.management.model.RsvpStatus;
 
 privileged aspect EventInvitee_Roo_JavaBean {
     
-    public Account EventInvitee.getGuest() {
-        return this.guest;
-    }
-    
-    public Account EventInvitee.getHost() {
-        return this.host;
+    public Account EventInvitee.getAccount() {
+        return this.account;
     }
     
     public RsvpStatus EventInvitee.getStatus() {

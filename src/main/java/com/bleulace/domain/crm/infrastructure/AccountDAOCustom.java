@@ -17,6 +17,4 @@ interface AccountDAOCustom
 	public List<Account> findPeopleYouMightKnow(String accountId, int count);
 
 	public List<Account> findBySearch(String searchTerm);
-
-	public List<Account> findByManagedResource(String resourceId);
 }

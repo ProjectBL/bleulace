@@ -19,10 +19,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.PreRemove;
-import javax.persistence.Table;
 
 import org.springframework.roo.addon.javabean.RooJavaBean;
-import org.springframework.roo.addon.jpa.activerecord.RooJpaActiveRecord;
 
 import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.resource.model.AbstractResource;
@@ -30,8 +28,6 @@ import com.bleulace.utils.chrono.TimeZoneEnum;
 
 @RooJavaBean
 @Entity
-@Table(name = "ACCOUNT")
-@RooJpaActiveRecord
 public class Account extends AbstractResource
 {
 	@Lob

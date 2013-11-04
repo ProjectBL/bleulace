@@ -15,6 +15,7 @@ import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 @Component
 class DemoEventSelectHandler implements RangeSelectHandler, EventClickHandler
@@ -35,17 +36,18 @@ class DemoEventSelectHandler implements RangeSelectHandler, EventClickHandler
 		PersistentEvent calendarEvent = new PersistentEvent();
 		calendarEvent.setStart(event.getStart());
 		calendarEvent.setEnd(event.getEnd());
-		showEvent(calendarEvent, event.getComponent());
+		showEvent(
+				(CalendarEvent) ctx.getBean("calendarAdapter", calendarEvent),
+				event.getComponent());
 	}
 
 	@Override
 	public void eventClick(EventClick event)
 	{
-		showEvent((PersistentEvent) event.getCalendarEvent(),
-				event.getComponent());
+		showEvent(event.getCalendarEvent(), event.getComponent());
 	}
 
-	private void showEvent(PersistentEvent event, Calendar calendar)
+	private void showEvent(CalendarEvent event, Calendar calendar)
 	{
 		Window w = (Window) ctx.getBean("timeBox", calendar, event);
 		UI.getCurrent().addWindow(w);

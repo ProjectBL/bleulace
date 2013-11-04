@@ -29,7 +29,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 @VaadinView
-class ProfileView extends CustomComponent implements View
+class ProfileView extends CustomComponent implements View,
+		TabSheet.CloseHandler
 {
 	@Autowired
 	private SystemUser user;
@@ -45,17 +46,11 @@ class ProfileView extends CustomComponent implements View
 	private TreeTable resourceTable;
 
 	@Autowired
-	@Qualifier("profileCalendar")
-	private Calendar calendar;
-
-	@Autowired
-	@Qualifier("profileTabSheet")
-	private TabSheet tabSheet;
-
-	@Autowired
 	private ApplicationContext ctx;
 
-	// panel rules everything around me
+	private TabSheet tabSheet;
+
+	// me
 	private final HorizontalSplitPanel panel = new HorizontalSplitPanel();
 
 	public ProfileView()
@@ -92,11 +87,18 @@ class ProfileView extends CustomComponent implements View
 
 	private Layout makeCenter()
 	{
-		VerticalLayout center = new VerticalLayout(tabSheet, calendar);
+		Calendar calendar = (Calendar) ctx.getBean("calendar", presenter);
+		tabSheet = (TabSheet) ctx.getBean("calendarTabs", calendar);
+		tabSheet.setCloseHandler(this);
+
+		VerticalLayout center = new VerticalLayout(tabSheet);
+		tabSheet.setSizeFull();
 		center.setSpacing(false);
-		center.setHeight(100f, Unit.PERCENTAGE);
-		calendar.setSizeFull();
-		center.setExpandRatio(calendar, 1.0f);
+		center.setSizeFull();
+		for (Component c : tabSheet)
+		{
+			center.setExpandRatio(tabSheet, 1.0f);
+		}
 		return center;
 	}
 
@@ -137,5 +139,20 @@ class ProfileView extends CustomComponent implements View
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void onTabClose(final TabSheet tabsheet, final Component tabContent)
+	{
+		presenter.tabClosing(
+				(EntityItem<?>) ((AbstractComponent) tabContent).getData(),
+				new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						tabsheet.removeTab(tabsheet.getTab(tabContent));
+					}
+				});
 	}
 }

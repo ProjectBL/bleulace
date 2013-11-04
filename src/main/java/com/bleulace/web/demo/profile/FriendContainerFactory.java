@@ -1,6 +1,7 @@
 package com.bleulace.web.demo.profile;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -49,9 +50,10 @@ class FriendContainerFactory implements FactoryBean<JPAContainer<Account>>
 				new IdsCallback()
 				{
 					@Override
-					public Collection<String> evaluate()
+					public Set<String> evaluate()
 					{
-						return accountDAO.findFriendIds(getId());
+						return new HashSet<String>(accountDAO
+								.findFriendIds(getId()));
 					}
 				}));
 		return container;

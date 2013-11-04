@@ -17,11 +17,11 @@ privileged aspect EventInvitee_Roo_Equals {
             return true;
         }
         EventInvitee rhs = (EventInvitee) obj;
-        return new EqualsBuilder().append(guest, rhs.guest).append(host, rhs.host).append(status, rhs.status).isEquals();
+        return new EqualsBuilder().append(account, rhs.account).append(status, rhs.status).isEquals();
     }
     
     public int EventInvitee.hashCode() {
-        return new HashCodeBuilder().append(guest).append(host).append(status).toHashCode();
+        return new HashCodeBuilder().append(account).append(status).toHashCode();
     }
     
 }
