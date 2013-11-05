@@ -10,9 +10,9 @@ class ManagementPermission implements Permission
 {
 	private final String id;
 
-	private final ManagementLevel level;
+	private final ManagementRole level;
 
-	ManagementPermission(ManagementLevel level, String id)
+	ManagementPermission(ManagementRole level, String id)
 	{
 		this.level = level;
 		this.id = id;
@@ -33,7 +33,7 @@ class ManagementPermission implements Permission
 	{
 		if (p instanceof ManagementPermission)
 		{
-			ManagementLevel that = ((ManagementPermission) p).level;
+			ManagementRole that = ((ManagementPermission) p).level;
 			return impliesManagementLevel(that);
 		}
 		return level.implies(p);

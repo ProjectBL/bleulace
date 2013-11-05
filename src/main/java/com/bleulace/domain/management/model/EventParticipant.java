@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,20 +15,20 @@ import com.bleulace.domain.crm.model.Account;
 
 @Embeddable
 @RooEquals
-public class ManagementAssignment implements Serializable
+public class EventParticipant implements Serializable
 {
-	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
+	@ManyToOne
 	private Account account;
 
 	@Column(nullable = false)
-	@Enumerated
-	private ManagementLevel level;
+	@Enumerated(EnumType.STRING)
+	private RsvpStatus status;
 
-	public ManagementAssignment(Account account, ManagementLevel level)
+	public EventParticipant(Account account, RsvpStatus status)
 	{
 		this.account = account;
-		this.level = level;
+		this.status = status;
 	}
 
 	public Account getAccount()
@@ -35,22 +36,17 @@ public class ManagementAssignment implements Serializable
 		return account;
 	}
 
-	public ManagementLevel getLevel()
+	public RsvpStatus getStatus()
 	{
-		return level;
+		return status;
 	}
 
-	public void setLevel(ManagementLevel level)
+	public void setStatus(RsvpStatus status)
 	{
-		this.level = level;
+		this.status = status;
 	}
 
-	private void setAccount(Account account)
-	{
-		this.account = account;
-	}
-
-	ManagementAssignment()
+	EventParticipant()
 	{
 	}
 }

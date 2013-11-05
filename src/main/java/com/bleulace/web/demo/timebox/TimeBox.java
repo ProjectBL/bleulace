@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 
 import com.bleulace.web.demo.calendar.CalendarEventAdapter;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.util.BeanContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -21,9 +20,10 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.CloseListener;
 
 @Configurable(preConstruction = true)
-class TimeBox extends Window
+class TimeBox extends Window implements CloseListener
 {
 	@Autowired
 	private ApplicationContext ctx;
@@ -35,14 +35,6 @@ class TimeBox extends Window
 	TimeBox(final TimeBoxPresenter presenter)
 	{
 		this.presenter = presenter;
-		addCloseListener(new Window.CloseListener()
-		{
-			@Override
-			public void windowClose(CloseEvent e)
-			{
-				presenter.timeBoxClosed();
-			}
-		});
 
 		final BeanFieldGroup<CalendarEventAdapter> fg = presenter
 				.getFieldGroup();
@@ -75,17 +67,14 @@ class TimeBox extends Window
 		content.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
 		setContent(content);
 
-		addCloseListener(new Window.CloseListener()
-		{
-			@Override
-			public void windowClose(CloseEvent e)
-			{
-				// comboBox.setValue(null);
-			}
-		});
-
 		deleteButton.setVisible(!presenter.getCurrentEvent().getSource()
 				.isNew());
+	}
+
+	@Override
+	public void windowClose(CloseEvent e)
+	{
+		presenter.timeBoxClosed();
 	}
 
 	public void showSuccessMessage(String text)
@@ -141,14 +130,6 @@ class TimeBox extends Window
 				presenter.deleteClicked();
 			}
 		});
-	}
-
-	private BeanContainer<String, ParticipantBean> makeContainer()
-	{
-		BeanContainer<String, ParticipantBean> container = new BeanContainer<String, ParticipantBean>(
-				ParticipantBean.class);
-		container.setBeanIdProperty("id");
-		return container;
 	}
 
 	private Button makeButton(String caption, int keyCode,

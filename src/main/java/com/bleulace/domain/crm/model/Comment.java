@@ -35,8 +35,7 @@ public class Comment extends AbstractResource
 		this.datePosted = datePosted;
 	}
 
-	@SuppressWarnings("unused")
-	private Comment()
+	Comment()
 	{
 	}
 

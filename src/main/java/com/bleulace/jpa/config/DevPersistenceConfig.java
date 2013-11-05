@@ -31,7 +31,8 @@ public class DevPersistenceConfig
 		dataSource.setDriverClassName(Driver.class.getName());
 
 		dataSource
-				.setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE;MVCC=true");
+		// .setUrl("jdbc:h2:mem:bleulaceDb;DB_CLOSE_ON_EXIT=FALSE;MVCC=true");
+				.setUrl("jdbc:h2:~/sandbox;DB_CLOSE_ON_EXIT=FALSE;MVCC=true");
 		dataSource.setUsername("sa");
 		dataSource.setPassword("");
 		dataSource.setTestOnBorrow(true);
@@ -48,7 +49,7 @@ public class DevPersistenceConfig
 	{
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("eclipselink.target-database", HSQLPlatform.class.getName());
-		props.put("eclipselink.logging.level.sql", "FINE");
+		props.put("eclipselink.logging.level.sql", "FINEST");
 		props.put("eclipselink.logging.parameters", "true");
 		props.put("eclipselink.ddl-generation", "drop-and-create-tables");
 		return props;

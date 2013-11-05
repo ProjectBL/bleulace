@@ -9,14 +9,14 @@ import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.QAccount;
 import com.bleulace.domain.crm.model.QContactInformation;
 import com.bleulace.domain.crm.model.QFriendRequest;
-import com.bleulace.domain.management.model.QManagementAssignment;
+import com.bleulace.domain.management.model.QManager;
 import com.bleulace.jpa.config.QueryFactory;
 import com.mysema.query.jpa.impl.JPAQuery;
 
 class AccountDAOImpl implements AccountDAOCustom
 {
 	private final QAccount a = new QAccount("a");
-	private final QManagementAssignment ass = new QManagementAssignment("ass");
+	private final QManager ass = new QManager("ass");
 	private final QContactInformation i = a.contactInformation;
 	private final QAccount f = new QAccount("f");
 	private final QFriendRequest req = new QFriendRequest("rec");
@@ -67,8 +67,7 @@ class AccountDAOImpl implements AccountDAOCustom
 				.from(a)
 				.where(i.firstName.containsIgnoreCase(searchTerm).or(
 						i.lastName.containsIgnoreCase(searchTerm).or(
-								a.username.containsIgnoreCase(searchTerm))))
-				.list(a);
+								a.id.containsIgnoreCase(searchTerm)))).list(a);
 	}
 
 	private JPAQuery makeQuery(String id)

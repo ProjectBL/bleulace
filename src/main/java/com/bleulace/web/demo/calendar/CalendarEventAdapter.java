@@ -6,8 +6,8 @@ import javax.validation.Valid;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.bleulace.domain.management.model.EventInvitee;
-import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.EventParticipant;
+import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
@@ -28,9 +28,9 @@ public interface CalendarEventAdapter extends EditableCalendarEvent,
 
 	void setSource(PersistentEvent event);
 
-	List<EventInvitee> getInvitees();
+	List<EventParticipant> getInvitees();
 
-	List<ManagementAssignment> getAssignments();
+	List<Manager> getAssignments();
 
 	void fireEventChange();
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.infrastructure.EventDAO;
-import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.EventParticipant;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.ctx.SpringApplicationContext;
 import com.bleulace.web.SystemUser;
@@ -80,7 +80,7 @@ class DemoEventRightClickHandler implements Handler
 		@Override
 		public void execute(CalendarEventAdapter event)
 		{
-			for (EventInvitee i : event.getInvitees())
+			for (EventParticipant i : event.getInvitees())
 			{
 				if (i.getAccount().getId()
 						.equals(SpringApplicationContext.getUser().getId()))

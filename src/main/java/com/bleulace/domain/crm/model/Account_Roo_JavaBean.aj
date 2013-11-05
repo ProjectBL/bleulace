@@ -14,6 +14,14 @@ import java.util.Map;
 
 privileged aspect Account_Roo_JavaBean {
     
+    public String Account.getId() {
+        return this.id;
+    }
+    
+    public void Account.setId(String id) {
+        this.id = id;
+    }
+    
     public byte[] Account.getAvatar() {
         return this.avatar;
     }
@@ -28,14 +36,6 @@ privileged aspect Account_Roo_JavaBean {
     
     public void Account.setGender(Gender gender) {
         this.gender = gender;
-    }
-    
-    public String Account.getUsername() {
-        return this.username;
-    }
-    
-    public void Account.setUsername(String username) {
-        this.username = username;
     }
     
     public HashedPassword Account.getPassword() {

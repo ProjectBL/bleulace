@@ -12,8 +12,6 @@ import com.bleulace.utils.IdCallback;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventMoveHandler;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventResizeHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectHandler;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
@@ -23,12 +21,6 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 class CalendarFactoryBean implements FactoryBean<Calendar>
 {
 	private final IdCallback callback;
-
-	@Autowired
-	private EventResizeHandler eventResizeHandler;
-
-	@Autowired
-	private EventMoveHandler eventMoveHandler;
 
 	@Autowired
 	private RangeSelectHandler rangeSelectHandler;

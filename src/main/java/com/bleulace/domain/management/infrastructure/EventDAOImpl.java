@@ -6,12 +6,10 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.model.PersistentEvent;
-import com.bleulace.domain.management.model.QEventInvitee;
+import com.bleulace.domain.management.model.QEventParticipant;
 import com.bleulace.domain.management.model.QPersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.jpa.config.QueryFactory;
@@ -20,13 +18,10 @@ import com.mysema.query.jpa.impl.JPAQuery;
 class EventDAOImpl implements EventDAOCustom
 {
 	QPersistentEvent e = new QPersistentEvent("e");
-	QEventInvitee i = new QEventInvitee("i");
+	QEventParticipant i = new QEventParticipant("i");
 
 	@PersistenceContext
 	private EntityManager em;
-
-	@Autowired
-	private AccountDAO accountDAO;
 
 	@Override
 	public List<PersistentEvent> findEvents(Date start, Date end,

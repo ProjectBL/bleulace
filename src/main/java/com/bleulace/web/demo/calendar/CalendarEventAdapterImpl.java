@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.bleulace.domain.management.model.EventInvitee;
-import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.EventParticipant;
+import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 
@@ -128,15 +128,15 @@ class CalendarEventAdapterImpl extends BasicEvent implements
 	}
 
 	@Override
-	public List<EventInvitee> getInvitees()
+	public List<EventParticipant> getInvitees()
 	{
 		return source.getInvitees();
 	}
 
 	@Override
-	public List<ManagementAssignment> getAssignments()
+	public List<Manager> getAssignments()
 	{
-		return source.getAssignments();
+		return source.getManagers();
 	}
 
 	@Override

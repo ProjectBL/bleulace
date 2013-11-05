@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.bleulace.domain.crm.model.Account;
-import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.EventParticipant;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.util.AbstractBeanContainer.BeanIdResolver;
@@ -21,6 +21,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.VerticalLayout;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Configurable(preConstruction = true)
 class ParticipantField extends CustomField<List>
 {
@@ -28,7 +29,7 @@ class ParticipantField extends CustomField<List>
 	@Qualifier("friendContainer")
 	private JPAContainer<Account> candidates;
 
-	private final BeanContainer<String, EventInvitee> participants = makeParticipantContainer();
+	private final BeanContainer<String, EventParticipant> participants = makeParticipantContainer();
 
 	ParticipantField()
 	{
@@ -69,8 +70,8 @@ class ParticipantField extends CustomField<List>
 				String id = (String) event.getProperty().getValue();
 				if (id != null && !participants.getItemIds().contains(id))
 				{
-					EventInvitee bean = new EventInvitee(candidates.getItem(id)
-							.getEntity(), RsvpStatus.PENDING);
+					EventParticipant bean = new EventParticipant(candidates
+							.getItem(id).getEntity(), RsvpStatus.PENDING);
 					participants.addBean(bean);
 					getInternalValue().add(bean);
 				}
@@ -120,24 +121,25 @@ class ParticipantField extends CustomField<List>
 		return table;
 	}
 
-	private BeanContainer<String, EventInvitee> makeParticipantContainer()
+	private BeanContainer<String, EventParticipant> makeParticipantContainer()
 	{
-		BeanContainer<String, EventInvitee> container = new BeanContainer<String, EventInvitee>(
-				EventInvitee.class);
+		BeanContainer<String, EventParticipant> container = new BeanContainer<String, EventParticipant>(
+				EventParticipant.class);
 		container
 				.addNestedContainerProperty("account.contactInformation.firstName");
 		container
 				.addNestedContainerProperty("account.contactInformation.lastName");
 		container
 				.addNestedContainerProperty("account.contactInformation.email");
-		container.setBeanIdResolver(new BeanIdResolver<String, EventInvitee>()
-		{
-			@Override
-			public String getIdForBean(EventInvitee bean)
-			{
-				return bean.getAccount().getId();
-			}
-		});
+		container
+				.setBeanIdResolver(new BeanIdResolver<String, EventParticipant>()
+				{
+					@Override
+					public String getIdForBean(EventParticipant bean)
+					{
+						return bean.getAccount().getId();
+					}
+				});
 		return container;
 	}
 }

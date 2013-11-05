@@ -3,24 +3,24 @@
 
 package com.bleulace.domain.management.model;
 
-import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.EventParticipant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-privileged aspect EventInvitee_Roo_Equals {
+privileged aspect EventParticipant_Roo_Equals {
     
-    public boolean EventInvitee.equals(Object obj) {
-        if (!(obj instanceof EventInvitee)) {
+    public boolean EventParticipant.equals(Object obj) {
+        if (!(obj instanceof EventParticipant)) {
             return false;
         }
         if (this == obj) {
             return true;
         }
-        EventInvitee rhs = (EventInvitee) obj;
+        EventParticipant rhs = (EventParticipant) obj;
         return new EqualsBuilder().append(account, rhs.account).append(status, rhs.status).isEquals();
     }
     
-    public int EventInvitee.hashCode() {
+    public int EventParticipant.hashCode() {
         return new HashCodeBuilder().append(account).append(status).toHashCode();
     }
     

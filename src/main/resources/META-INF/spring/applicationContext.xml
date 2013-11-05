@@ -29,19 +29,7 @@
 			type="regex" />
 	</context:component-scan>
 
-	<jdbc:initialize-database data-source="dataSource"
-		enabled="true" ignore-failures="ALL">
-		<jdbc:script encoding="UTF-8"
-			location="classpath:META-INF/db/migration/quartz-h2-createDDL.sql"
-			execution="INIT" />
-		<jdbc:script encoding="UTF-8"
-			location="classpath:META-INF/db/migration/quartz-h2-dropDDL.sql"
-			execution="DESTROY" />
-	</jdbc:initialize-database>
-
-	<jpa:repositories base-package="com.bleulace" />
-	<jpa:auditing auditor-aware-ref="auditProvider"
-		date-time-provider-ref="auditProvider" />
+	<jpa:auditing auditor-aware-ref="auditProvider"/>
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />

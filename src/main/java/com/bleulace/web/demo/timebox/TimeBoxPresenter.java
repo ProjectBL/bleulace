@@ -11,8 +11,6 @@ import com.bleulace.web.demo.calendar.CalendarEventAdapter;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.ui.Calendar;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 @Configurable(preConstruction = true)
@@ -54,13 +52,6 @@ class TimeBoxPresenter
 		this.view = view;
 	}
 
-	void managersClicked()
-	{
-		Window w = (Window) ctx.getBean("managerBox", getCurrentEvent()
-				.getSource());
-		UI.getCurrent().addWindow(w);
-	}
-
 	void cancelClicked()
 	{
 		view.showSuccessMessage("Operation canceled.");
@@ -82,10 +73,13 @@ class TimeBoxPresenter
 		{
 			fieldGroup.commit();
 			CalendarEventAdapter event = getCurrentEvent();
+			if (event.getSource().isNew())
+			{
+				calendar.addEvent(event);
+			}
 			view.showSuccessMessage("Event "
 					+ (event.getSource().isNew() ? "created successfully."
 							: "updated successfully."));
-			calendar.addEvent(event);
 			view.close();
 		}
 		catch (CommitException e)

@@ -1,5 +1,7 @@
 package com.bleulace.domain.management.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
@@ -8,14 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.springframework.roo.addon.equals.RooEquals;
-import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
 
-@RooEquals
-@RooJavaBean(settersByDefault = false)
 @Embeddable
-public class EventInvitee
+@RooEquals
+public class Manager implements Serializable
 {
 	@ManyToOne
 	@JoinColumn(nullable = false, updatable = false)
@@ -23,21 +23,35 @@ public class EventInvitee
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private RsvpStatus status;
+	private ManagementRole role;
 
-	public EventInvitee(Account account, RsvpStatus status)
+	public Manager(Account account, ManagementRole role)
 	{
 		this.account = account;
-		this.status = status;
+		this.role = role;
 	}
 
-	public void setStatus(RsvpStatus status)
+	Manager()
 	{
-		this.status = status;
 	}
 
-	@SuppressWarnings("unused")
-	private EventInvitee()
+	public Account getAccount()
 	{
+		return account;
+	}
+
+	public void setAccount(Account account)
+	{
+		this.account = account;
+	}
+
+	public ManagementRole getRole()
+	{
+		return role;
+	}
+
+	public void setRole(ManagementRole role)
+	{
+		this.role = role;
 	}
 }

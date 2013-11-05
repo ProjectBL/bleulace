@@ -6,6 +6,4 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 public interface CachingEventProvider extends CalendarEventProvider
 {
 	public boolean containsRange(CalendarDateRange range);
-
-	public void clearCache();
 }

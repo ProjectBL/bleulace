@@ -20,7 +20,7 @@ import org.apache.shiro.util.ByteSource;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.HashedPassword;
-import com.bleulace.domain.management.model.QManagementAssignment;
+import com.bleulace.domain.management.model.QManager;
 import com.bleulace.domain.resource.model.QAbstractResource;
 import com.bleulace.jpa.config.QueryFactory;
 import com.bleulace.utils.ctx.SpringApplicationContext;
@@ -56,7 +56,7 @@ public class JpaRealm extends AuthorizingRealm
 			return null;
 		}
 
-		Account identity = getDAO().findByUsername(username);
+		Account identity = getDAO().findOne(username);
 		if (identity == null)
 		{
 			return null;
@@ -102,14 +102,14 @@ public class JpaRealm extends AuthorizingRealm
 
 	private Collection<Permission> getManagementPermissions(String accountId)
 	{
-		QManagementAssignment a = new QManagementAssignment("a");
+		QManager a = new QManager("a");
 		QAbstractResource r = new QAbstractResource("r");
 		List<Permission> permissions = new LinkedList<Permission>();
-		for (Tuple tuple : QueryFactory.from(r).innerJoin(r.assignments, a)
+		for (Tuple tuple : QueryFactory.from(r).innerJoin(r.managers, a)
 				.where(a.account.id.eq(accountId)).distinct()
-				.list(new QTuple(r.id, a.level)))
+				.list(new QTuple(r.id, a.role)))
 		{
-			permissions.add(tuple.get(a.level).on(tuple.get(r.id)));
+			permissions.add(tuple.get(a.role).on(tuple.get(r.id)));
 		}
 		return permissions;
 	}

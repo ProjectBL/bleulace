@@ -3,7 +3,7 @@
 
 package com.bleulace.domain.management.model;
 
-import com.bleulace.domain.management.model.EventInvitee;
+import com.bleulace.domain.management.model.EventParticipant;
 import com.bleulace.domain.management.model.PersistentEvent;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +34,11 @@ privileged aspect PersistentEvent_Roo_JavaBean {
         this.end = end;
     }
     
-    public List<EventInvitee> PersistentEvent.getInvitees() {
+    public List<EventParticipant> PersistentEvent.getInvitees() {
         return this.invitees;
     }
     
-    public void PersistentEvent.setInvitees(List<EventInvitee> invitees) {
+    public void PersistentEvent.setInvitees(List<EventParticipant> invitees) {
         this.invitees = invitees;
     }
     

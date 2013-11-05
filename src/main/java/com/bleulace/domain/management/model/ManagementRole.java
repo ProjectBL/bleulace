@@ -4,12 +4,12 @@ import org.apache.shiro.authz.Permission;
 
 import com.bleulace.utils.authz.GenericPermission;
 
-public enum ManagementLevel implements GenericPermission<ManagementLevel>
+public enum ManagementRole implements GenericPermission<ManagementRole>
 {
 	LOOP, MIX, OWN;
 
 	@Override
-	public boolean implies(ManagementLevel level)
+	public boolean implies(ManagementRole level)
 	{
 		return this.ordinal() >= level.ordinal();
 	}

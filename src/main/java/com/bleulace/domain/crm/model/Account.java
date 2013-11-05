@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
@@ -23,13 +24,16 @@ import javax.persistence.PreRemove;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.Gender;
-import com.bleulace.domain.resource.model.AbstractResource;
 import com.bleulace.utils.chrono.TimeZoneEnum;
 
 @RooJavaBean
 @Entity
-public class Account extends AbstractResource
+public class Account
 {
+	@Id
+	@Column(nullable = false, updatable = false, unique = true)
+	private String id = "";
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private byte[] avatar;
@@ -37,9 +41,6 @@ public class Account extends AbstractResource
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Gender gender;
-
-	@Column(nullable = false, updatable = false, unique = true)
-	private String username = "";
 
 	@Embedded
 	private HashedPassword password = new HashedPassword();
@@ -62,7 +63,11 @@ public class Account extends AbstractResource
 	{
 	}
 
-	@Override
+	public String getUsername()
+	{
+		return id;
+	}
+
 	public String getTitle()
 	{
 		return contactInformation.getFirstName() + " "

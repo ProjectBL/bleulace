@@ -3,7 +3,7 @@
 
 package com.bleulace.domain.resource.model;
 
-import com.bleulace.domain.management.model.ManagementAssignment;
+import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.resource.model.AbstractResource;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -38,12 +38,12 @@ privileged aspect AbstractResource_Roo_JavaBean {
         this.children = children;
     }
     
-    public List<ManagementAssignment> AbstractResource.getAssignments() {
-        return this.assignments;
+    public List<Manager> AbstractResource.getManagers() {
+        return this.managers;
     }
     
-    public void AbstractResource.setAssignments(List<ManagementAssignment> assignments) {
-        this.assignments = assignments;
+    public void AbstractResource.setManagers(List<Manager> managers) {
+        this.managers = managers;
     }
     
     public DateTime AbstractResource.getCreatedDate() {

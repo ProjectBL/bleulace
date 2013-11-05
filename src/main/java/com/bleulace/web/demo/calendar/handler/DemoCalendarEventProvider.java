@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.management.infrastructure.EventDAO;
-import com.bleulace.domain.management.model.EventInvitee;
-import com.bleulace.domain.management.model.ManagementAssignment;
-import com.bleulace.domain.management.model.ManagementLevel;
+import com.bleulace.domain.management.model.EventParticipant;
+import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.RsvpStatus;
 import com.bleulace.utils.DefaultIdCallback;
@@ -64,16 +64,15 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	@RequiresUser
 	public List<CalendarEvent> getEvents(Date startDate, Date endDate)
 	{
+		eventList.clear();
 		for (PersistentEvent event : eventDAO.findEvents(startDate, endDate,
 				callback.evaluate()))
 		{
 			CalendarEventAdapter adapted = (CalendarEventAdapter) ctx.getBean(
 					"calendarAdapter", event);
-			if (!eventList.contains(adapted))
-			{
-				adapted.addEventChangeListener(this);
-				eventList.add(adapted);
-			}
+			adapted.addEventChangeListener(this);
+			adapted.setStyleName(getStyleName(adapted));
+			eventList.add(adapted);
 		}
 		return super.getEvents(startDate, endDate);
 	}
@@ -83,15 +82,14 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	{
 		CalendarEventAdapter adapter = (CalendarEventAdapter) event;
 		PersistentEvent source = adapter.getSource();
-		adapter.setSource(eventDAO.save(source));
-		adapter.addEventChangeListener(this);
 		adapter.getAssignments().add(
-				new ManagementAssignment(accountDAO.findOne(user.getId()),
-						ManagementLevel.OWN));
+				new Manager(accountDAO.findOne(user.getId()),
+						ManagementRole.OWN));
 		adapter.getInvitees().add(
-				new EventInvitee(accountDAO.findOne(user.getId()),
+				new EventParticipant(accountDAO.findOne(user.getId()),
 						RsvpStatus.ACCEPTED));
-		eventList.add(event);
+		adapter.setSource(eventDAO.save(source));
+		super.addEvent(event);
 	}
 
 	@Override
@@ -107,12 +105,6 @@ class DemoCalendarEventProvider extends BasicEventProvider implements
 	public boolean containsRange(CalendarDateRange range)
 	{
 		return super.getEvents(range.getStart(), range.getEnd()).size() > 0;
-	}
-
-	@Override
-	public void clearCache()
-	{
-		eventList.clear();
 	}
 
 	@Override

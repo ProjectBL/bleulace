@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,8 +35,10 @@ public class PersistentEvent extends Project
 	@Column(nullable = false)
 	private Date end;
 
-	@ElementCollection
-	private List<EventInvitee> invitees = new ArrayList<EventInvitee>();
+	@CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = {
+			"PeristentEvent_ID", "ACCOUNT_ID" }))
+	@ElementCollection(targetClass = EventParticipant.class, fetch = FetchType.LAZY)
+	private List<EventParticipant> invitees = new ArrayList<EventParticipant>();
 
 	public PersistentEvent()
 	{

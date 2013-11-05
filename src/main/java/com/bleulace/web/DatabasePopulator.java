@@ -14,10 +14,9 @@ import com.bleulace.domain.crm.Gender;
 import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.crm.model.ContactInformation;
-import com.bleulace.domain.management.model.ManagementAssignment;
-import com.bleulace.domain.management.model.ManagementLevel;
+import com.bleulace.domain.management.model.ManagementRole;
+import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.management.model.Project;
-import com.bleulace.domain.resource.model.TestResource;
 import com.bleulace.utils.SystemProfiles;
 
 /**
@@ -40,7 +39,7 @@ public class DatabasePopulator
 	{
 		Account me = new Account();
 		me.setGender(Gender.MALE);
-		me.setUsername("arleighdickerson@frugalu.com");
+		me.setId("arleighdickerson@frugalu.com");
 		me.setPassword("password");
 
 		ContactInformation myInfo = new ContactInformation("Arleigh",
@@ -54,8 +53,7 @@ public class DatabasePopulator
 		{
 			Account a = new Account();
 			a.setGender(Gender.MALE);
-			a.setUsername(RandomStringUtils.random(20, true, true)
-					+ "@frugalu.com");
+			a.setId(RandomStringUtils.random(20, true, true) + "@frugalu.com");
 			a.setPassword("password");
 
 			ContactInformation aInfo = new ContactInformation(
@@ -72,27 +70,14 @@ public class DatabasePopulator
 
 		Project project = new Project();
 		project.setTitle("World Domination");
-		project.getAssignments().add(
-				new ManagementAssignment(me, ManagementLevel.OWN));
+		project.getManagers().add(new Manager(me, ManagementRole.OWN));
 		em.persist(project);
 
 		Project bundle = new Project();
 		bundle.setTitle("Antarctic Domination");
-		bundle.getAssignments().add(
-				new ManagementAssignment(me, ManagementLevel.OWN));
+		bundle.getManagers().add(new Manager(me, ManagementRole.OWN));
 		project.addChild(bundle);
 		em.persist(bundle);
-
-		TestResource resource = new TestResource();
-		em.persist(resource);
-
-		for (int i = 0; i < 4; i++)
-		{
-			TestResource other = new TestResource();
-			resource.addChild(other);
-			resource = other;
-			em.persist(resource);
-		}
 
 		em.persist(project);
 		em.flush();
@@ -101,7 +86,7 @@ public class DatabasePopulator
 	// @Override
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
-		if (dao.findByUsername("arleighdickerson@frugalu.com") == null)
+		if (dao.findOne("arleighdickerson@frugalu.com") == null)
 		{
 			populate();
 		}
