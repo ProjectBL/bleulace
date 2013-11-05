@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,7 +36,8 @@ import com.bleulace.domain.resource.infrastructure.ResourceFeedHooks;
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-@EntityListeners({ AuditingEntityListener.class, ResourceFeedHooks.class })
+@EntityListeners({ AuditingEntityListener.class, ResourceFeedHooks.class,
+		ResourceManagerHooks.class })
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
@@ -43,6 +45,7 @@ public abstract class AbstractResource implements CompositeResource,
 	@Column(nullable = false, updatable = false)
 	private String id = UUID.randomUUID().toString();
 
+	@NotEmpty
 	@Column(nullable = false)
 	private String title = "";
 

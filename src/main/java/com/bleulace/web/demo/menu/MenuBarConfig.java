@@ -29,6 +29,7 @@ import com.google.common.eventbus.EventBus;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 
 @Configuration
@@ -68,7 +69,7 @@ class MenuBarConfig
 				.entrySet())
 		{
 			nw.addItem(entry.getKey(),
-					makeOpenResourceCommand(entry.getKey(), entry.getValue()));
+					makeNewResourceCommand(entry.getKey(), entry.getValue()));
 		}
 
 		MenuBar.MenuItem open = file.addItem("Open", null);
@@ -93,7 +94,7 @@ class MenuBarConfig
 	private MenuBar.Command makeNewResourceCommand(final String name,
 			final Class<? extends AbstractResource> clazz)
 	{
-		return null;
+		return ctx.getBean("create" + name + "Command", Command.class);
 	}
 
 	private MenuBar.Command makeOpenResourceCommand(final String name,

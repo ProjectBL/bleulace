@@ -103,6 +103,8 @@ class ParticipantField extends CustomField<List>
 				String id = (String) table.getValue();
 				if (id != null)
 				{
+					EventParticipant bean = participants.getItem(id).getBean();
+					getInternalValue().remove(bean);
 					participants.removeItem(id);
 				}
 			}

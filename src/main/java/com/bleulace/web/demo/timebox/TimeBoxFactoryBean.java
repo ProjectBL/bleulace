@@ -25,11 +25,11 @@ class TimeBoxFactoryBean implements FactoryBean<Window>
 		this.event = event;
 	}
 
-	@SuppressWarnings("unused")
-	private TimeBoxFactoryBean()
+	TimeBoxFactoryBean()
 	{
-		this(new Calendar(), (CalendarEventAdapter) SpringApplicationContext
-				.getBean("calendarAdapter", new PersistentEvent()));
+		this(SpringApplicationContext.getBean(Calendar.class),
+				(CalendarEventAdapter) SpringApplicationContext.getBean(
+						"calendarAdapter", new PersistentEvent()));
 	}
 
 	@Override

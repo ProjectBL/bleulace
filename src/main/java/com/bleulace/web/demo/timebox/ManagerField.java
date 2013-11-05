@@ -33,8 +33,8 @@ import com.vaadin.ui.Window;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Configurable(preConstruction = true)
-class ManagerField extends CustomField<List> implements Button.ClickListener,
-		Handler
+public class ManagerField extends CustomField<List> implements
+		Button.ClickListener, Handler
 {
 	@Autowired
 	@Qualifier("friendContainer")
@@ -50,7 +50,7 @@ class ManagerField extends CustomField<List> implements Button.ClickListener,
 	};
 	//@formatter:on
 
-	ManagerField()
+	public ManagerField()
 	{
 		setBuffered(true);
 	}

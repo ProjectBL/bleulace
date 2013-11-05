@@ -9,7 +9,7 @@ import com.cybercom.vaadin.spring.UIScope;
 
 @Configuration
 @Profile({ SystemProfiles.DEV, SystemProfiles.PROD })
-class UIScopeConfig
+class UIConfig
 {
 	@Bean
 	static UIScope uiScope()

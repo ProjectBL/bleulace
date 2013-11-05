@@ -1,5 +1,7 @@
 package com.bleulace.web.demo.calendar;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.bleulace.utils.DefaultIdCallback;
 import com.bleulace.utils.IdCallback;
+import com.bleulace.web.SystemUser;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
@@ -20,7 +23,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 @Component("calendar")
 class CalendarFactoryBean implements FactoryBean<Calendar>
 {
-	private final IdCallback callback;
+	private IdCallback callback;
 
 	@Autowired
 	private RangeSelectHandler rangeSelectHandler;
@@ -34,6 +37,10 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 	@Autowired
 	private ApplicationContext ctx;
 
+	CalendarFactoryBean()
+	{
+	}
+
 	CalendarFactoryBean(String id)
 	{
 		this(new DefaultIdCallback(id));
@@ -44,10 +51,13 @@ class CalendarFactoryBean implements FactoryBean<Calendar>
 		this.callback = callback;
 	}
 
-	@SuppressWarnings("unused")
-	private CalendarFactoryBean()
+	@PostConstruct
+	protected void init()
 	{
-		this((IdCallback) null);
+		if (callback == null)
+		{
+			callback = ctx.getBean(SystemUser.class);
+		}
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.IdCallback;
 import com.bleulace.web.SystemUser;
-import com.bleulace.web.annotation.EnablePush;
 import com.bleulace.web.annotation.Presenter;
 import com.bleulace.web.demo.resource.ResourceSelectedEvent;
 import com.google.common.collect.ForwardingMap;
@@ -69,12 +68,8 @@ public class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
 	}
 
 	@Subscribe
-	@EnablePush
 	public void resourceSelected(ResourceSelectedEvent event)
 	{
-		System.out.println(event);
-		System.out.println(event);
-		System.out.println(event);
 		resourceSelected(event.getItem());
 	}
 
