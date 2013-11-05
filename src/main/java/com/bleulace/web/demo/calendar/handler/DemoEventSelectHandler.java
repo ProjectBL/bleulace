@@ -9,8 +9,6 @@ import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.RequiresAuthorization;
 import com.vaadin.ui.Calendar;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClick;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.EventClickHandler;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.RangeSelectEvent;
@@ -49,8 +47,6 @@ class DemoEventSelectHandler implements RangeSelectHandler, EventClickHandler
 
 	private void showEvent(CalendarEvent event, Calendar calendar)
 	{
-		Window w = (Window) ctx.getBean("timeBox", calendar, event);
-		UI.getCurrent().addWindow(w);
-		w.focus();
+		ctx.getBean("timeBox", calendar, event);
 	}
 }

@@ -10,8 +10,16 @@ import com.bleulace.domain.resource.infrastructure.ResourceDAO;
 import com.bleulace.web.demo.calendar.CalendarEventAdapter;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
+
+import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
 
 @Configurable(preConstruction = true)
 class TimeBoxPresenter
@@ -25,7 +33,7 @@ class TimeBoxPresenter
 	@Autowired
 	private ResourceDAO resourceDAO;
 
-	private TimeBox view;
+	private MessageBox view;
 
 	private final Calendar calendar;
 
@@ -47,32 +55,45 @@ class TimeBoxPresenter
 		return fieldGroup;
 	}
 
-	void setView(TimeBox view)
+	void setView(MessageBox view)
 	{
 		this.view = view;
 	}
 
 	void cancelClicked()
 	{
-		view.showSuccessMessage("Operation canceled.");
+		Notification.show("Operation canceled.", Type.TRAY_NOTIFICATION);
 		view.close();
 	}
 
 	void deleteClicked()
 	{
-		view.showWarningDialog("Are you sure you want to delete "
-				+ getCurrentEvent().getCaption() + "?");
+		MessageBox
+				.showPlain(
+						Icon.WARN,
+						"Warning",
+						"Are you sure you want to delete "
+								+ fieldGroup.getItemDataSource().getBean()
+										.getCaption() + "?", ButtonId.CANCEL,
+						ButtonId.OK).getButton(ButtonId.OK)
+				.addClickListener(new Button.ClickListener()
+				{
+
+					@Override
+					public void buttonClick(ClickEvent event)
+					{
+						warningAccepted();
+					}
+				});
+		;
 	}
 
-	void warningAccepted(boolean accepted)
+	void warningAccepted()
 	{
-		if (accepted)
-		{
-			calendar.removeEvent((CalendarEvent) ctx.getBean("calendarAdapter",
-					getCurrentEvent()));
-			view.showSuccessMessage("Event deleted.");
-			view.close();
-		}
+		calendar.removeEvent((CalendarEvent) ctx.getBean("calendarAdapter",
+				getCurrentEvent()));
+		Notification.show("Event deleted.", Type.TRAY_NOTIFICATION);
+		view.close();
 	}
 
 	@RequiresUser
@@ -86,14 +107,14 @@ class TimeBoxPresenter
 			{
 				calendar.addEvent(event);
 			}
-			view.showSuccessMessage("Event "
+			Notification.show("Event "
 					+ (event.getSource().isNew() ? "created successfully."
-							: "updated successfully."));
+							: "updated successfully."), Type.TRAY_NOTIFICATION);
 			view.close();
 		}
 		catch (CommitException e)
 		{
-			view.showWarningMessage("Invalid timebox state.");
+			Notification.show("Invalid timebox state.", Type.WARNING_MESSAGE);
 		}
 	}
 

@@ -1,6 +1,8 @@
 package com.bleulace.web.demo.project;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 
@@ -9,6 +11,7 @@ import com.bleulace.web.demo.timebox.ManagerField;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 
@@ -18,6 +21,10 @@ import com.vaadin.ui.TextField;
 class ProjectFormFactoryBean implements FactoryBean<Component>
 {
 	private final FieldGroup fg;
+
+	@Autowired
+	@Qualifier("resourceComboBox")
+	private CustomField<?> parentBox;
 
 	ProjectFormFactoryBean(FieldGroup fg)
 	{
@@ -32,11 +39,12 @@ class ProjectFormFactoryBean implements FactoryBean<Component>
 	@Override
 	public Component getObject() throws Exception
 	{
+		fg.bind(parentBox, "parent");
 		TextField title = fg.buildAndBind("Title", "title", TextField.class);
 		ManagerField managerField = new ManagerField();
 		fg.bind(managerField, "managers");
 
-		FormLayout layout = new FormLayout(title, managerField);
+		FormLayout layout = new FormLayout(parentBox, title, managerField);
 		return layout;
 	}
 

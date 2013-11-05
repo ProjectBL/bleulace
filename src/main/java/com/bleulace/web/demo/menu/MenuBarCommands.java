@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
 import de.steinwedel.messagebox.MessageBox;
@@ -39,7 +38,7 @@ class MenuBarCommands
 			@Override
 			public void menuSelected(MenuItem selectedItem)
 			{
-				UI.getCurrent().addWindow(ctx.getBean("timeBox", Window.class));
+				ctx.getBean("timeBox", Window.class);
 			}
 		};
 	}

@@ -18,18 +18,17 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
+
+import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Configurable(preConstruction = true)
@@ -77,48 +76,36 @@ public class ManagerField extends CustomField<List> implements
 	@Override
 	public void buttonClick(ClickEvent event)
 	{
-		final Window window = new Window();
 		FormLayout form = new FormLayout(makeComboBox(), makeTable());
-		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.addComponent(makeButton("Cancel", KeyCode.ESCAPE,
+		MessageBox box = MessageBox.showCustomized(Icon.NONE, "Add Managers",
+				form, ButtonId.CANCEL, ButtonId.SAVE);
+		box.getWindow().setDraggable(false);
+		box.getButton(ButtonId.SAVE).addClickListener(
 				new Button.ClickListener()
 				{
-
-					@Override
-					public void buttonClick(ClickEvent event)
-					{
-						discard();
-						window.close();
-					}
-				}));
-		buttons.addComponent(makeButton("Submit", KeyCode.ESCAPE,
-				new Button.ClickListener()
-				{
-
 					@Override
 					public void buttonClick(ClickEvent event)
 					{
 						commit();
-						window.close();
 					}
-				}));
-		buttons.setSpacing(false);
-		VerticalLayout content = new VerticalLayout(form, buttons);
-		content.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
-
-		window.setContent(content);
-		window.setModal(true);
-		window.setResizable(false);
-		window.setCaption("Managers");
-		window.setClosable(false);
-		window.setDraggable(false);
-		UI.getCurrent().addWindow(window);
+				});
+		box.getButton(ButtonId.SAVE).setClickShortcut(KeyCode.ENTER);
+		box.getButton(ButtonId.CANCEL).addClickListener(
+				new Button.ClickListener()
+				{
+					@Override
+					public void buttonClick(ClickEvent event)
+					{
+						discard();
+					}
+				});
+		box.getButton(ButtonId.CANCEL).setClickShortcut(KeyCode.ESCAPE);
 	}
 
 	@Override
 	public Action[] getActions(Object target, Object sender)
 	{
-		return actions;
+		return target == null ? new Action[] {} : actions;
 	}
 
 	@Override

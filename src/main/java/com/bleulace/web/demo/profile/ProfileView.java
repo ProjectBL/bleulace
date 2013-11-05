@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
 import com.bleulace.domain.crm.model.Account;
@@ -47,7 +48,8 @@ class ProfileView extends CustomComponent implements View,
 	private MenuBar menuBar;
 
 	@Autowired
-	private ComboBox researchSearchField;
+	@Qualifier("resourceSearchField")
+	private ComboBox comboBox;
 
 	@Autowired
 	private TreeTable resourceTable;
