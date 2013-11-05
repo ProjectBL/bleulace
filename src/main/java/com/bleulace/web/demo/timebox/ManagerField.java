@@ -107,6 +107,11 @@ class ManagerField extends CustomField<List> implements Button.ClickListener,
 		content.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
 
 		window.setContent(content);
+		window.setModal(true);
+		window.setResizable(false);
+		window.setCaption("Managers");
+		window.setClosable(false);
+		window.setDraggable(false);
 		UI.getCurrent().addWindow(window);
 	}
 
@@ -141,7 +146,8 @@ class ManagerField extends CustomField<List> implements Button.ClickListener,
 
 	private ComboBox makeComboBox()
 	{
-		final ComboBox bean = new ComboBox("Assets", candidates);
+		final ComboBox bean = new ComboBox();
+		bean.setContainerDataSource(candidates);
 		bean.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 		bean.setItemCaptionPropertyId("title");
 		bean.setImmediate(true);

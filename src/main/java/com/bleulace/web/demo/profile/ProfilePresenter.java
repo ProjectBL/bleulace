@@ -10,8 +10,11 @@ import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.utils.IdCallback;
 import com.bleulace.web.SystemUser;
+import com.bleulace.web.annotation.EnablePush;
 import com.bleulace.web.annotation.Presenter;
+import com.bleulace.web.demo.resource.ResourceSelectedEvent;
 import com.google.common.collect.ForwardingMap;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.addon.jpacontainer.EntityItem;
 
 @Presenter
@@ -65,7 +68,17 @@ public class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
 		}
 	}
 
-	void resourceSelected(EntityItem<?> item)
+	@Subscribe
+	@EnablePush
+	public void resourceSelected(ResourceSelectedEvent event)
+	{
+		System.out.println(event);
+		System.out.println(event);
+		System.out.println(event);
+		resourceSelected(event.getItem());
+	}
+
+	public void resourceSelected(EntityItem<?> item)
 	{
 		put((String) item.getItemId(), item);
 		view.selectTab(item);

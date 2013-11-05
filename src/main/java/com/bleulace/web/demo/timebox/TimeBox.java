@@ -22,8 +22,13 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseListener;
 
+import de.steinwedel.messagebox.ButtonId;
+import de.steinwedel.messagebox.Icon;
+import de.steinwedel.messagebox.MessageBox;
+import de.steinwedel.messagebox.MessageBoxListener;
+
 @Configurable(preConstruction = true)
-class TimeBox extends Window implements CloseListener
+class TimeBox extends Window implements CloseListener, MessageBoxListener
 {
 	@Autowired
 	private ApplicationContext ctx;
@@ -77,14 +82,27 @@ class TimeBox extends Window implements CloseListener
 		presenter.timeBoxClosed();
 	}
 
-	public void showSuccessMessage(String text)
+	@Override
+	public void buttonClicked(ButtonId buttonId)
+	{
+		presenter.warningAccepted(buttonId.equals(ButtonId.OK));
+	}
+
+	void showSuccessMessage(String text)
 	{
 		Notification.show(text, Type.TRAY_NOTIFICATION);
 	}
 
-	public void showWarningMessage(String text)
+	void showWarningMessage(String text)
 	{
-		Notification.show(text);
+		Notification.show(text, Type.WARNING_MESSAGE);
+	}
+
+	void showWarningDialog(String text)
+	{
+		MessageBox
+				.showPlain(Icon.WARN, "Warning", text, this, ButtonId.CANCEL,
+						ButtonId.OK).setAutoClose(true).setModal(true);
 	}
 
 	private DateField makeDateField(String caption, String propertyId,

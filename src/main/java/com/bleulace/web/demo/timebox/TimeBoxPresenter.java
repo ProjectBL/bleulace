@@ -60,10 +60,19 @@ class TimeBoxPresenter
 
 	void deleteClicked()
 	{
-		calendar.removeEvent((CalendarEvent) ctx.getBean("calendarAdapter",
-				getCurrentEvent()));
-		view.showSuccessMessage("Event deleted.");
-		view.close();
+		view.showWarningDialog("Are you sure you want to delete "
+				+ getCurrentEvent().getCaption() + "?");
+	}
+
+	void warningAccepted(boolean accepted)
+	{
+		if (accepted)
+		{
+			calendar.removeEvent((CalendarEvent) ctx.getBean("calendarAdapter",
+					getCurrentEvent()));
+			view.showSuccessMessage("Event deleted.");
+			view.close();
+		}
 	}
 
 	@RequiresUser

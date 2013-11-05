@@ -7,6 +7,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +24,7 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.ui.MenuBar;
-import com.vaadin.ui.MenuBar.MenuItem;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.TreeTable;
 
 @Configuration
@@ -35,35 +35,22 @@ class ProfileConfig
 
 	@Bean
 	@Scope("ui")
-	public MenuBar profileMenuBar()
+	public ComboBox resourceSearchField(
+			@Qualifier("resourceContainer") JPAContainer<?> container)
 	{
-		MenuBar bean = new MenuBar();
-		MenuItem file = bean.addItem("File", null);
-		MenuItem edit = bean.addItem("Edit", null);
-		MenuItem view = bean.addItem("View", null);
+		ComboBox bean = new ComboBox();
+		bean.setContainerDataSource(container);
+		bean.setItemCaptionPropertyId("title");
+		bean.setImmediate(true);
 		return bean;
 	}
 
 	@Bean
 	@Scope("ui")
 	public TreeTable resourceTable(
-			Converter<String, DateTime> jodaDateTimeConverter)
+			Converter<String, DateTime> jodaDateTimeConverter,
+			@Qualifier("resourceContainer") JPAContainer<?> container)
 	{
-		final JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
-				"jpaContainer", Project.class,
-				TransactionalEntityProvider.class, new IdsCallback()
-				{
-					@Override
-					public Set<String> evaluate()
-					{
-						String id = ctx.getBean(ProfilePresenter.class)
-								.getAccount().getId();
-						return new HashSet<String>(SpringApplicationContext
-								.getBean(ResourceDAO.class).findIdsForManager(
-										id));
-					}
-				});
-		container.setParentProperty("parent");
 
 		final TreeTable bean = new TreeTable();
 		bean.setContainerDataSource(container);
@@ -126,5 +113,27 @@ class ProfileConfig
 				return String.class;
 			}
 		};
+	}
+
+	@Bean
+	@Scope("ui")
+	public JPAContainer<?> resourceContainer()
+	{
+		final JPAContainer<?> container = (JPAContainer<?>) ctx.getBean(
+				"jpaContainer", Project.class,
+				TransactionalEntityProvider.class, new IdsCallback()
+				{
+					@Override
+					public Set<String> evaluate()
+					{
+						String id = ctx.getBean(ProfilePresenter.class)
+								.getAccount().getId();
+						return new HashSet<String>(SpringApplicationContext
+								.getBean(ResourceDAO.class).findIdsForManager(
+										id));
+					}
+				});
+		container.setParentProperty("parent");
+		return container;
 	}
 }

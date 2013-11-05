@@ -115,7 +115,8 @@ class ParticipantField extends CustomField<List>
 			{
 				RsvpStatus status = participants.getItem(itemId).getBean()
 						.getStatus();
-				return status == null ? null : status.getStyleName();
+				return status == null || status.equals(RsvpStatus.PENDING) ? null
+						: status.getStyleName();
 			}
 		});
 		return table;

@@ -36,7 +36,14 @@ class TimeBoxFactoryBean implements FactoryBean<Window>
 	public Window getObject() throws Exception
 	{
 		TimeBoxPresenter presenter = new TimeBoxPresenter(event, calendar);
+
 		TimeBox timeBox = new TimeBox(presenter);
+		timeBox.setModal(true);
+		timeBox.setResizable(false);
+		timeBox.setCaption("TimeBox");
+		timeBox.setClosable(false);
+		timeBox.setDraggable(false);
+
 		presenter.setView(timeBox);
 		return timeBox;
 	}

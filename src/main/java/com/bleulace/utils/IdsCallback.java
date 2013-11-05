@@ -1,8 +1,8 @@
 package com.bleulace.utils;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface IdsCallback
 {
-	public Set<String> evaluate();
+	public Collection<String> evaluate();
 }

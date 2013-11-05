@@ -21,11 +21,14 @@ import javax.persistence.UniqueConstraint;
 
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.Manager;
 
 @Entity
@@ -61,6 +64,12 @@ public abstract class AbstractResource implements CompositeResource,
 
 	@LastModifiedDate
 	private DateTime lastModifiedDate;
+
+	@CreatedBy
+	private Account createdBy;
+
+	@LastModifiedBy
+	private Account lastModifiedBy;
 
 	protected AbstractResource()
 	{

@@ -5,10 +5,8 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import com.bleulace.utils.IdCallback;
 import com.bleulace.utils.IdsCallback;
@@ -22,16 +20,9 @@ class JPAContainerFactoryBean<T> implements FactoryBean<JPAContainer<T>>
 	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	private IdCallback userId;
-
-	@Autowired
-	private IdCallback targetId;
-
+	private IdsCallback callback;
 	private final Class<T> entityClazz;
 	private final Class<? extends EntityProvider<T>> providerClazz;
-
-	private IdsCallback callback;
 
 	@SuppressWarnings("unused")
 	private JPAContainerFactoryBean()
@@ -59,21 +50,6 @@ class JPAContainerFactoryBean<T> implements FactoryBean<JPAContainer<T>>
 			IdCallback callback)
 	{
 		this(entityClazz, providerClazz, callback.asIdsCallback());
-	}
-
-	public JPAContainerFactoryBean(Class<T> entityClazz,
-			Class<? extends EntityProvider<T>> providerClazz, String param)
-	{
-		this(entityClazz, providerClazz);
-		Assert.notNull(param);
-		if (param.equals("userId"))
-		{
-			callback = userId.asIdsCallback();
-		}
-		else if (param.equals("targetId"))
-		{
-			callback = targetId.asIdsCallback();
-		}
 	}
 
 	@Override

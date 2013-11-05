@@ -1,12 +1,17 @@
-package com.bleulace.utils.event;
+package com.bleulace.web.demo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.DestructionAwareBeanPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+import com.google.common.eventbus.DeadEvent;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
@@ -16,14 +21,15 @@ import com.google.common.eventbus.Subscribe;
  * 
  * @author Arleigh Dickerson
  */
-public class EventBusPostProcessor implements BeanPostProcessor,
+@Component
+class EventBusPostProcessor implements BeanPostProcessor,
 		DestructionAwareBeanPostProcessor
 {
-	private final EventBus eventBus;
+	@Autowired
+	private ApplicationContext ctx;
 
-	public EventBusPostProcessor(EventBus eventBus)
+	public EventBusPostProcessor()
 	{
-		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -97,6 +103,15 @@ public class EventBusPostProcessor implements BeanPostProcessor,
 
 	private EventBus getEventBus()
 	{
-		return eventBus;
+		return ctx.getBean("uiBus", EventBus.class);
+	}
+
+	@Subscribe
+	public void subscribe(DeadEvent event)
+	{
+		Logger.getLogger(getClass()).warn(
+				"Received dead event with source class '"
+						+ event.getSource().getClass() + "' and event class '"
+						+ event.getEvent().getClass() + "'");
 	}
 }

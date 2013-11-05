@@ -57,7 +57,6 @@ class BasePersistenceConfig
 		allProps.putAll(jpaPropsMap);
 
 		LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-		factoryBean.setPersistenceUnitName("persistenceUnit");
 		factoryBean.setPackagesToScan(new String[] { "com.bleulace" });
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setJpaPropertyMap(allProps);

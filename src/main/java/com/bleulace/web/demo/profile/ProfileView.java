@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
 import com.bleulace.domain.crm.model.Account;
@@ -19,6 +18,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -44,8 +44,10 @@ class ProfileView extends CustomComponent implements View,
 	private ProfilePresenter presenter;
 
 	@Autowired
-	@Qualifier("profileMenuBar")
 	private MenuBar menuBar;
+
+	@Autowired
+	private ComboBox researchSearchField;
 
 	@Autowired
 	private TreeTable resourceTable;

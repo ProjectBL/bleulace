@@ -3,6 +3,7 @@
 
 package com.bleulace.domain.resource.model;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.Manager;
 import com.bleulace.domain.resource.model.AbstractResource;
 import java.util.List;
@@ -60,6 +61,22 @@ privileged aspect AbstractResource_Roo_JavaBean {
     
     public void AbstractResource.setLastModifiedDate(DateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+    
+    public Account AbstractResource.getCreatedBy() {
+        return this.createdBy;
+    }
+    
+    public void AbstractResource.setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+    
+    public Account AbstractResource.getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+    
+    public void AbstractResource.setLastModifiedBy(Account lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
     
 }
