@@ -21,18 +21,23 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.PreRemove;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.domain.Persistable;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.Gender;
+import com.bleulace.domain.crm.infrastructure.AccountDAO;
 import com.bleulace.utils.chrono.TimeZoneEnum;
+import com.bleulace.utils.ctx.SpringApplicationContext;
 
 @RooJavaBean
 @Entity
-public class Account
+public class Account implements Persistable<String>
 {
 	@Id
+	@NotEmpty
 	@Column(nullable = false, updatable = false, unique = true)
-	private String id = "";
+	private String id;
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
@@ -92,6 +97,30 @@ public class Account
 		}
 	}
 
+	@Override
+	public boolean equals(Object obj)
+	{
+
+		if (null == obj)
+		{
+			return false;
+		}
+
+		if (this == obj)
+		{
+			return true;
+		}
+
+		if (!getClass().equals(obj.getClass()))
+		{
+			return false;
+		}
+
+		Account that = (Account) obj;
+
+		return null == this.getId() ? false : this.getId().equals(that.getId());
+	}
+
 	@PreRemove
 	public void preRemove()
 	{
@@ -99,5 +128,11 @@ public class Account
 		{
 			friends.remove(friend);
 		}
+	}
+
+	@Override
+	public boolean isNew()
+	{
+		return SpringApplicationContext.getBean(AccountDAO.class).exists(id);
 	}
 }

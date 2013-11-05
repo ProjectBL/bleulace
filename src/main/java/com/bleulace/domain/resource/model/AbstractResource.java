@@ -30,11 +30,12 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.Manager;
+import com.bleulace.domain.resource.infrastructure.ResourceFeedHooks;
 
 @Entity
 @RooJavaBean
 @Inheritance(strategy = InheritanceType.JOINED)
-@EntityListeners({ AuditingEntityListener.class })
+@EntityListeners({ AuditingEntityListener.class, ResourceFeedHooks.class })
 public abstract class AbstractResource implements CompositeResource,
 		Serializable
 {
@@ -53,7 +54,6 @@ public abstract class AbstractResource implements CompositeResource,
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
 	private List<AbstractResource> children = new ArrayList<AbstractResource>();
 
-	// TODO
 	@ElementCollection
 	@CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = {
 			"AbstractResource_ID", "ACCOUNT_ID" }))

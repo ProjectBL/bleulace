@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.util.Assert;
 
+import com.bleulace.domain.crm.model.Account;
 import com.bleulace.domain.management.model.PersistentEvent;
 import com.bleulace.domain.management.model.QEventParticipant;
 import com.bleulace.domain.management.model.QPersistentEvent;
@@ -46,5 +47,12 @@ class EventDAOImpl implements EventDAOCustom
 		return QueryFactory.from(e)
 				.where(e.start.before(end).and(e.end.after(start))).distinct()
 				.orderBy(e.start.asc());
+	}
+
+	@Override
+	public List<Account> findParticipants(PersistentEvent event)
+	{
+		return QueryFactory.from(e).innerJoin(e.invitees, i).where(e.eq(event))
+				.list(i.account);
 	}
 }
