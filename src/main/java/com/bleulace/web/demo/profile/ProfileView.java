@@ -1,5 +1,8 @@
 package com.bleulace.web.demo.profile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
 import org.apache.shiro.authz.annotation.RequiresUser;
@@ -10,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import com.bleulace.domain.crm.model.Account;
 import com.bleulace.web.SystemUser;
 import com.bleulace.web.annotation.VaadinView;
+import com.bleulace.web.demo.calendar.span.CalendarSpan;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -32,6 +36,7 @@ import com.vaadin.ui.themes.Reindeer;
 class ProfileView extends CustomComponent implements View,
 		TabSheet.CloseHandler
 {
+	private List<String> order = new ArrayList<String>();
 	@Autowired
 	private SystemUser user;
 
@@ -127,32 +132,29 @@ class ProfileView extends CustomComponent implements View,
 					tabSheet.getComponentCount());
 			tab.setClosable(true);
 		}
+		order.add(order.size(), (String) item.getItemId());
 	}
 
 	void selectTab(EntityItem<?> item)
 	{
-		for (Component component : tabSheet)
-		{
-			if (item.equals(((AbstractComponent) component).getData()))
-			{
-				tabSheet.setSelectedTab(component);
-				return;
-			}
-		}
+		int position = order.indexOf(item.getItemId())
+				+ CalendarSpan.values().length;
+		tabSheet.setSelectedTab(position);
 	}
 
 	@Override
 	public void onTabClose(final TabSheet tabsheet, final Component tabContent)
 	{
-		presenter.tabClosing(
-				(EntityItem<?>) ((AbstractComponent) tabContent).getData(),
-				new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						tabsheet.removeTab(tabsheet.getTab(tabContent));
-					}
-				});
+		final EntityItem<?> item = (EntityItem<?>) ((AbstractComponent) tabContent)
+				.getData();
+		presenter.tabClosing(item, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				tabsheet.removeTab(tabsheet.getTab(tabContent));
+				order.remove(item.getItemId());
+			}
+		});
 	}
 }

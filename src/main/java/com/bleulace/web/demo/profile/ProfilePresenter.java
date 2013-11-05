@@ -42,6 +42,7 @@ public class ProfilePresenter extends ForwardingMap<String, EntityItem<?>>
 		{
 			view.openTab(value);
 		}
+		view.selectTab(value);
 		return item;
 	}
 
